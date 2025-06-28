@@ -7,12 +7,27 @@ import HorizontalScrollPrinciples from './components/blkout/HorizontalScrollPrin
 import StickyNavigation from './components/blkout/StickyNavigation'
 import FloatingElements from './components/blkout/FloatingElements'
 import IvorChatbot from './components/blkout/IvorChatbot'
+import DirectAccessLayout from './components/blkout/DirectAccessLayout'
+import { useLayoutPreference } from './hooks/useLayoutPreference'
 
 function App() {
+  const { layoutMode, toggleLayout } = useLayoutPreference()
+
+  // Render direct access layout
+  if (layoutMode === 'direct') {
+    return (
+      <>
+        <DirectAccessLayout onToggleLayout={toggleLayout} />
+        <IvorChatbot />
+      </>
+    )
+  }
+
+  // Render scrollytelling layout
   return (
     <main className="relative min-h-screen">
       {/* Sticky Navigation */}
-      <StickyNavigation />
+      <StickyNavigation onToggleLayout={toggleLayout} />
       
       {/* Physics-based Floating Elements */}
       <FloatingElements />

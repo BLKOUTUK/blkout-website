@@ -2,10 +2,14 @@
 
 import { useEffect, useState } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, Layout } from 'lucide-react'
 import { NAVIGATION_ITEMS } from '@/lib/constants'
 
-export default function StickyNavigation() {
+interface StickyNavigationProps {
+  onToggleLayout?: () => void
+}
+
+export default function StickyNavigation({ onToggleLayout }: StickyNavigationProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
   
@@ -84,7 +88,7 @@ export default function StickyNavigation() {
             </motion.div>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex space-x-8">
+            <div className="hidden md:flex items-center space-x-8">
               {NAVIGATION_ITEMS.map((item) => (
                 <motion.button
                   key={item.name}
@@ -101,6 +105,20 @@ export default function StickyNavigation() {
                   {item.name}
                 </motion.button>
               ))}
+              
+              {/* Layout Toggle */}
+              {onToggleLayout && (
+                <motion.button
+                  onClick={onToggleLayout}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="flex items-center space-x-2 px-3 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 text-white hover:bg-white/20 transition-all"
+                  title="Switch to Direct Access"
+                >
+                  <Layout className="w-4 h-4" />
+                  <span className="text-xs">Direct</span>
+                </motion.button>
+              )}
             </div>
 
             {/* Mobile Menu Button */}
