@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { Calendar, Users, BookOpen, Zap, ArrowRight, Settings } from 'lucide-react'
 import { SITE_CONFIG, COMMUNITY_VALUES } from '@/lib/constants'
+import EventsCalendarWidget from './EventsCalendarWidget'
 
 interface DirectAccessLayoutProps {
   onToggleLayout: () => void
@@ -29,7 +30,7 @@ const quickAccessItems = [
     title: 'Events',
     description: 'Workshops, discussions & community gatherings',
     icon: Calendar,
-    href: '/events',
+    href: 'http://localhost:5173/',
     color: 'from-electric-indigo to-electric-green',
     stats: '3 upcoming events'
   },
@@ -107,6 +108,14 @@ export default function DirectAccessLayout({ onToggleLayout }: DirectAccessLayou
                   transition={{ delay: 0.1 * index }}
                   whileHover={{ scale: 1.02, y: -5 }}
                   className="group relative p-6 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 hover:border-white/40 transition-all cursor-pointer"
+                  onClick={() => {
+                    if (item.href.startsWith('http')) {
+                      window.open(item.href, '_blank')
+                    } else {
+                      // Handle internal navigation
+                      console.log('Navigate to:', item.href)
+                    }
+                  }}
                 >
                   {/* Background gradient */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-20 rounded-2xl transition-opacity`} />
@@ -174,11 +183,21 @@ export default function DirectAccessLayout({ onToggleLayout }: DirectAccessLayou
           </div>
         </motion.section>
 
-        {/* Community Pulse */}
+        {/* Events Calendar Widget */}
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
+          className="mb-16"
+        >
+          <EventsCalendarWidget maxEvents={4} />
+        </motion.section>
+
+        {/* Community Pulse */}
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8 }}
           className="text-center"
         >
           <div className="p-8 rounded-2xl bg-gradient-to-r from-electric-magenta/20 to-electric-cyan/20 backdrop-blur-sm border border-white/20">
