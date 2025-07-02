@@ -4,7 +4,8 @@ import { useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { DEVELOPMENT_PRINCIPLES } from '@/lib/constants'
+import { DEVELOPMENT_PRINCIPLES } from '../../lib/constants'
+import RetroImage from './RetroImage'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -220,6 +221,76 @@ export default function HorizontalScrollPrinciples() {
             </div>
           </div>
         ))}
+
+        {/* Resilience Imagery Section */}
+        <div className="flex-shrink-0 flex items-center justify-center" style={{ width: '100vw', height: '100vh' }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-8 max-w-6xl w-full">
+            
+            {/* John Henry - Breaking Through Systems */}
+            <motion.div 
+              className="aspect-[4/3] rounded-xl overflow-hidden"
+              initial={{ opacity: 0, x: -100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <RetroImage
+                src="/src/assets/images/John Henry.png"
+                alt="John Henry figure against brick wall with systemic challenges"
+                vcrIntensity="heavy"
+                className="w-full h-full"
+                overlayContent={
+                  <motion.div 
+                    className="p-6 bg-black/60 backdrop-blur-sm rounded-lg border border-electric-magenta/40"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5, duration: 0.6 }}
+                  >
+                    <h3 className="text-2xl font-bold text-electric-magenta mb-3">
+                      Breaking Through Systems
+                    </h3>
+                    <p className="text-white/90 leading-relaxed">
+                      Like John Henry, we face systemic barriers with determination and collective strength. 
+                      Every wall becomes a doorway when we build together.
+                    </p>
+                  </motion.div>
+                }
+              />
+            </motion.div>
+
+            {/* Baldwin - Voices That Matter */}
+            <motion.div 
+              className="aspect-[4/3] rounded-xl overflow-hidden"
+              initial={{ opacity: 0, x: 100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              <RetroImage
+                src="/src/assets/images/seat with baldwin.png"
+                alt="James Baldwin sitting among empty chairs on red background"
+                vcrIntensity="medium"
+                className="w-full h-full"
+                overlayContent={
+                  <motion.div 
+                    className="p-6 bg-black/60 backdrop-blur-sm rounded-lg border border-electric-cyan/40"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.7, duration: 0.6 }}
+                  >
+                    <h3 className="text-2xl font-bold text-electric-cyan mb-3">
+                      Every Voice Matters
+                    </h3>
+                    <p className="text-white/90 leading-relaxed">
+                      In the table we're building together, every voice has a seat. 
+                      Our principles create space for all who dare to dream liberation.
+                    </p>
+                  </motion.div>
+                }
+              />
+            </motion.div>
+          </div>
+        </div>
 
         {/* Development Principles Cards */}
         <div className="flex items-center h-full py-20" style={{ minWidth: 'max-content' }}>

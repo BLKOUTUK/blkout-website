@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { Menu, X, Layout } from 'lucide-react'
-import { NAVIGATION_ITEMS } from '@/lib/constants'
+import { NAVIGATION_ITEMS } from '../../lib/constants'
 
 interface StickyNavigationProps {
   onToggleLayout?: () => void

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-export type LayoutMode = 'scrollytelling' | 'direct'
+export type LayoutMode = 'scrollytelling' | 'direct' | 'bento'
 
 const LAYOUT_PREFERENCE_KEY = 'blkout_layout_preference'
 
@@ -27,7 +27,10 @@ export function useLayoutPreference() {
   }, [])
 
   const toggleLayout = () => {
-    const newMode = layoutMode === 'scrollytelling' ? 'direct' : 'scrollytelling'
+    const layoutCycle: LayoutMode[] = ['scrollytelling', 'bento', 'direct']
+    const currentIndex = layoutCycle.indexOf(layoutMode)
+    const nextIndex = (currentIndex + 1) % layoutCycle.length
+    const newMode = layoutCycle[nextIndex]
     setLayoutMode(newMode)
     localStorage.setItem(LAYOUT_PREFERENCE_KEY, newMode)
   }

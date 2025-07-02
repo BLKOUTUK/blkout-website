@@ -8,10 +8,21 @@ import StickyNavigation from './components/blkout/StickyNavigation'
 import FloatingElements from './components/blkout/FloatingElements'
 import IvorChatbot from './components/blkout/IvorChatbot'
 import DirectAccessLayout from './components/blkout/DirectAccessLayout'
+import BentoBoxLayout from './components/blkout/BentoBoxLayout'
 import { useLayoutPreference } from './hooks/useLayoutPreference'
 
 function App() {
   const { layoutMode, toggleLayout } = useLayoutPreference()
+
+  // Render bento box layout
+  if (layoutMode === 'bento') {
+    return (
+      <>
+        <BentoBoxLayout onToggleLayout={toggleLayout} />
+        <IvorChatbot />
+      </>
+    )
+  }
 
   // Render direct access layout
   if (layoutMode === 'direct') {

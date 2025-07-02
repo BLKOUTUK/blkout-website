@@ -5,7 +5,9 @@ import { motion, useScroll, useTransform } from 'framer-motion'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { Heart, Users, Zap, Shield, Sparkles } from 'lucide-react'
-import { COMMUNITY_VALUES } from '@/lib/constants'
+import { COMMUNITY_VALUES } from '../../lib/constants'
+import { getAssetsBySection } from '../../lib/mediaAssets'
+import RetroImage from './RetroImage'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -160,6 +162,73 @@ export default function ParallaxCommunityValues() {
           >
             These principles spark the conversations that shape our collective future
           </motion.p>
+        </motion.div>
+
+        {/* Retro Visual Gallery */}
+        <motion.div 
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20"
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, stagger: 0.2 }}
+          viewport={{ once: true }}
+        >
+          {/* Capacity Affirmation - Central Focus */}
+          <motion.div 
+            className="md:col-span-2 aspect-[16/9] rounded-xl overflow-hidden"
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.3 }}
+          >
+            <RetroImage
+              src="/src/assets/images/capacity.png"
+              alt="You are capable of creating the things you have in your mind - repeated affirmation"
+              vcrIntensity="light"
+              className="w-full h-full"
+              overlayContent={
+                <motion.div 
+                  className="text-center p-6 bg-black/40 backdrop-blur-sm rounded-lg border border-electric-cyan/30"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.5, duration: 0.6 }}
+                >
+                  <h3 className="text-2xl font-bold text-electric-cyan mb-2">
+                    Infinite Capacity
+                  </h3>
+                  <p className="text-white/90">
+                    The power to create and transform lives within each of us
+                  </p>
+                </motion.div>
+              }
+            />
+          </motion.div>
+
+          {/* Ancient Love - Side Panel */}
+          <motion.div 
+            className="aspect-square rounded-xl overflow-hidden"
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.3 }}
+          >
+            <RetroImage
+              src="/src/assets/images/ancientlove.png"
+              alt="Ancient Egyptian wall art showing intimate connection"
+              vcrIntensity="heavy"
+              className="w-full h-full"
+              overlayContent={
+                <motion.div 
+                  className="text-center p-4 bg-black/50 backdrop-blur-sm rounded-lg border border-white/20"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.7, duration: 0.6 }}
+                >
+                  <h4 className="text-lg font-bold text-white mb-1">
+                    Love is Ancient
+                  </h4>
+                  <p className="text-sm text-gray-200">
+                    Timeless foundations
+                  </p>
+                </motion.div>
+              }
+            />
+          </motion.div>
         </motion.div>
 
         <div ref={valuesRef} className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
