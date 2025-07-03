@@ -29,51 +29,114 @@ export default function EventsCalendarWidget({
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  // Mock data for demonstration - replace with actual API call
-  const mockEvents: Event[] = [
-    {
-      id: '1',
-      title: 'Black Trans Joy Workshop',
-      date: '2025-01-15',
-      time: '19:00',
-      location: 'South London Community Centre',
-      organizer_name: 'QTIPOC London',
-      description: 'A healing and empowerment workshop celebrating Black trans experiences.',
-      event_url: 'https://example.com/event1'
-    },
-    {
-      id: '2', 
-      title: 'Queer Poetry Night',
-      date: '2025-01-18',
-      time: '20:00',
-      location: 'The Ritzy, Brixton',
-      organizer_name: 'Black Writers Collective',
-      description: 'An evening of powerful words and community connection.',
-      event_url: 'https://example.com/event2'
-    },
-    {
-      id: '3',
-      title: 'Community Skills Share',
-      date: '2025-01-22',
-      time: '14:00',
-      location: 'Online (Zoom)',
-      organizer_name: 'BLKOUT Network',
-      description: 'Share skills, learn from each other, build cooperative power.',
-      event_url: 'https://example.com/event3'
+  // Live connection to IVOR Events Calendar
+  const fetchEventsFromIVOR = async (): Promise<Event[]> => {
+    try {
+      // Create iframe to communicate with IVOR calendar API
+      return new Promise((resolve, reject) => {
+        const iframe = document.createElement('iframe');
+        iframe.src = 'http://localhost:5173/api.html';
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+        
+        const requestId = Date.now().toString();
+        
+        // Set up message listener
+        const messageHandler = (event: MessageEvent) => {
+          if (event.data.type === 'IVOR_API_RESPONSE' && event.data.requestId === requestId) {
+            window.removeEventListener('message', messageHandler);
+            document.body.removeChild(iframe);
+            
+            if (event.data.success) {
+              resolve(event.data.data || []);
+            } else {
+              reject(new Error(event.data.error || 'API request failed'));
+            }
+          }
+        };
+        
+        window.addEventListener('message', messageHandler);
+        
+        // Send request after iframe loads
+        iframe.onload = () => {
+          iframe.contentWindow?.postMessage({
+            type: 'IVOR_API_REQUEST',
+            method: 'getFeaturedEvents',
+            params: { count: maxEvents },
+            requestId
+          }, '*');
+        };
+        
+        // Timeout after 10 seconds
+        setTimeout(() => {
+          window.removeEventListener('message', messageHandler);
+          if (iframe.parentNode) {
+            document.body.removeChild(iframe);
+          }
+          reject(new Error('API request timeout'));
+        }, 10000);
+      });
+    } catch (error) {
+      console.error('Error fetching from IVOR calendar:', error);
+      // Fallback to mock data
+      return [
+        {
+          id: '1',
+          title: 'Black Trans Joy Workshop',
+          date: '2025-01-15',
+          time: '19:00',
+          location: 'South London Community Centre',
+          organizer_name: 'QTIPOC London',
+          description: 'A healing and empowerment workshop celebrating Black trans experiences.',
+          event_url: 'http://localhost:5173/'
+        },
+        {
+          id: '2', 
+          title: 'Queer Poetry Night',
+          date: '2025-01-18',
+          time: '20:00',
+          location: 'The Ritzy, Brixton',
+          organizer_name: 'Black Writers Collective',
+          description: 'An evening of powerful words and community connection.',
+          event_url: 'http://localhost:5173/'
+        },
+        {
+          id: '3',
+          title: 'Community Skills Share',
+          date: '2025-01-22',
+          time: '14:00',
+          location: 'Online (Zoom)',
+          organizer_name: 'BLKOUT Network',
+          description: 'Share skills, learn from each other, build cooperative power.',
+          event_url: 'http://localhost:5173/'
+        }
+      ].slice(0, maxEvents);
     }
-  ]
+  }
 
   useEffect(() => {
-    // Simulate API call
     const loadEvents = async () => {
       setLoading(true)
+      setError(null)
       try {
-        // In production, this would fetch from the Google Sheets API
-        // or the deployed EventsCalendar endpoint
-        await new Promise(resolve => setTimeout(resolve, 1000)) // Simulate loading
-        setEvents(mockEvents.slice(0, maxEvents))
+        const eventsData = await fetchEventsFromIVOR()
+        setEvents(eventsData)
       } catch (err) {
-        setError('Failed to load events')
+        setError('Unable to connect to events calendar')
+        console.error('Events loading error:', err)
+        // Still show fallback events on error
+        setEvents([
+          {
+            id: 'fallback-1',
+            title: 'Community Events Available',
+            date: '2025-01-20',
+            time: '19:00',
+            location: 'Visit IVOR Calendar',
+            organizer_name: 'BLKOUT Community',
+            description: 'Click below to view all upcoming Black QTIPOC+ events.',
+            event_url: 'http://localhost:5173/'
+          }
+        ])
       } finally {
         setLoading(false)
       }
