@@ -8,7 +8,7 @@ This guide explains how the BLKOUT website integrates with the separate IVOR rep
 ## Repository Structure
 
 ```
-blkoutuk/
+BLKOUTUK/
 ├── blkout-website/          (this repository)
 │   ├── src/components/blkout/
 │   │   ├── IvorChatbot.tsx  (frontend component)
@@ -61,7 +61,7 @@ export const IVOR_CONFIG = {
 
 ```bash
 # Clone and setup IVOR repository
-git clone https://github.com/blkoutuk/ivor.git
+git clone https://github.com/BLKOUTUK/ivor.git
 cd ivor
 ./scripts/setup.sh
 
@@ -91,7 +91,7 @@ npm run dev
 ### Backend Deployment
 
 IVOR backend is deployed separately:
-- **Repository**: https://github.com/blkoutuk/ivor
+- **Repository**: https://github.com/BLKOUTUK/ivor
 - **Production URL**: https://ivor-api.blkoutuk.com
 - **Documentation**: https://ivor-api.blkoutuk.com/docs
 
@@ -247,8 +247,8 @@ if (DEBUG) console.log('IVOR Debug:', data)
 ## Support
 
 ### Documentation
-- **IVOR API**: https://github.com/blkoutuk/ivor/docs/API.md
-- **Deployment**: https://github.com/blkoutuk/ivor/docs/DEPLOYMENT.md
+- **IVOR API**: https://github.com/BLKOUTUK/ivor/docs/API.md
+- **Deployment**: https://github.com/BLKOUTUK/ivor/docs/DEPLOYMENT.md
 
 ### Community
 - **Issues**: GitHub Issues in respective repositories
