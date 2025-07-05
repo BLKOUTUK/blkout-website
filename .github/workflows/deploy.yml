@@ -24,10 +24,16 @@ jobs:
         run: npm ci
         
       - name: Build
-        run: npm run build
+        run: |
+          npm run build
+          echo "Build completed, checking dist folder:"
+          ls -la dist/
+          echo "Checking dist/index.html:"
+          head -5 dist/index.html
         
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+          force_orphan: true
