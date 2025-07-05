@@ -37,3 +37,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           force_orphan: true
+          publish_branch: gh-pages
+          commit_message: 'Deploy built files from dist/ folder'
