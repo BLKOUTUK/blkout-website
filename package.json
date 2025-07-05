@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Community platform for cooperative ownership - Building bridges, not walls",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
