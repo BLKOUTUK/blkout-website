@@ -10,6 +10,27 @@ import WelcomeVideo from './WelcomeVideo'
 
 gsap.registerPlugin(ScrollTrigger)
 
+// Helper function to calculate fist formation positions
+const getFistPosition = (cardIndex: number) => {
+  // Positions to form a raised fist shape (6 cards)
+  const positions = [
+    // Card 0: Thumb (left side)
+    { x: -200, y: 100, rotation: -15 },
+    // Card 1: Index finger (top)
+    { x: -50, y: -150, rotation: 10 },
+    // Card 2: Middle finger (top center)
+    { x: 50, y: -180, rotation: -5 },
+    // Card 3: Ring finger (top right)
+    { x: 150, y: -150, rotation: 15 },
+    // Card 4: Pinky (right side)
+    { x: 200, y: -100, rotation: 25 },
+    // Card 5: Palm/wrist (bottom center)
+    { x: 0, y: 150, rotation: 0 }
+  ]
+  
+  return positions[cardIndex] || { x: 0, y: 0, rotation: 0 }
+}
+
 // Quiz Component
 const QuizComponent: React.FC<{ slide: any }> = ({ slide }) => {
   const [currentQuestion, setCurrentQuestion] = useState(0)
@@ -188,65 +209,11 @@ const slides = [
   {
     id: 'welcome',
     type: 'video',
-    title: 'BLKOUTUK',
+    title: null,
     subtitle: null,
     content: null,
     bgImage: null,
     font: 'font-mono'
-  },
-  {
-    id: 'black',
-    type: 'definition',
-    title: 'BLACK?',
-    subtitle: '',
-    content: [
-      { text: 'More than melanin.', style: 'glitch-text pixel-text' },
-      { text: 'Not just heritage.', style: 'broken-box p-4 mt-4' },
-      { text: "'Black British' remains a provocation to many,", style: 'vhs-lines p-2' },
-      { text: 'often the same ones who aspire to colourblindness', style: 'text-red-400 line-through' }
-    ],
-    bgImage: '/images/1.png',
-    font: 'font-serif'
-  },
-  {
-    id: 'queer',
-    type: 'definition', 
-    title: 'QUEER',
-    subtitle: 'RECLAIMED TERRITORY',
-    content: [
-      { text: 'the box for those who seek to reject boxes.', style: 'broken-box p-6 rotate-3' },
-      { text: 'reclaiming a slur', style: 'glitch-text text-2xl' },
-      { text: '(from the university library)', style: 'text-xs italic opacity-60 mt-2' }
-    ],
-    bgImage: '/images/2.png',
-    font: 'font-sans'
-  },
-  {
-    id: 'male',
-    type: 'definition',
-    title: 'MALE*',
-    subtitle: '*TERMS AND CONDITIONS APPLY',
-    content: [
-      { text: 'The problem with masculinity *is* all men.', style: 'pixel-text text-3xl font-bold' },
-      { text: 'despite the harms and nowhere near Stockholm,', style: 'vhs-lines italic' },
-      { text: 'many of us find our jailers attractive', style: 'text-yellow-400 underline decoration-wavy' }
-    ],
-    bgImage: '/images/3.png',
-    font: 'font-mono'
-  },
-  {
-    id: 'out',
-    type: 'definition',
-    title: 'OUT',
-    subtitle: 'VISIBILITY ≠ LIBERATION',
-    content: [
-      { text: 'Visibility isn\'t liberation.', style: 'glitch-text text-4xl' },
-      { text: '*visibility without power is surveillance', style: 'broken-box p-4 text-red-300 text-sm' },
-      { text: 'Being NOT STRAIGHT is not STRAIGHTFORWARD.', style: 'pixel-text rotate-1' },
-      { text: 'STRAIGHT can be over-rated', style: 'line-through opacity-70' }
-    ],
-    bgImage: '/images/4.png',
-    font: 'font-serif'
   },
   {
     id: 'well-defined',
@@ -260,7 +227,61 @@ const slides = [
       { text: 'Our identities don\'t have to be convenient for your survey, nor static for the sake of the stats.', style: 'broken-box p-4 text-yellow-300 text-lg mt-8' },
       { text: 'Our identities are busy helping us to navigate relationships in a complex society', style: 'pixel-text text-xl mt-6 text-blkout-secondary' }
     ],
-    bgImage: '/images/blkoutrainbowbackground.png',
+    bgImage: '/images/WELLDEF2 (Youtube Banner).png',
+    font: 'font-serif'
+  },
+  {
+    id: 'black',
+    type: 'definition',
+    title: 'BLACK?',
+    subtitle: '',
+    content: [
+      { text: 'More than melanin.', style: 'glitch-text pixel-text' },
+      { text: 'Not just heritage.', style: 'broken-box p-4 mt-4' },
+      { text: "'Black British' remains a provocation to many,", style: 'vhs-lines p-2' },
+      { text: 'often the same ones who aspire to colourblindness', style: 'text-red-400 line-through' }
+    ],
+    bgImage: '/images/BLACK.png',
+    font: 'font-serif'
+  },
+  {
+    id: 'queer',
+    type: 'definition', 
+    title: 'QUEER',
+    subtitle: 'RECLAIMED TERRITORY',
+    content: [
+      { text: 'the box for those who seek to reject boxes.', style: 'broken-box p-6 rotate-3' },
+      { text: 'reclaiming a slur', style: 'glitch-text text-2xl' },
+      { text: '(from the university library)', style: 'text-xs italic opacity-60 mt-2' }
+    ],
+    bgImage: '/images/queer -.png',
+    font: 'font-sans'
+  },
+  {
+    id: 'male',
+    type: 'definition',
+    title: 'MALE*',
+    subtitle: '*TERMS AND CONDITIONS APPLY',
+    content: [
+      { text: 'The problem with masculinity *is* all men.', style: 'pixel-text text-3xl font-bold' },
+      { text: 'despite the harms and nowhere near Stockholm,', style: 'vhs-lines italic' },
+      { text: 'many of us find our jailers attractive', style: 'text-yellow-400 underline decoration-wavy' }
+    ],
+    bgImage: '/images/men-.png',
+    font: 'font-mono'
+  },
+  {
+    id: 'out',
+    type: 'definition',
+    title: 'OUT',
+    subtitle: 'VISIBILITY ≠ LIBERATION',
+    content: [
+      { text: 'Visibility isn\'t liberation.', style: 'glitch-text text-4xl' },
+      { text: '*visibility without power is surveillance', style: 'broken-box p-4 text-red-300 text-sm' },
+      { text: 'Being NOT STRAIGHT is not STRAIGHTFORWARD.', style: 'pixel-text rotate-1' },
+      { text: 'STRAIGHT can be over-rated', style: 'line-through opacity-70' }
+    ],
+    bgImage: '/images/out -.png',
     font: 'font-serif'
   },
   {
@@ -277,22 +298,20 @@ The resistance is not about anger alone, but about the audacity to imagine other
     font: 'font-serif'
   },
   {
-    id: 'projects',
-    type: 'projects',
-    title: 'CURRENT PROJECTS',
-    subtitle: 'OUR STORIES HAVE THE POWER TO CONNECT US',
-    content: 'We\'re unleashing our realness - for liberation',
-    projects: [
-      { name: 'Co-op', description: 'Building cooperative ownership together' },
-      { name: 'Channel', description: 'Broadcasting Black queer liberation' },
-      { name: 'StoryLab', description: 'Collaborative storytelling workshops' },
-      { name: 'IVOR', description: 'AI assistant for community guidance' },
-      { name: 'BLKOUTHUB', description: 'Digital community platform' },
-      { name: 'Black Men Who Brunch', description: 'Monthly community gathering' },
-      { name: 'Picnic Series', description: 'Outdoor community events' },
-      { name: 'Cinema Series', description: 'Film screenings & discussions' }
+    id: 'fist-formation',
+    type: 'fist-formation',
+    title: 'COLLECTIVE ACTION',
+    subtitle: 'MEMBERS AT THE CENTRE',
+    content: 'Six stories, one powerful movement',
+    cards: [
+      { id: 'card1', color: '#FF0000', project: 'Co-op', story: 'Building cooperative ownership together' },
+      { id: 'card2', color: '#FF8C00', project: 'Channel', story: 'Broadcasting Black queer liberation' },
+      { id: 'card3', color: '#FFD700', project: 'StoryLab', story: 'Collaborative storytelling workshops' },
+      { id: 'card4', color: '#00FF00', project: 'IVOR', story: 'AI assistant for community guidance' },
+      { id: 'card5', color: '#0000FF', project: 'BLKOUTHUB', story: 'Digital community platform' },
+      { id: 'card6', color: '#8B00FF', project: 'Community', story: 'Events, gatherings, connections' }
     ],
-    bgImage: '/images/5.png',
+    bgVideo: '/images/realnessnxt.mp4',
     font: 'font-sans'
   },
   {
@@ -458,14 +477,14 @@ const FullPageScrollytelling: React.FC = () => {
   // Map slides to sections for header
   const getSectionFromSlide = (slideIndex: number) => {
     if (slideIndex === 0) return 'home'
-    if (slideIndex >= 1 && slideIndex <= 4) return 'definitions'
-    if (slideIndex === 5) return 'lessons'  // prose section
-    if (slideIndex === 6) return 'projects'
-    if (slideIndex >= 7 && slideIndex <= 10) return 'lessons' // lesson slides
-    if (slideIndex === 11) return 'lessons' // engagement
-    if (slideIndex === 12) return 'lessons' // futures
-    if (slideIndex === 13) return 'quiz'
-    if (slideIndex === 14) return 'quiz' // connect
+    if (slideIndex >= 1 && slideIndex <= 5) return 'definitions'  // WELL DEFINED, BLACK, QUEER, MALE, OUT
+    if (slideIndex === 6) return 'lessons'  // prose section
+    if (slideIndex === 7) return 'projects'
+    if (slideIndex >= 8 && slideIndex <= 11) return 'lessons' // lesson slides
+    if (slideIndex === 12) return 'lessons' // engagement
+    if (slideIndex === 13) return 'lessons' // futures
+    if (slideIndex === 14) return 'quiz'
+    if (slideIndex === 15) return 'quiz' // connect
     return 'home'
   }
 
@@ -494,17 +513,19 @@ const FullPageScrollytelling: React.FC = () => {
           }
         })
 
-        // Parallax background effects
-        gsap.to(`${slideElement} .bg-image`, {
-          yPercent: -30,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: slideElement,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: true
-          }
-        })
+        // Parallax background effects - only if slide has background image
+        if (slide.bgImage) {
+          gsap.to(`${slideElement} .bg-image`, {
+            yPercent: -30,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: slideElement,
+              start: 'top bottom',
+              end: 'bottom top',
+              scrub: true
+            }
+          })
+        }
       })
     }, containerRef)
 
@@ -516,7 +537,7 @@ const FullPageScrollytelling: React.FC = () => {
     const slideElement = `.slide-${slideIndex}`
 
     // Subtle glitch effect that preserves legibility
-    if (slideIndex === 1 || slideIndex === 3) { // BLACK and MALE slides
+    if (slideIndex === 2 || slideIndex === 4) { // BLACK and MALE slides
       gsap.to(`${slideElement} .glitch-text`, {
         textShadow: '2px 0 #ff0000, -2px 0 #00ff00',
         duration: 0.05,
@@ -527,14 +548,17 @@ const FullPageScrollytelling: React.FC = () => {
       })
     }
 
-    // Text overflow effects
-    gsap.from(`${slideElement} .overflow-text`, {
-      x: -50,
-      opacity: 0,
-      duration: 0.8,
-      stagger: 0.2,
-      ease: 'back.out(1.7)'
-    })
+    // Text overflow effects - only animate if elements exist
+    const overflowElements = document.querySelectorAll(`${slideElement} .overflow-text`)
+    if (overflowElements.length > 0) {
+      gsap.from(`${slideElement} .overflow-text`, {
+        x: -50,
+        opacity: 0,
+        duration: 0.8,
+        stagger: 0.2,
+        ease: 'back.out(1.7)'
+      })
+    }
   }
 
   const scrollToSlide = (slideIndex: number) => {
@@ -580,17 +604,28 @@ const FullPageScrollytelling: React.FC = () => {
         totalSlides={slides.length}
       />
       
-      <div ref={containerRef} className="relative pt-20">
+      {/* BLKOUT Pride 2025 Logo Header */}
+      <div className="bg-black py-4 relative z-50">
+        <div className="flex justify-center">
+          <img 
+            src="/images/BLKOUTpride2025.png" 
+            alt="BLKOUT Pride 2025" 
+            className="h-12 md:h-16 w-auto"
+          />
+        </div>
+      </div>
+
+      <div ref={containerRef} className="relative">
         {slides.map((slide, index) => (
           <div
             key={slide.id}
-            className={`slide-${index} relative min-h-screen flex items-center justify-center overflow-hidden glitch-trigger`}
+            className={`slide-${index} relative h-screen flex items-center justify-center overflow-hidden glitch-trigger`}
             style={{
-              backgroundAttachment: 'fixed',
               backgroundColor: index % 2 === 0 ? '#000000' : '#111111'
             }}
           >
-            {/* Story-Focused Background Image - More Prominent */}
+            
+            {/* Background Image */}
             {slide.bgImage && (
               <div 
                 className="bg-image absolute inset-0"
@@ -599,24 +634,30 @@ const FullPageScrollytelling: React.FC = () => {
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                   backgroundRepeat: 'no-repeat',
-                  filter: `
-                    contrast(1.3) 
-                    brightness(1.1) 
-                    saturate(1.4)
-                  `,
-                  opacity: 0.95,
-                  mixBlendMode: 'multiply'
+                  filter: slide.type === 'definition' 
+                    ? 'brightness(1.0) contrast(1.05) saturate(1.1)' 
+                    : 'contrast(1.3) brightness(1.1) saturate(1.4)',
+                  opacity: slide.type === 'definition' ? 1.0 : 0.95,
+                  mixBlendMode: slide.type === 'definition' ? 'normal' : 'multiply',
+                  border: slide.type === 'definition' ? '3px solid lime' : 'none' // DEBUG: green border for definition slides
                 }}
               />
             )}
 
-            {/* Reduced overlay for better image visibility */}
-            {slide.bgImage && (
+            {/* DEBUG: Show slide info for definition slides */}
+            {slide.type === 'definition' && (
+              <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-2 text-sm z-50 rounded">
+                DEF: {slide.id} | BG: {slide.bgImage ? 'YES' : 'NO'}
+              </div>
+            )}
+
+            {/* Reduced overlay for better image visibility - skip for definition slides */}
+            {slide.bgImage && slide.type !== 'definition' && (
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/30" />
             )}
             
-            {/* Additional Image Overlay for Eclectic Effect */}
-            {slide.bgImage && index > 3 && (
+            {/* Additional Image Overlay for Eclectic Effect - skip for definition slides */}
+            {slide.bgImage && index > 3 && slide.type !== 'definition' && (
               <div 
                 className="absolute inset-0 opacity-10"
                 style={{
@@ -629,101 +670,125 @@ const FullPageScrollytelling: React.FC = () => {
               />
             )}
 
-            {/* VHS Overlay */}
-            <div className="vhs-lines absolute inset-0 opacity-20" />
+            {/* VHS Overlay - skip for definition slides */}
+            {slide.type !== 'definition' && (
+              <div className="vhs-lines absolute inset-0 opacity-20" />
+            )}
 
-            {/* Content */}
-            <div className={`relative z-10 w-full max-w-6xl mx-auto px-6 text-center ${slide.font}`}>
-              {slide.type === 'video' ? (
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1, delay: 0.3 }}
-                  className="space-y-12 w-full max-w-5xl mx-auto"
+            {/* Video Slide - Full Width */}
+            {slide.type === 'video' && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1.2, ease: "easeOut" }}
+                className="absolute inset-0 z-10"
+              >
+
+                {/* Full-width Welcome Video */}
+                <video
+                  className="absolute inset-0 w-full h-full object-cover"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  style={{
+                    filter: 'brightness(1.0) contrast(1.05) saturate(1.1)'
+                  }}
                 >
-                  <div className="text-center">
-                    <h1 className="text-5xl md:text-7xl font-bold text-white font-mono tracking-wider">
-                      {slide.title}
-                    </h1>
-                  </div>
-                  
-                  <div className="w-full">
-                    <WelcomeVideo />
-                  </div>
-                </motion.div>
-              ) : slide.type === 'definition' ? (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-screen w-full">
-                  {/* Text Content */}
-                  <motion.div
-                    initial={{ opacity: 0, x: -50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 1 }}
-                    viewport={{ once: false }}
-                    className="space-y-8 lg:order-1"
-                  >
-                    <div className="space-y-4">
-                      <h1 className={`text-5xl md:text-7xl font-black mb-6 ${
-                        index === 1 ? 'text-red-400' : 
-                        index === 2 ? 'text-purple-400' :
-                        index === 3 ? 'text-blue-400' : 'text-green-400'
-                      }`}>
-                        {slide.title}
-                      </h1>
-                      {slide.subtitle && (
-                        <p className="text-base md:text-lg text-gray-300 uppercase tracking-wider font-mono">
-                          {slide.subtitle}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="space-y-6 max-w-lg">
-                      {Array.isArray(slide.content) && slide.content.map((item: any, itemIndex: number) => (
-                        <motion.div
-                          key={itemIndex}
-                          initial={{ opacity: 0, y: 30 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.6, delay: itemIndex * 0.2 }}
-                          viewport={{ once: false }}
-                          className={`${item.style} text-base md:text-lg text-white leading-relaxed bg-black/60 p-4 rounded-lg backdrop-blur-sm overflow-text`}
-                        >
-                          {item.text}
-                        </motion.div>
-                      ))}
-                    </div>
-                  </motion.div>
-
-                  {/* Image Content - More Prominent */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 1, delay: 0.3 }}
-                    viewport={{ once: false }}
-                    className="lg:order-2 relative"
-                  >
-                    {slide.bgImage && (
-                      <div 
-                        className="aspect-square bg-white/5 rounded-2xl p-8 backdrop-blur-sm border border-white/20 shadow-2xl"
-                        style={{
-                          backgroundImage: `url(${slide.bgImage})`,
-                          backgroundSize: 'cover',
-                          backgroundPosition: 'center',
-                          filter: 'contrast(1.1) brightness(1.1) saturate(1.2)'
-                        }}
-                      >
-                        {/* Optional overlay text for context */}
-                        <div className="absolute bottom-4 left-4 right-4 bg-black/60 p-3 rounded-lg backdrop-blur-sm">
-                          <p className="text-xs text-gray-300 font-mono">
-                            {index === 1 && "Aaron Douglas Liberation Series"}
-                            {index === 2 && "Birds Flying in Formation"}
-                            {index === 3 && "Black Men as Chess Pieces"}
-                            {index === 4 && "TV Screens, Same Image"}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                  </motion.div>
+                  <source src="/images/Welcome Vid Final.webm" type="video/webm" />
+                  <source src="/Welcomevid.webm" type="video/webm" />
+                  <source src="/FIST RETURNS.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+                
+                {/* Hidden text for accessibility */}
+                <div className="sr-only">
+                  <h1>Welcome Video</h1>
                 </div>
-              ) : slide.type === 'prose' ? (
+              </motion.div>
+            )}
+
+            {/* Definition Slide - Pure Image Display */}
+            {slide.type === 'definition' && (
+              <div className="sr-only">
+                <span>{slide.title}</span>
+              </div>
+            )}
+
+            {/* Fist Formation Slide - Cards to Fist Animation */}
+            {slide.type === 'fist-formation' && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ duration: 1 }}
+                viewport={{ once: false }}
+                className="absolute inset-0 z-10"
+              >
+                {/* Background Video */}
+                {slide.bgVideo && (
+                  <video
+                    className="absolute inset-0 w-full h-full object-cover opacity-30"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                  >
+                    <source src={slide.bgVideo} type="video/mp4" />
+                  </video>
+                )}
+
+                {/* Cards Container */}
+                <div className="relative w-full h-full flex items-center justify-center">
+                  {/* Initial: Horizontal Scroll Layout */}
+                  <div className="cards-container flex space-x-8 overflow-x-auto no-scrollbar">
+                    {slide.cards?.map((card: any, cardIndex: number) => (
+                      <motion.div
+                        key={card.id}
+                        className="card flex-shrink-0 w-64 h-80 rounded-lg p-6 text-white relative overflow-hidden"
+                        style={{ backgroundColor: card.color }}
+                        initial={{ x: 0, y: 0, rotate: 0 }}
+                        whileInView={{
+                          x: getFistPosition(cardIndex).x,
+                          y: getFistPosition(cardIndex).y,
+                          rotate: getFistPosition(cardIndex).rotation,
+                          scale: 0.8
+                        }}
+                        transition={{
+                          delay: cardIndex * 0.3,
+                          duration: 1.5,
+                          ease: "easeInOut"
+                        }}
+                        viewport={{ once: false }}
+                      >
+                        <div className="relative z-10">
+                          <h3 className="text-xl font-bold mb-4">{card.project}</h3>
+                          <p className="text-sm opacity-90">{card.story}</p>
+                        </div>
+                        
+                        {/* Card gradient overlay */}
+                        <div 
+                          className="absolute inset-0 opacity-20"
+                          style={{
+                            background: `linear-gradient(135deg, ${card.color}, transparent)`
+                          }}
+                        />
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Hidden text for accessibility */}
+                <div className="sr-only">
+                  <h1>{slide.title}</h1>
+                  <p>{slide.subtitle}</p>
+                </div>
+              </motion.div>
+            )}
+
+            {/* Content - Skip for definition slides as they're pure images */}
+            {slide.type !== 'definition' && slide.type !== 'video' && slide.type !== 'fist-formation' && (
+              <div className={`relative z-10 w-full max-w-6xl mx-auto px-6 text-center ${slide.font}`}>
+              {slide.type === 'prose' ? (
                 <motion.div
                   initial={{ opacity: 0, y: 50 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -1001,7 +1066,8 @@ const FullPageScrollytelling: React.FC = () => {
                   </p>
                 </motion.div>
               )}
-            </div>
+              </div>
+            )}
 
             {/* Slide Navigation */}
             {index < slides.length - 1 && (

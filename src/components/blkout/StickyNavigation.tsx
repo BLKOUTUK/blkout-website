@@ -80,11 +80,14 @@ const StickyNavigation: React.FC = () => {
           {/* Logo */}
           <motion.div
             whileHover={{ scale: 1.05 }}
-            className="text-xl text-white cursor-pointer font-black"
-            style={{ fontFamily: 'Archivo Black, sans-serif' }}
+            className="cursor-pointer"
             onClick={() => scrollToSection('hero')}
           >
-            BLKOUTUK
+            <img 
+              src="/images/BLKOUTpride2025.png" 
+              alt="BLKOUT Pride 2025" 
+              className="h-8 w-auto"
+            />
           </motion.div>
 
           {/* Navigation Items */}
