@@ -613,7 +613,7 @@ const FullPageScrollytelling: React.FC = () => {
             key={slide.id}
             className={`slide-${index} relative h-screen flex items-center justify-center overflow-hidden glitch-trigger`}
             style={{
-              backgroundColor: index % 2 === 0 ? '#000000' : '#111111'
+              backgroundColor: '#000000'
             }}
           >
             
@@ -623,7 +623,7 @@ const FullPageScrollytelling: React.FC = () => {
                 className="bg-image absolute inset-0"
                 style={{
                   backgroundImage: `url(${slide.bgImage})`,
-                  backgroundSize: 'cover',
+                  backgroundSize: slide.type === 'definition' ? 'contain' : 'cover',
                   backgroundPosition: 'center',
                   backgroundRepeat: 'no-repeat',
                   filter: slide.type === 'definition' 
