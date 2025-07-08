@@ -3,8 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ChevronDown, ChevronUp } from 'lucide-react'
-import UniformHeader from './UniformHeader'
-import TVConsole from './TVConsole'
+import StickyNavigation from './StickyNavigation'
 import RemoteControl from './RemoteControl'
 import WelcomeVideo from './WelcomeVideo'
 
@@ -589,14 +588,7 @@ const FullPageScrollytelling: React.FC = () => {
 
   return (
     <>
-      <UniformHeader 
-        currentSection={currentSection}
-        onNavigate={(section) => {
-          // Navigate to first slide of each section
-          const sectionMap = { home: 0, definitions: 1, projects: 6, lessons: 5, quiz: 13 }
-          scrollToSlide(sectionMap[section as keyof typeof sectionMap] || 0)
-        }}
-      />
+      <StickyNavigation />
       
       <RemoteControl 
         onNavigate={scrollToSlide}
@@ -639,16 +631,15 @@ const FullPageScrollytelling: React.FC = () => {
                     : 'contrast(1.3) brightness(1.1) saturate(1.4)',
                   opacity: slide.type === 'definition' ? 1.0 : 0.95,
                   mixBlendMode: slide.type === 'definition' ? 'normal' : 'multiply',
-                  border: slide.type === 'definition' ? '3px solid lime' : 'none' // DEBUG: green border for definition slides
+                  border: 'none'
                 }}
               />
             )}
 
-            {/* DEBUG: Show slide info for definition slides */}
-            {slide.type === 'definition' && (
-              <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-2 text-sm z-50 rounded">
-                DEF: {slide.id} | BG: {slide.bgImage ? 'YES' : 'NO'}
-              </div>
+
+            {/* Text readability overlay for definition slides */}
+            {slide.bgImage && slide.type === 'definition' && (
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/40" />
             )}
 
             {/* Reduced overlay for better image visibility - skip for definition slides */}
@@ -708,11 +699,44 @@ const FullPageScrollytelling: React.FC = () => {
               </motion.div>
             )}
 
-            {/* Definition Slide - Pure Image Display */}
+            {/* Definition Slide - Content over Background */}
             {slide.type === 'definition' && (
-              <div className="sr-only">
-                <span>{slide.title}</span>
-              </div>
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1 }}
+                viewport={{ once: false }}
+                className="relative z-10 w-full max-w-6xl mx-auto px-6 text-center"
+              >
+                <div className="space-y-8">
+                  <div className="text-center mb-12">
+                    <h1 className={`text-4xl md:text-6xl font-bold text-white mb-4 ${slide.font}`}>
+                      {slide.title}
+                    </h1>
+                    {slide.subtitle && (
+                      <p className="text-lg md:text-xl text-gray-300 uppercase tracking-wider font-mono">
+                        {slide.subtitle}
+                      </p>
+                    )}
+                  </div>
+                  
+                  {/* Definition Content */}
+                  <div className="space-y-6">
+                    {Array.isArray(slide.content) && slide.content.map((item: any, index: number) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.8, delay: index * 0.2 }}
+                        viewport={{ once: false }}
+                        className={`${item.style} overflow-text`}
+                      >
+                        {item.text}
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
             )}
 
             {/* Fist Formation Slide - Cards to Fist Animation */}
