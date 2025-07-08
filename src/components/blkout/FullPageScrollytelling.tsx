@@ -597,12 +597,12 @@ const FullPageScrollytelling: React.FC = () => {
       />
       
       {/* BLKOUT Pride 2025 Logo Header */}
-      <div className="bg-black py-4 relative z-50">
+      <div className="bg-black py-8 relative z-50">
         <div className="flex justify-center">
           <img 
             src="/images/BLKOUTpride2025.png" 
             alt="BLKOUT Pride 2025" 
-            className="h-12 md:h-16 w-auto"
+            className="w-1/3 max-w-md h-auto"
           />
         </div>
       </div>
