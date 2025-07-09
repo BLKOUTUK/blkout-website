@@ -25,7 +25,7 @@ const HorizontalProjects: React.FC = () => {
     {
       id: 3,
       type: 'image',
-      src: '/images/blkoutcircleanimation.gif',
+      src: '/images/blkoutcircleANIMATION.gif',
       title: 'BLKOUT CIRCLE'
     }
   ]
