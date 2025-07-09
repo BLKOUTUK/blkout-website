@@ -6,37 +6,55 @@ const SimpleScrollytelling: React.FC = () => {
     {
       id: 'welcome-video',
       type: 'video',
-      videoSrc: '/images/Welcome Vid Final.webm'
+      videoSrc: '/images/welcomevidfinal.webm'
+    },
+    {
+      id: 'who',
+      type: 'image',
+      imageSrc: '/images/WHO.png',
+      title: 'WHO'
     },
     {
       id: 'well-defined',
       type: 'image',
-      imageSrc: '/images/WELLDEF2 (Youtube Banner).png',
+      imageSrc: '/images/welldef2.png',
       title: 'WELL DEFINED'
     },
     {
       id: 'black',
       type: 'image',
-      imageSrc: '/images/BLACK.png',
+      imageSrc: '/images/black2.png',
       title: 'BLACK?'
     },
     {
       id: 'queer',
       type: 'image',
-      imageSrc: '/images/queer -.png',
+      imageSrc: '/images/queer2.png',
       title: 'QUEER'
     },
     {
       id: 'male',
       type: 'image',
-      imageSrc: '/images/men-.png',
+      imageSrc: '/images/men2.png',
       title: 'MALE*'
     },
     {
       id: 'out',
       type: 'image',
-      imageSrc: '/images/out -.png',
+      imageSrc: '/images/out2.png',
       title: 'OUT'
+    },
+    {
+      id: 'work',
+      type: 'image',
+      imageSrc: '/images/the work.png',
+      title: 'THE WORK'
+    },
+    {
+      id: 'liberation',
+      type: 'image',
+      imageSrc: '/images/liberation.png',
+      title: 'LIBERATION'
     }
   ]
 
@@ -60,8 +78,8 @@ const SimpleScrollytelling: React.FC = () => {
             key={slide.id}
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: false, margin: "-20%" }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+            viewport={{ once: false, margin: "-40%", amount: 0.5 }}
             className="relative min-h-screen w-full flex items-center justify-center bg-black"
           >
             {slide.type === 'video' ? (
@@ -76,6 +94,26 @@ const SimpleScrollytelling: React.FC = () => {
                   <source src={slide.videoSrc} type="video/webm" />
                   Your browser does not support the video tag.
                 </video>
+                
+                {/* Rising text animations during welcome video */}
+                <div className="absolute inset-0 pointer-events-none">
+                  <motion.img 
+                    src="/images/USALL.png"
+                    initial={{ y: "100vh", opacity: 0 }}
+                    animate={{ y: "50vh", opacity: 1 }}
+                    transition={{ delay: 2, duration: 3, ease: "easeOut" }}
+                    className="absolute left-1/4 transform -translate-x-1/2 -translate-y-1/2"
+                    style={{ top: "50%", left: "25%" }}
+                  />
+                  <motion.img 
+                    src="/images/ALLOFUS.png" 
+                    initial={{ y: "100vh", opacity: 0 }}
+                    animate={{ y: "50vh", opacity: 1 }}
+                    transition={{ delay: 4, duration: 3, ease: "easeOut" }}
+                    className="absolute right-1/4 transform translate-x-1/2 -translate-y-1/2"
+                    style={{ top: "50%", right: "25%" }}
+                  />
+                </div>
               </div>
             ) : (
               <div className="w-full h-screen relative flex items-center justify-center">
