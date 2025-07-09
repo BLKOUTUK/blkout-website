@@ -110,34 +110,32 @@ const SimpleScrollytelling: React.FC = () => {
                   <motion.img 
                     src="/images/USALL.png"
                     initial={{ y: "100%", opacity: 0 }}
-                    whileInView={{ 
+                    animate={{ 
                       y: ["100%", "0%", "0%", "-100%"],
                       opacity: [0, 1, 1, 0]
                     }}
                     transition={{ 
                       duration: 6,
                       times: [0, 0.4, 0.7, 1],
-                      delay: 0,
+                      delay: 15,
                       ease: "easeOut"
                     }}
-                    viewport={{ once: false, margin: "-20%" }}
-                    className="absolute left-1/4 top-1/2 transform -translate-x-1/2 -translate-y-1/2 max-w-xs"
+                    className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1/2 max-w-md"
                   />
                   <motion.img 
                     src="/images/ALLOFUS.png" 
                     initial={{ y: "100%", opacity: 0 }}
-                    whileInView={{ 
+                    animate={{ 
                       y: ["100%", "0%", "0%", "-100%"],
                       opacity: [0, 1, 1, 0]
                     }}
                     transition={{ 
                       duration: 6,
                       times: [0, 0.4, 0.7, 1],
-                      delay: 3,
+                      delay: 20,
                       ease: "easeOut"
                     }}
-                    viewport={{ once: false, margin: "-20%" }}
-                    className="absolute right-1/4 top-1/2 transform translate-x-1/2 -translate-y-1/2 max-w-xs"
+                    className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1/2 max-w-md"
                   />
                 </div>
               </div>
