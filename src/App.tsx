@@ -2,10 +2,10 @@ import { motion } from 'framer-motion'
 import { ArrowRight, Users, Heart, Zap } from 'lucide-react'
 import { SITE_CONFIG, COMMUNITY_VALUES } from './lib/constants'
 import IvorChatbot from './components/blkout/IvorChatbot'
-import SimpleScrollytelling from './components/blkout/SimpleScrollytelling'
+import DebugScrollytelling from './components/blkout/DebugScrollytelling'
 
 function App() {
-  return <SimpleScrollytelling />
+  return <DebugScrollytelling />
 }
 
 export default App
