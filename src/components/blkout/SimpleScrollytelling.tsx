@@ -6,55 +6,64 @@ const SimpleScrollytelling: React.FC = () => {
     {
       id: 'welcome-video',
       type: 'video',
-      videoSrc: '/images/welcomevidfinal.webm'
+      videoSrc: '/images/welcomevidfinal.webm',
+      height: '100vh'
     },
     {
       id: 'who',
       type: 'image',
       imageSrc: '/images/WHO.png',
-      title: 'WHO'
+      title: 'WHO',
+      height: '40vh'
     },
     {
       id: 'well-defined',
       type: 'image',
       imageSrc: '/images/welldef2.png',
-      title: 'WELL DEFINED'
+      title: 'WELL DEFINED',
+      height: '100vh'
     },
     {
       id: 'black',
       type: 'image',
       imageSrc: '/images/black2.png',
-      title: 'BLACK?'
+      title: 'BLACK?',
+      height: '100vh'
     },
     {
       id: 'queer',
       type: 'image',
       imageSrc: '/images/queer2.png',
-      title: 'QUEER'
+      title: 'QUEER',
+      height: '100vh'
     },
     {
       id: 'male',
       type: 'image',
       imageSrc: '/images/men2.png',
-      title: 'MALE*'
+      title: 'MALE*',
+      height: '100vh'
     },
     {
       id: 'out',
       type: 'image',
       imageSrc: '/images/out2.png',
-      title: 'OUT'
+      title: 'OUT',
+      height: '100vh'
     },
     {
       id: 'work',
       type: 'image',
       imageSrc: '/images/the work.png',
-      title: 'THE WORK'
+      title: 'THE WORK',
+      height: '40vh'
     },
     {
       id: 'liberation',
       type: 'image',
       imageSrc: '/images/liberation.png',
-      title: 'LIBERATION'
+      title: 'LIBERATION',
+      height: '100vh'
     }
   ]
 
@@ -80,7 +89,8 @@ const SimpleScrollytelling: React.FC = () => {
             whileInView={{ opacity: 1 }}
             transition={{ duration: 1.5, ease: "easeOut" }}
             viewport={{ once: false, margin: "-10%", amount: 0.3 }}
-            className="relative min-h-screen w-full flex items-center justify-center bg-black"
+            className="relative w-full flex items-center justify-center bg-black"
+            style={{ minHeight: slide.height || '100vh' }}
           >
             {slide.type === 'video' ? (
               <div className="w-full h-screen relative">
@@ -100,23 +110,39 @@ const SimpleScrollytelling: React.FC = () => {
                   <motion.img 
                     src="/images/USALL.png"
                     initial={{ y: "100vh", opacity: 0 }}
-                    animate={{ y: "50vh", opacity: 1 }}
-                    transition={{ delay: 2, duration: 3, ease: "easeOut" }}
-                    className="absolute left-1/4 transform -translate-x-1/2 -translate-y-1/2"
-                    style={{ top: "50%", left: "25%" }}
+                    animate={{ 
+                      y: ["100vh", "50vh", "50vh", "-10vh"],
+                      opacity: [0, 1, 1, 0]
+                    }}
+                    transition={{ 
+                      duration: 6,
+                      times: [0, 0.4, 0.7, 1],
+                      delay: 2,
+                      ease: "easeOut"
+                    }}
+                    className="absolute left-1/4 transform -translate-x-1/2"
+                    style={{ left: "25%" }}
                   />
                   <motion.img 
                     src="/images/ALLOFUS.png" 
                     initial={{ y: "100vh", opacity: 0 }}
-                    animate={{ y: "50vh", opacity: 1 }}
-                    transition={{ delay: 4, duration: 3, ease: "easeOut" }}
-                    className="absolute right-1/4 transform translate-x-1/2 -translate-y-1/2"
-                    style={{ top: "50%", right: "25%" }}
+                    animate={{ 
+                      y: ["100vh", "50vh", "50vh", "-10vh"],
+                      opacity: [0, 1, 1, 0]
+                    }}
+                    transition={{ 
+                      duration: 6,
+                      times: [0, 0.4, 0.7, 1],
+                      delay: 5,
+                      ease: "easeOut"
+                    }}
+                    className="absolute right-1/4 transform translate-x-1/2"
+                    style={{ right: "25%" }}
                   />
                 </div>
               </div>
             ) : (
-              <div className="w-full h-screen relative flex items-center justify-center">
+              <div className="w-full relative flex items-center justify-center" style={{ height: slide.height || '100vh' }}>
                 <img
                   src={slide.imageSrc}
                   alt={slide.title}
