@@ -106,12 +106,12 @@ const SimpleScrollytelling: React.FC = () => {
                 </video>
                 
                 {/* Rising text animations during welcome video */}
-                <div className="absolute inset-0 pointer-events-none">
+                <div className="absolute inset-0 pointer-events-none z-10">
                   <motion.img 
                     src="/images/USALL.png"
-                    initial={{ y: "100vh", opacity: 0 }}
+                    initial={{ y: "100%", opacity: 0 }}
                     whileInView={{ 
-                      y: ["100vh", "50vh", "50vh", "-10vh"],
+                      y: ["100%", "0%", "0%", "-100%"],
                       opacity: [0, 1, 1, 0]
                     }}
                     transition={{ 
@@ -121,14 +121,13 @@ const SimpleScrollytelling: React.FC = () => {
                       ease: "easeOut"
                     }}
                     viewport={{ once: false, margin: "-20%" }}
-                    className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2"
-                    style={{ left: "25%" }}
+                    className="absolute left-1/4 top-1/2 transform -translate-x-1/2 -translate-y-1/2 max-w-xs"
                   />
                   <motion.img 
                     src="/images/ALLOFUS.png" 
-                    initial={{ y: "100vh", opacity: 0 }}
+                    initial={{ y: "100%", opacity: 0 }}
                     whileInView={{ 
-                      y: ["100vh", "50vh", "50vh", "-10vh"],
+                      y: ["100%", "0%", "0%", "-100%"],
                       opacity: [0, 1, 1, 0]
                     }}
                     transition={{ 
@@ -138,8 +137,7 @@ const SimpleScrollytelling: React.FC = () => {
                       ease: "easeOut"
                     }}
                     viewport={{ once: false, margin: "-20%" }}
-                    className="absolute right-1/2 top-1/2 transform translate-x-1/2 -translate-y-1/2"
-                    style={{ right: "25%" }}
+                    className="absolute right-1/4 top-1/2 transform translate-x-1/2 -translate-y-1/2 max-w-xs"
                   />
                 </div>
               </div>
