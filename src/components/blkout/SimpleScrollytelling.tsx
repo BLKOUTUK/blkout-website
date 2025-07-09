@@ -1,5 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
+import HorizontalProjects from './HorizontalProjects'
 
 const SimpleScrollytelling: React.FC = () => {
   const slides = [
@@ -155,6 +156,9 @@ const SimpleScrollytelling: React.FC = () => {
             </div>
           </motion.section>
         ))}
+        
+        {/* Horizontal Projects Section */}
+        <HorizontalProjects />
       </div>
     </div>
   )
