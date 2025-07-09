@@ -79,7 +79,7 @@ const SimpleScrollytelling: React.FC = () => {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 1.5, ease: "easeOut" }}
-            viewport={{ once: false, margin: "-40%", amount: 0.5 }}
+            viewport={{ once: false, margin: "-10%", amount: 0.3 }}
             className="relative min-h-screen w-full flex items-center justify-center bg-black"
           >
             {slide.type === 'video' ? (
