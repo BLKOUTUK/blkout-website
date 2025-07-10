@@ -10,25 +10,25 @@ import { SITE_CONFIG } from '../lib/constants'
  */
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-white">
-      {/* Clean Header */}
-      <header className="border-b border-gray-100">
+    <div className="min-h-screen bg-indigo-950">
+      {/* Luxe Header */}
+      <header className="border-b border-indigo-800">
         <div className="max-w-7xl mx-auto px-8 py-6">
           <div className="flex items-center justify-between">
-            <Link to="/" className="text-black font-bold text-xl">
+            <Link to="/" className="text-white font-bold text-xl tracking-wide">
               {SITE_CONFIG.name}
             </Link>
             <nav className="hidden md:flex space-x-8">
-              <Link to="/movement" className="text-gray-600 hover:text-black transition-colors font-medium">
+              <Link to="/movement" className="text-indigo-200 hover:text-white transition-colors font-medium tracking-wide">
                 Movement
               </Link>
-              <Link to="/media" className="text-gray-600 hover:text-black transition-colors font-medium">
+              <Link to="/media" className="text-indigo-200 hover:text-white transition-colors font-medium tracking-wide">
                 Media
               </Link>
-              <Link to="/events" className="text-gray-600 hover:text-black transition-colors font-medium">
+              <Link to="/events" className="text-indigo-200 hover:text-white transition-colors font-medium tracking-wide">
                 Events
               </Link>
-              <Link to="/resources" className="text-gray-600 hover:text-black transition-colors font-medium">
+              <Link to="/resources" className="text-indigo-200 hover:text-white transition-colors font-medium tracking-wide">
                 Resources
               </Link>
             </nav>
@@ -38,24 +38,25 @@ export default function HomePage() {
 
       {/* Main Bento Layout */}
       <main className="max-w-7xl mx-auto px-8 py-16">
-        {/* Welcome Section */}
+        {/* Welcome Section - Oversized Typography */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="mb-20"
         >
-          <h1 className="text-5xl md:text-7xl font-bold text-black mb-6 leading-tight">
-            Welcome Back
+          <h1 className="text-6xl md:text-8xl lg:text-9xl font-black text-white mb-8 leading-none tracking-tight">
+            WELCOME
+            <span className="block text-pink-400">BACK</span>
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl leading-relaxed">
+          <p className="text-2xl text-indigo-200 max-w-3xl leading-relaxed font-light">
             Your hub for community connection, movement building, and collective liberation.
           </p>
         </motion.div>
 
         {/* Bento Grid */}
         <div className="grid grid-cols-12 gap-8 mb-20">
-          {/* Large Movement Card */}
+          {/* Large Movement Card - Luminous Yellow Accent */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -64,20 +65,20 @@ export default function HomePage() {
           >
             <Link 
               to="/movement"
-              className="block bg-gray-50 rounded-2xl p-12 hover:bg-gray-100 transition-all group h-full"
+              className="block bg-indigo-900 rounded-2xl p-12 hover:bg-indigo-800 transition-all group h-full border-l-8 border-yellow-400"
             >
-              <BookOpen className="h-12 w-12 text-blkout-primary mb-8 group-hover:scale-105 transition-transform" />
-              <h2 className="text-3xl font-bold text-black mb-4">Movement Reports</h2>
-              <p className="text-gray-600 text-lg mb-8 leading-relaxed">
+              <BookOpen className="h-12 w-12 text-yellow-400 mb-8 group-hover:scale-105 transition-transform" />
+              <h2 className="text-3xl font-bold text-white mb-4 tracking-wide">Movement Reports</h2>
+              <p className="text-indigo-200 text-lg mb-8 leading-relaxed">
                 Quarterly analysis, strategic insights, and community building progress across the UK Black queer liberation movement.
               </p>
-              <div className="flex items-center text-blkout-primary font-medium">
+              <div className="flex items-center text-yellow-400 font-medium">
                 View Latest Reports <ArrowRight className="ml-2 h-5 w-5" />
               </div>
             </Link>
           </motion.div>
 
-          {/* Media Card */}
+          {/* Media Card - Cyan Accent */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -86,20 +87,21 @@ export default function HomePage() {
           >
             <Link 
               to="/media"
-              className="block bg-blkout-secondary/10 rounded-2xl p-8 hover:bg-blkout-secondary/20 transition-all group h-full"
+              className="block bg-indigo-900 rounded-2xl p-8 hover:bg-indigo-800 transition-all group h-full relative overflow-hidden"
             >
-              <MessageCircle className="h-10 w-10 text-blkout-secondary mb-6 group-hover:scale-105 transition-transform" />
-              <h3 className="text-xl font-bold text-black mb-3">Media Hub</h3>
-              <p className="text-gray-600 mb-6">
+              <div className="absolute top-0 right-0 w-16 h-16 bg-cyan-400 rounded-full -translate-y-4 translate-x-4"></div>
+              <MessageCircle className="h-10 w-10 text-cyan-400 mb-6 group-hover:scale-105 transition-transform" />
+              <h3 className="text-xl font-bold text-white mb-3 tracking-wide">Media Hub</h3>
+              <p className="text-indigo-200 mb-6">
                 Stories, newsroom, and community media
               </p>
-              <div className="flex items-center text-blkout-secondary font-medium">
+              <div className="flex items-center text-cyan-400 font-medium">
                 Explore <ArrowRight className="ml-2 h-4 w-4" />
               </div>
             </Link>
           </motion.div>
 
-          {/* Events Card */}
+          {/* Events Card - Tennis Ball Green Accent */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -108,20 +110,20 @@ export default function HomePage() {
           >
             <Link 
               to="/events"
-              className="block bg-blkout-accent/10 rounded-2xl p-8 hover:bg-blkout-accent/20 transition-all group h-full"
+              className="block bg-indigo-900 rounded-2xl p-8 hover:bg-indigo-800 transition-all group h-full border-t-4 border-lime-400"
             >
-              <Calendar className="h-10 w-10 text-blkout-accent mb-6 group-hover:scale-105 transition-transform" />
-              <h3 className="text-xl font-bold text-black mb-3">Community Events</h3>
-              <p className="text-gray-600 mb-6">
+              <Calendar className="h-10 w-10 text-lime-400 mb-6 group-hover:scale-105 transition-transform" />
+              <h3 className="text-xl font-bold text-white mb-3 tracking-wide">Community Events</h3>
+              <p className="text-indigo-200 mb-6">
                 Workshops, gatherings, and collective actions
               </p>
-              <div className="flex items-center text-blkout-accent font-medium">
+              <div className="flex items-center text-lime-400 font-medium">
                 See Calendar <ArrowRight className="ml-2 h-4 w-4" />
               </div>
             </Link>
           </motion.div>
 
-          {/* Resources Card */}
+          {/* Resources Card - Electric Pink Accent */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -130,14 +132,15 @@ export default function HomePage() {
           >
             <Link 
               to="/resources"
-              className="block bg-blkout-warm/10 rounded-2xl p-8 hover:bg-blkout-warm/20 transition-all group h-full"
+              className="block bg-indigo-900 rounded-2xl p-8 hover:bg-indigo-800 transition-all group h-full relative"
             >
-              <Users className="h-10 w-10 text-blkout-warm mb-6 group-hover:scale-105 transition-transform" />
-              <h3 className="text-xl font-bold text-black mb-3">Resources</h3>
-              <p className="text-gray-600 mb-6">
+              <div className="absolute bottom-0 left-0 w-full h-1 bg-pink-400"></div>
+              <Users className="h-10 w-10 text-pink-400 mb-6 group-hover:scale-105 transition-transform" />
+              <h3 className="text-xl font-bold text-white mb-3 tracking-wide">Resources</h3>
+              <p className="text-indigo-200 mb-6">
                 Knowledge base and community toolkit
               </p>
-              <div className="flex items-center text-blkout-warm font-medium">
+              <div className="flex items-center text-pink-400 font-medium">
                 Browse Tools <ArrowRight className="ml-2 h-4 w-4" />
               </div>
             </Link>
@@ -153,19 +156,19 @@ export default function HomePage() {
         >
           {/* Latest Report */}
           <div className="col-span-12 lg:col-span-7">
-            <div className="bg-gray-50 rounded-2xl p-10">
-              <h2 className="text-2xl font-bold text-black mb-8">Latest Movement Report</h2>
-              <div className="bg-white rounded-xl p-6">
-                <span className="inline-block bg-blkout-primary text-white text-xs px-3 py-1 rounded-full mb-4 font-medium">
+            <div className="bg-indigo-900 rounded-2xl p-10 border-l-4 border-yellow-400">
+              <h2 className="text-2xl font-bold text-white mb-8 tracking-wide">Latest Movement Report</h2>
+              <div className="bg-indigo-800 rounded-xl p-6">
+                <span className="inline-block bg-yellow-400 text-indigo-950 text-xs px-3 py-1 rounded-full mb-4 font-medium">
                   Q4 2024
                 </span>
-                <h4 className="text-lg font-semibold text-black mb-3">Community Building Progress</h4>
-                <p className="text-gray-600 mb-6 leading-relaxed">
+                <h4 className="text-lg font-semibold text-white mb-3">Community Building Progress</h4>
+                <p className="text-indigo-200 mb-6 leading-relaxed">
                   Quarterly analysis of cooperative ownership initiatives and community growth across the UK Black queer liberation movement.
                 </p>
                 <Link 
                   to="/movement/reports/q4-2024"
-                  className="inline-flex items-center text-blkout-primary font-medium hover:underline"
+                  className="inline-flex items-center text-yellow-400 font-medium hover:underline"
                 >
                   Read Full Report <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
@@ -175,25 +178,26 @@ export default function HomePage() {
 
           {/* Upcoming Events */}
           <div className="col-span-12 lg:col-span-5">
-            <div className="bg-white border border-gray-100 rounded-2xl p-8">
-              <h3 className="text-xl font-bold text-black mb-6">Upcoming Events</h3>
+            <div className="bg-indigo-900 rounded-2xl p-8 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-20 h-20 bg-lime-400 rounded-full -translate-y-6 translate-x-6"></div>
+              <h3 className="text-xl font-bold text-white mb-6 tracking-wide">Upcoming Events</h3>
               <div className="space-y-4">
-                <div className="border-l-4 border-blkout-secondary pl-4">
-                  <h4 className="font-medium text-black text-sm">Community Workshop</h4>
-                  <p className="text-gray-500 text-xs">Jan 15 • Cooperative ownership basics</p>
+                <div className="border-l-4 border-cyan-400 pl-4">
+                  <h4 className="font-medium text-white text-sm">Community Workshop</h4>
+                  <p className="text-indigo-200 text-xs">Jan 15 • Cooperative ownership basics</p>
                 </div>
-                <div className="border-l-4 border-blkout-accent pl-4">
-                  <h4 className="font-medium text-black text-sm">Movement Strategy</h4>
-                  <p className="text-gray-500 text-xs">Jan 20 • Monthly planning session</p>
+                <div className="border-l-4 border-pink-400 pl-4">
+                  <h4 className="font-medium text-white text-sm">Movement Strategy</h4>
+                  <p className="text-indigo-200 text-xs">Jan 20 • Monthly planning session</p>
                 </div>
-                <div className="border-l-4 border-blkout-warm pl-4">
-                  <h4 className="font-medium text-black text-sm">Digital Security</h4>
-                  <p className="text-gray-500 text-xs">Feb 1 • Online safety workshop</p>
+                <div className="border-l-4 border-yellow-400 pl-4">
+                  <h4 className="font-medium text-white text-sm">Digital Security</h4>
+                  <p className="text-indigo-200 text-xs">Feb 1 • Online safety workshop</p>
                 </div>
               </div>
               <Link 
                 to="/events"
-                className="inline-flex items-center text-blkout-primary font-medium mt-6 hover:underline"
+                className="inline-flex items-center text-lime-400 font-medium mt-6 hover:underline"
               >
                 View All Events <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
@@ -206,13 +210,15 @@ export default function HomePage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.6 }}
-          className="bg-black rounded-2xl p-12 text-center"
+          className="bg-black rounded-2xl p-12 text-center relative overflow-hidden"
         >
-          <h2 className="text-3xl font-bold text-white mb-4">Ready for Deeper Engagement?</h2>
-          <p className="text-gray-300 mb-8 text-lg max-w-2xl mx-auto leading-relaxed">
+          <div className="absolute top-0 left-0 w-32 h-32 bg-pink-400 rounded-full -translate-y-16 -translate-x-16"></div>
+          <div className="absolute bottom-0 right-0 w-24 h-24 bg-yellow-400 rounded-full translate-y-12 translate-x-12"></div>
+          <h2 className="text-4xl font-bold text-white mb-4 tracking-wide">Ready for Deeper Engagement?</h2>
+          <p className="text-indigo-200 mb-8 text-lg max-w-2xl mx-auto leading-relaxed">
             UK-based Black Queer Men can access our digital community platform for deeper connection and collaboration.
           </p>
-          <button className="bg-white text-black px-8 py-4 rounded-xl font-semibold hover:bg-gray-100 transition-colors">
+          <button className="bg-white text-black px-8 py-4 rounded-xl font-semibold hover:bg-cyan-400 hover:text-white transition-colors">
             Access BLKOUTHUB
           </button>
         </motion.div>
