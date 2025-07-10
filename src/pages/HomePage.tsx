@@ -56,7 +56,7 @@ export default function HomePage() {
 
         {/* Bento Grid */}
         <div className="grid grid-cols-12 gap-8 mb-20">
-          {/* Large Movement Card - Luminous Yellow Accent */}
+          {/* Large Media Card - Cyan Accent */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -64,21 +64,22 @@ export default function HomePage() {
             className="col-span-12 lg:col-span-8"
           >
             <Link 
-              to="/movement"
-              className="block bg-indigo-900 rounded-2xl p-12 hover:bg-indigo-800 transition-all group h-full border-l-8 border-yellow-400"
+              to="/media"
+              className="block bg-indigo-900 rounded-2xl p-12 hover:bg-indigo-800 transition-all group h-full border-l-8 border-cyan-400 relative overflow-hidden"
             >
-              <BookOpen className="h-12 w-12 text-yellow-400 mb-8 group-hover:scale-105 transition-transform" />
-              <h2 className="text-3xl font-bold text-white mb-4 tracking-wide">Movement Reports</h2>
+              <div className="absolute top-0 right-0 w-20 h-20 bg-cyan-400 rounded-full -translate-y-6 translate-x-6"></div>
+              <MessageCircle className="h-12 w-12 text-cyan-400 mb-8 group-hover:scale-105 transition-transform" />
+              <h2 className="text-3xl font-bold text-white mb-4 tracking-wide">What's Fresh</h2>
               <p className="text-indigo-200 text-lg mb-8 leading-relaxed">
-                Quarterly analysis, strategic insights, and community building progress across the UK Black queer liberation movement.
+                Your daily dose of stories, breaking news, and community voices. Because staying informed never felt this good.
               </p>
-              <div className="flex items-center text-yellow-400 font-medium">
-                View Latest Reports <ArrowRight className="ml-2 h-5 w-5" />
+              <div className="flex items-center text-cyan-400 font-medium">
+                Check What's New <ArrowRight className="ml-2 h-5 w-5" />
               </div>
             </Link>
           </motion.div>
 
-          {/* Media Card - Cyan Accent */}
+          {/* Movement Card - Yellow Accent */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -86,17 +87,16 @@ export default function HomePage() {
             className="col-span-12 lg:col-span-4"
           >
             <Link 
-              to="/media"
-              className="block bg-indigo-900 rounded-2xl p-8 hover:bg-indigo-800 transition-all group h-full relative overflow-hidden"
+              to="/movement"
+              className="block bg-indigo-900 rounded-2xl p-8 hover:bg-indigo-800 transition-all group h-full border-t-4 border-yellow-400"
             >
-              <div className="absolute top-0 right-0 w-16 h-16 bg-cyan-400 rounded-full -translate-y-4 translate-x-4"></div>
-              <MessageCircle className="h-10 w-10 text-cyan-400 mb-6 group-hover:scale-105 transition-transform" />
-              <h3 className="text-xl font-bold text-white mb-3 tracking-wide">Media Hub</h3>
+              <BookOpen className="h-10 w-10 text-yellow-400 mb-6 group-hover:scale-105 transition-transform" />
+              <h3 className="text-xl font-bold text-white mb-3 tracking-wide">Movement Intel</h3>
               <p className="text-indigo-200 mb-6">
-                Stories, newsroom, and community media
+                The strategic insights you need to stay ahead
               </p>
-              <div className="flex items-center text-cyan-400 font-medium">
-                Explore <ArrowRight className="ml-2 h-4 w-4" />
+              <div className="flex items-center text-yellow-400 font-medium">
+                Get Briefed <ArrowRight className="ml-2 h-4 w-4" />
               </div>
             </Link>
           </motion.div>
@@ -113,12 +113,12 @@ export default function HomePage() {
               className="block bg-indigo-900 rounded-2xl p-8 hover:bg-indigo-800 transition-all group h-full border-t-4 border-lime-400"
             >
               <Calendar className="h-10 w-10 text-lime-400 mb-6 group-hover:scale-105 transition-transform" />
-              <h3 className="text-xl font-bold text-white mb-3 tracking-wide">Community Events</h3>
+              <h3 className="text-xl font-bold text-white mb-3 tracking-wide">Where We Connect</h3>
               <p className="text-indigo-200 mb-6">
-                Workshops, gatherings, and collective actions
+                Real spaces, real faces. The gatherings that actually matter.
               </p>
               <div className="flex items-center text-lime-400 font-medium">
-                See Calendar <ArrowRight className="ml-2 h-4 w-4" />
+                See What's On <ArrowRight className="ml-2 h-4 w-4" />
               </div>
             </Link>
           </motion.div>
@@ -136,12 +136,12 @@ export default function HomePage() {
             >
               <div className="absolute bottom-0 left-0 w-full h-1 bg-pink-400"></div>
               <Users className="h-10 w-10 text-pink-400 mb-6 group-hover:scale-105 transition-transform" />
-              <h3 className="text-xl font-bold text-white mb-3 tracking-wide">Resources</h3>
+              <h3 className="text-xl font-bold text-white mb-3 tracking-wide">Your Toolkit</h3>
               <p className="text-indigo-200 mb-6">
-                Knowledge base and community toolkit
+                Everything you need to level up. We've got you covered.
               </p>
               <div className="flex items-center text-pink-400 font-medium">
-                Browse Tools <ArrowRight className="ml-2 h-4 w-4" />
+                Get Equipped <ArrowRight className="ml-2 h-4 w-4" />
               </div>
             </Link>
           </motion.div>
