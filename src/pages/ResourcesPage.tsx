@@ -1,7 +1,7 @@
 import React from 'react'
 import { Routes, Route, Link, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Book, Tool, Guide } from 'lucide-react'
+import { ArrowLeft, Book, Wrench, FileText } from 'lucide-react'
 
 /**
  * ResourcesPage - Knowledge base, toolkit, and community guides
@@ -113,7 +113,7 @@ export default function ResourcesPage() {
                 to="/resources/toolkit"
                 className="block bg-white/10 backdrop-blur-sm rounded-lg p-8 hover:bg-white/20 transition-all group"
               >
-                <Tool className="h-12 w-12 text-blkout-secondary mb-6 group-hover:scale-110 transition-transform" />
+                <Wrench className="h-12 w-12 text-blkout-secondary mb-6 group-hover:scale-110 transition-transform" />
                 <h3 className="text-white font-semibold text-2xl mb-4">Toolkit</h3>
                 <p className="text-gray-300">
                   Practical tools and templates for organizing
@@ -130,7 +130,7 @@ export default function ResourcesPage() {
                 to="/resources/guides"
                 className="block bg-white/10 backdrop-blur-sm rounded-lg p-8 hover:bg-white/20 transition-all group"
               >
-                <Guide className="h-12 w-12 text-blkout-secondary mb-6 group-hover:scale-110 transition-transform" />
+                <FileText className="h-12 w-12 text-blkout-secondary mb-6 group-hover:scale-110 transition-transform" />
                 <h3 className="text-white font-semibold text-2xl mb-4">Guides</h3>
                 <p className="text-gray-300">
                   Step-by-step community building guides
