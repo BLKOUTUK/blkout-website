@@ -9,99 +9,174 @@ import { ArrowLeft, ArrowRight, Newspaper, Video, Mic, Camera } from 'lucide-rea
  */
 
 // Sub-components for different media content types - Light/Dark theme
-const MediaBlog = () => (
-  <div className="max-w-6xl mx-auto px-8 py-16">
-    {/* Theme Toggle */}
-    <div className="flex justify-end mb-8">
-      <button className="bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-700 transition-colors">
-        Dark Mode
-      </button>
-    </div>
+const MediaBlog = () => {
+  const [isDarkMode, setIsDarkMode] = React.useState(false)
 
-    {/* Hero Article - December 2024 (Amber Color Theme) */}
-    <article className="mb-20">
-      <div className="bg-amber-400 rounded-3xl overflow-hidden">
-        <div className="grid grid-cols-12 min-h-[60vh]">
-          {/* Content Side */}
-          <div className="col-span-12 lg:col-span-8 p-12 lg:p-16 flex flex-col justify-center">
-            <span className="inline-block bg-white/20 text-slate-800 text-sm font-bold px-4 py-2 rounded mb-6 uppercase tracking-wider">
-              What's Fresh Today
-            </span>
-            <h1 className="text-4xl lg:text-6xl font-black text-slate-800 mb-6 leading-tight tracking-tight">
-              Black Queer Joy in Community Organizing
-            </h1>
-            <p className="text-xl text-slate-700 mb-8 leading-relaxed font-medium">
-              Because celebrating while resisting? That's exactly the energy we need right now.
-            </p>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div className="w-14 h-14 rounded-full bg-slate-800 flex items-center justify-center">
-                  <span className="text-sm font-bold text-white">CT</span>
-                </div>
-                <div>
-                  <p className="font-bold text-slate-800">Community Editorial Team</p>
-                  <p className="text-sm text-slate-600">December 15, 2024 • 8 min read</p>
-                </div>
-              </div>
-              <button className="bg-slate-800 text-white px-8 py-4 rounded-xl font-bold hover:bg-slate-700 transition-colors">
-                Read Now
-              </button>
+  return (
+    <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-slate-900' : 'bg-slate-50'}`}>
+      {/* Header with Navigation */}
+      <header className={`border-b transition-colors ${
+        isDarkMode 
+          ? 'bg-slate-800 border-slate-700' 
+          : 'bg-white border-slate-200'
+      }`}>
+        <div className="max-w-7xl mx-auto px-8 py-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <Link to="/home" className={`transition-colors ${
+                isDarkMode 
+                  ? 'text-slate-400 hover:text-white' 
+                  : 'text-slate-600 hover:text-slate-800'
+              }`}>
+                <ArrowLeft className="h-5 w-5" />
+              </Link>
+              <h1 className={`font-bold text-xl tracking-wide ${
+                isDarkMode ? 'text-white' : 'text-slate-800'
+              }`}>Media</h1>
             </div>
+            <nav className="hidden md:flex space-x-6">
+              <Link to="/media" className={`font-semibold border-b-2 border-cyan-400 pb-1 ${
+                isDarkMode ? 'text-white' : 'text-slate-800'
+              }`}>
+                News
+              </Link>
+              <Link to="/media/storylab" className={`transition-colors ${
+                isDarkMode 
+                  ? 'text-slate-400 hover:text-white' 
+                  : 'text-slate-500 hover:text-slate-800'
+              }`}>
+                Story Lab
+              </Link>
+              <Link to="/media/channel" className={`transition-colors ${
+                isDarkMode 
+                  ? 'text-slate-400 hover:text-white' 
+                  : 'text-slate-500 hover:text-slate-800'
+              }`}>
+                Channel
+              </Link>
+              <Link to="/media/newsroom" className={`transition-colors ${
+                isDarkMode 
+                  ? 'text-slate-400 hover:text-white' 
+                  : 'text-slate-500 hover:text-slate-800'
+              }`}>
+                Press
+              </Link>
+            </nav>
           </div>
-          
-          {/* Visual Side */}
-          <div className="col-span-12 lg:col-span-4 bg-amber-500 flex items-center justify-center p-8">
-            <div className="w-full h-64 lg:h-80 bg-white/20 rounded-2xl backdrop-blur-sm flex items-center justify-center">
-              <span className="text-slate-800 text-6xl">📸</span>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-6xl mx-auto px-8 py-16">
+        {/* Theme Toggle & Logo */}
+        <div className="flex justify-between items-center mb-8">
+          <div className="flex items-center space-x-3">
+            <img 
+              src="/images/BLKOUTpride2025.png" 
+              alt="BLKOUT UK" 
+              className="h-8 w-auto opacity-70"
+            />
+          </div>
+          <button 
+            onClick={() => setIsDarkMode(!isDarkMode)}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              isDarkMode 
+                ? 'bg-slate-700 text-white hover:bg-slate-600' 
+                : 'bg-slate-800 text-white hover:bg-slate-700'
+            }`}
+          >
+            {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+          </button>
+        </div>
+
+      {/* Hero Article - Real BLKOUT Content */}
+      <article className="mb-20">
+        <div className="bg-amber-400 rounded-3xl overflow-hidden">
+          <div className="grid grid-cols-12 min-h-[60vh]">
+            {/* Content Side */}
+            <div className="col-span-12 lg:col-span-8 p-12 lg:p-16 flex flex-col justify-center">
+              <span className="inline-block bg-white/20 text-slate-800 text-sm font-bold px-4 py-2 rounded mb-6 uppercase tracking-wider">
+                Making Space For Us
+              </span>
+              <h1 className="text-4xl lg:text-6xl font-black text-slate-800 mb-6 leading-tight tracking-tight">
+                THE ROAD TO THE FUTURE
+              </h1>
+              <p className="text-xl text-slate-700 mb-8 leading-relaxed font-medium">
+                Reflecting on LGBTQ History Month and resisting the erasure of Black folk from LGBTQ histories. Because our stories matter, our futures matter.
+              </p>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <div className="w-14 h-14 rounded-full bg-slate-800 flex items-center justify-center">
+                    <span className="text-sm font-bold text-white">BUK</span>
+                  </div>
+                  <div>
+                    <p className="font-bold text-slate-800">BLKOUT UK Team</p>
+                    <p className="text-sm text-slate-600">March 3, 2024 • 6 min read</p>
+                  </div>
+                </div>
+                <button className="bg-slate-800 text-white px-8 py-4 rounded-xl font-bold hover:bg-slate-700 transition-colors">
+                  Read Now
+                </button>
+              </div>
+            </div>
+            
+            {/* Visual Side */}
+            <div className="col-span-12 lg:col-span-4 bg-amber-500 flex items-center justify-center p-8">
+              <div className="w-full h-64 lg:h-80 bg-white/20 rounded-2xl backdrop-blur-sm flex items-center justify-center">
+                <span className="text-slate-800 text-6xl">🌟</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </article>
+      </article>
 
     {/* Latest Stories Grid */}
     <section className="mb-20">
-      <h2 className="text-4xl font-black text-slate-800 mb-12 tracking-tight">What's Hot Right Now</h2>
+      <h2 className={`text-4xl font-black mb-12 tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>What's Hot Right Now</h2>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {[
           {
-            title: "Cooperative Economics 101: Building Community Wealth",
-            excerpt: "Worker and housing cooperatives reshaping economic power? Yes, please. Here's how Manchester and Birmingham are making it happen.",
-            date: "Dec 12, 2024",
-            readTime: "6 min read",
-            category: "Economics",
-            author: "Kemi Adebayo",
+            title: "WELCOME TO THE BLKOUTUK BLOG",
+            excerpt: "A space for Black queer men to think, shout, show off, curse, celebrate, laugh, reflect and share. This is where we make space for us.",
+            date: "Mar 3, 2024",
+            readTime: "5 min read",
+            category: "Community",
+            author: "BLKOUT UK Team",
             accent: "bg-pink-400"
           },
           {
-            title: "Community Spotlight: The Manchester Collective",
-            excerpt: "From vacant lots to community gardens to political power. This is how you transform a neighborhood.",
-            date: "Dec 10, 2024", 
-            readTime: "4 min read",
-            category: "Community Power",
-            author: "Jordan Clarke",
+            title: "Invitation to Clubland",
+            excerpt: "Creating sustainable, affirming, and transformative spaces. Because we deserve places where we can truly be ourselves.",
+            date: "Sep 5, 2023", 
+            readTime: "8 min read",
+            category: "Spaces",
+            author: "BLKOUT UK",
             accent: "bg-cyan-400"
           },
           {
-            title: "Digital Security in the Age of Surveillance",
-            excerpt: "Your digital presence while organizing matters. Here's your practical guide to staying safe online.",
-            date: "Dec 8, 2024",
-            readTime: "5 min read",
-            category: "Digital Rights",
-            author: "Sam Okafor",
+            title: "Visibility, Vulnerability, and Individualism",
+            excerpt: "Theatre and personal storytelling - one man's journey to selfhood. The power of authentic expression in community building.",
+            date: "Jul 19, 2023",
+            readTime: "12 min read",
+            category: "Arts & Culture",
+            author: "Community Contributor",
             accent: "bg-lime-400"
           },
           {
-            title: "Housing Cooperative Success Stories",
-            excerpt: "Real families, real solutions. See how cooperative ownership is changing lives across the UK.",
-            date: "Dec 6, 2024",
-            readTime: "7 min read", 
-            category: "Housing",
-            author: "Zara Hassan",
+            title: "When 'I' Becomes 'We': Community Healing",
+            excerpt: "Malcolm X reminded us that when 'I' is replaced with 'We', even illness becomes wellness. Building solidarity through shared struggle.",
+            date: "Jun 15, 2023",
+            readTime: "6 min read", 
+            category: "Healing",
+            author: "Editorial Team",
             accent: "bg-yellow-400"
           }
         ].map((post, index) => (
-          <article key={index} className="bg-slate-50 rounded-2xl p-8 hover:bg-slate-100 transition-all group border-l-4 border-transparent hover:border-slate-800">
+          <article key={index} className={`rounded-2xl p-8 transition-all group border-l-4 border-transparent ${
+            isDarkMode 
+              ? 'bg-slate-800 hover:bg-slate-700 hover:border-slate-600' 
+              : 'bg-slate-50 hover:bg-slate-100 hover:border-slate-800'
+          }`}>
             <div className="flex items-start justify-between mb-4">
               <span className={`inline-block ${post.accent} text-slate-800 text-xs font-bold px-3 py-1 rounded uppercase tracking-wider`}>
                 {post.category}
@@ -109,32 +184,139 @@ const MediaBlog = () => (
               <div className={`w-12 h-12 ${post.accent} rounded-lg`}></div>
             </div>
             
-            <h3 className="text-2xl font-bold text-slate-800 mb-4 leading-tight group-hover:text-slate-600 transition-colors">
+            <h3 className={`text-2xl font-bold mb-4 leading-tight transition-colors ${
+              isDarkMode 
+                ? 'text-white group-hover:text-slate-300' 
+                : 'text-slate-800 group-hover:text-slate-600'
+            }`}>
               <Link to={`/media/blog/${post.title.toLowerCase().replace(/[^a-z0-9]/g, '-')}`}>
                 {post.title}
               </Link>
             </h3>
             
-            <p className="text-slate-600 mb-6 leading-relaxed font-medium">
+            <p className={`mb-6 leading-relaxed font-medium ${
+              isDarkMode ? 'text-slate-300' : 'text-slate-600'
+            }`}>
               {post.excerpt}
             </p>
             
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4 text-sm text-slate-500">
+              <div className={`flex items-center space-x-4 text-sm ${
+                isDarkMode ? 'text-slate-400' : 'text-slate-500'
+              }`}>
                 <span className="font-medium">{post.author}</span>
                 <span>•</span>
                 <span>{post.date}</span>
                 <span>•</span>
                 <span>{post.readTime}</span>
               </div>
-              <ArrowRight className="h-5 w-5 text-slate-400 group-hover:text-slate-600 transition-colors" />
+              <ArrowRight className={`h-5 w-5 transition-colors ${
+                isDarkMode 
+                  ? 'text-slate-500 group-hover:text-slate-300' 
+                  : 'text-slate-400 group-hover:text-slate-600'
+              }`} />
             </div>
           </article>
         ))}
       </div>
     </section>
-  </div>
-)
+
+    {/* Additional Headlines Row - Six Stories */}
+    <section className="mb-16">
+      <h2 className={`text-3xl font-black mb-8 tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-800'}`}>More Stories From The Community</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[
+          {
+            title: "Building Black Queer Solidarity",
+            excerpt: "How mutual aid networks are transforming communities across the UK.",
+            date: "May 20, 2023",
+            category: "Solidarity",
+            accent: "bg-pink-400",
+            emoji: "🤝"
+          },
+          {
+            title: "Creative Expression & Resistance",
+            excerpt: "Art as activism - showcasing Black queer artists making change.",
+            date: "Apr 15, 2023",
+            category: "Arts",
+            accent: "bg-cyan-400",
+            emoji: "🎨"
+          },
+          {
+            title: "Housing Justice Stories",
+            excerpt: "Real stories from the housing frontline - victories and struggles.",
+            date: "Mar 28, 2023",
+            category: "Housing",
+            accent: "bg-lime-400",
+            emoji: "🏠"
+          },
+          {
+            title: "Digital Organizing Tools",
+            excerpt: "How tech is empowering grassroots movements in new ways.",
+            date: "Mar 10, 2023",
+            category: "Tech",
+            accent: "bg-yellow-400",
+            emoji: "📱"
+          },
+          {
+            title: "Mental Health & Community",
+            excerpt: "Collective healing practices in Black queer spaces.",
+            date: "Feb 22, 2023",
+            category: "Wellness",
+            accent: "bg-purple-400",
+            emoji: "💜"
+          },
+          {
+            title: "Economic Justice Now",
+            excerpt: "Cooperative ownership models creating lasting change.",
+            date: "Feb 8, 2023",
+            category: "Economics",
+            accent: "bg-orange-400",
+            emoji: "💰"
+          }
+        ].map((story, index) => (
+          <article key={index} className={`rounded-xl p-6 transition-all group cursor-pointer ${
+            isDarkMode 
+              ? 'bg-slate-800 hover:bg-slate-700' 
+              : 'bg-white hover:bg-slate-50 shadow-sm hover:shadow-md'
+          }`}>
+            {/* Image Teaser */}
+            <div className={`w-full h-32 ${story.accent} rounded-lg mb-4 flex items-center justify-center relative overflow-hidden`}>
+              <span className="text-3xl">{story.emoji}</span>
+              <div className="absolute inset-0 bg-gradient-to-br from-transparent to-black/10"></div>
+            </div>
+            
+            {/* Content */}
+            <div className="flex items-start justify-between mb-2">
+              <span className={`inline-block ${story.accent} text-slate-800 text-xs font-bold px-2 py-1 rounded text-center uppercase tracking-wider`}>
+                {story.category}
+              </span>
+              <span className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+                {story.date}
+              </span>
+            </div>
+            
+            <h3 className={`text-lg font-bold mb-2 leading-tight transition-colors ${
+              isDarkMode 
+                ? 'text-white group-hover:text-slate-300' 
+                : 'text-slate-800 group-hover:text-slate-600'
+            }`}>
+              {story.title}
+            </h3>
+            
+            <p className={`text-sm leading-relaxed ${
+              isDarkMode ? 'text-slate-300' : 'text-slate-600'
+            }`}>
+              {story.excerpt}
+            </p>
+          </article>
+        ))}
+      </div>
+    </section>
+      </main>
+    </div>
+  )
+}
 
 const StoryLab = () => {
   // December 2024 color theme - Deep Orange/Amber
@@ -411,39 +593,8 @@ export default function MediaPage() {
 
   if (isMainPage) {
     return (
-      <div className="min-h-screen bg-slate-50">
-        {/* Light Theme Header */}
-        <header className="bg-white border-b border-slate-200">
-          <div className="max-w-7xl mx-auto px-8 py-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <Link to="/home" className="text-slate-600 hover:text-slate-800 transition-colors">
-                  <ArrowLeft className="h-5 w-5" />
-                </Link>
-                <h1 className="text-slate-800 font-bold text-xl tracking-wide">Media</h1>
-              </div>
-              <nav className="hidden md:flex space-x-6">
-                <Link to="/media" className="text-slate-800 font-semibold border-b-2 border-cyan-400 pb-1">
-                  News
-                </Link>
-                <Link to="/media/storylab" className="text-slate-500 hover:text-slate-800 transition-colors">
-                  Story Lab
-                </Link>
-                <Link to="/media/channel" className="text-slate-500 hover:text-slate-800 transition-colors">
-                  Channel
-                </Link>
-                <Link to="/media/newsroom" className="text-slate-500 hover:text-slate-800 transition-colors">
-                  Press
-                </Link>
-              </nav>
-            </div>
-          </div>
-        </header>
-
-        {/* Direct Blog Content */}
-        <main className="bg-slate-50">
-          <MediaBlog />
-        </main>
+      <div className="min-h-screen">
+        <MediaBlog />
       </div>
     )
   }

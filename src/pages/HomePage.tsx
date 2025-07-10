@@ -15,9 +15,16 @@ export default function HomePage() {
       <header className="border-b border-indigo-800">
         <div className="max-w-7xl mx-auto px-8 py-6">
           <div className="flex items-center justify-between">
-            <Link to="/" className="text-white font-bold text-xl tracking-wide">
-              {SITE_CONFIG.name}
-            </Link>
+            <div className="flex items-center space-x-4">
+              <img 
+                src="/images/BLKOUTpride2025.png" 
+                alt="BLKOUT UK" 
+                className="h-10 w-auto opacity-80"
+              />
+              <Link to="/" className="text-white font-bold text-xl tracking-wide">
+                {SITE_CONFIG.name}
+              </Link>
+            </div>
             <nav className="hidden md:flex space-x-8">
               <Link to="/movement" className="text-indigo-200 hover:text-white transition-colors font-medium tracking-wide">
                 Movement
