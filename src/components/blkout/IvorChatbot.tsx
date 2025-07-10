@@ -2,15 +2,17 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MessageCircle, X, Send } from 'lucide-react'
+import { MessageCircle, X, Send, AlertCircle, Loader2 } from 'lucide-react'
+import { getIvorResponse, trackIvorInteraction } from '../../services/ivor-api'
 
 /**
- * IvorChatbot - IVOR beta integration for community interaction
+ * IvorChatbot - IVOR Community Intelligence Platform
  * 
- * @purpose Demonstrate new direction and collaboration capabilities
- * @values Community-driven AI, authentic connection
+ * @purpose Connect community members with resources through AI-powered assistance
+ * @values Community-driven AI, cultural authenticity, privacy protection
  * @accessibility Full keyboard navigation and screen reader support
  * @mobile Optimized for mobile-first community engagement
+ * @integration OpenAI API with community knowledge base
  */
 
 interface Message {
@@ -18,6 +20,8 @@ interface Message {
   text: string
   sender: 'user' | 'ivor'
   timestamp: Date
+  isError?: boolean
+  sources?: string[]
 }
 
 export default function IvorChatbot() {
@@ -25,15 +29,16 @@ export default function IvorChatbot() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: "Hey! I'm IVOR, BLKOUT's community AI. I'm here to help connect you with our movement for cooperative ownership. What brings you to our community today?",
+      text: "Hey! I'm IVOR, inspired by the legacy of Ivor Cummings who was known for connecting our community with resources and support. I'm here to help you find what you need—whether that's mental health support, housing assistance, legal rights, community events, or just someone to talk to. What brings you here today?",
       sender: 'ivor',
       timestamp: new Date()
     }
   ])
   const [inputText, setInputText] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
-  const sendMessage = () => {
-    if (!inputText.trim()) return
+  const sendMessage = async () => {
+    if (!inputText.trim() || isLoading) return
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -43,18 +48,48 @@ export default function IvorChatbot() {
     }
 
     setMessages(prev => [...prev, userMessage])
+    const currentInput = inputText
     setInputText('')
+    setIsLoading(true)
 
-    // Simulate IVOR response (in real implementation, this would call IVOR API)
-    setTimeout(() => {
+    try {
+      // Generate a simple user ID for rate limiting (could be improved with proper auth)
+      const userId = `user-${Date.now()}`
+      
+      // Call IVOR API
+      const response = await getIvorResponse(currentInput, userId)
+      
+      // Track interaction for community intelligence
+      trackIvorInteraction(currentInput, response.message, userId)
+      
+      // Create IVOR response message
       const ivorResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: "That's a great question! Our community believes in cooperative ownership and Black queer liberation. Let me connect you with someone who can share more about our movement. Would you like to join our next community gathering?",
+        text: response.message,
         sender: 'ivor',
-        timestamp: new Date()
+        timestamp: new Date(),
+        isError: !response.success,
+        sources: response.sources
       }
+      
       setMessages(prev => [...prev, ivorResponse])
-    }, 1000)
+      
+    } catch (error) {
+      console.error('Error sending message:', error)
+      
+      // Error response
+      const errorResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        text: "I'm having some technical difficulties right now. In the meantime, you can reach out to our partner organizations directly: BLKOUT, Black Thrive BQC, Black Trans Hub, or QueerCroydon for support.",
+        sender: 'ivor',
+        timestamp: new Date(),
+        isError: true
+      }
+      
+      setMessages(prev => [...prev, errorResponse])
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -113,12 +148,30 @@ export default function IvorChatbot() {
                     className={`max-w-[80%] p-3 rounded-lg ${
                       message.sender === 'user'
                         ? 'bg-blkout-primary text-white'
+                        : message.isError
+                        ? 'bg-red-50 text-red-800 border border-red-200'
                         : 'bg-gray-100 text-gray-800'
                     }`}
                   >
+                    {message.isError && (
+                      <div className="flex items-center gap-2 mb-2">
+                        <AlertCircle size={14} />
+                        <span className="text-xs font-medium">Connection Issue</span>
+                      </div>
+                    )}
                     <p className="text-sm">{message.text}</p>
+                    {message.sources && message.sources.length > 0 && (
+                      <div className="mt-2 text-xs text-gray-600">
+                        <span className="font-medium">Sources: </span>
+                        {message.sources.join(', ')}
+                      </div>
+                    )}
                     <p className={`text-xs mt-1 ${
-                      message.sender === 'user' ? 'text-blkout-secondary' : 'text-gray-500'
+                      message.sender === 'user' 
+                        ? 'text-blkout-secondary' 
+                        : message.isError 
+                        ? 'text-red-600' 
+                        : 'text-gray-500'
                     }`}>
                       {message.timestamp.toLocaleTimeString([], { 
                         hour: '2-digit', 
@@ -128,6 +181,22 @@ export default function IvorChatbot() {
                   </div>
                 </motion.div>
               ))}
+              
+              {/* Loading indicator */}
+              {isLoading && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex justify-start"
+                >
+                  <div className="max-w-[80%] p-3 rounded-lg bg-gray-100 text-gray-800">
+                    <div className="flex items-center gap-2">
+                      <Loader2 size={16} className="animate-spin" />
+                      <span className="text-sm">IVOR is thinking...</span>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
             </div>
 
             {/* Input */}
@@ -140,22 +209,28 @@ export default function IvorChatbot() {
                   type="text"
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
-                  placeholder="Ask IVOR about our community..."
+                  placeholder={isLoading ? "IVOR is thinking..." : "Ask IVOR about our community..."}
+                  disabled={isLoading}
                   className="flex-1 p-2 border border-gray-300 rounded-md 
                     focus:outline-none focus:ring-2 focus:ring-blkout-primary 
-                    focus:border-transparent text-sm"
+                    focus:border-transparent text-sm disabled:opacity-50 
+                    disabled:cursor-not-allowed"
                   aria-label="Message input"
                 />
                 <button
                   type="submit"
-                  disabled={!inputText.trim()}
+                  disabled={!inputText.trim() || isLoading}
                   className="px-3 py-2 bg-blkout-primary text-white rounded-md 
                     hover:bg-blkout-warm transition-colors disabled:opacity-50 
                     disabled:cursor-not-allowed focus:outline-none focus:ring-2 
                     focus:ring-blkout-primary focus:ring-opacity-50"
                   aria-label="Send message"
                 >
-                  <Send size={16} />
+                  {isLoading ? (
+                    <Loader2 size={16} className="animate-spin" />
+                  ) : (
+                    <Send size={16} />
+                  )}
                 </button>
               </form>
             </div>
