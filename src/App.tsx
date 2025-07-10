@@ -7,6 +7,7 @@ import IvorChatbot from './components/blkout/IvorChatbot'
 import HomePage from './pages/HomePage'
 import MovementPage from './pages/MovementPage' 
 import MediaPage from './pages/MediaPage'
+import ArticlePage from './pages/ArticlePage'
 import EventsPage from './pages/EventsPage'
 import ResourcesPage from './pages/ResourcesPage'
 
@@ -24,6 +25,7 @@ function App() {
         {/* Content areas */}
         <Route path="/movement/*" element={<MovementPage />} />
         <Route path="/media/*" element={<MediaPage />} />
+        <Route path="/article/:slug" element={<ArticlePage />} />
         <Route path="/events" element={<EventsPage />} />
         <Route path="/resources/*" element={<ResourcesPage />} />
       </Routes>

@@ -13,12 +13,12 @@ const MediaBlog = () => {
   const [isDarkMode, setIsDarkMode] = React.useState(false)
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-slate-900' : 'bg-slate-50'}`}>
+    <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-slate-900' : 'bg-blue-50'}`}>
       {/* Header with Navigation */}
       <header className={`border-b transition-colors ${
         isDarkMode 
           ? 'bg-slate-800 border-slate-700' 
-          : 'bg-white border-slate-200'
+          : 'bg-blue-50 border-blue-200'
       }`}>
         <div className="max-w-7xl mx-auto px-8 py-6">
           <div className="flex items-center justify-between">
@@ -26,38 +26,38 @@ const MediaBlog = () => {
               <Link to="/home" className={`transition-colors ${
                 isDarkMode 
                   ? 'text-slate-400 hover:text-white' 
-                  : 'text-slate-600 hover:text-slate-800'
+                  : 'text-blue-600 hover:text-blue-800'
               }`}>
                 <ArrowLeft className="h-5 w-5" />
               </Link>
               <h1 className={`font-bold text-xl tracking-wide ${
-                isDarkMode ? 'text-white' : 'text-slate-800'
+                isDarkMode ? 'text-white' : 'text-blue-800'
               }`}>Media</h1>
             </div>
             <nav className="hidden md:flex space-x-6">
               <Link to="/media" className={`font-semibold border-b-2 border-cyan-400 pb-1 ${
-                isDarkMode ? 'text-white' : 'text-slate-800'
+                isDarkMode ? 'text-white' : 'text-blue-800'
               }`}>
                 News
               </Link>
               <Link to="/media/storylab" className={`transition-colors ${
                 isDarkMode 
                   ? 'text-slate-400 hover:text-white' 
-                  : 'text-slate-500 hover:text-slate-800'
+                  : 'text-blue-500 hover:text-blue-800'
               }`}>
                 Story Lab
               </Link>
               <Link to="/media/channel" className={`transition-colors ${
                 isDarkMode 
                   ? 'text-slate-400 hover:text-white' 
-                  : 'text-slate-500 hover:text-slate-800'
+                  : 'text-blue-500 hover:text-blue-800'
               }`}>
                 Channel
               </Link>
               <Link to="/media/newsroom" className={`transition-colors ${
                 isDarkMode 
                   ? 'text-slate-400 hover:text-white' 
-                  : 'text-slate-500 hover:text-slate-800'
+                  : 'text-blue-500 hover:text-blue-800'
               }`}>
                 Press
               </Link>
@@ -74,7 +74,7 @@ const MediaBlog = () => {
             <img 
               src="/images/BLKOUTpride2025.png" 
               alt="BLKOUT UK" 
-              className="h-8 w-auto opacity-70"
+              className="h-16 w-auto opacity-80"
             />
           </div>
           <button 
@@ -114,9 +114,12 @@ const MediaBlog = () => {
                     <p className="text-sm text-slate-600">March 3, 2024 • 6 min read</p>
                   </div>
                 </div>
-                <button className="bg-slate-800 text-white px-8 py-4 rounded-xl font-bold hover:bg-slate-700 transition-colors">
+                <Link 
+                  to="/article/the-road-to-the-future"
+                  className="bg-slate-800 text-white px-8 py-4 rounded-xl font-bold hover:bg-slate-700 transition-colors inline-block"
+                >
                   Read Now
-                </button>
+                </Link>
               </div>
             </div>
             
@@ -175,7 +178,7 @@ const MediaBlog = () => {
           <article key={index} className={`rounded-2xl p-8 transition-all group border-l-4 border-transparent ${
             isDarkMode 
               ? 'bg-slate-800 hover:bg-slate-700 hover:border-slate-600' 
-              : 'bg-slate-50 hover:bg-slate-100 hover:border-slate-800'
+              : 'bg-white hover:bg-blue-50 hover:border-blue-600'
           }`}>
             <div className="flex items-start justify-between mb-4">
               <span className={`inline-block ${post.accent} text-slate-800 text-xs font-bold px-3 py-1 rounded uppercase tracking-wider`}>
@@ -189,7 +192,7 @@ const MediaBlog = () => {
                 ? 'text-white group-hover:text-slate-300' 
                 : 'text-slate-800 group-hover:text-slate-600'
             }`}>
-              <Link to={`/media/blog/${post.title.toLowerCase().replace(/[^a-z0-9]/g, '-')}`}>
+              <Link to={`/article/${post.title.toLowerCase().replace(/[^a-z0-9]/g, '-')}`}>
                 {post.title}
               </Link>
             </h3>
@@ -278,7 +281,7 @@ const MediaBlog = () => {
           <article key={index} className={`rounded-xl p-6 transition-all group cursor-pointer ${
             isDarkMode 
               ? 'bg-slate-800 hover:bg-slate-700' 
-              : 'bg-white hover:bg-slate-50 shadow-sm hover:shadow-md'
+              : 'bg-white hover:bg-blue-50 shadow-sm hover:shadow-md'
           }`}>
             {/* Image Teaser */}
             <div className={`w-full h-32 ${story.accent} rounded-lg mb-4 flex items-center justify-center relative overflow-hidden`}>

@@ -19,7 +19,7 @@ export default function HomePage() {
               <img 
                 src="/images/BLKOUTpride2025.png" 
                 alt="BLKOUT UK" 
-                className="h-10 w-auto opacity-80"
+                className="h-20 w-auto opacity-90"
               />
               <Link to="/" className="text-white font-bold text-xl tracking-wide">
                 {SITE_CONFIG.name}
