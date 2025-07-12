@@ -649,7 +649,7 @@ const FullPageScrollytelling: React.FC = () => {
   }
 
   return (
-    <>
+    <div className="w-full overflow-x-hidden">
       <StickyNavigation />
       
       <RemoteControl 
@@ -659,8 +659,8 @@ const FullPageScrollytelling: React.FC = () => {
       />
       
       {/* BLKOUT Pride 2025 Logo Header */}
-      <div className="bg-black py-8 relative z-50">
-        <div className="flex justify-center">
+      <div className="bg-black py-8 relative z-50 w-full">
+        <div className="flex justify-center px-4">
           <img 
             src="/images/BLKOUTpride2025.png" 
             alt="BLKOUT Pride 2025" 
@@ -673,9 +673,10 @@ const FullPageScrollytelling: React.FC = () => {
         {slides.map((slide, index) => (
           <div
             key={slide.id}
-            className={`slide-${index} relative h-screen flex items-center justify-center overflow-hidden glitch-trigger`}
+            className={`slide-${index} relative w-full h-screen flex items-center justify-center overflow-hidden glitch-trigger`}
             style={{
-              backgroundColor: '#000000'
+              backgroundColor: '#000000',
+              minHeight: '100vh'
             }}
           >
             
@@ -836,7 +837,7 @@ const FullPageScrollytelling: React.FC = () => {
 
             {/* Content - Skip for definition slides as they're pure images */}
             {slide.type !== 'definition' && slide.type !== 'video' && slide.type !== 'fist-formation' && (
-              <div className={`relative z-10 w-full max-w-6xl mx-auto px-6 text-center ${slide.font}`}>
+              <div className={`relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center ${slide.font}`}>
               {slide.type === 'prose' ? (
                 <motion.div
                   initial={{ opacity: 0, y: 50 }}
@@ -968,7 +969,7 @@ const FullPageScrollytelling: React.FC = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 1 }}
                   viewport={{ once: false }}
-                  className="max-w-6xl mx-auto space-y-12"
+                  className="w-full max-w-6xl mx-auto space-y-12 px-4 sm:px-6 lg:px-8 py-8"
                 >
                   <div className="text-center mb-16">
                     <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
@@ -1246,7 +1247,7 @@ const FullPageScrollytelling: React.FC = () => {
           display: none;
         }
       `}</style>
-    </>
+    </div>
   )
 }
 

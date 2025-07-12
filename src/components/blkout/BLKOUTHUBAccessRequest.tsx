@@ -441,14 +441,14 @@ const BLKOUTHUBAccessRequest: React.FC<BLKOUTHUBAccessRequestProps> = ({
 
   if (submitState === 'success') {
     return (
-      <div className={`bg-gradient-to-br from-blkout-deep/80 to-blkout-accent/80 backdrop-blur-sm rounded-2xl p-8 border border-white/20 ${className}`}>
+      <div className={`w-full bg-gradient-to-br from-blkout-deep/80 to-blkout-accent/80 backdrop-blur-sm rounded-2xl p-8 border border-white/20 ${className}`}>
         {renderSuccess()}
       </div>
     )
   }
 
   return (
-    <div className={`bg-gradient-to-br from-blkout-deep/80 to-blkout-accent/80 backdrop-blur-sm rounded-2xl p-8 border border-white/20 ${className}`}>
+    <div className={`w-full bg-gradient-to-br from-blkout-deep/80 to-blkout-accent/80 backdrop-blur-sm rounded-2xl p-8 border border-white/20 ${className}`}>
       {/* Progress Indicator */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-4">
