@@ -110,7 +110,7 @@ const rateLimitTracker = new Map<string, number[]>()
  * Get OpenAI API key from environment
  */
 function getOpenAIKey(): string {
-  const apiKey = process.env.OPENAI_API_KEY || import.meta.env.VITE_OPENAI_API_KEY
+  const apiKey = process.env.OPENAI_API_KEY || (import.meta as any).env?.VITE_OPENAI_API_KEY
   if (!apiKey) {
     throw new Error('OpenAI API key not found. Please set OPENAI_API_KEY or VITE_OPENAI_API_KEY environment variable.')
   }

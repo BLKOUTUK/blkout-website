@@ -1,0 +1,57 @@
+{
+  "name": "BLKOUT Simple Test Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual_trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Test BLKOUT workflow logic\nconst testData = [\n  {\n    publish_date: '2025-01-13',\n    platform: 'instagram',\n    content_type: 'post',\n    title: 'Community Workshop Reminder',\n    content: 'Join us tomorrow for our cooperative ownership workshop! 🌟',\n    status: 'approved'\n  },\n  {\n    publish_date: '2025-01-14',\n    platform: 'facebook',\n    content_type: 'post', \n    title: 'Future Event',\n    content: 'This should be filtered out',\n    status: 'approved'\n  }\n];\n\n// Filter for today's content\nconst today = new Date().toISOString().split('T')[0];\nconst todaysContent = testData.filter(item => \n  item.publish_date === today && item.status === 'approved'\n);\n\nconsole.log('Today is:', today);\nconsole.log('Filtered content:', todaysContent);\n\nreturn todaysContent.map(item => ({ json: item }));"
+      },
+      "id": "test_content_filter",
+      "name": "Test Content Filter",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Simulate social media posting\nconst content = $input.all();\n\nconst results = content.map(item => {\n  const data = item.json;\n  \n  return {\n    json: {\n      ...data,\n      posted_at: new Date().toISOString(),\n      post_id: `test_${Math.random().toString(36).substr(2, 9)}`,\n      status: 'posted_test',\n      engagement: {\n        likes: 0,\n        comments: 0,\n        shares: 0\n      }\n    }\n  };\n});\n\nconsole.log('Would post to social media:', results);\nreturn results;"
+      },
+      "id": "simulate_posting",
+      "name": "Simulate Social Media Posting",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300]
+    }
+  ],
+  "connections": {
+    "manual_trigger": {
+      "main": [
+        [
+          {
+            "node": "test_content_filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "test_content_filter": {
+      "main": [
+        [
+          {
+            "node": "simulate_posting",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

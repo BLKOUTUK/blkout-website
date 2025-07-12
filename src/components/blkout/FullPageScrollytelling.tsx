@@ -6,6 +6,9 @@ import { ChevronDown, ChevronUp } from 'lucide-react'
 import StickyNavigation from './StickyNavigation'
 import RemoteControl from './RemoteControl'
 import WelcomeVideo from './WelcomeVideo'
+import CommunityEmailCapture from './CommunityEmailCapture'
+import BLKOUTHUBAccessRequest from './BLKOUTHUBAccessRequest'
+import InteractiveRevelation from './InteractiveRevelation'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -381,57 +384,116 @@ Will you answer?`,
     font: 'font-sans'
   },
   {
-    id: 'futures',
-    type: 'futures',
-    title: 'NEW POSSIBLE',
-    subtitle: 'WHAT IF WE OWNED OUR STORIES?',
-    content: 'Not just told them. Or sold them to the highest bidder?',
+    id: 'own-stories',
+    type: 'revelation',
+    title: 'WHAT IF OUR STORIES CREATED LIBERATION DIALOGUES?',
+    subtitle: '',
+    content: [
+      { text: 'Not just told them and left.', style: 'text-3xl text-white mb-8' },
+      { text: 'Or sold them to the highest bidder?', style: 'text-2xl text-gray-300 mb-12' },
+      { text: 'Braver spaces. Bolder storytelling.', style: 'text-4xl text-blkout-primary font-bold mb-8' },
+      { text: 'Lifted each other up. Created representation on our terms.', style: 'text-xl text-gray-200' }
+    ],
     bgImage: '/images/6.png',
+    font: 'font-sans'
+  },
+  {
+    id: 'build-wealth',
+    type: 'revelation',
+    title: 'WHAT IF WE BUILT WEALTH TOGETHER?',
+    subtitle: '',
+    content: [
+      { text: 'Community ownership, cooperative economics.', style: 'text-3xl text-white mb-8' },
+      { text: 'Resources controlled by us. From health to culture, housing to tech.', style: 'text-2xl text-gray-300 mb-12' },
+      { text: 'Liberation plus financial independence.', style: 'text-4xl text-blkout-secondary font-bold' }
+    ],
+    bgImage: '/images/blkoutrainbowbackground.png',
     font: 'font-mono'
+  },
+  {
+    id: 'liberation-legacy',
+    type: 'revelation',
+    title: 'WHAT IF WE MOVED BEYOND VISIBILITY TO SOLIDARITY?',
+    subtitle: '',
+    content: [
+      { text: 'Building what we need over time.', style: 'text-3xl text-white mb-8' },
+      { text: 'Cathedral-building legacy. Trusting each other not to blow it all on a one-day party.', style: 'text-2xl text-gray-300 mb-12' },
+      { text: 'The revolution is cooperative. Raise your voice.', style: 'text-4xl text-blkout-accent font-bold' }
+    ],
+    bgImage: '/images/blkoutrainbowbackground.png',
+    font: 'font-serif'
+  },
+  {
+    id: 'critical-connections',
+    type: 'revelation',
+    title: 'CRITICAL CONNECTIONS',
+    subtitle: 'BUILDING COMMUNITY IN ISOLATION',
+    content: [
+      { text: 'Only 1 in 20 Black queer men feel local belonging.', style: 'text-3xl text-white mb-6' },
+      { text: 'Only 2 in 10 have someone to socialize with.', style: 'text-3xl text-white mb-12' },
+      { text: "We're building critical connections.", style: 'text-4xl text-blkout-warm font-bold mb-8' },
+      { text: 'Critical mass will follow.', style: 'text-2xl text-gray-300' }
+    ],
+    bgImage: '/images/6.png',
+    font: 'font-sans'
   },
   {
     id: 'quiz',
     type: 'quiz',
-    title: 'ARE YOU READY?',
+    title: 'ARE YOU BLACK ENOUGH, QUEER ENOUGH, OUT ENOUGH?',
     subtitle: 'TAKE OUR COMPLETELY SCIENTIFIC TEST',
-    content: 'Are you Black enough, queer enough, out enough?',
+    content: 'Plot twist: There was never a test.',
     questions: [
       {
-        question: "How do you prefer to start your mornings?",
+        question: "Favorite weather?",
         options: [
-          "With meditation and intention setting",
-          "Coffee and checking the group chat", 
-          "Already been up for hours plotting liberation",
-          "What morning? Time is a construct"
+          "☀️ Sunny",
+          "⛈️ Stormy", 
+          "🌧️ Rainy",
+          "🤷🏾‍♂️ Don't notice"
         ]
       },
       {
-        question: "Your ideal Friday night involves:",
+        question: "Dream dinner guest?",
         options: [
-          "Deep conversations about systemic change",
-          "Drag bingo with chosen family",
-          "Reading theory while rage-tweeting",
-          "All of the above, simultaneously"
+          "👵🏾 Grandmother",
+          "👑 Beyoncé",
+          "✍🏾 James Baldwin",
+          "💙 Rhyeim"
         ]
       },
       {
-        question: "When someone says 'that's not how we do things here':",
+        question: "Ideal Friday night?",
         options: [
-          "You smile and do it your way anyway",
-          "You question why that's 'the way'",
-          "You build a better system entirely",
-          "You're already three steps ahead"
+          "🏠 House party",
+          "🛋️ Musical theatre",
+          "💃🏾 Sex party",
+          "🎨 Cross-stitch"
         ]
       }
     ],
     results: {
       welcome: {
-        title: "WELCOME HOME",
-        message: "You're exactly who we've been waiting for. Your journey, your questions, your readiness to grow - it all belongs here. Black queer men are invited to join BLKOUTHUB. Everyone is welcome to sign up for our newsletter and join the conversation."
+        title: "CONGRATULATIONS! You passed!",
+        message: "Plot twist: There was never a test. Identity is liberation, not prison. Difference creates dialogue, not division. If you stay ready, you don't have to get ready. You are ready to build power?"
       }
     },
     bgImage: '/images/BLKOUT25.png',
     font: 'font-serif'
+  },
+  {
+    id: 'welcome-home',
+    type: 'landing',
+    title: 'WELCOME TO BLKOUTUK',
+    subtitle: 'THIS ISN\'T JUST A WEBSITE. IT\'S A MOVEMENT.',
+    content: [
+      { text: 'Your whole self is welcome', style: 'text-2xl text-blkout-primary mb-4' },
+      { text: 'Your stories matter', style: 'text-2xl text-blkout-secondary mb-4' },
+      { text: 'Your voice has power', style: 'text-2xl text-blkout-accent mb-12' },
+      { text: 'Ready to build the future together?', style: 'text-3xl text-white font-bold' }
+    ],
+    bgImage: '/images/blkoutrainbowbackground.png',
+    font: 'font-sans'
   },
   {
     id: 'connect',
@@ -478,7 +540,7 @@ const FullPageScrollytelling: React.FC = () => {
     if (slideIndex === 0) return 'home'
     if (slideIndex >= 1 && slideIndex <= 5) return 'definitions'  // WELL DEFINED, BLACK, QUEER, MALE, OUT
     if (slideIndex === 6) return 'lessons'  // prose section
-    if (slideIndex === 7) return 'projects'
+    if (slideIndex === 7) return 'lessons'
     if (slideIndex >= 8 && slideIndex <= 11) return 'lessons' // lesson slides
     if (slideIndex === 12) return 'lessons' // engagement
     if (slideIndex === 13) return 'lessons' // futures
@@ -809,56 +871,6 @@ const FullPageScrollytelling: React.FC = () => {
                     </div>
                   </div>
                 </motion.div>
-              ) : slide.type === 'projects' ? (
-                <motion.div
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 1 }}
-                  viewport={{ once: false }}
-                  className="space-y-8"
-                >
-                  <div className="text-center mb-12">
-                    <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
-                      {slide.title}
-                    </h1>
-                    <p className="text-lg md:text-xl text-gray-300 uppercase tracking-wider font-mono">
-                      {slide.subtitle}
-                    </p>
-                  </div>
-                  
-                  {/* Horizontal scrolling projects */}
-                  <div className="relative">
-                    <div className="flex space-x-6 overflow-x-auto scrollbar-hide pb-6 px-6" style={{ scrollSnapType: 'x mandatory' }}>
-                      {slide.projects?.map((project: any, projectIndex: number) => (
-                        <motion.div
-                          key={project.name}
-                          initial={{ opacity: 0, x: 50 }}
-                          whileInView={{ opacity: 1, x: 0 }}
-                          transition={{ duration: 0.6, delay: projectIndex * 0.1 }}
-                          viewport={{ once: false }}
-                          className="flex-shrink-0 w-72 h-40 bg-gradient-to-br from-gray-900 to-black rounded-lg p-6 border border-white/20 backdrop-blur-sm"
-                          style={{ scrollSnapAlign: 'center' }}
-                        >
-                          <h3 className="text-xl font-bold text-white mb-3 font-mono uppercase tracking-wider">
-                            {project.name}
-                          </h3>
-                          <p className="text-gray-300 text-sm leading-relaxed">
-                            {project.description}
-                          </p>
-                          <div className="mt-4 flex items-center space-x-2">
-                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                            <span className="text-xs text-gray-400 font-mono">ACTIVE</span>
-                          </div>
-                        </motion.div>
-                      ))}
-                    </div>
-                    
-                    {/* Scroll indicator */}
-                    <div className="text-center mt-4">
-                      <p className="text-sm text-gray-400 font-mono">← SCROLL TO EXPLORE →</p>
-                    </div>
-                  </div>
-                </motion.div>
               ) : slide.type === 'lesson' ? (
                 <motion.div
                   initial={{ opacity: 0, y: 50 }}
@@ -948,6 +960,8 @@ const FullPageScrollytelling: React.FC = () => {
                 </motion.div>
               ) : slide.type === 'quiz' ? (
                 <QuizComponent slide={slide} />
+              ) : slide.type === 'revelation' ? (
+                <InteractiveRevelation slide={slide} />
               ) : slide.type === 'connect' ? (
                 <motion.div
                   initial={{ opacity: 0, y: 50 }}
@@ -968,54 +982,79 @@ const FullPageScrollytelling: React.FC = () => {
                     </p>
                   </div>
                   
-                  {/* Connection Options */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {slide.sections?.map((section: any, index: number) => (
-                      <motion.div
-                        key={section.title}
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: index * 0.2 }}
-                        viewport={{ once: false }}
-                        className={`relative p-8 rounded-lg border backdrop-blur-sm transition-all hover:scale-105 ${
-                          section.highlight 
-                            ? 'bg-gradient-to-br from-blkout-primary/20 to-blkout-warm/20 border-blkout-primary/50 shadow-lg shadow-blkout-primary/20' 
-                            : 'bg-gray-900/40 border-white/20 hover:border-white/40'
-                        }`}
+                  {/* Connection Options with Interactive Components */}
+                  <div className="space-y-12">
+                    {/* Email Capture */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.8, delay: 0.2 }}
+                      viewport={{ once: false }}
+                    >
+                      <CommunityEmailCapture
+                        source="scrollytelling"
+                        variant="full"
+                        preselectedInterests={['newsletter', 'events', 'movement-updates']}
+                        onSuccess={(trackingId) => {
+                          console.log('Email signup successful:', trackingId)
+                        }}
+                      />
+                    </motion.div>
+
+                    {/* BLKOUTHUB Access Request */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.8, delay: 0.4 }}
+                      viewport={{ once: false }}
+                    >
+                      <BLKOUTHUBAccessRequest
+                        onSuccess={(data) => {
+                          console.log('BLKOUTHUB access request submitted:', data)
+                        }}
+                      />
+                    </motion.div>
+
+                    {/* Quick Navigation to Main Site */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.8, delay: 0.6 }}
+                      viewport={{ once: false }}
+                      className="grid grid-cols-2 md:grid-cols-4 gap-4"
+                    >
+                      <a 
+                        href="/movement" 
+                        className="p-4 bg-white/10 border border-white/20 rounded-lg hover:bg-white/20 transition-all text-center group"
                       >
-                        {section.highlight && (
-                          <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                            <span className="bg-blkout-primary text-white px-4 py-1 rounded-full text-sm font-mono uppercase tracking-wider">
-                              Priority Access
-                            </span>
-                          </div>
-                        )}
-                        
-                        <div className="text-center space-y-4">
-                          <h3 className="text-2xl font-bold text-white">
-                            {section.title}
-                          </h3>
-                          <p className="text-sm text-gray-300 uppercase tracking-wider font-mono">
-                            {section.subtitle}
-                          </p>
-                          <p className="text-gray-200 leading-relaxed">
-                            {section.description}
-                          </p>
-                          
-                          <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className={`w-full mt-6 px-6 py-3 rounded-lg font-semibold transition-all ${
-                              section.highlight
-                                ? 'bg-blkout-primary hover:bg-blkout-warm text-white shadow-lg'
-                                : 'bg-white/10 hover:bg-white/20 text-white border border-white/30'
-                            }`}
-                          >
-                            {section.action}
-                          </motion.button>
-                        </div>
-                      </motion.div>
-                    ))}
+                        <div className="text-sm font-medium text-white group-hover:text-blkout-secondary transition-colors">Movement</div>
+                        <div className="text-xs text-gray-400 mt-1">Reports & Analysis</div>
+                      </a>
+                      
+                      <a 
+                        href="/media" 
+                        className="p-4 bg-white/10 border border-white/20 rounded-lg hover:bg-white/20 transition-all text-center group"
+                      >
+                        <div className="text-sm font-medium text-white group-hover:text-blkout-secondary transition-colors">Media</div>
+                        <div className="text-xs text-gray-400 mt-1">Stories & News</div>
+                      </a>
+                      
+                      <a 
+                        href="/events" 
+                        className="p-4 bg-white/10 border border-white/20 rounded-lg hover:bg-white/20 transition-all text-center group"
+                      >
+                        <div className="text-sm font-medium text-white group-hover:text-blkout-secondary transition-colors">Events</div>
+                        <div className="text-xs text-gray-400 mt-1">Community Gatherings</div>
+                      </a>
+                      
+                      <a 
+                        href="/resources" 
+                        className="p-4 bg-white/10 border border-white/20 rounded-lg hover:bg-white/20 transition-all text-center group"
+                      >
+                        <div className="text-sm font-medium text-white group-hover:text-blkout-secondary transition-colors">Resources</div>
+                        <div className="text-xs text-gray-400 mt-1">Tools & Guides</div>
+                      </a>
+                    </motion.div>
                   </div>
                   
                   {/* Footer Message */}

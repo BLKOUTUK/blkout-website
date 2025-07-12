@@ -330,10 +330,10 @@ export function searchKnowledgeBase(query: string, knowledgeBase: KnowledgeBaseI
       
       // Sort by how many search terms match
       const aMatches = searchTerms.filter(term => 
-        [item.question, item.answer, ...item.tags].join(' ').toLowerCase().includes(term)
+        [a.question, a.answer, ...a.tags].join(' ').toLowerCase().includes(term)
       ).length
       const bMatches = searchTerms.filter(term => 
-        [item.question, item.answer, ...item.tags].join(' ').toLowerCase().includes(term)
+        [b.question, b.answer, ...b.tags].join(' ').toLowerCase().includes(term)
       ).length
       
       return bMatches - aMatches
