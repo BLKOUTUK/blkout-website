@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import SimpleScrollytelling from './components/blkout/SimpleScrollytelling'
+import FullPageScrollytelling from './components/blkout/FullPageScrollytelling'
 import IvorChatbot from './components/blkout/IvorChatbot'
 
 // Import future page components
@@ -17,7 +17,7 @@ function App() {
       {/* Routes */}
       <Routes>
         {/* Landing page - Scrollytelling introduction */}
-        <Route path="/" element={<SimpleScrollytelling />} />
+        <Route path="/" element={<FullPageScrollytelling />} />
         
         {/* Traditional homepage for returning visitors */}
         <Route path="/home" element={<HomePage />} />
