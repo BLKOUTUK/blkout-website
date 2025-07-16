@@ -1,0 +1,8 @@
+services:
+  blkoutwebsite:
+    image: blkoutwebsite
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      NODE_ENV: production
