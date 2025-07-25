@@ -3,6 +3,8 @@ import { motion } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
 import WelcomeVideo from './WelcomeVideo'
 import BLKOUTHUBAccessRequest from './BLKOUTHUBAccessRequest'
+import IVORShowcase from './IVORShowcase'
+import CommunityEmailCapture from './CommunityEmailCapture'
 
 const slides = [
   {
@@ -46,6 +48,20 @@ const slides = [
     subtitle: 'Redefining Masculinity',
     content: 'How do we reimagine masculinity through tenderness and truth?',
     bgImage: '/images/male-bg.png'
+  },
+  {
+    id: 'ivor-intro',
+    title: 'MEET IVOR',
+    subtitle: 'Your Community Intelligence',
+    content: 'ivor',
+    bgImage: '/images/ivor-bg.png'
+  },
+  {
+    id: 'connect',
+    title: 'JOIN THE MOVEMENT',
+    subtitle: 'Ready to Build Together?',
+    content: 'connect',
+    bgImage: '/images/connect-bg.png'
   }
 ]
 
@@ -90,6 +106,21 @@ const SimpleScrollytelling: React.FC = () => {
           </motion.div>
         )}
 
+        {/* IVOR Showcase */}
+        {slide.id === 'ivor-intro' && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            className="mb-8"
+          >
+            <IVORShowcase 
+              userPathway="questioning"
+              onSignupPrompt={() => setCurrentSlide(slides.length - 1)}
+            />
+          </motion.div>
+        )}
+
         {/* Main Content */}
         <motion.div
           key={slide.id}
@@ -126,19 +157,71 @@ const SimpleScrollytelling: React.FC = () => {
           </motion.p>
         </motion.div>
 
-        {/* Call to Action on Last Slide */}
-        {currentSlide === slides.length - 1 && (
+        {/* Enhanced Connection Options on Last Slide */}
+        {slide.id === 'connect' && (
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1, duration: 0.8 }}
-            className="mt-12"
+            className="mt-12 space-y-8"
           >
+            {/* Primary CTA */}
             <BLKOUTHUBAccessRequest
               onSuccess={(data) => {
                 console.log('BLKOUTHUB access request submitted:', data)
               }}
             />
+            
+            {/* Secondary Newsletter Signup */}
+            <div className="max-w-xl mx-auto">
+              <CommunityEmailCapture
+                source="scrollytelling-connect"
+                variant="compact"
+                preselectedInterests={['newsletter', 'events', 'community']}
+                onSuccess={(trackingId) => {
+                  console.log('Email signup successful:', trackingId)
+                }}
+              />
+            </div>
+
+            {/* Quick Links to Other Parts of Ecosystem */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+              <motion.a 
+                href="/events" 
+                whileHover={{ scale: 1.05 }}
+                className="p-4 bg-black/20 rounded-lg text-center hover:bg-black/30 transition-all"
+              >
+                <div className="text-2xl mb-2">📅</div>
+                <div className="text-sm text-white">Events</div>
+              </motion.a>
+              
+              <motion.a 
+                href="/newsroom" 
+                whileHover={{ scale: 1.05 }}
+                className="p-4 bg-black/20 rounded-lg text-center hover:bg-black/30 transition-all"
+              >
+                <div className="text-2xl mb-2">📰</div>
+                <div className="text-sm text-white">Newsroom</div>
+              </motion.a>
+              
+              <motion.a 
+                href="/ivor" 
+                whileHover={{ scale: 1.05 }}
+                className="p-4 bg-black/20 rounded-lg text-center hover:bg-black/30 transition-all"
+              >
+                <div className="text-2xl mb-2">🤖</div>
+                <div className="text-sm text-white">IVOR AI</div>
+              </motion.a>
+              
+              <motion.a 
+                href="/governance" 
+                whileHover={{ scale: 1.05 }}
+                className="p-4 bg-black/20 rounded-lg text-center hover:bg-black/30 transition-all"
+              >
+                <div className="text-2xl mb-2">⚖️</div>
+                <div className="text-sm text-white">Governance</div>
+              </motion.a>
+            </div>
           </motion.div>
         )}
 
