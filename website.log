@@ -1,0 +1,57 @@
+
+> blkout-website@0.1.0 dev
+> vite
+
+
+  VITE v7.0.0  ready in 265 ms
+
+  ➜  Local:   http://127.0.0.1:8080/
+6:10:42 AM [vite] (client) page reload google-sheets-events.html
+6:20:10 AM [vite] (client) page reload simple-website.html
+10:52:37 AM [vite] (client) hmr update /src/App.tsx, /src/index.css
+10:52:37 AM [vite] (client) hmr update /src/components/blkout/IvorChatbot.tsx, /src/index.css
+10:52:37 AM [vite] (client) hmr update /src/index.css
+10:52:37 AM [vite] (client) hmr update /src/components/blkout/DirectAccessLayout.tsx, /src/index.css, /src/components/blkout/ParallaxCommunityValues.tsx, /src/components/blkout/StickyNavigation.tsx, /src/components/blkout/HorizontalScrollPrinciples.tsx
+10:52:37 AM [vite] (client) page reload src/main.tsx
+10:52:37 AM [vite] (client) page reload tailwind.config.js
+10:52:37 AM [vite] changed tsconfig file detected: /home/robbe/projects/blkout-website/tsconfig.json - Clearing cache and forcing full-reload to ensure TypeScript is compiled with updated config values.
+10:52:37 AM [vite] vite.config.js changed, restarting server...
+10:52:37 AM [vite] (client) page reload google-sheets-events.html
+10:52:37 AM [vite] (client) page reload simple-website.html
+10:52:37 AM [vite] (client) hmr update /src/components/blkout/BentoBoxLayout.tsx, /src/index.css
+10:52:37 AM [vite] (client) hmr update /src/components/blkout/ComplexityRhythm.tsx, /src/index.css
+10:52:37 AM [vite] (client) hmr update /src/components/blkout/DirectAccessLayout.tsx, /src/index.css
+10:52:37 AM [vite] (client) hmr update /src/components/blkout/EventsCalendarWidget.tsx, /src/index.css
+10:52:37 AM [vite] (client) hmr update /src/components/blkout/FloatingElements.tsx, /src/index.css
+10:52:37 AM [vite] (client) page reload src/components/blkout/GoogleSheetsEvents.tsx
+10:52:37 AM [vite] (client) hmr update /src/components/blkout/HeroVideoCarousel.tsx, /src/index.css
+10:52:37 AM [vite] (client) hmr update /src/components/blkout/HorizontalScrollPrinciples.tsx, /src/index.css
+10:52:37 AM [vite] (client) hmr update /src/components/blkout/IntroductoryPage.tsx, /src/index.css
+10:52:37 AM [vite] (client) hmr update /src/components/blkout/IvorAvatar.tsx, /src/index.css
+10:52:37 AM [vite] (client) hmr update /src/components/blkout/IvorEventCard.tsx, /src/index.css
+10:52:37 AM [vite] (client) page reload src/components/blkout/MediaGallery.tsx
+10:52:37 AM [vite] (client) hmr update /src/components/blkout/ParallaxCommunityValues.tsx, /src/index.css
+10:52:37 AM [vite] (client) hmr update /src/components/blkout/PreEngagementCarousel.tsx, /src/index.css
+10:52:37 AM [vite] (client) hmr update /src/components/blkout/RetroImage.tsx, /src/index.css
+10:52:37 AM [vite] (client) hmr update /src/components/blkout/RetroVideo.tsx, /src/index.css
+10:52:37 AM [vite] (client) page reload src/components/blkout/RetroVideoShowcase.tsx
+10:52:37 AM [vite] (client) hmr update /src/components/blkout/ScrollytellingHero.tsx, /src/index.css
+10:52:37 AM [vite] (client) hmr update /src/components/blkout/StickyNavigation.tsx, /src/index.css
+10:52:37 AM [vite] (client) hmr update /src/components/blkout/VCREffects.tsx, /src/index.css
+10:52:37 AM [vite] (client) page reload src/components/community/CommunityGateway.tsx
+10:52:37 AM [vite] (client) page reload src/components/community/HubReports.tsx
+10:52:37 AM [vite] (client) page reload src/components/magazine/ArticleGrid.tsx
+10:52:37 AM [vite] (client) page reload src/components/magazine/ArticlePage.tsx
+10:52:37 AM [vite] (client) page reload src/components/magazine/MagazineLayout.tsx
+10:52:37 AM [vite] (client) page reload src/components/magazine/StoriesPage.tsx
+10:52:37 AM [vite] (client) page reload src/components/movement/MovementIntro.tsx
+10:52:37 AM [vite] (client) hmr update /src/App.tsx, /src/index.css
+10:52:37 AM [vite] (client) page reload src/lib/ivor-config.ts
+10:52:37 AM [vite] (client) page reload src/lib/mediaAssets.ts
+10:52:37 AM [vite] server restarted.
+
+  ➜  Local:   http://localhost:3003/
+  ➜  Network: http://10.255.255.254:3003/
+  ➜  Network: http://172.30.133.123:3003/
+  ➜  Network: http://172.19.0.1:3003/
+12:28:14 PM [vite] (client) page reload google-sheets-working.html
