@@ -1,7 +1,7 @@
-import SimpleScrollytelling from './components/blkout/SimpleScrollytelling'
+import FullPageScrollytelling from './components/blkout/FullPageScrollytelling'
 
 function App() {
-  return <SimpleScrollytelling />
+  return <FullPageScrollytelling />
 }
 
 export default App
