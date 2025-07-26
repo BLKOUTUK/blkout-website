@@ -1,7 +1,7 @@
-import HomeSelector from './components/blkout/HomeSelector'
+import SimpleScrollytelling from './components/blkout/SimpleScrollytelling'
 
 function App() {
-  return <HomeSelector />
+  return <SimpleScrollytelling />
 }
 
 export default App
