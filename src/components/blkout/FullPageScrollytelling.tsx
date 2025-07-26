@@ -26,86 +26,78 @@ interface Slide {
   lessons?: any[]
 }
 
-// Slide data reconstructed from conversation logs
-const slides: Slide[] = [
+// Complete liberation slides array with all 19 sophisticated experiences
+const slides = [
   {
-    id: 'logo-intro',
-    title: 'BLKOUT UK',
-    subtitle: 'Black Queer Men\'s Liberation Through Technology',
-    content: 'Building collective power through cooperative ownership',
-    type: 'prose',
+    id: 'welcome',
+    type: 'video',
+    title: null,
+    subtitle: null,
+    content: null,
+    bgImage: null,
     font: 'font-mono'
   },
   {
-    id: 'video-intro',
-    title: '',
+    id: 'well-defined',
+    type: 'definition',
+    title: 'WELL DEFINED',
+    subtitle: 'COMPLEXITY IS ALL WE HAVE',
+    bgImage: '/images/WELL DEFINED FINAL -.png',
+    font: 'font-serif'
+  },
+  {
+    id: 'black',
+    type: 'definition',
+    title: 'BLACK?',
     subtitle: '',
-    content: '',
-    type: 'video',
-    videoUrl: '/blkout-intro-video.mp4'
+    content: [
+      { text: 'More than melanin.', style: 'glitch-text pixel-text' },
+      { text: 'Not just heritage.', style: 'broken-box p-4 mt-4' },
+      { text: "'Black British' remains a provocation to many,", style: 'vhs-lines p-2' },
+      { text: 'often the same ones who aspire to colourblindness', style: 'text-red-400 line-through' }
+    ],
+    bgImage: '/images/BLACK.png',
+    font: 'font-serif'
   },
   {
-    id: 'black-question',
-    title: 'Black?',
-    subtitle: 'What does Blackness mean in our liberation journey?',
-    content: 'We center Blackness as both identity and politic - a source of power, resilience, and revolutionary potential.',
-    type: 'prose',
-    font: 'font-bold'
+    id: 'queer',
+    type: 'definition', 
+    title: 'QUEER',
+    subtitle: 'RECLAIMED TERRITORY',
+    content: [
+      { text: 'the box for those who seek to reject boxes.', style: 'broken-box p-6 rotate-3' },
+      { text: 'reclaiming a slur', style: 'glitch-text text-2xl' },
+      { text: '(from the university library)', style: 'text-xs italic opacity-60 mt-2' }
+    ],
+    bgImage: '/images/queer -.png',
+    font: 'font-sans'
   },
   {
-    id: 'queer-question', 
-    title: 'Queer?',
-    subtitle: 'How does queerness amplify our collective power?',
-    content: 'Queerness isn\'t just sexuality - it\'s a rejection of systems that would diminish us, a celebration of authentic self-expression.',
-    type: 'prose',
-    font: 'font-bold'
+    id: 'male',
+    type: 'definition',
+    title: 'MALE*',
+    subtitle: '*TERMS AND CONDITIONS APPLY',
+    content: [
+      { text: 'The problem with masculinity *is* all men.', style: 'pixel-text text-3xl font-bold' },
+      { text: 'despite the harms and nowhere near Stockholm,', style: 'vhs-lines italic' },
+      { text: 'many of us find our jailers attractive', style: 'text-yellow-400 underline decoration-wavy' }
+    ],
+    bgImage: '/images/men-.png',
+    font: 'font-mono'
   },
   {
-    id: 'male-question',
-    title: 'Male?',
-    subtitle: 'What kind of masculinity serves liberation?',
-    content: 'We reimagine masculinity beyond toxic stereotypes - embracing vulnerability, community care, and collective healing.',
-    type: 'prose', 
-    font: 'font-bold'
-  },
-  {
-    id: 'pathway-quiz',
-    title: 'Discover Your Liberation Pathway',
-    subtitle: 'Every journey is unique',
-    content: '',
-    type: 'pathway-quiz',
-    questions: [
-      {
-        question: "What draws you most to community work?",
-        options: [
-          { text: "Direct mutual aid and support", pathway: "community-organizer" },
-          { text: "Creative expression and storytelling", pathway: "creative-catalyst" },
-          { text: "Technology and digital liberation", pathway: "tech-liberator" },
-          { text: "Policy and systemic change", pathway: "policy-advocate" }
-        ]
-      }
-    ]
-  },
-  {
-    id: 'ivor-introduction',
-    title: 'Meet IVOR',
-    subtitle: 'Your AI Community Assistant',
-    content: 'IVOR (Intelligent Virtual Organizer for Revolution) helps coordinate our collective liberation work.',
-    type: 'ivor-introduction'
-  },
-  {
-    id: 'ivor-demo',
-    title: 'IVOR in Action',
-    subtitle: 'Experience the future of community organizing',
-    content: '',
-    type: 'ivor-demo'
-  },
-  {
-    id: 'revelation',
-    title: 'Your Liberation Journey',
-    subtitle: 'Personalized insights for your pathway',
-    content: '',
-    type: 'revelation'
+    id: 'out',
+    type: 'definition',
+    title: 'OUT',
+    subtitle: 'VISIBILITY ≠ LIBERATION',
+    content: [
+      { text: 'Visibility isn\'t liberation.', style: 'glitch-text text-4xl' },
+      { text: '*visibility without power is surveillance', style: 'broken-box p-4 text-red-300 text-sm' },
+      { text: 'Being NOT STRAIGHT is not STRAIGHTFORWARD.', style: 'pixel-text rotate-1' },
+      { text: 'STRAIGHT can be over-rated', style: 'line-through opacity-70' }
+    ],
+    bgImage: '/images/out -.png',
+    font: 'font-serif'
   },
   {
     id: 'connect',
@@ -173,10 +165,38 @@ const FullPageScrollytelling: React.FC = () => {
               muted 
               loop 
               className="w-full h-full object-cover"
-              src={slide.videoUrl}
+              src={slide.videoUrl || "/images/welcomevidfinal.webm"}
             >
-              <source src={slide.videoUrl} type="video/mp4" />
+              <source src={slide.videoUrl || "/images/welcomevidfinal.webm"} type="video/webm" />
             </video>
+          </div>
+        )
+
+      case 'definition':
+        return (
+          <div className="absolute inset-0 z-20 flex items-center justify-center p-6 sm:p-8 lg:p-12">
+            <div className="relative w-full h-full flex items-center justify-center">
+              {slide.bgImage ? (
+                <img 
+                  src={slide.bgImage} 
+                  alt={`${slide.title}: Visual representation with artistic typography`}
+                  className="max-w-full max-h-full object-contain drop-shadow-2xl"
+                  style={{ 
+                    filter: 'brightness(1.05) contrast(1.1) saturate(1.15)',
+                    minHeight: '70vh',
+                    maxHeight: '85vh'
+                  }}
+                />
+              ) : (
+                <div className="text-center text-white">
+                  <h1 className="text-6xl md:text-8xl font-bold mb-8">{slide.title}</h1>
+                  <p className="text-2xl md:text-3xl text-gray-300">{slide.subtitle}</p>
+                  {Array.isArray(slide.content) && slide.content.map((item: any, i: number) => (
+                    <p key={i} className={`text-xl ${item.style || ''} mt-4`}>{item.text}</p>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         )
 
@@ -394,7 +414,7 @@ const FullPageScrollytelling: React.FC = () => {
             </div>
           )}
 
-          {slide.type === 'video' && renderSlideContent(slide, index)}
+          {(slide.type === 'video' || slide.type === 'definition') && renderSlideContent(slide, index)}
 
           {/* Slide Navigation */}
           {index < slides.length - 1 && (
