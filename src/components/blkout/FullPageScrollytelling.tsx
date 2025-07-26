@@ -100,6 +100,68 @@ const slides = [
     font: 'font-serif'
   },
   {
+    id: 'fake-quiz-trigger',
+    type: 'fake-quiz-trigger',
+    title: 'BEFORE WE CONTINUE...',
+    subtitle: 'A QUICK QUESTION',
+    content: 'We want to know if you belong here. Are you ready?',
+    questions: [
+      {
+        question: "Favorite weather?",
+        options: ["☀️ Sunny", "⛈️ Stormy", "🌧️ Rainy", "🤷🏾‍♂️ Don't notice"]
+      },
+      {
+        question: "Dream dinner guest?", 
+        options: ["👵🏾 Grandmother", "👑 Beyoncé", "✍🏾 James Baldwin", "💙 Rhyeim"]
+      }
+    ],
+    results: {
+      welcome: {
+        title: "CONGRATULATIONS! You passed!",
+        message: "Plot twist: There was never a test. Identity is liberation, not prison. Difference creates dialogue, not division. Black queer men belong here. You are ready to build power."
+      }
+    },
+    font: 'font-serif'
+  },
+  {
+    id: 'pathway-discovery',
+    type: 'pathway-quiz',
+    title: 'DISCOVER YOUR LIBERATION PATHWAY',
+    subtitle: 'FIND YOUR ROLE IN THE MOVEMENT',
+    content: 'Now that you\'ve explored what\'s possible, let\'s get curious about how you want to contribute to our collective liberation.',
+    font: 'font-serif'
+  },
+  {
+    id: 'meet-ivor',
+    type: 'ivor-introduction',
+    title: 'MEET IVOR',
+    subtitle: 'YOUR COMMUNITY INTELLIGENCE',
+    content: 'Based on your vision choices and pathway, I\'ve been preparing personalized support for your liberation journey.',
+    font: 'font-serif'
+  },
+  {
+    id: 'ivor-showcase',
+    type: 'ivor-demo',
+    title: 'IVOR IN ACTION',
+    subtitle: 'PERSONALIZED COMMUNITY INTELLIGENCE',
+    content: 'Here\'s what I found for you this week, based on your interests and pathway.',
+    font: 'font-serif'
+  },
+  {
+    id: 'own-stories',
+    type: 'revelation',
+    title: 'WHAT IF OUR STORIES CREATED LIBERATION DIALOGUES?',
+    subtitle: '',
+    content: [
+      { text: 'Not just told them and left.', style: 'text-3xl text-white mb-8' },
+      { text: 'Or sold them to the highest bidder?', style: 'text-2xl text-gray-300 mb-12' },
+      { text: 'Braver spaces. Bolder storytelling.', style: 'text-4xl text-blkout-primary font-bold mb-8' },
+      { text: 'Lifted each other up. Created representation on our terms.', style: 'text-xl text-gray-200' }
+    ],
+    bgImage: null, // TODO: Add welldef2.png when available
+    font: 'font-serif'
+  },
+  {
     id: 'connect',
     title: 'Join the Movement',
     subtitle: 'Ready to build together?',
@@ -288,6 +350,39 @@ const FullPageScrollytelling: React.FC = () => {
           />
         )
 
+      case 'fake-quiz-trigger':
+        return (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            viewport={{ once: false }}
+            className="max-w-4xl mx-auto space-y-8 text-center"
+          >
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
+              {slide.title}
+            </h1>
+            <p className="text-lg md:text-xl text-gray-300 uppercase tracking-wider font-mono mb-6">
+              {slide.subtitle}
+            </p>
+            <p className="text-xl text-gray-200 mb-8 italic">
+              {typeof slide.content === 'string' ? slide.content : ''}
+            </p>
+            
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-gradient-to-r from-blkout-primary to-blkout-warm px-8 py-4 rounded-lg text-white font-bold text-lg shadow-lg hover:shadow-xl transition-all"
+            >
+              Take The Test
+            </motion.button>
+            
+            <p className="text-sm text-gray-400 font-mono mt-4">
+              *This will only take a moment
+            </p>
+          </motion.div>
+        )
+
       case 'connect':
         return (
           <motion.div
@@ -303,7 +398,7 @@ const FullPageScrollytelling: React.FC = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1, delay: 0.2 }}
               >
-                <div className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 rounded-full px-6 py-2 mb-6">
+                <div className="inline-block bg-gradient-to-r from-blkout-primary to-blkout-warm rounded-full px-6 py-2 mb-6">
                   <span className="text-white font-mono text-xs uppercase tracking-widest font-bold">
                     The Journey Continues Here
                   </span>
@@ -311,7 +406,7 @@ const FullPageScrollytelling: React.FC = () => {
                 
                 <h1 className="text-5xl md:text-7xl font-bold mb-8 text-white leading-tight">
                   Ready to Build<br />
-                  <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-blkout-secondary to-blkout-accent bg-clip-text text-transparent">
                     Together?
                   </span>
                 </h1>
@@ -329,7 +424,7 @@ const FullPageScrollytelling: React.FC = () => {
               transition={{ duration: 0.8, delay: 0.6 }}
               className="text-center"
             >
-              <div className="bg-gradient-to-br from-gray-900/80 to-blue-900/80 backdrop-blur-sm rounded-2xl p-8 border border-blue-500/30 max-w-2xl mx-auto">
+              <div className="bg-gradient-to-br from-blkout-deep/80 to-blkout-primary/80 backdrop-blur-sm rounded-2xl p-8 border border-blkout-primary/30 max-w-2xl mx-auto">
                 <h2 className="text-3xl font-bold text-white mb-4">
                   Join BLKOUT HUB
                 </h2>
