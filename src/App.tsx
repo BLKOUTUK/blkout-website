@@ -1,7 +1,13 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import FullPageScrollytelling from './components/blkout/FullPageScrollytelling'
+import ProjectHub from './components/blkout/ProjectHub'
 import IntegrationDashboard from './components/blkout/IntegrationDashboard'
+import CommunityGateway from './components/community/CommunityGateway'
+import MagazineLayout from './components/magazine/MagazineLayout'
+import StoriesPage from './components/magazine/StoriesPage'
+import MovementIntro from './components/movement/MovementIntro'
+import HubReports from './components/community/HubReports'
 
 // Connect to actual backend services
 const NewsroomPage = () => {
@@ -173,7 +179,12 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<FullPageScrollytelling />} />
-        <Route path="/dashboard" element={<IntegrationDashboard />} />
+        <Route path="/dashboard" element={<ProjectHub />} />
+        <Route path="/admin" element={<IntegrationDashboard />} />
+        <Route path="/community" element={<CommunityGateway />} />
+        <Route path="/stories" element={<StoriesPage />} />
+        <Route path="/movement" element={<MovementIntro />} />
+        <Route path="/reports" element={<HubReports />} />
         <Route path="/newsroom" element={<NewsroomPage />} />
         <Route path="/events" element={<EventsPage />} />
         <Route path="/ivor" element={<IVORPage />} />

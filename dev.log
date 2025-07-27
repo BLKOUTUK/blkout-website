@@ -1,0 +1,21 @@
+
+> blkout-website@0.1.0 dev
+> vite
+
+11:47:14 AM [vite] (client) Re-optimizing dependencies because vite config has changed
+Port 5173 is in use, trying another one...
+Port 5174 is in use, trying another one...
+Port 5175 is in use, trying another one...
+
+  VITE v7.0.0  ready in 237 ms
+
+  ➜  Local:   http://localhost:5176/
+  ➜  Network: use --host to expose
+11:48:31 AM [vite] (client) hmr update /src/components/community/CommunityGateway.tsx, /src/index.css
+11:48:56 AM [vite] (client) hmr update /src/components/community/CommunityGateway.tsx, /src/index.css
+12:08:54 PM [vite] (client) hmr update /src/components/magazine/ArticleGrid.tsx, /src/index.css
+12:08:59 PM [vite] (client) hmr update /src/components/magazine/ArticleGrid.tsx, /src/index.css
+12:09:08 PM [vite] (client) hmr update /src/components/magazine/ArticleGrid.tsx, /src/index.css
+12:09:14 PM [vite] (client) hmr update /src/components/magazine/ArticleGrid.tsx, /src/index.css
+12:09:53 PM [vite] (client) hmr update /src/components/community/CommunityGateway.tsx, /src/index.css
+12:09:59 PM [vite] (client) hmr update /src/components/community/CommunityGateway.tsx, /src/index.css

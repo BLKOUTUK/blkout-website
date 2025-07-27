@@ -188,7 +188,7 @@ const slides = [
     subtitle: null,
     content: null,
     bgImage: null,
-    videoUrl: '/images/finalfinalwelcome ‑ Made with FlexClip.mp4',
+    videoUrl: '/images/Finalfinalwelcome ‑ Made With Flexclip.mp4',
     font: 'font-mono'
   },
   
@@ -565,7 +565,7 @@ Will you answer?`,
     title: 'IVOR IN ACTION',
     subtitle: 'PERSONALIZED COMMUNITY INTELLIGENCE',
     content: 'Here\'s what I found for you this week, based on your interests and pathway.',
-    bgImage: '/images/ivor.png',
+    bgImage: '/images/photo collage.png',
     font: 'font-serif'
   },
   
@@ -688,9 +688,9 @@ const FullPageScrollytelling: React.FC = () => {
               muted 
               loop 
               className="w-full h-full object-cover"
-              src={slide.videoUrl || "/images/welcomevidfinal.webm"}
+              src={slide.videoUrl || "/images/Finalfinalwelcome ‑ Made With Flexclip.mp4"}
             >
-              <source src={slide.videoUrl || "/images/welcomevidfinal.webm"} type="video/webm" />
+              <source src={slide.videoUrl || "/images/Finalfinalwelcome ‑ Made With Flexclip.mp4"} type="video/mp4" />
             </video>
           </div>
         )
