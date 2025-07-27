@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { ChevronDown } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import WelcomeVideo from './WelcomeVideo'
 import BLKOUTHUBAccessRequest from './BLKOUTHUBAccessRequest'
 import IVORShowcase from './IVORShowcase'
@@ -185,42 +186,66 @@ const SimpleScrollytelling: React.FC = () => {
             </div>
 
             {/* Quick Links to Other Parts of Ecosystem */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-              <motion.a 
-                href="/events" 
-                whileHover={{ scale: 1.05 }}
-                className="p-4 bg-black/20 rounded-lg text-center hover:bg-black/30 transition-all"
-              >
-                <div className="text-2xl mb-2">📅</div>
-                <div className="text-sm text-white">Events</div>
-              </motion.a>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-8">
+              <Link to="/events">
+                <motion.div 
+                  whileHover={{ scale: 1.05 }}
+                  className="p-4 bg-black/20 rounded-lg text-center hover:bg-black/30 transition-all"
+                >
+                  <div className="text-2xl mb-2">📅</div>
+                  <div className="text-sm text-white">Events</div>
+                </motion.div>
+              </Link>
               
-              <motion.a 
-                href="/newsroom" 
-                whileHover={{ scale: 1.05 }}
-                className="p-4 bg-black/20 rounded-lg text-center hover:bg-black/30 transition-all"
-              >
-                <div className="text-2xl mb-2">📰</div>
-                <div className="text-sm text-white">Newsroom</div>
-              </motion.a>
+              <Link to="/media/newsroom">
+                <motion.div 
+                  whileHover={{ scale: 1.05 }}
+                  className="p-4 bg-black/20 rounded-lg text-center hover:bg-black/30 transition-all"
+                >
+                  <div className="text-2xl mb-2">📰</div>
+                  <div className="text-sm text-white">Newsroom</div>
+                </motion.div>
+              </Link>
               
-              <motion.a 
-                href="/ivor" 
-                whileHover={{ scale: 1.05 }}
-                className="p-4 bg-black/20 rounded-lg text-center hover:bg-black/30 transition-all"
-              >
-                <div className="text-2xl mb-2">🤖</div>
-                <div className="text-sm text-white">IVOR AI</div>
-              </motion.a>
+              <Link to="/media/channel">
+                <motion.div 
+                  whileHover={{ scale: 1.05 }}
+                  className="p-4 bg-black/20 rounded-lg text-center hover:bg-black/30 transition-all"
+                >
+                  <div className="text-2xl mb-2">📺</div>
+                  <div className="text-sm text-white">Channel</div>
+                </motion.div>
+              </Link>
               
-              <motion.a 
-                href="/governance" 
-                whileHover={{ scale: 1.05 }}
-                className="p-4 bg-black/20 rounded-lg text-center hover:bg-black/30 transition-all"
-              >
-                <div className="text-2xl mb-2">⚖️</div>
-                <div className="text-sm text-white">Governance</div>
-              </motion.a>
+              <Link to="/media/storylab">
+                <motion.div 
+                  whileHover={{ scale: 1.05 }}
+                  className="p-4 bg-black/20 rounded-lg text-center hover:bg-black/30 transition-all"
+                >
+                  <div className="text-2xl mb-2">✍️</div>
+                  <div className="text-sm text-white">Storylab</div>
+                </motion.div>
+              </Link>
+              
+              <Link to="/ivor">
+                <motion.div 
+                  whileHover={{ scale: 1.05 }}
+                  className="p-4 bg-black/20 rounded-lg text-center hover:bg-black/30 transition-all"
+                >
+                  <div className="text-2xl mb-2">🤖</div>
+                  <div className="text-sm text-white">IVOR AI</div>
+                </motion.div>
+              </Link>
+              
+              <Link to="/governance">
+                <motion.div 
+                  whileHover={{ scale: 1.05 }}
+                  className="p-4 bg-black/20 rounded-lg text-center hover:bg-black/30 transition-all"
+                >
+                  <div className="text-2xl mb-2">⚖️</div>
+                  <div className="text-sm text-white">Governance</div>
+                </motion.div>
+              </Link>
             </div>
           </motion.div>
         )}
