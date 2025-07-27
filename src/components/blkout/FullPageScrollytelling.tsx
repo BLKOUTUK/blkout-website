@@ -1171,53 +1171,15 @@ const FullPageScrollytelling: React.FC = () => {
                           }}
                         />
                       ) : section.title === 'EXPLORE' ? (
-                        <div className="space-y-3">
-                          <Link to="/media/newsroom">
-                            <motion.button
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                              className="w-full bg-gray-700 text-white hover:bg-gray-600 px-4 py-2 rounded-lg font-bold transition-all shadow-lg text-sm"
-                            >
-                              📰 Newsroom
-                            </motion.button>
-                          </Link>
-                          <Link to="/events">
-                            <motion.button
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                              className="w-full bg-gray-700 text-white hover:bg-gray-600 px-4 py-2 rounded-lg font-bold transition-all shadow-lg text-sm"
-                            >
-                              📅 Events
-                            </motion.button>
-                          </Link>
-                          <Link to="/ivor">
-                            <motion.button
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                              className="w-full bg-gray-700 text-white hover:bg-gray-600 px-4 py-2 rounded-lg font-bold transition-all shadow-lg text-sm"
-                            >
-                              🤖 IVOR AI
-                            </motion.button>
-                          </Link>
-                          <Link to="/media/channel">
-                            <motion.button
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                              className="w-full bg-gray-700 text-white hover:bg-gray-600 px-4 py-2 rounded-lg font-bold transition-all shadow-lg text-sm"
-                            >
-                              📺 Channel
-                            </motion.button>
-                          </Link>
-                          <Link to="/media/storylab">
-                            <motion.button
-                              whileHover={{ scale: 1.05 }}
-                              whileTap={{ scale: 0.95 }}
-                              className="w-full bg-gray-700 text-white hover:bg-gray-600 px-4 py-2 rounded-lg font-bold transition-all shadow-lg text-sm"
-                            >
-                              ✍️ Storylab
-                            </motion.button>
-                          </Link>
-                        </div>
+                        <Link to="/dashboard">
+                          <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="w-full bg-gray-700 text-white hover:bg-gray-600 px-6 py-3 rounded-lg font-bold transition-all shadow-lg"
+                          >
+                            Enter Dashboard
+                          </motion.button>
+                        </Link>
                       ) : (
                         <motion.button
                           whileHover={{ scale: 1.05 }}

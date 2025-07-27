@@ -194,41 +194,19 @@ const EnhancedQuiz: React.FC<QuizProps> = ({ slide, onComplete }) => {
               Connect with content and community that serves your pathway.
             </p>
             
-            {/* Pathway-Specific Navigation */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Newsroom - for analysis and community news */}
-              <Link to="/media/newsroom">
+            {/* Continue to Dashboard */}
+            <div className="max-w-md mx-auto">
+              <Link to="/dashboard">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
-                  className="p-6 bg-black/30 hover:bg-black/40 rounded-xl border border-white/20 transition-all"
+                  className="p-8 bg-gradient-to-br from-blkout-primary/30 to-blkout-warm/30 hover:from-blkout-primary/40 hover:to-blkout-warm/40 rounded-xl border border-blkout-primary/30 transition-all text-center"
                 >
-                  <div className="text-3xl mb-3">📰</div>
-                  <h4 className="text-lg font-bold text-white mb-2">Community News</h4>
-                  <p className="text-sm text-gray-300">Liberation analysis & community updates</p>
-                </motion.div>
-              </Link>
-              
-              {/* Channel BLKOUT - for video content and education */}
-              <Link to="/media/channel">
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  className="p-6 bg-black/30 hover:bg-black/40 rounded-xl border border-white/20 transition-all"
-                >
-                  <div className="text-3xl mb-3">📺</div>
-                  <h4 className="text-lg font-bold text-white mb-2">Channel BLKOUT</h4>
-                  <p className="text-sm text-gray-300">Video stories & educational content</p>
-                </motion.div>
-              </Link>
-              
-              {/* Storylab - for personal expression and community stories */}
-              <Link to="/media/storylab">
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  className="p-6 bg-black/30 hover:bg-black/40 rounded-xl border border-white/20 transition-all"
-                >
-                  <div className="text-3xl mb-3">✍️</div>
-                  <h4 className="text-lg font-bold text-white mb-2">Storylab</h4>
-                  <p className="text-sm text-gray-300">Share your story & connect with others</p>
+                  <div className="text-4xl mb-4">🚀</div>
+                  <h4 className="text-xl font-bold text-white mb-3">Enter Your Dashboard</h4>
+                  <p className="text-sm text-gray-300 mb-4">Access all BLKOUT projects from your personalized hub</p>
+                  <div className="text-xs text-blkout-light">
+                    Newsroom • Events • IVOR AI • Channel • Storylab • Community Hub
+                  </div>
                 </motion.div>
               </Link>
             </div>

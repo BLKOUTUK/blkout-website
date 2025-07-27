@@ -1,6 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import FullPageScrollytelling from './components/blkout/FullPageScrollytelling'
+import IntegrationDashboard from './components/blkout/IntegrationDashboard'
 
 // Connect to actual backend services
 const NewsroomPage = () => {
@@ -172,6 +173,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<FullPageScrollytelling />} />
+        <Route path="/dashboard" element={<IntegrationDashboard />} />
         <Route path="/newsroom" element={<NewsroomPage />} />
         <Route path="/events" element={<EventsPage />} />
         <Route path="/ivor" element={<IVORPage />} />
