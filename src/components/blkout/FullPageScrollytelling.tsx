@@ -188,8 +188,18 @@ const slides = [
     subtitle: null,
     content: null,
     bgImage: null,
-    videoUrl: '/images/Finalfinalwelcome ‑ Made With Flexclip.mp4',
+    videoUrl: '/images/squared/Finalfinalwelcome SQUARED.mp4',
     font: 'font-mono'
+  },
+  
+  // Value Proposition Opening
+  {
+    id: 'value-proposition',
+    type: 'prose',
+    title: 'WHERE BLACK QUEER MEN BUILD COLLECTIVE POWER',
+    subtitle: 'TECHNOLOGY FOR LIBERATION, NOT EXTRACTION',
+    content: 'BLKOUT creates cooperative platforms where Black queer men control their stories, resources, and future. We build technology that serves community liberation over corporate profits. Join us in reimagining what digital solidarity looks like.',
+    font: 'font-sans'
   },
   
   // 2-6. Definitions (Well Defined + BLACK/QUEER/MALE/OUT)
@@ -198,9 +208,18 @@ const slides = [
     type: 'definition',
     title: 'WELL DEFINED',
     subtitle: 'COMPLEXITY IS ALL WE HAVE',
-    bgImage: '/images/WELL DEFINED FINAL -.png',
+    bgImage: 'WELLDEF_SQUARED.png',
     font: 'font-serif'
   },
+  
+  // Chapter 1
+  {
+    id: 'chapter-1',
+    type: 'chapter',
+    title: '1. LIBERATION DIALOGUE: UNITY DOESN\'T MEAN UNIFORMITY',
+    font: 'font-sans'
+  },
+  
   {
     id: 'black',
     type: 'definition',
@@ -212,7 +231,7 @@ const slides = [
       { text: "'Black British' remains a provocation to many,", style: 'vhs-lines p-2' },
       { text: 'often the same ones who aspire to colourblindness', style: 'text-red-400 line-through' }
     ],
-    bgImage: '/images/BLACK.png',
+    bgImage: 'BlackSQUARED.png',
     font: 'font-serif'
   },
   {
@@ -225,7 +244,7 @@ const slides = [
       { text: 'reclaiming a slur', style: 'glitch-text text-2xl' },
       { text: '(from the university library)', style: 'text-xs italic opacity-60 mt-2' }
     ],
-    bgImage: '/images/queer -.png',
+    bgImage: 'queerSQUARED.PNG',
     font: 'font-sans'
   },
   {
@@ -238,7 +257,7 @@ const slides = [
       { text: 'despite the harms and nowhere near Stockholm,', style: 'vhs-lines italic' },
       { text: 'many of us find our jailers attractive', style: 'text-yellow-400 underline decoration-wavy' }
     ],
-    bgImage: '/images/men-.png',
+    bgImage: 'menSQUARED.png',
     font: 'font-mono'
   },
   {
@@ -252,7 +271,7 @@ const slides = [
       { text: 'Being NOT STRAIGHT is not STRAIGHTFORWARD.', style: 'pixel-text rotate-1' },
       { text: 'STRAIGHT can be over-rated', style: 'line-through opacity-70' }
     ],
-    bgImage: '/images/out -.png',
+    bgImage: 'outSQUARED.png',
     font: 'font-serif'
   },
   
@@ -262,7 +281,7 @@ const slides = [
     type: 'definition',
     title: 'LIBERATION DIALOGUE',
     subtitle: 'DISRUPTION, DIFFERENCE, MEANING-MAKING',
-    bgImage: '/images/LIBERATION.png',
+    bgImage: 'liberationSQUARED.png',
     font: 'font-serif'
   },
   
@@ -295,6 +314,14 @@ const slides = [
     },
     bgImage: null,
     font: 'font-serif'
+  },
+  
+  // Chapter 2
+  {
+    id: 'chapter-2',
+    type: 'chapter',
+    title: '2. GOING TOGETHER: SHARING EXPERIENCES, SHARING AMBITIONS',
+    font: 'font-sans'
   },
   
   // 9. Quiz response - remove duplicate, handled by fake-quiz-trigger component
@@ -371,10 +398,10 @@ The reward? A legacy of liberation that extends far beyond your individual journ
   {
     id: 'future-visioning',
     type: 'visioning-bridge',
-    title: 'CLOSE YOUR EYES. IMAGINE...',
+    title: 'IMAGINE',
     subtitle: 'WHAT COULD WE BUILD TOGETHER?',
     content: 'In your mind, step into a future where Black queer men have everything we need to thrive. What do you see? What feels possible when we work together?',
-    bgImage: '/images/blkoutuk.com%20v3/sunrise.png',
+    bgImage: 'sunrise SQUARED.png',
     font: 'font-serif'
   },
   
@@ -390,7 +417,7 @@ The reward? A legacy of liberation that extends far beyond your individual journ
       { text: 'Braver spaces. Bolder storytelling.', style: 'text-4xl text-blkout-primary font-bold mb-8' },
       { text: 'Lifted each other up. Created representation on our terms.', style: 'text-xl text-gray-200' }
     ],
-    bgImage: '/images/blkoutuk.com%20v3/seat%20with%20baldwin.png',
+    bgImage: 'seat with baldwin SQUARED.png',
     font: 'font-serif'
   },
   
@@ -405,7 +432,7 @@ The reward? A legacy of liberation that extends far beyond your individual journ
       { text: 'Resources controlled by us. From health to culture, housing to tech.', style: 'text-2xl text-gray-300 mb-12' },
       { text: 'Liberation plus financial independence.', style: 'text-4xl text-blkout-secondary font-bold' }
     ],
-    bgImage: '/images/blkoutuk.com%20v3/capacity.png',
+    bgImage: 'capacitySQUARED.png',
     font: 'font-serif'
   },
   
@@ -420,7 +447,7 @@ The reward? A legacy of liberation that extends far beyond your individual journ
       { text: 'Cathedral-building legacy. Trusting each other not to blow it all on a one-day party.', style: 'text-2xl text-gray-300 mb-12' },
       { text: 'The revolution is cooperative. Raise your voice.', style: 'text-4xl text-blkout-accent font-bold' }
     ],
-    bgImage: '/images/imagine.png',
+    bgImage: 'imagine SQUARED.png',
     font: 'font-serif'
   },
   
@@ -428,7 +455,7 @@ The reward? A legacy of liberation that extends far beyond your individual journ
   {
     id: 'story-powered-video',
     type: 'video',
-    videoUrl: '/images/story powered full width (Video).mp4',
+    videoUrl: '/images/squared/story powered SQUARED).mp4',
     autoplay: true,
     font: 'font-sans'
   },
@@ -439,7 +466,7 @@ The reward? A legacy of liberation that extends far beyond your individual journ
     type: 'definition',
     title: 'OUR PROJECTS',
     subtitle: 'BUILDING LIBERATION TOGETHER',
-    bgImage: '/images/projects.png',
+    bgImage: 'projects SQUAREDpng.png',
     font: 'font-sans'
   },
   
@@ -462,6 +489,14 @@ The door is open. The work is waiting. The future is calling.
 Will you answer?`,
     colorTheme: 'from-blue-500 to-blue-700',
     textColor: 'text-blue-100',
+    font: 'font-sans'
+  },
+  
+  // Chapter 3
+  {
+    id: 'chapter-3',
+    type: 'chapter',
+    title: '3. AMPLIFYING INFLUENCE: YOUR VOICE MATTERS HERE',
     font: 'font-sans'
   },
   
@@ -565,7 +600,7 @@ Will you answer?`,
     title: 'IVOR IN ACTION',
     subtitle: 'PERSONALIZED COMMUNITY INTELLIGENCE',
     content: 'Here\'s what I found for you this week, based on your interests and pathway.',
-    bgImage: '/images/photo collage.png',
+    bgImage: 'photo collage Video.mp4',
     font: 'font-serif'
   },
   
@@ -599,7 +634,7 @@ Will you answer?`,
         highlight: false
       }
     ],
-    bgImage: '/images/blkoutuk.com%20v3/facecard.png',
+    bgImage: 'facecard SQUARED.png',
     font: 'font-sans'
   }
 ]
@@ -680,6 +715,37 @@ const FullPageScrollytelling: React.FC = () => {
 
   const renderSlideContent = (slide: Slide, index: number): React.ReactNode => {
     switch (slide.type) {
+      case 'chapter':
+        return (
+          <div className="absolute inset-0 z-20 flex items-center justify-center p-6 sm:p-8 lg:p-12">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1 }}
+              viewport={{ once: false }}
+              className="bg-white rounded-2xl shadow-2xl p-8 md:p-12 lg:p-16 max-w-4xl mx-auto text-center border border-gray-200"
+            >
+              <div className="flex flex-col items-center space-y-6">
+                <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-black leading-tight"
+                    style={{ fontFamily: 'Arial Black, Arial, sans-serif' }}>
+                  {slide.title}
+                </h1>
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.8, delay: 0.3 }}
+                  className="flex items-center justify-center"
+                >
+                  <img 
+                    src="/images/favicon2.png" 
+                    alt="BLKOUT" 
+                    className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 opacity-80"
+                  />
+                </motion.div>
+              </div>
+            </motion.div>
+          </div>
+        )
       case 'video':
         return (
           <div className="relative w-full h-full flex items-center justify-center">
@@ -688,9 +754,9 @@ const FullPageScrollytelling: React.FC = () => {
               muted 
               loop 
               className="w-full h-full object-cover"
-              src={slide.videoUrl || "/images/Finalfinalwelcome ‑ Made With Flexclip.mp4"}
+              src={slide.videoUrl || "/images/squared/Finalfinalwelcome SQUARED.mp4"}
             >
-              <source src={slide.videoUrl || "/images/Finalfinalwelcome ‑ Made With Flexclip.mp4"} type="video/mp4" />
+              <source src={slide.videoUrl || "/images/squared/Finalfinalwelcome SQUARED.mp4"} type="video/mp4" />
             </video>
           </div>
         )
@@ -712,8 +778,8 @@ const FullPageScrollytelling: React.FC = () => {
                 />
               ) : (
                 <div className="text-center text-white">
-                  <h1 className="text-6xl md:text-8xl font-bold mb-8 heading-block">{slide.title}</h1>
-                  <p className="text-2xl md:text-3xl text-gray-300">{slide.subtitle}</p>
+                  <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-8 heading-block">{slide.title}</h1>
+                  <p className="text-xl md:text-2xl lg:text-3xl text-gray-300">{slide.subtitle}</p>
                   {Array.isArray(slide.content) && slide.content.map((item: any, i: number) => (
                     <p key={i} className={`text-xl ${item.style || ''} mt-4`}>{item.text}</p>
                   ))}
@@ -732,11 +798,11 @@ const FullPageScrollytelling: React.FC = () => {
             viewport={{ once: false }}
             className="max-w-4xl mx-auto space-y-8"
           >
-            <h1 className={`text-6xl md:text-8xl font-bold text-white heading-block ${slide.font || ''}`}>
+            <h1 className={`text-5xl md:text-7xl lg:text-8xl font-bold text-white heading-block ${slide.font || ''}`}>
               {slide.title}
             </h1>
             {slide.subtitle && (
-              <p className="text-2xl md:text-3xl text-gray-300">
+              <p className="text-xl md:text-2xl lg:text-3xl text-gray-300">
                 {slide.subtitle}
               </p>
             )}
@@ -1156,30 +1222,107 @@ const FullPageScrollytelling: React.FC = () => {
                       </p>
                       
                       {section.title === 'BLKOUTHUB' ? (
-                        <BLKOUTHUBAccessRequest
-                          onSuccess={(data) => {
-                            console.log('BLKOUTHUB access request submitted:', data)
-                          }}
-                        />
-                      ) : section.title === 'NEWSLETTER' ? (
-                        <CommunityEmailCapture
-                          source="scrollytelling"
-                          variant="compact"
-                          preselectedInterests={['newsletter']}
-                          onSuccess={(trackingId) => {
-                            console.log('Email signup successful:', trackingId)
-                          }}
-                        />
-                      ) : section.title === 'EXPLORE' ? (
-                        <Link to="/dashboard">
+                        <a href="https://blkouthub.com/invitation?code=BE862C" target="_blank" rel="noopener noreferrer">
                           <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className="w-full bg-gray-700 text-white hover:bg-gray-600 px-6 py-3 rounded-lg font-bold transition-all shadow-lg"
+                            className="w-full bg-electric-magenta text-white hover:bg-electric-cyan px-6 py-3 rounded-lg font-bold transition-all shadow-lg"
                           >
-                            Enter Dashboard
+                            Join BLKOUTHUB
                           </motion.button>
-                        </Link>
+                        </a>
+                      ) : section.title === 'NEWSLETTER' ? (
+                        <div className="newsletter-signup">
+                          <form 
+                            method="post" 
+                            action="https://sendfox.com/form/3zpwee/1wj276" 
+                            className="sendfox-form space-y-4" 
+                            id="1wj276" 
+                            data-async="true" 
+                            data-recaptcha="true"
+                          >
+                            <div>
+                              <label htmlFor="sendfox_form_name" className="block text-sm font-medium text-gray-200 mb-2">
+                                First Name:
+                              </label>
+                              <input 
+                                type="text" 
+                                id="sendfox_form_name" 
+                                placeholder="First Name" 
+                                name="first_name" 
+                                required 
+                                className="w-full px-3 py-2 border border-gray-600 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:ring-2 focus:ring-electric-magenta focus:border-transparent"
+                              />
+                            </div>
+                            <div>
+                              <label htmlFor="sendfox_form_email" className="block text-sm font-medium text-gray-200 mb-2">
+                                Email:
+                              </label>
+                              <input 
+                                type="email" 
+                                id="sendfox_form_email" 
+                                placeholder="Email" 
+                                name="email" 
+                                required 
+                                className="w-full px-3 py-2 border border-gray-600 rounded-lg bg-gray-800 text-white placeholder-gray-400 focus:ring-2 focus:ring-electric-magenta focus:border-transparent"
+                              />
+                            </div>
+                            <div className="flex items-start space-x-2">
+                              <input 
+                                type="checkbox" 
+                                name="gdpr" 
+                                value="1" 
+                                required 
+                                className="mt-1 h-4 w-4 text-electric-magenta focus:ring-electric-magenta border-gray-600 rounded bg-gray-800"
+                              />
+                              <label className="text-sm text-gray-300">
+                                I agree to receive email updates and promotions.
+                              </label>
+                            </div>
+                            <div style={{ position: 'absolute', left: '-5000px' }} aria-hidden="true">
+                              <input type="text" name="a_password" tabIndex={-1} defaultValue="" autoComplete="off" />
+                            </div>
+                            <motion.button 
+                              type="submit"
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              className="w-full bg-electric-magenta text-white hover:bg-electric-cyan px-6 py-3 rounded-lg font-bold transition-all shadow-lg"
+                            >
+                              Subscribe
+                            </motion.button>
+                          </form>
+                          <script src="https://cdn.sendfox.com/js/form.js" charSet="utf-8"></script>
+                        </div>
+                      ) : section.title === 'EXPLORE' ? (
+                        <div className="space-y-3">
+                          <Link to="/stories">
+                            <motion.button
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              className="w-full bg-electric-magenta text-white hover:bg-electric-cyan px-4 py-2 rounded-lg font-medium transition-all shadow-lg mb-2"
+                            >
+                              Newsroom & Stories
+                            </motion.button>
+                          </Link>
+                          <Link to="/community">
+                            <motion.button
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              className="w-full bg-electric-cyan text-white hover:bg-electric-indigo px-4 py-2 rounded-lg font-medium transition-all shadow-lg mb-2"
+                            >
+                              Community Hub
+                            </motion.button>
+                          </Link>
+                          <a href="https://black-qtipoc-events-calendar.vercel.app/" target="_blank" rel="noopener noreferrer">
+                            <motion.button
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                              className="w-full bg-electric-indigo text-white hover:bg-electric-green px-4 py-2 rounded-lg font-medium transition-all shadow-lg"
+                            >
+                              Events Calendar
+                            </motion.button>
+                          </a>
+                        </div>
                       ) : (
                         <motion.button
                           whileHover={{ scale: 1.05 }}
@@ -1242,13 +1385,27 @@ const FullPageScrollytelling: React.FC = () => {
         <div
           key={slide.id}
           data-slide-index={index}
-          className={`slide relative min-h-screen w-full flex items-center justify-center px-4 sm:px-6 lg:px-8 py-8 ${
-            (slide as any).bgImage && slide.type !== 'revelation' && slide.type !== 'definition' ? 'bg-cover bg-center bg-no-repeat' : ''
-          }`}
-          style={{
-            backgroundImage: (slide as any).bgImage && slide.type !== 'revelation' && slide.type !== 'definition' ? `url(${(slide as any).bgImage})` : undefined,
-          }}
+          className="slide relative min-h-screen w-full flex items-center justify-center px-4 sm:px-6 lg:px-8 py-8 bg-black"
         >
+          {/* Square container for slide content */}
+          <div className="relative w-full max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-3xl mx-auto">
+            {/* 1:1 aspect ratio container */}
+            <div className="aspect-square w-full relative rounded-2xl overflow-hidden shadow-2xl">
+              {/* Background */}
+              <div 
+                className={`absolute inset-0 ${
+                  (slide as any).bgImage 
+                    ? 'bg-cover bg-center bg-no-repeat' 
+                    : 'bg-gradient-to-br from-gray-900 via-black to-gray-800'
+                }`}
+                style={{
+                  backgroundImage: (slide as any).bgImage ? `url(/images/squared/${(slide as any).bgImage})` : undefined
+                }}
+              />
+              
+              {/* Content container */}
+              <div className="relative z-10 w-full h-full flex items-center justify-center">
+                <div className={`w-full text-center ${slide.font || ''}`}>
           {(slide as any).bgImage && slide.type !== 'fake-quiz-trigger' && slide.type !== 'pathway-quiz' && slide.type !== 'revelation' && slide.type !== 'definition' && (
             <div className="absolute inset-0 bg-black/60 z-0" />
           )}
@@ -1264,8 +1421,12 @@ const FullPageScrollytelling: React.FC = () => {
           )}
 
           {(slide.type === 'video' || slide.type === 'definition' || slide.type === 'revelation') && renderSlideContent(slide, index)}
+                </div>
+              </div>
+            </div>
+          </div>
 
-          {/* Slide Navigation */}
+          {/* Slide Navigation - outside square container */}
           {index < slides.length - 1 && (
             <motion.button
               initial={{ opacity: 0 }}
