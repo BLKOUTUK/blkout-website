@@ -593,24 +593,24 @@ Will you answer?`,
   
   // 19. Skip - IVOR introduction now integrated into quiz response
   
-  // 20. Bespoke pathway
+  // 20. Photo Collage Video
   {
-    id: 'ivor-showcase',
-    type: 'ivor-demo',
+    id: 'photo-collage',
+    type: 'video',
     title: 'IVOR IN ACTION',
     subtitle: 'PERSONALIZED COMMUNITY INTELLIGENCE',
     content: 'Here\'s what I found for you this week, based on your interests and pathway.',
-    bgImage: 'photo collage Video.mp4',
+    videoUrl: '/images/squared/photo collage Video.mp4',
     font: 'font-serif'
   },
   
-  // 21. Ready to join?
+  // 21. Primary CTA - BLKOUTHUB
   {
-    id: 'connect',
+    id: 'blkouthub-cta',
     type: 'connect',
     title: 'READY TO JOIN?',
-    subtitle: 'YOUR LIBERATION JOURNEY CONTINUES',
-    content: 'You&apos;ve seen what IVOR can do. Want weekly personalized intelligence, real community support, and collective action opportunities?',
+    subtitle: 'YOUR LIBERATION JOURNEY STARTS HERE',
+    content: 'You&apos;ve seen what IVOR can do. Ready for weekly personalized intelligence, real community support, and collective action opportunities?',
     sections: [
       {
         title: 'BLKOUTHUB',
@@ -618,13 +618,26 @@ Will you answer?`,
         description: 'Full access to IVOR, community support, and collective action. Your liberation journey starts here.',
         action: 'Join BLKOUTHUB',
         highlight: true
-      },
+      }
+    ],
+    bgImage: 'facecard SQUARED.png',
+    font: 'font-sans'
+  },
+  
+  // 22. Secondary CTAs - Newsletter & Explore
+  {
+    id: 'secondary-ctas',
+    type: 'connect',
+    title: 'STAY CONNECTED',
+    subtitle: 'CHOOSE YOUR LEVEL OF ENGAGEMENT',
+    content: 'Not ready for full membership? There are other ways to stay connected and support the movement.',
+    sections: [
       {
         title: 'NEWSLETTER',
         subtitle: 'For Everyone',
         description: 'Stay connected with our latest projects, events, and community stories. No commitment required.',
         action: 'Subscribe',
-        highlight: false
+        highlight: true
       },
       {
         title: 'EXPLORE',
@@ -634,7 +647,7 @@ Will you answer?`,
         highlight: false
       }
     ],
-    bgImage: 'facecard SQUARED.png',
+    bgImage: 'liberationSQUARED.png',
     font: 'font-sans'
   }
 ]
