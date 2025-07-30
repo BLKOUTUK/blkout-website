@@ -8,6 +8,7 @@ import {
   Sparkles, Clock, User, Send, CheckCircle,
   Shield, Target, Zap, Globe, ChevronDown
 } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import PrimaryNavigationEnhanced from '../layout/PrimaryNavigationEnhanced'
 
 // Community Hero Section  
@@ -78,14 +79,13 @@ const CommunityHero = () => (
             <Users className="w-6 h-6 mr-3" />
             JOIN BLKOUTHUB
           </motion.button>
-          <motion.button 
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+          <Link
+            to="/discussions"
             className="px-12 py-4 border-2 border-indigo-400 text-indigo-100 font-black text-lg hover:bg-indigo-400 hover:text-indigo-900 transition-all duration-300 heading-block uppercase tracking-wide flex items-center"
           >
             <MessageCircle className="w-6 h-6 mr-3" />
             START DISCUSSION
-          </motion.button>
+          </Link>
         </motion.div>
 
         {/* Community Stats */}

@@ -11,7 +11,7 @@ const navigationItems = [
   { name: 'I.V.O.R.', href: '/ivor', description: 'AI assistant and resource finder' },
   { name: 'Events', href: '/events', description: 'Community events calendar' },
   { name: 'Our Movement', href: '/movement', description: 'Movement principles and community values' },
-  { name: 'Join Discussion', href: '/community', description: 'Community engagement and HUB access' }
+  { name: 'Join Discussion', href: '/discussions', description: 'Community discussions and conversations' }
 ]
 
 interface PrimaryNavigationProps {
@@ -31,15 +31,28 @@ export default function PrimaryNavigationEnhanced({ className = '' }: PrimaryNav
   }
 
   return (
-    <nav className={`bg-gradient-to-r from-indigo-950 via-indigo-900 to-slate-900 border-b border-indigo-800/30 sticky top-0 z-50 backdrop-blur-sm ${className}`}>
+    <nav className={`bg-indigo-950 border-b border-indigo-800/30 sticky top-0 z-50 backdrop-blur-sm ${className}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           
           {/* Logo/Brand */}
           <div className="flex items-center space-x-4">
             <Link to="/platform" className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-lg flex items-center justify-center shadow-lg">
-                <span className="text-white font-black text-lg heading-block">B</span>
+              <div className="w-10 h-10 flex items-center justify-center">
+                <img 
+                  src="/favicon.ico" 
+                  alt="BLKOUT" 
+                  className="w-8 h-8"
+                  onError={(e) => {
+                    // Fallback to text if favicon doesn't load
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    const fallback = document.createElement('div');
+                    fallback.className = 'w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center';
+                    fallback.innerHTML = '<span class="text-white font-black text-lg heading-block">B</span>';
+                    target.parentNode?.appendChild(fallback);
+                  }}
+                />
               </div>
               <div>
                 <span className="text-2xl font-black text-white heading-block uppercase">

@@ -7,7 +7,8 @@ import CommunityGatewayEnhanced from './components/community/CommunityGatewayEnh
 import MagazineLayout from './components/magazine/MagazineLayout'
 import PlatformHomepage from './components/magazine/PlatformHomepage'
 import StoriesPageEnhanced from './components/magazine/StoriesPageEnhanced'
-import MovementIntro from './components/movement/MovementIntro'
+import MovementIntroEnhanced from './components/movement/MovementIntroEnhanced'
+import JoinDiscussionEnhanced from './components/community/JoinDiscussionEnhanced'
 import HubReports from './components/community/HubReports'
 
 // Connect to actual backend services
@@ -185,7 +186,8 @@ function App() {
         <Route path="/admin" element={<IntegrationDashboard />} />
         <Route path="/community" element={<CommunityGatewayEnhanced />} />
         <Route path="/stories" element={<StoriesPageEnhanced />} />
-        <Route path="/movement" element={<MovementIntro />} />
+        <Route path="/movement" element={<MovementIntroEnhanced />} />
+        <Route path="/discussions" element={<JoinDiscussionEnhanced />} />
         <Route path="/reports" element={<HubReports />} />
         <Route path="/newsroom" element={<NewsroomPage />} />
         <Route path="/events" element={<EventsPage />} />
