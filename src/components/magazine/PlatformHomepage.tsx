@@ -175,9 +175,11 @@ const PlatformHero = () => (
             transition={{ duration: 0.6, delay: 0.4 }}
             className="text-6xl md:text-8xl lg:text-9xl font-black text-white heading-block leading-none mb-8"
           >
-            COMMUNITY
+            <span className="bg-gradient-to-r from-indigo-400 via-violet-400 to-emerald-400 bg-clip-text text-transparent">
+              COMMUNITY
+            </span>
             <br />
-            <span className="bg-gradient-to-r from-indigo-400 to-slate-300 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-slate-400 via-blue-400 to-indigo-400 bg-clip-text text-transparent">
               LIBERATION
             </span>
           </motion.h1>
@@ -266,7 +268,11 @@ const EventsWidget = () => (
     className="bg-indigo-900/50 backdrop-blur-sm rounded-none border border-indigo-700/30 p-8 hover:bg-indigo-900/70 transition-all duration-300"
   >
     <div className="mb-8">
-      <h3 className="text-2xl font-black text-white heading-block mb-3 uppercase">UPCOMING EVENTS</h3>
+      <h3 className="text-2xl font-black heading-block mb-3 uppercase">
+        <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">
+          UPCOMING EVENTS
+        </span>
+      </h3>
       <p className="text-indigo-200 font-light">Community gatherings & activities</p>
     </div>
     
@@ -309,7 +315,11 @@ const IVORWidget = () => (
     className="bg-slate-900/50 backdrop-blur-sm rounded-none border border-slate-700/30 p-8 hover:bg-slate-900/70 transition-all duration-300"
   >
     <div className="mb-8">
-      <h3 className="text-2xl font-black text-white heading-block mb-3 uppercase">I.V.O.R. RESOURCES</h3>
+      <h3 className="text-2xl font-black heading-block mb-3 uppercase">
+        <span className="bg-gradient-to-r from-violet-400 to-slate-400 bg-clip-text text-transparent">
+          I.V.O.R. RESOURCES
+        </span>
+      </h3>
       <p className="text-slate-200 font-light">AI-powered community support</p>
     </div>
     
@@ -351,7 +361,11 @@ const CommunityWidget = () => (
     className="bg-indigo-900/50 backdrop-blur-sm rounded-none border border-indigo-700/30 p-8 hover:bg-indigo-900/70 transition-all duration-300"
   >
     <div className="mb-8">
-      <h3 className="text-2xl font-black text-white heading-block mb-3 uppercase">COMMUNITY PULSE</h3>
+      <h3 className="text-2xl font-black heading-block mb-3 uppercase">
+        <span className="bg-gradient-to-r from-emerald-400 to-indigo-400 bg-clip-text text-transparent">
+          COMMUNITY PULSE
+        </span>
+      </h3>
       <p className="text-indigo-200 font-light">Real-time engagement</p>
     </div>
     
@@ -418,11 +432,15 @@ export default function PlatformHomepage() {
                   <motion.h2 
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="text-5xl md:text-6xl font-black text-white heading-block mb-6 uppercase leading-none"
+                    className="text-5xl md:text-6xl font-black heading-block mb-6 uppercase leading-none"
                   >
-                    FEATURED
+                    <span className="bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">
+                      FEATURED
+                    </span>
                     <br />
-                    <span className="text-indigo-400">STORIES</span>
+                    <span className="bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
+                      STORIES
+                    </span>
                   </motion.h2>
                   <p className="text-xl text-indigo-100 font-light leading-relaxed max-w-2xl">
                     Bold narratives and community voices that shape our liberation movement.
@@ -456,8 +474,10 @@ export default function PlatformHomepage() {
                         </span>
                       </div>
                       
-                      <h3 className="text-3xl md:text-4xl font-black text-white heading-block mb-6 leading-tight">
-                        {featuredArticle.title}
+                      <h3 className="text-3xl md:text-4xl font-black heading-block mb-6 leading-tight">
+                        <span className={`bg-gradient-to-r ${CONTENT_CATEGORIES[featuredArticle.category].gradient} bg-clip-text text-transparent`}>
+                          {featuredArticle.title}
+                        </span>
                       </h3>
                       
                       <p className="text-lg text-indigo-100 mb-8 leading-relaxed font-light">
@@ -512,9 +532,13 @@ export default function PlatformHomepage() {
               {/* Recent Stories Section */}
               <section>
                 <div className="mb-16 text-center lg:text-left">
-                  <h2 className="text-4xl md:text-5xl font-black text-white heading-block mb-4 uppercase">
-                    RECENT
-                    <span className="text-slate-400 ml-4">STORIES</span>
+                  <h2 className="text-4xl md:text-5xl font-black heading-block mb-4 uppercase">
+                    <span className="bg-gradient-to-r from-slate-400 to-indigo-400 bg-clip-text text-transparent">
+                      RECENT
+                    </span>
+                    <span className="bg-gradient-to-r from-violet-400 to-emerald-400 bg-clip-text text-transparent ml-4">
+                      STORIES
+                    </span>
                   </h2>
                   <p className="text-lg text-indigo-100 font-light">
                     The latest from our community contributors
@@ -539,8 +563,10 @@ export default function PlatformHomepage() {
                         <span className="text-sm text-indigo-400">{article.publishedAt}</span>
                       </div>
                       
-                      <h3 className="text-xl md:text-2xl font-black text-white heading-block mb-4 leading-tight">
-                        {article.title}
+                      <h3 className="text-xl md:text-2xl font-black heading-block mb-4 leading-tight">
+                        <span className={`bg-gradient-to-r ${CONTENT_CATEGORIES[article.category].gradient} bg-clip-text text-transparent`}>
+                          {article.title}
+                        </span>
                       </h3>
                       
                       <p className="text-indigo-100 mb-6 leading-relaxed font-light">
