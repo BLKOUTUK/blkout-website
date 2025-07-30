@@ -5,6 +5,7 @@ import ProjectHub from './components/blkout/ProjectHub'
 import IntegrationDashboard from './components/blkout/IntegrationDashboard'
 import CommunityGateway from './components/community/CommunityGateway'
 import MagazineLayout from './components/magazine/MagazineLayout'
+import MagazineHomepage from './components/magazine/MagazineHomepage'
 import StoriesPage from './components/magazine/StoriesPage'
 import MovementIntro from './components/movement/MovementIntro'
 import HubReports from './components/community/HubReports'
@@ -179,6 +180,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<FullPageScrollytelling />} />
+        <Route path="/platform" element={<MagazineHomepage />} />
         <Route path="/dashboard" element={<ProjectHub />} />
         <Route path="/admin" element={<IntegrationDashboard />} />
         <Route path="/community" element={<CommunityGateway />} />
