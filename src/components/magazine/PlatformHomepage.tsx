@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Calendar, Users, MessageCircle, ArrowRight, Clock, User, Play, Star, TrendingUp, Heart, Share2, BookOpen, Sparkles, Target, Zap, ChevronDown, Mail, Twitter, Instagram, Youtube, Github, ExternalLink } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import ArticleGrid from './ArticleGrid'
-import PrimaryNavigation from '../layout/PrimaryNavigation'
+import PrimaryNavigationEnhanced from '../layout/PrimaryNavigationEnhanced'
 
 // Masculine indigo color scheme
 const PLATFORM_COLORS = {
@@ -599,7 +599,7 @@ export default function PlatformHomepage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-indigo-900 to-slate-900">
       {/* Primary Navigation */}
-      <PrimaryNavigation />
+      <PrimaryNavigationEnhanced />
       
       {/* Platform Hero */}
       <PlatformHero />

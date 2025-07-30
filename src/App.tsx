@@ -3,10 +3,10 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import FullPageScrollytelling from './components/blkout/FullPageScrollytelling'
 import ProjectHub from './components/blkout/ProjectHub'
 import IntegrationDashboard from './components/blkout/IntegrationDashboard'
-import CommunityGateway from './components/community/CommunityGateway'
+import CommunityGatewayEnhanced from './components/community/CommunityGatewayEnhanced'
 import MagazineLayout from './components/magazine/MagazineLayout'
 import PlatformHomepage from './components/magazine/PlatformHomepage'
-import StoriesPage from './components/magazine/StoriesPage'
+import StoriesPageEnhanced from './components/magazine/StoriesPageEnhanced'
 import MovementIntro from './components/movement/MovementIntro'
 import HubReports from './components/community/HubReports'
 
@@ -183,8 +183,8 @@ function App() {
         <Route path="/platform" element={<PlatformHomepage />} />
         <Route path="/dashboard" element={<ProjectHub />} />
         <Route path="/admin" element={<IntegrationDashboard />} />
-        <Route path="/community" element={<CommunityGateway />} />
-        <Route path="/stories" element={<StoriesPage />} />
+        <Route path="/community" element={<CommunityGatewayEnhanced />} />
+        <Route path="/stories" element={<StoriesPageEnhanced />} />
         <Route path="/movement" element={<MovementIntro />} />
         <Route path="/reports" element={<HubReports />} />
         <Route path="/newsroom" element={<NewsroomPage />} />
