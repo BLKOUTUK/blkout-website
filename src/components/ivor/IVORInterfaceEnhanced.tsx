@@ -402,17 +402,33 @@ const IVORFeatures = () => (
 )
 
 // Chat Interface Component
-const IVORChatInterface = ({ backendStatus }: { backendStatus: string }) => {
+const IVORChatInterface = ({ backendStatus, pathwayContext, initialMessage }: { 
+  backendStatus: string, 
+  pathwayContext?: any, 
+  initialMessage?: string 
+}) => {
   const [messages, setMessages] = useState([
     {
       id: '1',
       type: 'ivor',
-      content: "Hello! I'm IVOR, your community AI assistant. I'm here to help you find resources, connect with community, and support your journey. How can I assist you today?",
+      content: pathwayContext 
+        ? `Hello! I'm IVOR, your community AI assistant. I see you've just completed your liberation pathway assessment and discovered you're a ${pathwayContext.pathway}. That's exciting! I'm here to help you understand your pathway and connect you with resources, community, and opportunities that align with your journey. How can I support you today?`
+        : "Hello! I'm IVOR, your community AI assistant. I'm here to help you find resources, connect with community, and support your journey. How can I assist you today?",
       timestamp: new Date()
     }
   ])
-  const [inputMessage, setInputMessage] = useState('')
+  const [inputMessage, setInputMessage] = useState(initialMessage || '')
   const [isTyping, setIsTyping] = useState(false)
+
+  // Auto-send initial message if pathway context is present
+  React.useEffect(() => {
+    if (initialMessage && pathwayContext && backendStatus === 'connected') {
+      // Send the initial pathway message automatically after a brief delay
+      setTimeout(() => {
+        sendMessage()
+      }, 2000)
+    }
+  }, [initialMessage, pathwayContext, backendStatus])
 
   const sendMessage = async () => {
     if (!inputMessage.trim() || backendStatus === 'offline') return
@@ -436,7 +452,12 @@ const IVORChatInterface = ({ backendStatus }: { backendStatus: string }) => {
         },
         body: JSON.stringify({
           message: inputMessage,
-          context: 'community_support'
+          context: pathwayContext ? {
+            type: 'liberation_pathway',
+            pathway: pathwayContext.pathway,
+            focus: pathwayContext.focus,
+            description: pathwayContext.description
+          } : 'community_support'
         })
       })
 
@@ -587,6 +608,8 @@ const IVORChatInterface = ({ backendStatus }: { backendStatus: string }) => {
 export default function IVORInterfaceEnhanced() {
   const [backendStatus, setBackendStatus] = useState<'checking' | 'connected' | 'offline'>('checking')
   const [showChat, setShowChat] = useState(false)
+  const [pathwayContext, setPathwayContext] = useState<any>(null)
+  const [initialMessage, setInitialMessage] = useState<string>('')
 
   useEffect(() => {
     // Check backend status
@@ -599,6 +622,33 @@ export default function IVORInterfaceEnhanced() {
         }
       })
       .catch(() => setBackendStatus('offline'))
+
+    // Check for pathway context from URL or localStorage
+    const urlParams = new URLSearchParams(window.location.search)
+    const pathwayParam = urlParams.get('pathway')
+    
+    if (pathwayParam) {
+      // If pathway is in URL, show chat immediately with context
+      setShowChat(true)
+      setInitialMessage(`I just completed the liberation pathway assessment and discovered I'm a ${pathwayParam}. Can you help me understand what this means and how I can get involved?`)
+    }
+
+    // Check localStorage for pathway context
+    const storedContext = localStorage.getItem('pathwayContext')
+    if (storedContext) {
+      try {
+        const context = JSON.parse(storedContext)
+        setPathwayContext(context)
+        if (context.pathway) {
+          setShowChat(true)
+          setInitialMessage(`I just completed the liberation pathway assessment and discovered I'm a ${context.pathway}. My focus area is ${context.focus}. Can you help me understand what this means and provide specific resources for my journey?`)
+        }
+        // Clear the context after using it
+        localStorage.removeItem('pathwayContext')
+      } catch (error) {
+        console.log('Error parsing pathway context:', error)
+      }
+    }
   }, [])
 
   return (
@@ -609,9 +659,35 @@ export default function IVORInterfaceEnhanced() {
       {/* IVOR Hero */}
       <IVORHero />
       
+      {/* Pathway Context Banner */}
+      {pathwayContext && (
+        <section className="py-8 bg-gradient-to-r from-emerald-600/20 to-indigo-600/20 backdrop-blur-sm border-y border-emerald-500/30">
+          <div className="max-w-4xl mx-auto px-8 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="flex items-center justify-center space-x-4"
+            >
+              <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></div>
+              <p className="text-emerald-300 font-bold heading-block uppercase">
+                Liberation Pathway Activated: {pathwayContext.pathway}
+              </p>
+              <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></div>
+            </motion.div>
+            <p className="text-indigo-200 font-light mt-2">
+              IVOR will provide personalized support based on your pathway results
+            </p>
+          </div>
+        </section>
+      )}
+
       {/* Chat Interface */}
       {showChat ? (
-        <IVORChatInterface backendStatus={backendStatus} />
+        <IVORChatInterface 
+          backendStatus={backendStatus} 
+          pathwayContext={pathwayContext}
+          initialMessage={initialMessage}
+        />
       ) : (
         <section className="py-24">
           <div className="max-w-4xl mx-auto px-8 text-center">
@@ -622,7 +698,7 @@ export default function IVORInterfaceEnhanced() {
               className="px-12 py-4 bg-gradient-to-r from-emerald-600 to-indigo-600 text-white font-black text-lg hover:from-emerald-500 hover:to-indigo-500 transition-all duration-300 shadow-xl hover:shadow-2xl heading-block uppercase tracking-wide flex items-center mx-auto"
             >
               <MessageCircle className="w-6 h-6 mr-3" />
-              START CONVERSATION WITH IVOR
+              {pathwayContext ? `CONTINUE WITH ${pathwayContext.pathway} PATHWAY` : 'START CONVERSATION WITH IVOR'}
             </motion.button>
             {backendStatus === 'offline' && (
               <p className="text-amber-400 mt-4 font-light">

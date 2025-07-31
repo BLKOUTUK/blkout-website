@@ -478,7 +478,16 @@ The reward? Building movements that create lasting change for all Black queer me
           "📅 Healing Circle - Thursdays 7pm, Peckham Community Centre",
           "🎯 Peer support coordinator - Manchester chapter, £200/month",
           "📚 Trauma-Informed Community Care certification - March 15"
-        ]
+        ],
+        cta: {
+          text: "Get IVOR Support",
+          action: "ivor-connect",
+          pathwayContext: {
+            pathway: "community-healer",
+            initialMessage: "Hi IVOR! I just completed the liberation pathway quiz and my results show I'm drawn to community healing work. I'm interested in finding healing circles, peer support opportunities, and trauma-informed community care resources. Can you help me find specific opportunities and connections in this area?",
+            focus: "healing, trauma-informed care, peer support, community wellness"
+          }
+        }
       },
       "creative-catalyst": {
         title: "CREATIVE CATALYST", 
@@ -488,7 +497,16 @@ The reward? Building movements that create lasting change for all Black queer me
           "📝 'Black Futures' digital magazine - £150 per published piece",
           "🎬 Documentary collaboration with Kwame - grant funded",
           "🎪 'Realness Stories' curator - £300/event + travel"
-        ]
+        ],
+        cta: {
+          text: "Get IVOR Support",
+          action: "ivor-connect",
+          pathwayContext: {
+            pathway: "creative-catalyst",
+            initialMessage: "Hi IVOR! My liberation pathway results show I'm a creative catalyst focused on storytelling as liberation practice. I'm looking for opportunities in digital publishing, documentary work, and curating community stories. Can you help me find creative opportunities and connect with other storytellers in the community?",
+            focus: "storytelling, creative expression, media production, community narratives"
+          }
+        }
       },
       "tech-liberator": {
         title: "TECH LIBERATOR",
@@ -498,7 +516,16 @@ The reward? Building movements that create lasting change for all Black queer me
           "💻 Platform development - React/TypeScript, cooperative ownership",
           "🔧 IVOR notification system design - £500 developer fee",
           "🏫 'Code for Liberation' workshop - £250/session"
-        ]
+        ],
+        cta: {
+          text: "Get IVOR Support",
+          action: "ivor-connect",
+          pathwayContext: {
+            pathway: "tech-liberator",
+            initialMessage: "Hi IVOR! I've completed the liberation pathway quiz and I'm identified as a tech liberator who sees technology as a tool for collective liberation. I'm interested in cooperative platform development, community tech projects, and sharing technical skills for liberation. Can you help me find tech opportunities and connect with other liberation-focused technologists?",
+            focus: "cooperative technology, platform development, community tech education, digital liberation"
+          }
+        }
       },
       "systems-transformer": {
         title: "SYSTEMS TRANSFORMER",
@@ -508,7 +535,16 @@ The reward? Building movements that create lasting change for all Black queer me
           "📊 Stonewall Housing data analyst - £2,800/month contract",
           "⚡ Government consultation response - conversion therapy ban",
           "🤝 Housing Justice Alliance strategy meeting - Feb 24"
-        ]
+        ],
+        cta: {
+          text: "Get IVOR Support",
+          action: "ivor-connect",
+          pathwayContext: {
+            pathway: "systems-transformer",
+            initialMessage: "Hi IVOR! My liberation pathway results identify me as a systems transformer focused on policy and systemic change. I'm interested in housing justice, policy analysis, government consultations, and strategic organizing work. Can you help me find policy opportunities and connect with organizations working on systemic change?",
+            focus: "policy analysis, systemic change, housing justice, government relations, strategic organizing"
+          }
+        }
       }
     },
     font: 'font-serif'
@@ -531,12 +567,12 @@ The reward? Building movements that create lasting change for all Black queer me
     type: 'connect',
     title: 'READY TO JOIN?',
     subtitle: 'YOUR LIBERATION JOURNEY STARTS HERE',
-    content: 'You\'ve seen what IVOR can do. Ready for weekly personalized intelligence, real community support, and collective action opportunities?',
+    content: 'You\'ve experienced our vision. Now join the movement for real community support, personalized AI assistance, and collective liberation action.',
     sections: [
       {
         title: 'BLKOUTHUB',
         subtitle: 'For Black Queer Men',
-        description: 'Full access to IVOR, community support, and collective action. Your liberation journey starts here.',
+        description: 'Join our exclusive community with IVOR AI support, peer networks, and direct action opportunities. Limited to Black queer men only.',
         action: 'Join BLKOUTHUB',
         highlight: true
       }
@@ -556,7 +592,7 @@ The reward? Building movements that create lasting change for all Black queer me
       {
         title: 'NEWSLETTER',
         subtitle: 'For Everyone',
-        description: 'Get updates on community events, new projects, and liberation stories delivered to your inbox.',
+        description: 'Stay informed with weekly liberation content, community events, and early access to new platform features.',
         action: 'Subscribe',
         highlight: true
       }
@@ -575,7 +611,7 @@ The reward? Building movements that create lasting change for all Black queer me
       {
         title: 'EXPLORE',
         subtitle: 'Discover More',
-        description: 'Access stories, community spaces, and all the tools for Black queer liberation.',
+        description: 'Explore our full ecosystem: newsroom, events, community spaces, and liberation resources.',
         action: 'Browse Platform',
         highlight: true,
         link: '/platform'
@@ -817,8 +853,8 @@ const FullPageScrollytellingOptimized: React.FC = () => {
 
       case 'pathway-quiz':
         return (
-          <div className="w-full h-full p-4 flex items-center justify-center overflow-y-auto">
-            <div className="w-full max-w-md">
+          <div className="w-full h-full p-2 overflow-y-auto">
+            <div className="w-full h-full max-w-full">
               <EnhancedQuiz 
                 slide={slide} 
                 onComplete={(responses) => {
@@ -1047,15 +1083,39 @@ const FullPageScrollytellingOptimized: React.FC = () => {
                       {slide.sections[0].description}
                     </p>
                     
-                    <a href="https://blkouthub.com/invitation?code=BE862C" target="_blank" rel="noopener noreferrer">
+                    {slide.sections[0].title === 'BLKOUTHUB' ? (
+                      <a href="https://blkouthub.com/invitation?code=BE862C" target="_blank" rel="noopener noreferrer">
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="w-full bg-white text-blkout-primary hover:bg-gray-100 px-6 py-3 rounded-xl font-bold transition-all shadow-lg text-lg"
+                        >
+                          {slide.sections[0].action}
+                        </motion.button>
+                      </a>
+                    ) : slide.sections[0].link ? (
+                      <Link to={slide.sections[0].link}>
+                        <motion.button
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="w-full bg-white text-blkout-primary hover:bg-gray-100 px-6 py-3 rounded-xl font-bold transition-all shadow-lg text-lg"
+                        >
+                          {slide.sections[0].action}
+                        </motion.button>
+                      </Link>
+                    ) : (
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         className="w-full bg-white text-blkout-primary hover:bg-gray-100 px-6 py-3 rounded-xl font-bold transition-all shadow-lg text-lg"
+                        onClick={() => {
+                          // Handle other CTA actions
+                          console.log('CTA clicked:', slide.sections[0].action);
+                        }}
                       >
-                        Join BLKOUTHUB
+                        {slide.sections[0].action}
                       </motion.button>
-                    </a>
+                    )}
                   </div>
                 </motion.div>
               ) : Array.isArray(slide.sections) && (
@@ -1133,7 +1193,7 @@ const FullPageScrollytellingOptimized: React.FC = () => {
                                 type="submit"
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
-                                className="w-full bg-electric-magenta text-white hover:bg-electric-cyan px-3 py-2 rounded-lg font-bold transition-all shadow-lg text-xs"
+                                className="w-full bg-white text-blkout-primary hover:bg-gray-100 px-4 py-3 rounded-lg font-bold transition-all shadow-lg text-sm"
                               >
                                 Subscribe
                               </motion.button>
@@ -1148,7 +1208,7 @@ const FullPageScrollytellingOptimized: React.FC = () => {
                                 section.highlight
                                   ? 'bg-white text-blkout-primary hover:bg-gray-100'
                                   : 'bg-gray-700 text-white hover:bg-gray-600'
-                              } px-3 py-2 rounded-lg font-bold transition-all shadow-lg text-xs`}
+                              } px-4 py-3 rounded-lg font-bold transition-all shadow-lg text-sm`}
                             >
                               {section.action}
                             </motion.button>
@@ -1161,7 +1221,7 @@ const FullPageScrollytellingOptimized: React.FC = () => {
                               section.highlight
                                 ? 'bg-white text-blkout-primary hover:bg-gray-100'
                                 : 'bg-gray-700 text-white hover:bg-gray-600'
-                            } px-3 py-2 rounded-lg font-bold transition-all shadow-lg text-xs`}
+                            } px-4 py-3 rounded-lg font-bold transition-all shadow-lg text-sm`}
                           >
                             {section.action}
                           </motion.button>
