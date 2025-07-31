@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { Calendar } from 'lucide-react'
-import FullPageScrollytelling from './components/blkout/FullPageScrollytelling'
+import FullPageScrollytellingOptimized from './components/blkout/FullPageScrollytellingOptimized'
 import ProjectHub from './components/blkout/ProjectHub'
 import IntegrationDashboard from './components/blkout/IntegrationDashboard'
 import CommunityGatewayEnhanced from './components/community/CommunityGatewayEnhanced'
@@ -283,7 +283,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<FullPageScrollytelling />} />
+        <Route path="/" element={<FullPageScrollytellingOptimized />} />
         <Route path="/platform" element={<PlatformHomepage />} />
         <Route path="/dashboard" element={<ProjectHub />} />
         <Route path="/admin" element={<IntegrationDashboard />} />
