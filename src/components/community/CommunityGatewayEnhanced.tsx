@@ -10,6 +10,7 @@ import {
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import PrimaryNavigationEnhanced from '../layout/PrimaryNavigationEnhanced'
+import PlatformFooter from '../layout/PlatformFooter'
 
 // Community Hero Section  
 const CommunityHero = () => (
@@ -471,6 +472,9 @@ export default function CommunityGatewayEnhanced() {
       
       {/* Story Submission */}
       <StorySubmissionSection />
+      
+      {/* Platform Footer */}
+      <PlatformFooter />
     </div>
   )
 }

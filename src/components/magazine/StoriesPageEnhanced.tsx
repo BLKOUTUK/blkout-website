@@ -6,6 +6,7 @@ import { Search, Filter, Calendar, User, Clock, Heart, MessageCircle, ArrowRight
 import ArticleGrid from './ArticleGrid'
 import ArticlePage from './ArticlePage'
 import PrimaryNavigationEnhanced from '../layout/PrimaryNavigationEnhanced'
+import PlatformFooter from '../layout/PlatformFooter'
 
 // Content categories with masculine colors
 const CONTENT_CATEGORIES = {
@@ -422,6 +423,9 @@ export default function StoriesPageEnhanced() {
           )}
         </div>
       </section>
+      
+      {/* Platform Footer */}
+      <PlatformFooter />
     </div>
   )
 }

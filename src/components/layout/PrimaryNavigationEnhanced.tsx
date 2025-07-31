@@ -36,15 +36,15 @@ export default function PrimaryNavigationEnhanced({ className = '' }: PrimaryNav
         <div className="flex items-center justify-between h-20">
           
           {/* Logo/Brand */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 flex-shrink-0">
             <Link to="/platform" className="flex items-center space-x-3">
-              <div className="w-10 h-10 flex items-center justify-center">
+              <div className="w-12 h-12 flex items-center justify-center">
                 <img 
-                  src="/favicon.ico" 
+                  src="/images/BLKOUT25INV.png" 
                   alt="BLKOUT" 
-                  className="w-8 h-8"
+                  className="w-10 h-10 object-contain"
                   onError={(e) => {
-                    // Fallback to text if favicon doesn't load
+                    // Fallback to text if logo doesn't load
                     const target = e.target as HTMLImageElement;
                     target.style.display = 'none';
                     const fallback = document.createElement('div');
@@ -54,7 +54,7 @@ export default function PrimaryNavigationEnhanced({ className = '' }: PrimaryNav
                   }}
                 />
               </div>
-              <div>
+              <div className="hidden sm:block">
                 <span className="text-2xl font-black text-white heading-block uppercase">
                   <span className="bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">
                     BLKOUT
@@ -118,14 +118,6 @@ export default function PrimaryNavigationEnhanced({ className = '' }: PrimaryNav
               </div>
             </div>
 
-            {/* Back to Landing */}
-            <Link
-              to="/"
-              className="hidden md:flex items-center space-x-2 px-4 py-2 text-indigo-300 hover:text-white transition-colors font-medium"
-            >
-              <Home className="w-4 h-4" />
-              <span className="text-sm font-mono uppercase tracking-wider">About</span>
-            </Link>
 
             {/* Mobile menu button */}
             <button
@@ -180,17 +172,6 @@ export default function PrimaryNavigationEnhanced({ className = '' }: PrimaryNav
                 </Link>
               ))}
 
-              {/* Enhanced Mobile Back to Landing */}
-              <Link
-                to="/"
-                onClick={() => setIsOpen(false)}
-                className="block px-6 py-4 text-sm text-indigo-300 hover:text-white border-t border-indigo-800/30 mt-4 transition-colors"
-              >
-                <div className="flex items-center space-x-3">
-                  <Home className="w-5 h-5" />
-                  <span className="font-mono uppercase tracking-wider">Back to About BLKOUT</span>
-                </div>
-              </Link>
             </div>
           </motion.div>
         )}

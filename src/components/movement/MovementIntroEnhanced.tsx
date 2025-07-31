@@ -9,6 +9,7 @@ import {
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import PrimaryNavigationEnhanced from '../layout/PrimaryNavigationEnhanced'
+import PlatformFooter from '../layout/PlatformFooter'
 
 interface Resource {
   id: string
@@ -503,6 +504,9 @@ export default function MovementIntroEnhanced() {
       
       {/* BLKOUTHUB CTA */}
       <BlkoutHubCTA />
+      
+      {/* Platform Footer */}
+      <PlatformFooter />
     </div>
   )
 }

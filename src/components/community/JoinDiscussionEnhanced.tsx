@@ -8,6 +8,7 @@ import {
   ChevronDown, Filter, Search, Eye, Pin
 } from 'lucide-react'
 import PrimaryNavigationEnhanced from '../layout/PrimaryNavigationEnhanced'
+import PlatformFooter from '../layout/PlatformFooter'
 
 // Discussion types and topics
 const discussionCategories = {
@@ -399,6 +400,94 @@ const DiscussionList = ({ selectedCategory }: { selectedCategory: string }) => {
   )
 }
 
+// BLKOUTHUB Promotion Section
+const BLKOUTHUBPromotion = () => (
+  <section className="py-24">
+    <div className="max-w-5xl mx-auto px-8">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="bg-gradient-to-br from-emerald-600 via-indigo-600 to-violet-600 p-16 text-center relative overflow-hidden"
+      >
+        {/* Background pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-32 h-32 bg-white rounded-full blur-2xl"></div>
+          <div className="absolute bottom-0 right-0 w-24 h-24 bg-white rounded-full blur-2xl"></div>
+        </div>
+        
+        <div className="relative z-10">
+          <motion.div
+            animate={{ scale: [1, 1.1, 1] }}
+            transition={{ duration: 3, repeat: Infinity }}
+            className="text-6xl mb-8"
+          >
+            🚀
+          </motion.div>
+          
+          <h2 className="text-4xl md:text-5xl font-black text-white heading-block mb-6 uppercase">
+            READY TO JOIN
+            <br />
+            <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
+              BLKOUTHUB?
+            </span>
+          </h2>
+          
+          <p className="text-xl md:text-2xl text-white/90 mb-12 max-w-3xl mx-auto font-light leading-relaxed">
+            These conversations happen live in our private community platform. Join authentic discussions, 
+            peer support, and collective action with verified Black queer men.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-6 justify-center mb-12">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="px-12 py-4 bg-white text-indigo-900 font-black text-lg hover:bg-gray-100 transition-colors heading-block uppercase flex items-center justify-center"
+            >
+              <Users className="w-6 h-6 mr-3" />
+              JOIN BLKOUTHUB
+            </motion.button>
+            
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="px-12 py-4 border-2 border-white text-white font-black text-lg hover:bg-white hover:text-indigo-900 transition-colors heading-block uppercase flex items-center justify-center"
+            >
+              <MessageCircle className="w-6 h-6 mr-3" />
+              LEARN MORE
+            </motion.button>
+          </div>
+
+          {/* Newsletter Signup */}
+          <div className="border-t border-white/20 pt-12">
+            <h4 className="text-2xl font-black text-white heading-block mb-4 uppercase">
+              STAY UPDATED
+            </h4>
+            <p className="text-white/90 mb-8 font-light">
+              Get notified when BLKOUTHUB opens for new members and community updates.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="flex-1 px-6 py-3 bg-white/10 backdrop-blur-sm border border-white/30 text-white placeholder-white/60 focus:outline-none focus:border-white/60 font-light"
+              />
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="px-8 py-3 bg-white/20 backdrop-blur-sm text-white font-bold hover:bg-white/30 transition-all heading-block uppercase flex items-center justify-center"
+              >
+                <Send className="w-4 h-4 mr-2" />
+                SUBSCRIBE
+              </motion.button>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  </section>
+)
+
 export default function JoinDiscussionEnhanced() {
   const [selectedCategory, setSelectedCategory] = useState('All')
 
@@ -410,6 +499,9 @@ export default function JoinDiscussionEnhanced() {
       {/* Discussion Hero */}
       <DiscussionHero />
       
+      {/* BLKOUTHUB Promotion */}
+      <BLKOUTHUBPromotion />
+      
       {/* Discussion Categories */}
       <DiscussionCategories 
         selectedCategory={selectedCategory}
@@ -418,6 +510,9 @@ export default function JoinDiscussionEnhanced() {
       
       {/* Discussion List */}
       <DiscussionList selectedCategory={selectedCategory} />
+      
+      {/* Platform Footer */}
+      <PlatformFooter />
     </div>
   )
 }
