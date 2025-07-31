@@ -198,10 +198,10 @@ const slides: Slide[] = [
   {
     id: 'welcome',
     type: 'video',
+    videoUrl: '/images/squared/Finalfinalwelcome SQUARED.mp4',
     title: '',
     subtitle: '',
     content: '',
-    videoUrl: '/images/squared/Finalfinalwelcome%20SQUARED.mp4',
     font: 'font-mono'
   },
   
@@ -782,77 +782,20 @@ const FullPageScrollytellingOptimized: React.FC = () => {
         )
 
       case 'video':
-        const VideoComponent = () => {
-          const videoRef = useRef<HTMLVideoElement>(null);
-          const [videoError, setVideoError] = useState(false);
-          const [videoLoaded, setVideoLoaded] = useState(false);
-
-          useEffect(() => {
-            const video = videoRef.current;
-            if (!video) return;
-
-            const handleLoadedData = () => {
-              console.log('Video loaded successfully:', slide.videoUrl);
-              setVideoLoaded(true);
-              setVideoError(false);
-            };
-
-            const handleError = (e: any) => {
-              console.error('Video error:', e);
-              console.error('Video src:', slide.videoUrl);
-              setVideoError(true);
-              setVideoLoaded(false);
-            };
-
-            const handleCanPlayThrough = () => {
-              console.log('Video can play through:', slide.videoUrl);
-              video.play().catch(console.error);
-            };
-
-            video.addEventListener('loadeddata', handleLoadedData);
-            video.addEventListener('error', handleError);
-            video.addEventListener('canplaythrough', handleCanPlayThrough);
-
-            // Try to load the video
-            video.load();
-
-            return () => {
-              video.removeEventListener('loadeddata', handleLoadedData);
-              video.removeEventListener('error', handleError);
-              video.removeEventListener('canplaythrough', handleCanPlayThrough);
-            };
-          }, []);
-
-          return (
-            <div className="relative w-full h-full flex items-center justify-center overflow-hidden bg-black">
-              {videoError && (
-                <div className="absolute inset-0 flex items-center justify-center text-white bg-black">
-                  <div className="text-center">
-                    <p>Video failed to load</p>
-                    <p className="text-sm opacity-75">{slide.videoUrl}</p>
-                  </div>
-                </div>
-              )}
-              <video 
-                ref={videoRef}
-                autoPlay 
-                muted 
-                loop 
-                playsInline
-                preload="auto"
-                className={`w-full h-full object-cover transition-opacity duration-300 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}
-                key={slide.videoUrl} // Force re-render if URL changes
-              >
-                <source src={slide.videoUrl} type="video/mp4" />
-                <source src={slide.videoUrl.replace('%20', ' ')} type="video/mp4" />
-                <source src={encodeURI(slide.videoUrl)} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-            </div>
-          );
-        };
-
-        return <VideoComponent />
+        return (
+          <div className="relative w-full h-full">
+            <video 
+              autoPlay 
+              muted 
+              loop 
+              playsInline
+              className="w-full h-full object-cover"
+              src={slide.videoUrl}
+            >
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        )
 
       case 'definition':
         return (
