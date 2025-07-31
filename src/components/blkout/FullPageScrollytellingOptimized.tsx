@@ -383,16 +383,6 @@ The reward? Building movements that create lasting change for all Black queer me
     font: 'font-serif'
   },
   
-  // Additional visioning slides
-  {
-    id: 'what-if-stories',
-    type: 'prose',
-    title: 'WHAT IF OUR STORIES...',
-    subtitle: 'stories not just told and left',
-    content: 'nor simply sold to the highest bidder',
-    font: 'font-serif'
-  },
-  
   // Revelation slides - image optimized
   {
     id: 'own-stories',
