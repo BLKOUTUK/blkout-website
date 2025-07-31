@@ -686,6 +686,53 @@ const FullPageScrollytellingOptimized: React.FC = () => {
     }
   }, [])
 
+  // Determine slide theme based on content and type
+  const getSlideTheme = useCallback((slide: any): string => {
+    // IVOR-related sections: dark orange
+    if (slide.type === 'pathway-quiz' || 
+        slide.id?.includes('ivor') || 
+        slide.title?.includes('IVOR') ||
+        slide.title?.includes('PATHWAY') ||
+        slide.title?.includes('LIBERATION PATHWAY') ||
+        slide.content?.includes('IVOR') ||
+        slide.type === 'fake-quiz-trigger') {
+      return 'bg-gradient-to-br from-orange-900 via-orange-800 to-amber-900'
+    }
+    
+    // Movement/collective action sections: dark green  
+    if (slide.title?.includes('MOVEMENT') ||
+        slide.title?.includes('COLLECTIVE') ||
+        slide.title?.includes('LIBERATION') ||
+        slide.title?.includes('POWER') ||
+        slide.title?.includes('UNITY') ||
+        slide.title?.includes('FUTURES') ||
+        slide.title?.includes('REALNESS') ||
+        slide.title?.includes('VOICE MATTERS') ||
+        slide.content?.includes('movement') ||
+        slide.content?.includes('collective') ||
+        slide.subtitle?.includes('movement') ||
+        slide.type === 'chapter') {
+      return 'bg-gradient-to-br from-green-900 via-green-800 to-emerald-900'
+    }
+    
+    // Discussion/community sections: dark red
+    if (slide.title?.includes('DISCUSSION') ||
+        slide.title?.includes('COMMUNITY') ||
+        slide.title?.includes('CONNECT') ||
+        slide.title?.includes('VOICES') ||
+        slide.title?.includes('CONVERSATION') ||
+        slide.title?.includes('STAY CONNECTED') ||
+        slide.title?.includes('READY TO JOIN') ||
+        slide.content?.includes('discussion') ||
+        slide.content?.includes('community') ||
+        slide.type === 'connect') {
+      return 'bg-gradient-to-br from-red-900 via-red-800 to-rose-900'
+    }
+    
+    // Default theme for other sections
+    return 'bg-gradient-to-br from-gray-900 via-black to-gray-800'
+  }, [])
+
   const nextSlide = useCallback(() => {
     if (currentSlide < slides.length - 1) {
       scrollToSlide(currentSlide + 1)
@@ -1291,7 +1338,7 @@ const FullPageScrollytellingOptimized: React.FC = () => {
                     className={`absolute inset-0 ${
                       slide.bgImage 
                         ? 'bg-cover bg-center bg-no-repeat' 
-                        : 'bg-gradient-to-br from-gray-900 via-black to-gray-800'
+                        : getSlideTheme(slide)
                     }`}
                     style={{
                       backgroundImage: slide.bgImage ? `url(/images/squared/${slide.bgImage})` : undefined

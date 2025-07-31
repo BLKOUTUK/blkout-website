@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section Color Theme Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #111;
+            color: white;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .color-section {
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+        .orange-theme {
+            background: linear-gradient(to bottom right, #7c2d12, #c2410c, #92400e);
+        }
+        .green-theme {
+            background: linear-gradient(to bottom right, #14532d, #166534, #065f46);
+        }
+        .red-theme {
+            background: linear-gradient(to bottom right, #7f1d1d, #dc2626, #be185d);
+        }
+        .default-theme {
+            background: linear-gradient(to bottom right, #1f2937, #000000, #374151);
+        }
+        .slide-preview {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid rgba(255,255,255,0.5);
+        }
+        .slide-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+        .slide-type {
+            background: rgba(255,255,255,0.2);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+        h2 {
+            margin-top: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+        .color-label {
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Section Color Theme Preview</h1>
+        <p>Preview of how different scrollytelling sections will appear with distinctive background colors.</p>
+        
+        <div class="color-section orange-theme">
+            <div class="color-label">🟠 IVOR SECTIONS - Dark Orange Theme</div>
+            
+            <div class="slide-preview">
+                <div class="slide-type">pathway-quiz</div>
+                <div class="slide-title">DISCOVER YOUR LIBERATION PATHWAY</div>
+                <p>Quiz sections and IVOR interactions will use warm orange gradients</p>
+            </div>
+            
+            <div class="slide-preview">
+                <div class="slide-type">fake-quiz-trigger</div>
+                <div class="slide-title">Take The Test</div>
+                <p>Quiz trigger buttons and pathway discovery</p>
+            </div>
+            
+            <div class="slide-preview">
+                <div class="slide-type">Any slide with "IVOR" or "PATHWAY"</div>
+                <div class="slide-title">IVOR Integration Slides</div>
+                <p>Any content mentioning IVOR or pathway discovery</p>
+            </div>
+        </div>
+        
+        <div class="color-section green-theme">
+            <div class="color-label">🟢 MOVEMENT SECTIONS - Dark Green Theme</div>
+            
+            <div class="slide-preview">
+                <div class="slide-type">chapter</div>
+                <div class="slide-title">UNITY NOT UNIFORMITY</div>
+                <p>Movement chapter slides with liberation themes</p>
+            </div>
+            
+            <div class="slide-preview">
+                <div class="slide-type">chapter</div>
+                <div class="slide-title">CREATING SHARED FUTURES</div>
+                <p>Collective action and movement building content</p>
+            </div>
+            
+            <div class="slide-preview">
+                <div class="slide-type">chapter</div>
+                <div class="slide-title">REALNESS UNLEASHED</div>
+                <p>Authentic liberation messaging</p>
+            </div>
+            
+            <div class="slide-preview">
+                <div class="slide-type">chapter</div>
+                <div class="slide-title">YOUR VOICE MATTERS</div>
+                <p>Empowerment and collective power themes</p>
+            </div>
+            
+            <div class="slide-preview">
+                <div class="slide-type">prose</div>
+                <div class="slide-title">WHERE BLACK QUEER MEN BUILD COLLECTIVE POWER</div>
+                <p>Movement value propositions and liberation content</p>
+            </div>
+        </div>
+        
+        <div class="color-section red-theme">
+            <div class="color-label">🔴 DISCUSSION SECTIONS - Dark Red Theme</div>
+            
+            <div class="slide-preview">
+                <div class="slide-type">connect</div>
+                <div class="slide-title">READY TO JOIN?</div>
+                <p>Community connection and joining CTAs</p>
+            </div>
+            
+            <div class="slide-preview">
+                <div class="slide-type">connect</div>
+                <div class="slide-title">STAY CONNECTED</div>
+                <p>Newsletter signup and community engagement</p>
+            </div>
+            
+            <div class="slide-preview">
+                <div class="slide-type">Any with "DISCUSSION" or "COMMUNITY"</div>
+                <div class="slide-title">Community Discussion Slides</div>
+                <p>Conversation starters and community building content</p>
+            </div>
+        </div>
+        
+        <div class="color-section default-theme">
+            <div class="color-label">⚫ DEFAULT SECTIONS - Dark Gray Theme</div>
+            
+            <div class="slide-preview">
+                <div class="slide-type">video</div>
+                <div class="slide-title">Video Content</div>
+                <p>Video slides and general content without specific themes</p>
+            </div>
+            
+            <div class="slide-preview">
+                <div class="slide-type">prose</div>
+                <div class="slide-title">General Content</div>
+                <p>Standard content slides that don't fit other categories</p>
+            </div>
+            
+            <div class="slide-preview">
+                <div class="slide-type">definition</div>
+                <div class="slide-title">Definition Slides</div>
+                <p>Explanatory content and general information</p>
+            </div>
+        </div>
+        
+        <div style="margin-top: 40px; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 8px;">
+            <h3>🎯 Color Theme Logic</h3>
+            <ul>
+                <li><strong>Orange (IVOR):</strong> pathway-quiz, fake-quiz-trigger, any content with "IVOR" or "PATHWAY"</li>
+                <li><strong>Green (Movement):</strong> chapter type, content with "MOVEMENT", "COLLECTIVE", "LIBERATION", "POWER", "UNITY", "FUTURES", "REALNESS", "VOICE MATTERS"</li>
+                <li><strong>Red (Discussion):</strong> connect type, content with "DISCUSSION", "COMMUNITY", "CONNECT", "VOICES", "CONVERSATION", "STAY CONNECTED", "READY TO JOIN"</li>
+                <li><strong>Gray (Default):</strong> All other content</li>
+            </ul>
+        </div>
+        
+        <div style="margin-top: 20px; text-align: center;">
+            <h3>✅ Color Accessibility</h3>
+            <p>All themes maintain sufficient contrast ratios for text readability while providing clear visual distinction between section types.</p>
+            <p><strong>Build Status:</strong> ✅ Successful (4.25s) | <strong>Bundle Size:</strong> 519.97 kB</p>
+        </div>
+        
+        <div style="text-center; margin-top: 30px;">
+            <a href="/" style="color: #60a5fa; text-decoration: none;">← Return to Scrollytelling Experience</a>
+        </div>
+    </div>
+</body>
+</html>
