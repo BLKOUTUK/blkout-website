@@ -194,22 +194,48 @@ const EnhancedQuiz: React.FC<QuizProps> = ({ slide, onComplete }) => {
               Connect with content and community that serves your pathway.
             </p>
             
-            {/* Continue to Dashboard */}
-            <div className="max-w-md mx-auto">
-              <Link to="/dashboard">
-                <motion.div
+            {/* IVOR Connection CTA */}
+            {pathwayData.cta?.action === 'ivor-connect' ? (
+              <div className="max-w-md mx-auto">
+                <motion.button
                   whileHover={{ scale: 1.05 }}
-                  className="p-8 bg-gradient-to-br from-blkout-primary/30 to-blkout-warm/30 hover:from-blkout-primary/40 hover:to-blkout-warm/40 rounded-xl border border-blkout-primary/30 transition-all text-center"
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => {
+                    // Store pathway context in localStorage for IVOR to access
+                    localStorage.setItem('pathwayContext', JSON.stringify(pathwayData.cta.pathwayContext))
+                    // Navigate to IVOR with context
+                    window.location.href = '/ivor?pathway=' + pathwayData.cta.pathwayContext.pathway
+                  }}
+                  className="w-full p-8 bg-gradient-to-br from-emerald-600/90 to-indigo-600/90 hover:from-emerald-500/90 hover:to-indigo-500/90 rounded-xl border border-emerald-500/30 transition-all text-center"
                 >
-                  <div className="text-4xl mb-4">🚀</div>
-                  <h4 className="text-xl font-bold text-white mb-3">Enter Your Dashboard</h4>
-                  <p className="text-sm text-gray-300 mb-4">Access all BLKOUT projects from your personalized hub</p>
-                  <div className="text-xs text-blkout-light">
-                    Newsroom • Events • IVOR AI • Channel • Storylab • Community Hub
+                  <div className="text-4xl mb-4">🤖</div>
+                  <h4 className="text-xl font-bold text-white mb-3">{pathwayData.cta.text}</h4>
+                  <p className="text-sm text-gray-300 mb-4">
+                    Start a personalized conversation with IVOR about your {pathwayData.title.toLowerCase()} pathway
+                  </p>
+                  <div className="text-xs text-emerald-200">
+                    Context: {pathwayData.cta.pathwayContext.focus}
                   </div>
-                </motion.div>
-              </Link>
-            </div>
+                </motion.button>
+              </div>
+            ) : (
+              /* Continue to Dashboard */
+              <div className="max-w-md mx-auto">
+                <Link to="/dashboard">
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    className="p-8 bg-gradient-to-br from-blkout-primary/30 to-blkout-warm/30 hover:from-blkout-primary/40 hover:to-blkout-warm/40 rounded-xl border border-blkout-primary/30 transition-all text-center"
+                  >
+                    <div className="text-4xl mb-4">🚀</div>
+                    <h4 className="text-xl font-bold text-white mb-3">Enter Your Dashboard</h4>
+                    <p className="text-sm text-gray-300 mb-4">Access all BLKOUT projects from your personalized hub</p>
+                    <div className="text-xs text-blkout-light">
+                      Newsroom • Events • IVOR AI • Channel • Storylab • Community Hub
+                    </div>
+                  </motion.div>
+                </Link>
+              </div>
+            )}
             
             <div className="mt-6 pt-6 border-t border-white/20">
               <p className="text-sm text-gray-400 mb-4">Or explore the full ecosystem:</p>
