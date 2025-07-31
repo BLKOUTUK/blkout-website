@@ -555,27 +555,40 @@ The reward? Building movements that create lasting change for all Black queer me
     font: 'font-sans'
   },
   
-  // Secondary CTAs - elegant landing page without background image
+  // Newsletter CTA - separate slide
   {
-    id: 'secondary-ctas',
+    id: 'newsletter-cta',
     type: 'connect',
     title: 'STAY CONNECTED',
-    subtitle: 'CHOOSE YOUR LEVEL OF ENGAGEMENT',
-    content: 'Not ready for full membership? There are other ways to stay connected and support the movement.',
+    subtitle: 'JOIN OUR NEWSLETTER',
+    content: 'Stay connected with our latest projects, events, and community stories.',
     sections: [
       {
         title: 'NEWSLETTER',
         subtitle: 'For Everyone',
-        description: 'Stay connected with our latest projects, events, and community stories.',
+        description: 'Get updates on community events, new projects, and liberation stories delivered to your inbox.',
         action: 'Subscribe',
         highlight: true
-      },
+      }
+    ],
+    font: 'font-sans'
+  },
+  
+  // Explore Platform CTA - separate slide
+  {
+    id: 'explore-platform-cta',
+    type: 'connect',
+    title: 'EXPLORE THE PLATFORM',
+    subtitle: 'DISCOVER MORE',
+    content: 'Browse our full range of projects, resources, and ways to get involved in the movement.',
+    sections: [
       {
         title: 'EXPLORE',
         subtitle: 'Discover More',
-        description: 'Browse our full range of projects, resources, and ways to get involved.',
-        action: 'Browse All',
-        highlight: false
+        description: 'Access stories, community spaces, and all the tools for Black queer liberation.',
+        action: 'Browse Platform',
+        highlight: true,
+        link: '/platform'
       }
     ],
     font: 'font-sans'
@@ -704,7 +717,7 @@ const FullPageScrollytellingOptimized: React.FC = () => {
               muted 
               loop 
               playsInline
-              className="w-full h-full object-contain"
+              className="w-full h-full object-cover"
               src={slide.videoUrl}
               loading="lazy"
             >
@@ -717,16 +730,27 @@ const FullPageScrollytellingOptimized: React.FC = () => {
         return (
           <div className="relative w-full h-full">
             {slide.bgImage ? (
-              <img 
-                src={`/images/squared/${slide.bgImage}`}
-                alt={`${slide.title}: Visual representation`}
-                className="w-full h-full object-cover"
-                loading="lazy"
-                style={{ 
-                  filter: 'brightness(1.1) contrast(1.1) saturate(1.1)',
-                  objectFit: 'cover'
-                }}
-              />
+              <>
+                <img 
+                  src={`/images/squared/${slide.bgImage}`}
+                  alt={`${slide.title}: Visual representation`}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  style={{ 
+                    filter: 'brightness(1.1) contrast(1.1) saturate(1.1)',
+                    objectFit: 'cover'
+                  }}
+                />
+                {/* Text overlay for definition slides */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center text-white p-6">
+                    <h1 className="text-2xl md:text-3xl font-bold mb-4 heading-block text-white drop-shadow-lg">{slide.title}</h1>
+                    {slide.subtitle && (
+                      <p className="text-sm md:text-base text-gray-100 drop-shadow-lg">{slide.subtitle}</p>
+                    )}
+                  </div>
+                </div>
+              </>
             ) : (
               <div className="flex items-center justify-center h-full text-center text-white p-6">
                 <div>
@@ -752,12 +776,12 @@ const FullPageScrollytellingOptimized: React.FC = () => {
                 {slide.title}
               </h1>
               {slide.subtitle && (
-                <p className="text-sm md:text-base text-gray-300 leading-relaxed text-center">
+                <p className="text-sm md:text-base text-gray-300 leading-relaxed text-center max-w-lg mx-auto">
                   {slide.subtitle}
                 </p>
               )}
               {slide.content && (
-                <p className="text-base text-gray-200 max-w-md leading-relaxed text-center">
+                <p className="text-base text-gray-200 max-w-lg leading-relaxed text-center mx-auto">
                   {typeof slide.content === 'string' ? slide.content : slide.content}
                 </p>
               )}
@@ -1095,26 +1119,19 @@ const FullPageScrollytellingOptimized: React.FC = () => {
                             </form>
                           </div>
                         ) : section.title === 'EXPLORE' ? (
-                          <div className="grid grid-cols-2 gap-2">
-                            <Link to="/stories">
-                              <motion.button
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                className="w-full bg-electric-magenta text-white hover:bg-electric-cyan px-2 py-1 rounded font-medium transition-all shadow-lg text-xs"
-                              >
-                                Stories
-                              </motion.button>
-                            </Link>
-                            <Link to="/community">
-                              <motion.button
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                className="w-full bg-electric-cyan text-white hover:bg-electric-indigo px-2 py-1 rounded font-medium transition-all shadow-lg text-xs"
-                              >
-                                Community
-                              </motion.button>
-                            </Link>
-                          </div>
+                          <Link to={section.link || '/platform'}>
+                            <motion.button
+                              whileHover={{ scale: 1.02 }}
+                              whileTap={{ scale: 0.98 }}
+                              className={`w-full ${
+                                section.highlight
+                                  ? 'bg-white text-blkout-primary hover:bg-gray-100'
+                                  : 'bg-gray-700 text-white hover:bg-gray-600'
+                              } px-3 py-2 rounded-lg font-bold transition-all shadow-lg text-xs`}
+                            >
+                              {section.action}
+                            </motion.button>
+                          </Link>
                         ) : (
                           <motion.button
                             whileHover={{ scale: 1.02 }}
