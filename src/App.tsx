@@ -13,6 +13,7 @@ import JoinDiscussionEnhanced from './components/community/JoinDiscussionEnhance
 import HubReports from './components/community/HubReports'
 import IVORInterfaceEnhanced from './components/ivor/IVORInterfaceEnhanced'
 import NewsroomEnhanced from './components/newsroom/NewsroomEnhanced'
+import EventsPageIntegrated from './components/events/EventsPageIntegrated'
 import PrimaryNavigationEnhanced from './components/layout/PrimaryNavigationEnhanced'
 import PlatformFooter from './components/layout/PlatformFooter'
 
@@ -293,7 +294,7 @@ function App() {
         <Route path="/discussions" element={<JoinDiscussionEnhanced />} />
         <Route path="/reports" element={<HubReports />} />
         <Route path="/newsroom" element={<NewsroomEnhanced />} />
-        <Route path="/events" element={<EventsPage />} />
+        <Route path="/events" element={<EventsPageIntegrated />} />
         <Route path="/ivor" element={<IVORInterfaceEnhanced />} />
         <Route path="/governance" element={<GovernancePage />} />
         <Route path="/media/newsroom" element={<NewsroomPage />} />
