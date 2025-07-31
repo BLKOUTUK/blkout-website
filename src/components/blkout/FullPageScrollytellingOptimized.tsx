@@ -356,19 +356,40 @@ The reward? Freedom from systems that demand you diminish yourself to participat
 The reward? The profound relief of being known and loved for exactly who you are.`,
         colorTheme: 'from-yellow-500 to-yellow-700',
         textColor: 'text-yellow-100'
+      },
+      {
+        id: 'lesson4',
+        title: 'COLLECTIVE LIBERATION',
+        subtitle: 'NONE OF US ARE FREE UNTIL ALL OF US ARE FREE',
+        quote: 'Your liberation is bound up with mine.',
+        author: 'Fannie Lou Hamer',
+        content: `Individual success within oppressive systems is not liberation. True freedom requires collective action and community power.
+
+The reward? Building movements that create lasting change for all Black queer men.`,
+        colorTheme: 'from-green-500 to-green-700',
+        textColor: 'text-green-100'
       }
     ],
     font: 'font-sans'
   },
   
-  // Visioning bridge
+  // Visioning bridge with picture
   {
     id: 'future-visioning',
-    type: 'visioning-bridge',
+    type: 'definition',
     title: 'IMAGINE',
-    subtitle: 'WHAT COULD WE BUILD TOGETHER?',
-    content: 'In your mind, step into a future where Black queer men have everything we need to thrive. What do you see?',
+    subtitle: 'WHAT WE COULD BUILD TOGETHER',
     bgImage: 'sunrise SQUARED.png',
+    font: 'font-serif'
+  },
+  
+  // Additional visioning slides
+  {
+    id: 'what-if-stories',
+    type: 'prose',
+    title: 'WHAT IF OUR STORIES...',
+    subtitle: 'stories not just told and left',
+    content: 'nor simply sold to the highest bidder',
     font: 'font-serif'
   },
   
@@ -400,7 +421,16 @@ The reward? The profound relief of being known and loved for exactly who you are
     font: 'font-serif'
   },
   
-  // Story powered video
+  // Realness Unleashed - moved before video
+  {
+    id: 'realness-unleashed',
+    type: 'chapter',
+    title: 'REALNESS UNLEASHED',
+    subtitle: 'Building the infrastructure for Black Queer community',
+    font: 'font-sans'
+  },
+  
+  // Story powered video - moved after chapter
   {
     id: 'story-powered-video',
     type: 'video',
@@ -408,15 +438,6 @@ The reward? The profound relief of being known and loved for exactly who you are
     title: '',
     subtitle: '',
     content: '',
-    font: 'font-sans'
-  },
-  
-  // Realness Unleashed
-  {
-    id: 'realness-unleashed',
-    type: 'chapter',
-    title: 'REALNESS UNLEASHED',
-    subtitle: 'Building the infrastructure for Black Queer community',
     font: 'font-sans'
   },
 
@@ -534,7 +555,7 @@ The reward? The profound relief of being known and loved for exactly who you are
     font: 'font-sans'
   },
   
-  // Secondary CTAs - elegant landing page
+  // Secondary CTAs - elegant landing page without background image
   {
     id: 'secondary-ctas',
     type: 'connect',
@@ -557,7 +578,6 @@ The reward? The profound relief of being known and loved for exactly who you are
         highlight: false
       }
     ],
-    bgImage: 'liberationSQUARED.png',
     font: 'font-sans'
   }
 ]
@@ -684,7 +704,7 @@ const FullPageScrollytellingOptimized: React.FC = () => {
               muted 
               loop 
               playsInline
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
               src={slide.videoUrl}
               loading="lazy"
             >
@@ -732,12 +752,12 @@ const FullPageScrollytellingOptimized: React.FC = () => {
                 {slide.title}
               </h1>
               {slide.subtitle && (
-                <p className="text-sm md:text-base text-gray-300 leading-relaxed">
+                <p className="text-sm md:text-base text-gray-300 leading-relaxed text-center">
                   {slide.subtitle}
                 </p>
               )}
               {slide.content && (
-                <p className="text-base text-gray-200 max-w-md leading-relaxed">
+                <p className="text-base text-gray-200 max-w-md leading-relaxed text-center">
                   {typeof slide.content === 'string' ? slide.content : slide.content}
                 </p>
               )}
