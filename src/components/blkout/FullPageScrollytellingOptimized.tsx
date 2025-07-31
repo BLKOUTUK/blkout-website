@@ -180,7 +180,7 @@ interface Slide {
   title: string
   subtitle?: string
   content?: string | React.ReactNode
-  type: 'video' | 'prose' | 'lesson' | 'engagement' | 'lessons-horizontal' | 'fake-quiz-trigger' | 'pathway-quiz' | 'visioning-bridge' | 'ivor-introduction' | 'ivor-demo' | 'revelation' | 'connect' | 'definition' | 'fist-formation' | 'chapter'
+  type: 'video' | 'prose' | 'lesson' | 'engagement' | 'lessons-horizontal' | 'fake-quiz-trigger' | 'pathway-quiz' | 'visioning-bridge' | 'ivor-introduction' | 'ivor-demo' | 'revelation' | 'connect' | 'definition' | 'image-only' | 'fist-formation' | 'chapter'
   backgroundImage?: string
   bgImage?: string
   font?: string
@@ -217,10 +217,10 @@ const slides: Slide[] = [
     font: 'font-sans'
   },
   
-  // Well Defined - image optimized
+  // Well Defined - image only
   {
     id: 'well-defined',
-    type: 'definition',
+    type: 'image-only',
     title: 'WELL DEFINED',
     subtitle: 'COMPLEXITY IS ALL WE HAVE',
     bgImage: 'WELLDEF_SQUARED.png',
@@ -237,10 +237,10 @@ const slides: Slide[] = [
     font: 'font-sans'
   },
   
-  // Definitions - optimized images
+  // Definitions - image only slides without text overlays
   {
     id: 'black',
-    type: 'definition',
+    type: 'image-only',
     title: 'BLACK?',
     subtitle: 'MORE THAN MELANIN',
     bgImage: 'BlackSQUARED.png',
@@ -248,7 +248,7 @@ const slides: Slide[] = [
   },
   {
     id: 'queer',
-    type: 'definition', 
+    type: 'image-only', 
     title: 'QUEER',
     subtitle: 'RECLAIMED TERRITORY',
     bgImage: 'queerSQUARED.PNG',
@@ -256,7 +256,7 @@ const slides: Slide[] = [
   },
   {
     id: 'male',
-    type: 'definition',
+    type: 'image-only',
     title: 'MALE*',
     subtitle: '*TERMS AND CONDITIONS APPLY',
     bgImage: 'menSQUARED.png',
@@ -264,17 +264,17 @@ const slides: Slide[] = [
   },
   {
     id: 'out',
-    type: 'definition',
+    type: 'image-only',
     title: 'OUT',
     subtitle: 'VISIBILITY ≠ LIBERATION',
     bgImage: 'outSQUARED.png',
     font: 'font-serif'
   },
   
-  // Liberation image
+  // Liberation image - image only
   {
     id: 'liberation-image',
-    type: 'definition',
+    type: 'image-only',
     title: 'LIBERATION DIALOGUE',
     subtitle: 'DISRUPTION, DIFFERENCE, MEANING-MAKING',
     bgImage: 'liberationSQUARED.png',
@@ -441,10 +441,10 @@ The reward? Building movements that create lasting change for all Black queer me
     font: 'font-sans'
   },
 
-  // Project intro
+  // Project intro - image only
   {
     id: 'project-intro',
-    type: 'definition',
+    type: 'image-only',
     title: 'OUR PROJECTS',
     subtitle: 'BUILDING LIBERATION TOGETHER',
     bgImage: 'projects SQUAREDpng.png',
@@ -717,7 +717,7 @@ const FullPageScrollytellingOptimized: React.FC = () => {
               muted 
               loop 
               playsInline
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
               src={slide.videoUrl}
               loading="lazy"
             >
@@ -741,16 +741,41 @@ const FullPageScrollytellingOptimized: React.FC = () => {
                     objectFit: 'cover'
                   }}
                 />
-                {/* Text overlay for definition slides */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center text-white p-6">
-                    <h1 className="text-2xl md:text-3xl font-bold mb-4 heading-block text-white drop-shadow-lg">{slide.title}</h1>
+                {/* Text overlay for definition slides - positioned in top third */}
+                <div className="absolute top-0 left-0 right-0 flex justify-center pt-8">
+                  <div className="bg-black/70 backdrop-blur-sm rounded-lg p-4 mx-4 text-center text-white max-w-sm">
+                    <h1 className="text-lg md:text-xl font-bold mb-2 heading-block text-white">{slide.title}</h1>
                     {slide.subtitle && (
-                      <p className="text-sm md:text-base text-gray-100 drop-shadow-lg">{slide.subtitle}</p>
+                      <p className="text-xs md:text-sm text-gray-100">{slide.subtitle}</p>
                     )}
                   </div>
                 </div>
               </>
+            ) : (
+              <div className="flex items-center justify-center h-full text-center text-white p-6">
+                <div>
+                  <h1 className="text-3xl md:text-4xl font-bold mb-4 heading-block">{slide.title}</h1>
+                  <p className="text-lg md:text-xl text-gray-300">{slide.subtitle}</p>
+                </div>
+              </div>
+            )}
+          </div>
+        )
+
+      case 'image-only':
+        return (
+          <div className="relative w-full h-full">
+            {slide.bgImage ? (
+              <img 
+                src={`/images/squared/${slide.bgImage}`}
+                alt={`${slide.title}: Visual representation`}
+                className="w-full h-full object-cover"
+                loading="lazy"
+                style={{ 
+                  filter: 'brightness(1.1) contrast(1.1) saturate(1.1)',
+                  objectFit: 'cover'
+                }}
+              />
             ) : (
               <div className="flex items-center justify-center h-full text-center text-white p-6">
                 <div>
