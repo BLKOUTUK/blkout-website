@@ -49,7 +49,7 @@ const ivorCapabilities = [
 
 // IVOR Hero Section
 const IVORHero = () => (
-  <section className="relative min-h-[90vh] flex items-center justify-center bg-gradient-to-br from-indigo-950 via-indigo-900 to-slate-900 overflow-hidden">
+  <section className="relative min-h-[90vh] flex items-center justify-center bg-gradient-to-br from-orange-950 via-orange-900 to-amber-900 overflow-hidden">
     {/* Background pattern */}
     <div className="absolute inset-0 opacity-10">
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500 rounded-full blur-3xl"></div>
@@ -211,7 +211,7 @@ const IVORHero = () => (
 
 // IVOR Capabilities Section
 const IVORCapabilities = () => (
-  <section className="py-24 bg-indigo-50/5 backdrop-blur-sm">
+  <section className="py-24 bg-orange-50/5 backdrop-blur-sm">
     <div className="max-w-6xl mx-auto px-8">
       <div className="text-center mb-16">
         <motion.h2 
@@ -652,7 +652,7 @@ export default function IVORInterfaceEnhanced() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-indigo-900 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-orange-950 via-orange-900 to-amber-900">
       {/* Enhanced Navigation */}
       <PrimaryNavigationEnhanced />
       

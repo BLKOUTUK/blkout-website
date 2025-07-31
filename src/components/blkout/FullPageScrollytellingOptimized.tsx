@@ -784,21 +784,15 @@ const FullPageScrollytellingOptimized: React.FC = () => {
 
       case 'video':
         return (
-          <div className="relative w-full h-full bg-black flex items-center justify-center">
+          <div className="relative w-full h-full">
             <video 
               autoPlay 
               muted 
               loop 
               playsInline
-              className="max-w-full max-h-full object-contain"
+              className="w-full h-full object-cover"
               src={slide.videoUrl}
               loading="lazy"
-              style={{
-                width: 'auto',
-                height: 'auto',
-                maxWidth: '100%',
-                maxHeight: '100%'
-              }}
             >
               <source src={slide.videoUrl} type="video/mp4" />
             </video>

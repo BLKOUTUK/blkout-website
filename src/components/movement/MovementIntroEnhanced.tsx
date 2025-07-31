@@ -115,7 +115,7 @@ const featuredResources: Resource[] = [
 
 // Movement Hero Section
 const MovementHero = () => (
-  <section className="relative min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-indigo-950 via-indigo-900 to-slate-900 overflow-hidden">
+  <section className="relative min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-green-950 via-green-900 to-emerald-900 overflow-hidden">
     {/* Background pattern */}
     <div className="absolute inset-0 opacity-10">
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500 rounded-full blur-3xl"></div>
@@ -237,7 +237,7 @@ const MovementHero = () => (
 
 // Movement Principles Section
 const MovementPrinciples = () => (
-  <section className="py-24 bg-indigo-50/5 backdrop-blur-sm">
+  <section className="py-24 bg-green-50/5 backdrop-blur-sm">
     <div className="max-w-6xl mx-auto px-8">
       <div className="text-center mb-16">
         <motion.h2 
@@ -245,7 +245,7 @@ const MovementPrinciples = () => (
           animate={{ opacity: 1, y: 0 }}
           className="text-4xl md:text-5xl font-black heading-block mb-6 uppercase"
         >
-          <span className="bg-gradient-to-r from-emerald-400 to-indigo-400 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-emerald-400 to-green-400 bg-clip-text text-transparent">
             OUR
           </span>
           <span className="bg-gradient-to-r from-violet-400 to-slate-400 bg-clip-text text-transparent ml-4">
@@ -268,7 +268,7 @@ const MovementPrinciples = () => (
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.2 }}
               whileHover={{ scale: 1.02, y: -5 }}
-              className="bg-indigo-900/30 backdrop-blur-sm border border-indigo-700/30 p-8 hover:bg-indigo-900/50 transition-all duration-500 text-center group"
+              className="bg-green-900/30 backdrop-blur-sm border border-green-700/30 p-8 hover:bg-green-900/50 transition-all duration-500 text-center group"
             >
               <div className={`w-16 h-16 bg-gradient-to-br ${principle.gradient} flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300`}>
                 <IconComponent className="w-8 h-8 text-white" />
@@ -489,7 +489,7 @@ const BlkoutHubCTA = () => (
 
 export default function MovementIntroEnhanced() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-indigo-900 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-green-950 via-green-900 to-emerald-900">
       {/* Enhanced Navigation */}
       <PrimaryNavigationEnhanced />
       

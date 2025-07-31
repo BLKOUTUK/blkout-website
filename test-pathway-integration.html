@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Pathway Integration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1e293b;
+            color: white;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .test-button {
+            background: linear-gradient(to right, #059669, #4338ca);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+            font-weight: bold;
+        }
+        .test-button:hover {
+            opacity: 0.9;
+        }
+        .result {
+            background: #374151;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>IVOR Pathway Integration Test</h1>
+        <p>Test the pathway context integration with IVOR</p>
+        
+        <h2>Test Pathways:</h2>
+        
+        <button class="test-button" onclick="testPathway('Community Healer')">
+            Test Community Healer Pathway
+        </button>
+        
+        <button class="test-button" onclick="testPathway('Culture Keeper')">
+            Test Culture Keeper Pathway
+        </button>
+        
+        <button class="test-button" onclick="testPathway('System Disruptor')">
+            Test System Disruptor Pathway
+        </button>
+        
+        <button class="test-button" onclick="testPathway('Wisdom Keeper')">
+            Test Wisdom Keeper Pathway
+        </button>
+        
+        <button class="test-button" onclick="clearContext()">
+            Clear Context & Test Normal IVOR
+        </button>
+        
+        <div id="result" class="result" style="display: none;">
+            <h3>Test Result:</h3>
+            <p id="result-text"></p>
+            <p><a href="/ivor" target="_blank" style="color: #60a5fa;">→ Open IVOR with Context</a></p>
+        </div>
+        
+        <h2>How it works:</h2>
+        <ol>
+            <li>Click a pathway test button to simulate completing the liberation quiz</li>
+            <li>This stores pathway context in localStorage</li>
+            <li>Open IVOR interface - it should automatically detect the context</li>
+            <li>IVOR will show pathway-specific greeting and auto-send initial message</li>
+            <li>Backend API calls will include pathway context for personalized responses</li>
+        </ol>
+    </div>
+
+    <script>
+        function testPathway(pathway) {
+            // Simulate pathway context from the liberation quiz
+            const pathwayContext = {
+                pathway: pathway,
+                focus: getPathwayFocus(pathway),
+                description: getPathwayDescription(pathway)
+            };
+            
+            // Store in localStorage like the quiz would
+            localStorage.setItem('pathwayContext', JSON.stringify(pathwayContext));
+            
+            // Show result
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('result-text').innerHTML = `
+                <strong>Pathway Context Set:</strong><br>
+                Pathway: ${pathway}<br>
+                Focus: ${pathwayContext.focus}<br>
+                Description: ${pathwayContext.description}<br><br>
+                <em>Now open IVOR to see the context integration in action!</em>
+            `;
+        }
+        
+        function clearContext() {
+            localStorage.removeItem('pathwayContext');
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('result-text').innerHTML = `
+                <strong>Context Cleared</strong><br>
+                IVOR will now show the standard interface without pathway context.
+            `;
+        }
+        
+        function getPathwayFocus(pathway) {
+            const focuses = {
+                'Community Healer': 'healing trauma and building resilience',
+                'Culture Keeper': 'preserving and celebrating Black culture',
+                'System Disruptor': 'challenging oppressive systems',
+                'Wisdom Keeper': 'sharing knowledge and mentoring others'
+            };
+            return focuses[pathway] || 'community empowerment';
+        }
+        
+        function getPathwayDescription(pathway) {
+            const descriptions = {
+                'Community Healer': 'Focused on trauma-informed support and collective healing',
+                'Culture Keeper': 'Dedicated to cultural preservation and celebration',
+                'System Disruptor': 'Committed to systemic change through direct action',
+                'Wisdom Keeper': 'Sharing knowledge and guiding community growth'
+            };
+            return descriptions[pathway] || 'Contributing to community liberation';
+        }
+    </script>
+</body>
+</html>

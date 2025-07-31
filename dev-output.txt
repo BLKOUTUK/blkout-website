@@ -1,0 +1,11 @@
+
+> blkout-website@0.1.0 dev
+> vite 2
+
+6:21:06 PM [vite] (client) Re-optimizing dependencies because vite config has changed
+Port 5173 is in use, trying another one...
+
+  VITE v7.0.0  ready in 149 ms
+
+  ➜  Local:   http://localhost:5174/
+  ➜  Network: use --host to expose

@@ -105,7 +105,7 @@ const activeDiscussions = [
 
 // Discussion Hero Section
 const DiscussionHero = () => (
-  <section className="relative py-24 bg-gradient-to-br from-indigo-950 via-indigo-900 to-slate-900 overflow-hidden">
+  <section className="relative py-24 bg-gradient-to-br from-red-950 via-red-900 to-rose-900 overflow-hidden">
     {/* Background pattern */}
     <div className="absolute inset-0 opacity-10">
       <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-emerald-500 rounded-full blur-3xl"></div>
@@ -492,7 +492,7 @@ export default function JoinDiscussionEnhanced() {
   const [selectedCategory, setSelectedCategory] = useState('All')
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-indigo-900 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-red-950 via-red-900 to-rose-900">
       {/* Enhanced Navigation */}
       <PrimaryNavigationEnhanced />
       
