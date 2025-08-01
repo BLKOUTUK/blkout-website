@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Plus, Settings, Heart, Shield, Mail, LogIn, LogOut, User, Zap, Users, Globe, Rss, BarChart3, Calendar } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { Plus, Settings, Heart, Shield, Mail, LogIn, LogOut, User, Zap, Users, Globe, Rss, BarChart3, Calendar, ArrowRight } from 'lucide-react'
 import PrimaryNavigationEnhanced from '../layout/PrimaryNavigationEnhanced'
 import PlatformFooter from '../layout/PlatformFooter'
+import { eventsService, Event as EventType, EventStats } from '../../services/eventsService'
 
 // Use Event type from service
 type Event = EventType
@@ -12,8 +14,6 @@ interface FilterOptions {
   location: string
   searchTerm: string
 }
-
-import { eventsService, Event as EventType, EventStats } from '../../services/eventsService'
 
 // Event Card Component
 const EventCard: React.FC<{ event: Event }> = ({ event }) => {
