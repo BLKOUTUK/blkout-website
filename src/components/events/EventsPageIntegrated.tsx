@@ -38,31 +38,37 @@ const EventCard: React.FC<{ event: Event }> = ({ event }) => {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+    <motion.div 
+      className="bg-yellow-800/20 backdrop-blur-sm border border-yellow-600/30 rounded-2xl overflow-hidden hover:bg-yellow-800/30 hover:border-yellow-500/50 transition-all duration-300 group"
+      whileHover={{ scale: 1.02 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+    >
       {event.image && (
-        <div className="h-48 bg-gradient-to-br from-indigo-500 to-purple-600"></div>
+        <div className="h-48 bg-gradient-to-br from-yellow-600 to-amber-500"></div>
       )}
       <div className="p-6">
         <div className="flex items-start justify-between mb-3">
-          <h3 className="text-xl font-bold text-gray-900 line-clamp-2">
+          <h3 className="text-xl font-bold text-yellow-100 line-clamp-2 group-hover:text-yellow-50 transition-colors">
             {event.title}
           </h3>
-          <span className={`px-2 py-1 text-xs font-medium rounded-full ${
-            event.status === 'approved' ? 'bg-green-100 text-green-800' :
-            event.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-            'bg-red-100 text-red-800'
+          <span className={`px-3 py-1 text-xs font-medium rounded-full ${
+            event.status === 'approved' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' :
+            event.status === 'pending' ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30' :
+            'bg-red-500/20 text-red-300 border border-red-500/30'
           }`}>
             {event.status}
           </span>
         </div>
         
-        <p className="text-gray-600 mb-4 line-clamp-3">
+        <p className="text-yellow-200 mb-4 line-clamp-3">
           {event.description}
         </p>
         
-        <div className="space-y-2 text-sm text-gray-500">
+        <div className="space-y-2 text-sm text-yellow-300">
           <div className="flex items-center">
-            <Calendar className="w-4 h-4 mr-2" />
+            <Calendar className="w-4 h-4 mr-2 text-yellow-400" />
             <span>{formatDate(event.date)}</span>
             {event.startTime && (
               <span className="ml-2">at {formatTime(event.startTime)}</span>
@@ -71,7 +77,7 @@ const EventCard: React.FC<{ event: Event }> = ({ event }) => {
           
           {event.location && (
             <div className="flex items-center">
-              <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-4 h-4 mr-2 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
               </svg>
               <span>{event.location}</span>
@@ -80,8 +86,17 @@ const EventCard: React.FC<{ event: Event }> = ({ event }) => {
           
           {event.organizer && (
             <div className="flex items-center">
-              <User className="w-4 h-4 mr-2" />
+              <User className="w-4 h-4 mr-2 text-yellow-400" />
               <span>{event.organizer}</span>
+            </div>
+          )}
+          
+          {event.cost && (
+            <div className="flex items-center">
+              <svg className="w-4 h-4 mr-2 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+              </svg>
+              <span>{event.cost}</span>
             </div>
           )}
         </div>
@@ -91,9 +106,9 @@ const EventCard: React.FC<{ event: Event }> = ({ event }) => {
             {event.tags.map((tag, index) => (
               <span
                 key={index}
-                className="px-2 py-1 text-xs bg-indigo-100 text-indigo-700 rounded-full"
+                className="px-2 py-1 text-xs bg-yellow-600/30 text-yellow-200 rounded-full border border-yellow-500/40"
               >
-                {tag}
+                #{tag}
               </span>
             ))}
           </div>
@@ -105,17 +120,15 @@ const EventCard: React.FC<{ event: Event }> = ({ event }) => {
               href={event.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-medium"
+              className="inline-flex items-center text-yellow-400 hover:text-yellow-300 font-medium transition-colors group"
             >
               Learn More
-              <svg className="w-4 h-4 ml-1" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
+              <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
             </a>
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   )
 }
 
@@ -125,27 +138,32 @@ const FilterBar: React.FC<{
   onFiltersChange: (filters: FilterOptions) => void
 }> = ({ filters, onFiltersChange }) => {
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+    <motion.div 
+      className="bg-yellow-800/20 backdrop-blur-sm border border-yellow-600/30 rounded-2xl p-6 mb-8"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: 0.6 }}
+    >
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-yellow-200 mb-2">
             Search Events
           </label>
           <input
             type="text"
             placeholder="Search by title or description..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full px-4 py-3 bg-yellow-900/30 border border-yellow-600/40 rounded-lg text-yellow-100 placeholder-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
             value={filters.searchTerm}
             onChange={(e) => onFiltersChange({ ...filters, searchTerm: e.target.value })}
           />
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-yellow-200 mb-2">
             Date Range
           </label>
           <select
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full px-4 py-3 bg-yellow-900/30 border border-yellow-600/40 rounded-lg text-yellow-100 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
             value={filters.dateRange}
             onChange={(e) => onFiltersChange({ ...filters, dateRange: e.target.value as FilterOptions['dateRange'] })}
           >
@@ -157,24 +175,24 @@ const FilterBar: React.FC<{
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-yellow-200 mb-2">
             Location
           </label>
           <input
             type="text"
             placeholder="Filter by location..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full px-4 py-3 bg-yellow-900/30 border border-yellow-600/40 rounded-lg text-yellow-100 placeholder-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
             value={filters.location}
             onChange={(e) => onFiltersChange({ ...filters, location: e.target.value })}
           />
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-yellow-200 mb-2">
             Source
           </label>
           <select
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full px-4 py-3 bg-yellow-900/30 border border-yellow-600/40 rounded-lg text-yellow-100 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
             value={filters.source}
             onChange={(e) => onFiltersChange({ ...filters, source: e.target.value })}
           >
@@ -285,7 +303,7 @@ const EventsPageIntegrated: React.FC = () => {
   }, [events, filters])
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-950 via-yellow-900 to-amber-900">
       <PrimaryNavigationEnhanced />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -293,24 +311,41 @@ const EventsPageIntegrated: React.FC = () => {
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">
-                Community Events
-              </h1>
-              <p className="text-xl text-gray-600">
-                Discover and connect with Black QTIPOC community events
-              </p>
+              <motion.h1 
+                className="text-5xl font-black heading-block mb-4 uppercase"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+              >
+                <span className="bg-gradient-to-r from-yellow-400 to-amber-300 bg-clip-text text-transparent">
+                  Community Events
+                </span>
+              </motion.h1>
+              <motion.p 
+                className="text-xl text-yellow-100 font-light"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                Liberation through connection • Discover Black QTIPOC community events
+              </motion.p>
             </div>
             
-            <div className="flex items-center space-x-4">
+            <motion.div 
+              className="flex items-center space-x-4"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
               {/* Backend Status Indicator */}
-              <div className="bg-white rounded-lg shadow-md px-4 py-2">
+              <div className="bg-yellow-800/30 backdrop-blur-sm border border-yellow-600/30 rounded-lg px-4 py-2">
                 <div className="flex items-center space-x-2">
                   <div className={`w-2 h-2 rounded-full ${
-                    backendStatus === 'connected' ? 'bg-green-500' :
-                    backendStatus === 'offline' ? 'bg-red-500' :
-                    'bg-yellow-500 animate-pulse'
+                    backendStatus === 'connected' ? 'bg-emerald-400' :
+                    backendStatus === 'offline' ? 'bg-red-400' :
+                    'bg-yellow-400 animate-pulse'
                   }`}></div>
-                  <span className="text-xs text-gray-600">
+                  <span className="text-xs text-yellow-200">
                     {backendStatus === 'connected' ? 'Live Data' :
                      backendStatus === 'offline' ? 'Mock Data' :
                      'Connecting...'}
@@ -318,15 +353,15 @@ const EventsPageIntegrated: React.FC = () => {
                 </div>
               </div>
               
-              <div className="bg-white rounded-lg shadow-md px-6 py-4">
-                <div className="text-2xl font-bold text-indigo-600">{stats.total}</div>
-                <div className="text-sm text-gray-500">Total Events</div>
+              <div className="bg-yellow-800/30 backdrop-blur-sm border border-yellow-600/30 rounded-lg px-6 py-4">
+                <div className="text-2xl font-bold text-yellow-300">{stats.total}</div>
+                <div className="text-sm text-yellow-200">Total Events</div>
               </div>
-              <div className="bg-white rounded-lg shadow-md px-6 py-4">
-                <div className="text-2xl font-bold text-green-600">{stats.approved}</div>
-                <div className="text-sm text-gray-500">Approved</div>
+              <div className="bg-yellow-800/30 backdrop-blur-sm border border-yellow-600/30 rounded-lg px-6 py-4">
+                <div className="text-2xl font-bold text-emerald-400">{stats.approved}</div>
+                <div className="text-sm text-yellow-200">Approved</div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
 
@@ -337,56 +372,103 @@ const EventsPageIntegrated: React.FC = () => {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(6)].map((_, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden animate-pulse">
-                <div className="h-48 bg-gray-200"></div>
+              <div key={index} className="bg-yellow-800/20 backdrop-blur-sm border border-yellow-600/30 rounded-2xl overflow-hidden animate-pulse">
+                <div className="h-48 bg-yellow-700/30"></div>
                 <div className="p-6">
-                  <div className="h-6 bg-gray-200 rounded mb-3"></div>
-                  <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                  <div className="h-6 bg-yellow-700/30 rounded mb-3"></div>
+                  <div className="h-4 bg-yellow-700/30 rounded mb-2"></div>
+                  <div className="h-4 bg-yellow-700/30 rounded w-3/4"></div>
                 </div>
               </div>
             ))}
           </div>
         ) : filteredEvents.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredEvents.map((event) => (
-              <EventCard key={event.id} event={event} />
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+          >
+            {filteredEvents.map((event, index) => (
+              <motion.div
+                key={event.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 * index }}
+              >
+                <EventCard event={event} />
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         ) : (
-          <div className="text-center py-12">
-            <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-medium text-gray-900 mb-2">No events found</h3>
-            <p className="text-gray-500">
-              {filters.searchTerm || filters.location || filters.source !== 'all' || filters.dateRange !== 'all'
-                ? 'Try adjusting your filters to see more events.'
-                : 'Check back soon for upcoming community events.'
-              }
-            </p>
-          </div>
+          <motion.div 
+            className="text-center py-16"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="bg-yellow-800/20 backdrop-blur-sm border border-yellow-600/30 rounded-2xl p-12 max-w-md mx-auto">
+              <Calendar className="w-16 h-16 text-yellow-400 mx-auto mb-6" />
+              <h3 className="text-2xl font-bold text-yellow-100 mb-4">No events found</h3>
+              <p className="text-yellow-200">
+                {filters.searchTerm || filters.location || filters.source !== 'all' || filters.dateRange !== 'all'
+                  ? 'Try adjusting your filters to discover more community events.'
+                  : 'Check back soon for upcoming Black QTIPOC community events.'
+                }
+              </p>
+            </div>
+          </motion.div>
         )}
 
         {/* Community Notice */}
-        <div className="mt-12 bg-gradient-to-br from-indigo-900 to-purple-900 rounded-2xl p-8 text-white">
+        <motion.div 
+          className="mt-16 bg-gradient-to-br from-amber-900 via-yellow-900 to-yellow-800 rounded-2xl p-8 border border-yellow-600/30"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.0 }}
+        >
           <div className="max-w-3xl mx-auto text-center">
-            <Heart className="w-12 h-12 text-pink-400 mx-auto mb-4" />
-            <h3 className="text-2xl font-bold mb-4">
-              Building Community Together
-            </h3>
-            <p className="text-lg text-indigo-100 mb-6">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.6, delay: 1.2 }}
+            >
+              <Heart className="w-16 h-16 text-yellow-400 mx-auto mb-6" />
+            </motion.div>
+            <motion.h3 
+              className="text-3xl font-black heading-block mb-6 uppercase"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.4 }}
+            >
+              <span className="bg-gradient-to-r from-yellow-300 to-amber-200 bg-clip-text text-transparent">
+                Building Community Together
+              </span>
+            </motion.h3>
+            <motion.p 
+              className="text-lg text-yellow-100 mb-8 font-light leading-relaxed"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.6 }}
+            >
               These events are curated to support and celebrate Black QTIPOC communities. 
-              Join us in creating spaces of liberation, joy, and mutual support.
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
-              <button className="bg-pink-500 hover:bg-pink-600 text-white font-medium px-6 py-3 rounded-lg transition-colors">
+              Join us in creating spaces of liberation, joy, and collective power.
+            </motion.p>
+            <motion.div 
+              className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.8 }}
+            >
+              <button className="bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-yellow-950 font-bold px-8 py-4 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
                 Submit an Event
               </button>
-              <button className="bg-transparent border-2 border-indigo-300 hover:bg-indigo-800 text-white font-medium px-6 py-3 rounded-lg transition-colors">
+              <button className="bg-transparent border-2 border-yellow-400 hover:bg-yellow-400/10 text-yellow-100 font-bold px-8 py-4 rounded-xl transition-all duration-300 transform hover:scale-105">
                 Join Our Community
               </button>
-            </div>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
       </div>
       
       <PlatformFooter />
