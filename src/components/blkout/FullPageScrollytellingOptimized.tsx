@@ -783,15 +783,29 @@ const FullPageScrollytellingOptimized: React.FC = () => {
 
       case 'video':
         return (
-          <div className="relative w-full h-full">
+          <div className="relative w-full h-full bg-black flex items-center justify-center">
             <video 
               autoPlay 
               muted 
               loop 
               playsInline
-              className="w-full h-full object-cover"
+              preload="auto"
+              className="max-w-full max-h-full object-contain"
               src={slide.videoUrl}
+              onLoadedData={() => console.log('Video loaded successfully:', slide.videoUrl)}
+              onError={(e) => {
+                console.error('Video failed to load:', slide.videoUrl)
+                console.error('Error details:', e)
+              }}
+              onCanPlay={() => console.log('Video can play:', slide.videoUrl)}
+              style={{
+                width: 'auto',
+                height: 'auto',
+                maxWidth: '100%',
+                maxHeight: '100%'
+              }}
             >
+              <source src={slide.videoUrl} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           </div>

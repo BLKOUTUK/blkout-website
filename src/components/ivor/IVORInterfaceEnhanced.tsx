@@ -6,10 +6,11 @@ import {
   MessageCircle, Send, Mic, FileText, Search, 
   Brain, Zap, Users, Heart, Shield, Target,
   ChevronDown, Play, ArrowRight, Sparkles,
-  Database, Globe, Book, Headphones
+  Database, Globe, Book, Headphones, AlertCircle
 } from 'lucide-react'
 import PrimaryNavigationEnhanced from '../layout/PrimaryNavigationEnhanced'
 import PlatformFooter from '../layout/PlatformFooter'
+import { ivorService, IVORResponse, IVORMessage } from '../../services/ivorService'
 
 // IVOR Capabilities
 const ivorCapabilities = [
@@ -445,7 +446,7 @@ const IVORChatInterface = ({ backendStatus, pathwayContext, initialMessage }: {
     setIsTyping(true)
 
     try {
-      const response = await fetch('http://localhost:8000/api/chat', {
+      const response = await fetch('http://localhost:8000/chat/message', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -612,16 +613,13 @@ export default function IVORInterfaceEnhanced() {
   const [initialMessage, setInitialMessage] = useState<string>('')
 
   useEffect(() => {
-    // Check backend status
-    fetch('http://localhost:8000/health/')
-      .then(response => {
-        if (response.ok) {
-          setBackendStatus('connected')
-        } else {
-          throw new Error('Backend not responding')
-        }
-      })
-      .catch(() => setBackendStatus('offline'))
+    // Check IVOR backend status using service
+    const checkConnection = async () => {
+      const connected = await ivorService.checkConnection()
+      setBackendStatus(connected ? 'connected' : 'offline')
+    }
+    
+    checkConnection()
 
     // Check for pathway context from URL or localStorage
     const urlParams = new URLSearchParams(window.location.search)

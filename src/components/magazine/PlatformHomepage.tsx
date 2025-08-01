@@ -177,11 +177,11 @@ const PlatformHero = () => (
             className="text-6xl md:text-8xl lg:text-9xl font-black text-white heading-block leading-none mb-8"
           >
             <span className="bg-gradient-to-r from-indigo-400 via-violet-400 to-emerald-400 bg-clip-text text-transparent">
-              COMMUNITY
+              BLKOUT
             </span>
             <br />
             <span className="bg-gradient-to-r from-slate-400 via-blue-400 to-indigo-400 bg-clip-text text-transparent">
-              LIBERATION
+              PLATFORM
             </span>
           </motion.h1>
           <motion.p 
