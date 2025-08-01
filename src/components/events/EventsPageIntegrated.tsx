@@ -204,7 +204,7 @@ const FilterBar: React.FC<{
           </select>
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
 
