@@ -382,53 +382,55 @@ const FeaturedArticleCard = ({ article }: { article: StoryArchiveItem }) => {
         </h1>
         
         {/* Excerpt */}
-        <p className="text-lg text-gray-700 mb-6 leading-relaxed">
+        <p className="text-gray-700 mb-6 leading-relaxed line-clamp-3">
           {article.excerpt}
         </p>
-        
-        {/* Author and actions */}
+
+        {/* Action Buttons */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-3">
               <div className={`w-10 h-10 bg-gradient-to-br ${categoryData.gradient} rounded-full flex items-center justify-center shadow-lg`}>
-                <span className="text-white text-sm font-semibold">
-                  {article.author.avatar}
-                </span>
+                <categoryData.icon className="w-5 h-5 text-white" />
               </div>
               <div>
-                <p className="font-semibold text-gray-900">
-                  {article.author.name}
-                </p>
+                <p className="font-semibold text-gray-900">{article.author}</p>
                 <div className="flex items-center text-sm text-gray-500 space-x-2">
-                  <span>{article.publishedAt}</span>
-                  <span>•</span>
-                  <span>{article.readTime} min read</span>
+                  <Clock className="w-4 h-4" />
+                  <span>{formatDate(article.publishedAt)}</span>
                 </div>
               </div>
             </div>
           </div>
           
           <div className="flex items-center space-x-3">
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <Link
+              to={`/article/${article.id}`}
               className={`px-6 py-3 bg-gradient-to-r ${categoryData.gradient} text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center`}
             >
               Read Story
               <ArrowRight className="w-4 h-4 ml-2" />
-            </motion.button>
-            <motion.button 
-              whileHover={{ scale: 1.05 }}
+            </Link>
+            <button
               className="px-4 py-3 text-gray-600 hover:text-gray-900 font-medium transition-colors flex items-center"
             >
               <Share2 className="w-4 h-4 mr-2" />
               Share
-            </motion.button>
+            </button>
           </div>
         </div>
       </div>
     </motion.div>
   )
+}
+
+// Helper function for date formatting  
+const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long', 
+    day: 'numeric'
+  })
 }
 
 // Main component
@@ -454,8 +456,8 @@ export default function MagazineHomepageEnhanced() {
   if (!featuredArticle) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-600 mb-4">Loading Magazine...</h2>
+        <div className="text-center px-4">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-600 mb-4">Loading Magazine...</h2>
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto"></div>
         </div>
       </div>
@@ -470,126 +472,117 @@ export default function MagazineHomepageEnhanced() {
       {/* Hero section with curved background */}
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-purple-50/30 to-pink-50/50"></div>
-        <div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-b-[100px]"></div>
+        <div className="absolute top-0 left-0 w-full h-64 sm:h-80 lg:h-96 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 rounded-b-[50px] sm:rounded-b-[100px]"></div>
         
-        {/* Main Container */}
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        {/* Main Container - Enhanced mobile spacing */}
+        <div className="relative max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-8 lg:py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12">
             
             {/* Main Content Area - 8 columns */}
             <main className="lg:col-span-8">
               
-              {/* Featured Story Hero */}
-              <section className="mb-16">
-                <div className="mb-8">
+              {/* Featured Story Hero - Mobile optimized */}
+              <section className="mb-8 sm:mb-12 lg:mb-16">
+                <div className="mb-6 sm:mb-8">
                   <motion.div 
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
                     className="text-center lg:text-left"
                   >
-                    <h1 className="text-5xl lg:text-6xl font-black heading-block mb-4 uppercase tracking-tight">
-                      <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent">
-                        BLKOUT
-                      </span>
-                      <span className="text-gray-800 ml-2">MAGAZINE</span>
+                    <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black heading-block mb-3 sm:mb-4 uppercase tracking-tight leading-tight">
+                      BLKOUT <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600">STORIES</span>
                     </h1>
-                    <p className="text-xl text-gray-600 font-light max-w-2xl">
-                      Authentic stories, radical imagination, and community voices from Black queer liberation movements.
+                    <p className="text-base sm:text-lg lg:text-xl text-gray-600 font-light max-w-2xl leading-relaxed">
+                      Authentic voices from the Black queer liberation movement
                     </p>
                   </motion.div>
-                </div>
-
-                {/* Featured Article Card */}
-                <FeaturedArticleCard article={featuredArticle} />
-
-                {/* Featured Navigation Dots */}
-                {featuredArticles.length > 1 && (
-                  <div className="flex justify-center space-x-2 mt-6">
+                  
+                  {/* Featured Article Carousel Indicators - Mobile friendly */}
+                  <div className="flex justify-center space-x-2 mt-4 sm:mt-6">
                     {featuredArticles.map((_, index) => (
                       <button
                         key={index}
-                        onClick={() => setCurrentFeatured(index)}
-                        className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                        className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
                           index === currentFeatured 
-                            ? 'bg-purple-600 scale-110' 
+                            ? 'bg-purple-600 scale-125' 
                             : 'bg-gray-300 hover:bg-gray-400'
                         }`}
-                        aria-label={`Go to featured article ${index + 1}`}
+                        onClick={() => setCurrentFeatured(index)}
+                        aria-label={`View featured article ${index + 1}`}
                       />
                     ))}
                   </div>
-                )}
-              </section>
+                </div>
 
-              {/* Recent Stories Grid */}
-              <section className="mb-16">
-                <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-3xl font-bold text-gray-800 heading-block uppercase">
+                {/* Recent Articles Grid - Mobile optimized */}
+                <div className="flex items-center justify-between mb-6 sm:mb-8">
+                  <h2 className="text-xl sm:text-2xl lg:text-3xl font-black heading-block uppercase">
                     Latest Stories
                   </h2>
                   <Link 
-                    to="/stories" 
-                    className="text-purple-600 hover:text-purple-700 font-semibold flex items-center gap-2 transition-colors"
+                    to="/stories"
+                    className="text-purple-600 hover:text-purple-700 font-semibold flex items-center gap-1 sm:gap-2 transition-colors text-sm sm:text-base"
                   >
                     View All
-                    <ArrowRight className="w-4 h-4" />
+                    <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4" />
                   </Link>
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {recentArticles.slice(0, 6).map((article) => (
-                    <EnhancedArticleCard key={article.id} article={article} />
+                
+                {/* Grid Layout - Mobile first responsive */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
+                  {recentArticles.map((article, index) => (
+                    <EnhancedArticleCard 
+                      key={`${article.id}-${index}`} 
+                      article={article}
+                    />
                   ))}
                 </div>
               </section>
-
-              {/* Content Category Key */}
-              <ContentCategoryKey />
-              
             </main>
-
-            {/* Sidebar - 4 columns */}
-            <aside className="lg:col-span-4 space-y-8">
+            
+            {/* Sidebar - 4 columns - Mobile optimized */}
+            <aside className="lg:col-span-4 space-y-6 sm:space-y-8">
               
-              {/* Community Stats Widget */}
-              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
-                <h3 className="text-lg font-bold text-gray-800 mb-4 heading-block uppercase">
-                  Community Impact
-                </h3>
-                <div className="space-y-4">
+              {/* Community Stats - Mobile friendly */}
+              <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6">
+                <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">Community Impact</h2>
+                <div className="space-y-3 sm:space-y-4">
                   {[
                     { label: 'Stories Published', value: liveStoryArchive.length.toString(), trend: '+5', color: 'text-purple-600' },
-                    { label: 'Community Voices', value: '89', trend: '+12', color: 'text-emerald-600' },
-                    { label: 'Categories Covered', value: Object.keys(CONTENT_CATEGORIES).length.toString(), trend: '+2', color: 'text-blue-600' },
-                    { label: 'Active Contributors', value: '47', trend: '+8', color: 'text-orange-600' }
-                  ].map((stat) => (
-                    <div key={stat.label} className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600 font-medium">{stat.label}</span>
-                      <div className="text-right">
-                        <div className={`text-lg font-bold ${stat.color}`}>{stat.value}</div>
-                        <div className="text-xs text-emerald-500 font-medium">+{stat.trend} this week</div>
+                    { label: 'Community Voices', value: '89', trend: '+12', color: 'text-blue-600' },
+                    { label: 'Stories This Week', value: '8', trend: '+3', color: 'text-green-600' },
+                    { label: 'Featured Authors', value: '23', trend: '+2', color: 'text-orange-600' }
+                  ].map((stat, index) => (
+                    <div key={stat.label} className="flex items-center justify-between p-2 sm:p-3 bg-gray-50 rounded-lg">
+                      <div>
+                        <p className="text-xs sm:text-sm font-medium text-gray-600">{stat.label}</p>
+                        <p className="text-lg sm:text-xl font-bold text-gray-900">{stat.value}</p>
+                      </div>
+                      <div className={`text-xs sm:text-sm font-semibold ${stat.color} flex items-center`}>
+                        <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                        {stat.trend}
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Events Widget */}
-              <EventsWidget />
-
-              {/* I.V.O.R. Widget */}
-              <IVORWidget />
-
-              {/* Community Activity Widget */}
-              <CommunityActivityWidget />
-
-              {/* Membership Widget */}
-              <MembershipWidget />
-              
+              {/* Widget Grid - Stack on mobile */}
+              <div className="space-y-4 sm:space-y-6 lg:space-y-8">
+                <EventsWidget />
+                <IVORWidget />
+                <CommunityActivityWidget />
+                <MembershipWidget />
+              </div>
             </aside>
           </div>
         </div>
+
+        {/* Featured Article Card - Mobile optimized */}
+        <FeaturedArticleCard article={featuredArticle} />
+        
+        {/* Category Navigation */}
+        <ContentCategoryKey />
       </div>
     </div>
   )

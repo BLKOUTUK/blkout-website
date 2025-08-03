@@ -46,94 +46,51 @@ export default function PrimaryNavigationEnhanced({ className = '' }: PrimaryNav
       aria-label="Main navigation"
       className={`bg-indigo-950 border-b border-indigo-800/30 sticky top-0 z-50 backdrop-blur-sm ${className}`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+        <div className="flex items-center justify-between h-14 sm:h-16 lg:h-20">
           
-          {/* Logo/Brand */}
-          <div className="flex items-center space-x-4 flex-shrink-0">
-            <Link to="/platform" className="flex items-center space-x-3">
-              <div className="w-12 h-12 flex items-center justify-center">
-                <img 
-                  src="/images/BLKOUT25INV.png" 
-                  alt="BLKOUT UK logo - Bold letters representing Black queer liberation community platform" 
-                  className="w-10 h-10 object-contain"
-                  onError={(e) => {
-                    // Fallback to text if logo doesn't load
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
-                    const fallback = document.createElement('div');
-                    fallback.className = 'w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center';
-                    const span = document.createElement('span');
-                    span.className = 'text-white font-black text-lg heading-block';
-                    span.textContent = 'B';
-                    fallback.appendChild(span);
-                    fallback.setAttribute('aria-label', 'BLKOUT logo fallback');
-                    target.parentNode?.appendChild(fallback);
-                  }}
-                />
+          {/* Logo - Mobile optimized */}
+          <div className="flex-shrink-0">
+            <Link 
+              to="/" 
+              className="flex items-center space-x-2 text-white font-bold text-lg sm:text-xl lg:text-2xl hover:text-indigo-200 transition-colors focus-enhanced"
+              aria-label="BLKOUT Home"
+            >
+              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-electric-cyan to-electric-magenta rounded-lg flex items-center justify-center">
+                <span className="text-xs sm:text-sm font-black text-white">B</span>
               </div>
-              <div className="hidden sm:block">
-                <span className="text-2xl font-black text-white heading-block uppercase">
-                  <span className="bg-gradient-to-r from-indigo-400 to-violet-400 bg-clip-text text-transparent">
-                    BLKOUT
-                  </span>
-                  <span className="bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent ml-1">
-                    UK
-                  </span>
-                </span>
-                <div className="text-xs text-indigo-300 font-mono uppercase tracking-wider -mt-1">
-                  PLATFORM
-                </div>
-              </div>
+              <span className="hidden sm:inline">BLKOUT</span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-2">
+          <div className="hidden lg:flex items-center space-x-8">
             {navigationItems.map((item) => (
               <div key={item.name} className="relative group">
                 <Link
                   to={item.href}
-                  className={`px-6 py-3 text-sm font-bold transition-all duration-300 relative heading-block uppercase tracking-wide flex items-center space-x-1 ${
+                  className={`px-3 py-2 text-sm font-medium transition-colors duration-200 focus-enhanced ${
                     isActive(item.href)
-                      ? 'text-white bg-indigo-700/50 backdrop-blur-sm'
-                      : 'text-indigo-200 hover:text-white hover:bg-indigo-800/30'
+                      ? 'text-white bg-indigo-800/50 rounded-md'
+                      : 'text-indigo-200 hover:text-white hover:bg-indigo-800/30 rounded-md'
                   }`}
                 >
-                  <span>{item.name}</span>
-                  {item.submenu && (
-                    <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" />
-                  )}
-                  {isActive(item.href) && (
-                    <motion.div
-                      layoutId="activeTab"
-                      className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-400 to-violet-400"
-                      initial={false}
-                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                    />
-                  )}
-                  
-                  {/* Enhanced Tooltip */}
-                  {!item.submenu && (
-                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-3 w-72 p-4 bg-gradient-to-br from-indigo-950 to-slate-950 border border-indigo-700/50 text-indigo-100 text-sm rounded-none opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 backdrop-blur-sm">
-                      <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-indigo-950 rotate-45 border-t border-l border-indigo-700/50"></div>
-                      <p className="font-light leading-relaxed">{item.description}</p>
-                    </div>
-                  )}
+                  {item.name}
                 </Link>
                 
-                {/* Dropdown Menu */}
-                {item.submenu && (
-                  <div className="absolute top-full left-0 w-80 bg-gradient-to-br from-indigo-950 to-slate-950 border border-indigo-700/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 backdrop-blur-sm">
-                    <div className="py-4">
-                      {item.submenu.map((subItem) => (
+                {/* Dropdown menu for desktop */}
+                {item.children && (
+                  <div className="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                    <div className="py-1">
+                      {item.children.map((subItem) => (
                         <Link
                           key={subItem.name}
                           to={subItem.href}
-                          className="block px-6 py-3 text-indigo-200 hover:text-white hover:bg-indigo-800/30 transition-all"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors focus-enhanced"
+                          target={subItem.external ? '_blank' : undefined}
+                          rel={subItem.external ? 'noopener noreferrer' : undefined}
                         >
-                          <div className="font-bold text-sm uppercase tracking-wide mb-1">{subItem.name}</div>
-                          <div className="text-xs text-indigo-400 font-light normal-case tracking-normal">{subItem.description}</div>
+                          {subItem.name}
                         </Link>
                       ))}
                     </div>
@@ -143,106 +100,99 @@ export default function PrimaryNavigationEnhanced({ className = '' }: PrimaryNav
             ))}
           </div>
 
-          {/* Search and Actions */}
-          <div className="flex items-center space-x-4">
-            
-            {/* Enhanced Search Bar */}
-            <div className="hidden md:flex items-center">
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-indigo-400" />
-                <input
-                  id="desktop-search"
-                  type="text"
-                  placeholder="Search stories..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  aria-label="Search stories, articles, and community content"
-                  className="w-72 pl-12 pr-4 py-3 bg-indigo-900/50 border border-indigo-700/50 text-white placeholder-indigo-300 focus:outline-none focus:border-indigo-500 focus:bg-indigo-900/70 focus:ring-2 focus:ring-indigo-400 transition-all backdrop-blur-sm font-light"
-                />
-              </div>
+          {/* Search Bar - Hidden on mobile, visible on desktop */}
+          <div className="hidden lg:flex items-center space-x-4">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search stories..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-64 px-4 py-2 text-sm bg-indigo-900/50 border border-indigo-700 rounded-lg text-white placeholder-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              />
+              <Search className="absolute right-3 top-2.5 w-4 h-4 text-indigo-300" />
             </div>
+          </div>
 
-
-            {/* Mobile menu button */}
+          {/* Mobile menu button - Enhanced touch target */}
+          <div className="lg:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              aria-label={isOpen ? "Close mobile menu" : "Open mobile menu"}
+              className="touch-target text-indigo-200 hover:text-white focus-enhanced rounded-md"
               aria-expanded={isOpen}
-              className="lg:hidden p-3 text-indigo-300 hover:text-white hover:bg-indigo-800/30 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all"
+              aria-label="Toggle main menu"
             >
-              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
 
-        {/* Enhanced Mobile Navigation */}
+        {/* Mobile Navigation Menu - Enhanced mobile UX */}
         {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden border-t border-indigo-800/30 bg-indigo-950/50 backdrop-blur-sm"
-          >
-            <div className="py-6 space-y-3">
+          <div className="lg:hidden border-t border-indigo-800/30">
+            <div className="py-4 space-y-1">
               
               {/* Mobile Search */}
-              <div className="px-4 pb-6">
+              <div className="px-2 pb-4">
                 <div className="relative">
-                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-indigo-400" />
                   <input
                     type="text"
                     placeholder="Search stories..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3 bg-indigo-900/50 border border-indigo-700/50 text-white placeholder-indigo-300 focus:outline-none focus:border-indigo-500 font-light"
+                    className="w-full px-4 py-3 text-sm bg-indigo-900/50 border border-indigo-700 rounded-lg text-white placeholder-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   />
+                  <Search className="absolute right-3 top-3.5 w-4 h-4 text-indigo-300" />
                 </div>
               </div>
 
-              {/* Enhanced Mobile Navigation Items */}
+              {/* Mobile Navigation Links */}
               {navigationItems.map((item) => (
-                <div key={item.name} className="space-y-1">
+                <div key={item.name}>
                   <Link
                     to={item.href}
-                    onClick={() => setIsOpen(false)}
-                    className={`block px-6 py-4 text-sm font-bold transition-all heading-block uppercase tracking-wide ${
+                    className={`block px-4 py-3 text-base font-medium transition-colors duration-200 touch-target focus-enhanced ${
                       isActive(item.href)
-                        ? 'text-white bg-indigo-700/50 border-r-4 border-indigo-400'
+                        ? 'text-white bg-indigo-800/50 border-l-4 border-electric-cyan'
                         : 'text-indigo-200 hover:text-white hover:bg-indigo-800/30'
                     }`}
+                    onClick={() => setIsOpen(false)}
                   >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="font-black mb-1">{item.name}</div>
-                        <div className="text-xs text-indigo-400 font-light normal-case tracking-normal">{item.description}</div>
-                      </div>
-                      {item.submenu && (
-                        <ChevronDown className="w-4 h-4 text-indigo-400" />
-                      )}
-                    </div>
+                    {item.name}
                   </Link>
                   
-                  {/* Mobile Submenu */}
-                  {item.submenu && (
-                    <div className="bg-indigo-900/30 ml-4">
-                      {item.submenu.map((subItem) => (
+                  {/* Mobile submenu */}
+                  {item.children && (
+                    <div className="pl-6 space-y-1">
+                      {item.children.map((subItem) => (
                         <Link
                           key={subItem.name}
                           to={subItem.href}
+                          className="block px-4 py-2 text-sm text-indigo-300 hover:text-white hover:bg-indigo-800/20 transition-colors touch-target focus-enhanced"
+                          target={subItem.external ? '_blank' : undefined}
+                          rel={subItem.external ? 'noopener noreferrer' : undefined}
                           onClick={() => setIsOpen(false)}
-                          className="block px-6 py-3 text-indigo-300 hover:text-white hover:bg-indigo-800/30 transition-all"
                         >
-                          <div className="font-bold text-sm uppercase tracking-wide mb-1">{subItem.name}</div>
-                          <div className="text-xs text-indigo-400 font-light normal-case tracking-normal">{subItem.description}</div>
+                          {subItem.name}
                         </Link>
                       ))}
                     </div>
                   )}
                 </div>
               ))}
-
+              
+              {/* Mobile CTA */}
+              <div className="px-4 pt-4 border-t border-indigo-800/30">
+                <Link
+                  to="/community"
+                  className="block w-full py-3 px-4 text-center text-sm font-medium text-white bg-gradient-to-r from-electric-cyan to-electric-magenta rounded-lg hover:opacity-90 transition-opacity touch-target focus-enhanced"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Join Community
+                </Link>
+              </div>
             </div>
-          </motion.div>
+          </div>
         )}
       </div>
     </nav>
