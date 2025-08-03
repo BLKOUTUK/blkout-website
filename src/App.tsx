@@ -7,6 +7,7 @@ import IntegrationDashboard from './components/blkout/IntegrationDashboard'
 import CommunityGatewayEnhanced from './components/community/CommunityGatewayEnhanced'
 import MagazineLayout from './components/magazine/MagazineLayout'
 import PlatformHomepage from './components/magazine/PlatformHomepage'
+import MagazineHomepageEnhanced from './components/magazine/MagazineHomepageEnhanced'
 import StoriesPageEnhanced from './components/magazine/StoriesPageEnhanced'
 import MovementIntroEnhanced from './components/movement/MovementIntroEnhanced'
 import JoinDiscussionEnhanced from './components/community/JoinDiscussionEnhanced'
@@ -16,98 +17,24 @@ import NewsroomEnhanced from './components/newsroom/NewsroomEnhanced'
 import EventsPageIntegrated from './components/events/EventsPageIntegrated'
 import PrimaryNavigationEnhanced from './components/layout/PrimaryNavigationEnhanced'
 import PlatformFooter from './components/layout/PlatformFooter'
+import SkipNavigation from './components/layout/SkipNavigation'
 
-// Connect to actual backend services
-const NewsroomPage = () => {
-  const [articles, setArticles] = React.useState([])
-  const [loading, setLoading] = React.useState(true)
-  const [backendStatus, setBackendStatus] = React.useState('checking')
-  
-  React.useEffect(() => {
-    // Check if newsroom backend is running and fetch articles
-    fetch('http://localhost:3001/api/articles')
-      .then(res => res.json())
-      .then(data => {
-        setArticles(data.articles || [])
-        setBackendStatus('running')
-      })
-      .catch(() => {
-        setBackendStatus('offline')
-      })
-      .finally(() => {
-        setLoading(false)
-      })
-  }, [])
-  
-  return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">BLKOUT Newsroom</h1>
-          <p className="text-xl text-gray-300 mb-8">Community news and liberation analysis</p>
-        </div>
-        
-        {backendStatus === 'checking' && loading && (
-          <div className="text-center">
-            <p className="text-xl text-gray-300">Connecting to newsroom backend...</p>
-          </div>
-        )}
-        
-        {backendStatus === 'offline' && (
-          <div className="text-center">
-            <p className="text-xl text-gray-300 mb-4">Newsroom backend is currently offline</p>
-            <p className="text-sm text-gray-400 mb-8">
-              To start newsroom: cd newsroom/blkout-newsroom-backend && npm run dev
-            </p>
-          </div>
-        )}
-        
-        {backendStatus === 'running' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {articles.length > 0 ? articles.map((article: any, index: number) => (
-              <div key={index} className="bg-white/10 rounded-lg p-6 hover:bg-white/20 transition-all">
-                <h3 className="text-lg font-semibold text-white mb-2">{article.title}</h3>
-                <p className="text-gray-300 text-sm mb-4">{article.excerpt}</p>
-                <div className="flex justify-between items-center text-xs text-gray-400">
-                  <span>{article.source}</span>
-                  <span>{new Date(article.published_date).toLocaleDateString()}</span>
-                </div>
-              </div>
-            )) : (
-              <div className="col-span-full text-center">
-                <p className="text-xl text-gray-300">No articles available yet</p>
-                <p className="text-sm text-gray-400">Articles will appear here as they are aggregated</p>
-              </div>
-            )}
-          </div>
-        )}
-        
-        <div className="text-center mt-12">
-          <a href="/" className="text-blue-400 hover:text-blue-300">← Back to Home</a>
-        </div>
-      </div>
-    </div>
-  )
-}
-
+// Events Page Component
 const EventsPage = () => {
-  const [backendStatus, setBackendStatus] = React.useState<'checking' | 'connected' | 'offline'>('checking')
+  const [backendStatus, setBackendStatus] = React.useState('checking')
   const [shouldRedirect, setShouldRedirect] = React.useState(false)
   
   React.useEffect(() => {
-    // First try to connect to events backend
-    fetch('http://localhost:5173/api/events')
-      .then(response => {
-        if (response.ok) {
-          setBackendStatus('connected')
-          // If backend is running, redirect to the existing calendar
-          setShouldRedirect(true)
-          setTimeout(() => {
-            window.location.href = 'http://localhost:5173'
-          }, 2000)
-        } else {
-          throw new Error('Events backend not responding')
-        }
+    // Check if events backend is running
+    fetch('http://localhost:5173/health')
+      .then(res => res.json())
+      .then(() => {
+        setBackendStatus('running')
+        setShouldRedirect(true)
+        // Small delay before redirect
+        setTimeout(() => {
+          window.location.href = 'http://localhost:5173'
+        }, 2000)
       })
       .catch(() => {
         setBackendStatus('offline')
@@ -283,9 +210,12 @@ const StorylabPage = () => (
 function App() {
   return (
     <Router>
+      <SkipNavigation />
       <Routes>
         <Route path="/" element={<FullPageScrollytellingOptimized />} />
         <Route path="/platform" element={<PlatformHomepage />} />
+        <Route path="/magazine" element={<MagazineHomepageEnhanced />} />
+        <Route path="/home" element={<MagazineHomepageEnhanced />} />
         <Route path="/dashboard" element={<ProjectHub />} />
         <Route path="/admin" element={<IntegrationDashboard />} />
         <Route path="/community" element={<CommunityGatewayEnhanced />} />
@@ -294,10 +224,11 @@ function App() {
         <Route path="/discussions" element={<JoinDiscussionEnhanced />} />
         <Route path="/reports" element={<HubReports />} />
         <Route path="/newsroom" element={<NewsroomEnhanced />} />
-        <Route path="/events" element={<EventsPageIntegrated />} />
+        <Route path="/media" element={<ChannelBLKOUTPage />} />
+        <Route path="/events" element={<EventsPage />} />
         <Route path="/ivor" element={<IVORInterfaceEnhanced />} />
         <Route path="/governance" element={<GovernancePage />} />
-        <Route path="/media/newsroom" element={<NewsroomPage />} />
+        <Route path="/media/newsroom" element={<NewsroomEnhanced />} />
         <Route path="/media/channel" element={<ChannelBLKOUTPage />} />
         <Route path="/media/storylab" element={<StorylabPage />} />
       </Routes>

@@ -3,135 +3,73 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Calendar, Users, MessageCircle, ArrowRight, Clock, User, Play, Star, TrendingUp, Heart, Share2, BookOpen, Sparkles, Target, Zap } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import ArticleGrid from './ArticleGrid'
 import PrimaryNavigation from '../layout/PrimaryNavigation'
+import { CONTENT_CATEGORIES, getCategoryIndicator } from '../../lib/constants'
+import { liveStoryArchive } from '../../data/liveStoryArchive'
 
-// Enhanced content category definitions with gradients
-const CONTENT_CATEGORIES = {
-  'Original Commentary': { 
-    color: 'bg-purple-600', 
-    textColor: 'text-purple-600',
-    gradient: 'from-purple-400 via-purple-500 to-purple-600',
-    glowColor: 'shadow-purple-500/25'
-  },
-  'Curated Content': { 
-    color: 'bg-pink-600', 
-    textColor: 'text-pink-600',
-    gradient: 'from-pink-400 via-pink-500 to-pink-600',
-    glowColor: 'shadow-pink-500/25'
-  },
-  'Event Coverage': { 
-    color: 'bg-orange-600', 
-    textColor: 'text-orange-600',
-    gradient: 'from-orange-400 via-orange-500 to-orange-600',
-    glowColor: 'shadow-orange-500/25'
-  },
-  'Community Response': { 
-    color: 'bg-green-600', 
-    textColor: 'text-green-600',
-    gradient: 'from-green-400 via-green-500 to-green-600',
-    glowColor: 'shadow-green-500/25'
-  },
-  'Video/Audio/Photo': { 
-    color: 'bg-blue-600', 
-    textColor: 'text-blue-600',
-    gradient: 'from-blue-400 via-blue-500 to-blue-600',
-    glowColor: 'shadow-blue-500/25'
-  }
+// Import liveStoryArchive types
+type StoryArchiveItem = typeof liveStoryArchive[0]
+
+// Enhanced article card for recent stories
+const EnhancedArticleCard = ({ article }: { article: StoryArchiveItem }) => {
+  const categoryData = getCategoryIndicator(article.category)
+  
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -4 }}
+      transition={{ duration: 0.3 }}
+      className="bg-white rounded-2xl border border-gray-200/60 p-6 shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer"
+    >
+      <div className="flex items-center mb-3">
+        <div className={`w-3 h-3 rounded-full ${categoryData.color} mr-3`}></div>
+        <span className={`text-sm font-semibold ${categoryData.textColor}`}>
+          {article.category}
+        </span>
+        <span className="mx-2 text-gray-400">•</span>
+        <span className="text-sm text-gray-500">{article.publishedAt}</span>
+      </div>
+      
+      <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-gray-700 transition-colors line-clamp-2">
+        {article.title}
+      </h3>
+      
+      <p className="text-gray-700 mb-4 leading-relaxed line-clamp-3">
+        {article.excerpt}
+      </p>
+      
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-2">
+          <div className={`w-8 h-8 ${categoryData.color} rounded-full flex items-center justify-center`}>
+            <span className="text-white text-xs font-medium">
+              {article.author.avatar}
+            </span>
+          </div>
+          <div>
+            <p className="text-sm font-medium text-gray-900">
+              {article.author.name}
+            </p>
+            <p className="text-xs text-gray-500">
+              {article.readTime} min read
+            </p>
+          </div>
+        </div>
+        
+        <motion.button 
+          whileHover={{ scale: 1.02 }}
+          className={`px-4 py-2 ${categoryData.color} text-white text-sm font-medium rounded-lg hover:opacity-90 transition-all flex items-center`}
+        >
+          Read
+          <ArrowRight className="w-3 h-3 ml-1" />
+        </motion.button>
+      </div>
+    </motion.div>
+  )
 }
 
-interface Article {
-  id: string
-  title: string
-  excerpt: string
-  author: {
-    name: string
-    avatar: string
-  }
-  publishedAt: string
-  readTime: number
-  category: keyof typeof CONTENT_CATEGORIES
-  featured: boolean
-  image?: string
-  tags: string[]
-  likes?: number
-  comments?: number
-}
-
-// Enhanced mock data with engagement metrics
-const mockFeaturedArticles: Article[] = [
-  {
-    id: '1',
-    title: 'Building Cooperative Ownership in Digital Spaces',
-    excerpt: 'How Black queer communities are reimagining platform ownership and digital sovereignty through collective action and radical imagination.',
-    author: { name: 'Marcus Johnson', avatar: 'MJ' },
-    publishedAt: '2025-01-29',
-    readTime: 8,
-    category: 'Original Commentary',
-    featured: true,
-    image: '/images/squared/WELLDEF_SQUARED.png',
-    tags: ['Digital Rights', 'Cooperative', 'Liberation'],
-    likes: 234,
-    comments: 47
-  },
-  {
-    id: '2', 
-    title: 'Community Response: Mental Health Resources Launch',
-    excerpt: 'Community members share their experiences with the new peer support networks and resource accessibility in this heartfelt collection.',
-    author: { name: 'Devon Williams', avatar: 'DW' },
-    publishedAt: '2025-01-28',
-    readTime: 5,
-    category: 'Community Response',
-    featured: true,
-    image: '/images/squared/BlackSQUARED.png',
-    tags: ['Mental Health', 'Community', 'Resources'],
-    likes: 189,
-    comments: 32
-  },
-  {
-    id: '3', 
-    title: 'The Art of Black Joy: Visual Stories from Our Community',
-    excerpt: 'A multimedia exploration of how Black joy manifests in everyday moments, celebrations, and acts of resistance across the UK.',
-    author: { name: 'Aisha Clarke', avatar: 'AC' },
-    publishedAt: '2025-01-27',
-    readTime: 6,
-    category: 'Video/Audio/Photo',
-    featured: true,
-    image: '/images/squared/BLKOUT25INV.png',
-    tags: ['Black Joy', 'Photography', 'Community'],
-    likes: 312,
-    comments: 58
-  }
-]
-
-const mockRecentArticles: Article[] = [
-  {
-    id: '4',
-    title: 'Event Coverage: Black History Month Planning Session',
-    excerpt: 'Key highlights from the community planning session for BHM 2025 celebrations.',
-    author: { name: 'Jordan Clarke', avatar: 'JC' },
-    publishedAt: '2025-01-27',
-    readTime: 4,
-    category: 'Event Coverage',
-    featured: false,
-    tags: ['Events', 'Black History Month'],
-    likes: 156,
-    comments: 23
-  },
-  {
-    id: '5',
-    title: 'Curated: Policy Changes Affecting QTIPOC+ Communities',
-    excerpt: 'Analysis of recent policy developments and their impact on Black queer communities.',
-    author: { name: 'Alex Thompson', avatar: 'AT' },
-    publishedAt: '2025-01-26',
-    readTime: 6,
-    category: 'Curated Content',
-    featured: false,
-    tags: ['Policy', 'QTIPOC', 'Rights'],
-    likes: 203,
-    comments: 41
-  }
-]
 
 // Enhanced widgets with sophisticated styling
 const EventsWidget = () => (
@@ -382,8 +320,8 @@ const ContentCategoryKey = () => (
 )
 
 // Enhanced featured article component
-const FeaturedArticleCard = ({ article, isActive }: { article: Article, isActive: boolean }) => {
-  const categoryData = CONTENT_CATEGORIES[article.category]
+const FeaturedArticleCard = ({ article }: { article: StoryArchiveItem }) => {
+  const categoryData = getCategoryIndicator(article.category)
   
   return (
     <motion.div
@@ -497,15 +435,32 @@ const FeaturedArticleCard = ({ article, isActive }: { article: Article, isActive
 export default function MagazineHomepageEnhanced() {
   const [currentFeatured, setCurrentFeatured] = useState(0)
 
+  // Get featured articles from real liveStoryArchive data
+  const featuredArticles = liveStoryArchive.filter(article => article.featured)
+  const recentArticles = liveStoryArchive.slice(0, 12) // Get 12 most recent
+
   // Auto-rotate featured articles every 10 seconds
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentFeatured((prev) => (prev + 1) % mockFeaturedArticles.length)
-    }, 10000)
-    return () => clearInterval(interval)
-  }, [])
+    if (featuredArticles.length > 1) {
+      const interval = setInterval(() => {
+        setCurrentFeatured((prev) => (prev + 1) % featuredArticles.length)
+      }, 10000)
+      return () => clearInterval(interval)
+    }
+  }, [featuredArticles.length])
 
-  const featuredArticle = mockFeaturedArticles[currentFeatured]
+  const featuredArticle = featuredArticles[currentFeatured] || featuredArticles[0]
+
+  if (!featuredArticle) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-600 mb-4">Loading Magazine...</h2>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto"></div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
@@ -530,142 +485,108 @@ export default function MagazineHomepageEnhanced() {
                   <motion.div 
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
                     className="text-center lg:text-left"
                   >
-                    <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                      Stories that Connect.{' '}
-                      <span className="bg-gradient-to-r from-blkout-primary via-purple-600 to-blkout-warm bg-clip-text text-transparent">
-                        Voices
-                      </span>{' '}
-                      that Matter.
-                    </h2>
-                    <p className="text-xl text-gray-600 max-w-2xl">
-                      Discover bold stories and join a movement that puts community first.
+                    <h1 className="text-5xl lg:text-6xl font-black heading-block mb-4 uppercase tracking-tight">
+                      <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent">
+                        BLKOUT
+                      </span>
+                      <span className="text-gray-800 ml-2">MAGAZINE</span>
+                    </h1>
+                    <p className="text-xl text-gray-600 font-light max-w-2xl">
+                      Authentic stories, radical imagination, and community voices from Black queer liberation movements.
                     </p>
                   </motion.div>
                 </div>
 
-                <AnimatePresence mode="wait">
-                  <FeaturedArticleCard 
-                    key={currentFeatured}
-                    article={featuredArticle}
-                    isActive={true}
-                  />
-                </AnimatePresence>
-                
-                {/* Featured story indicator dots */}
-                <div className="flex justify-center mt-8 space-x-3">
-                  {mockFeaturedArticles.map((_, index) => (
-                    <motion.button
-                      key={index}
-                      onClick={() => setCurrentFeatured(index)}
-                      whileHover={{ scale: 1.2 }}
-                      whileTap={{ scale: 0.9 }}
-                      className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                        index === currentFeatured 
-                          ? 'bg-gradient-to-r from-blkout-primary to-blkout-warm shadow-lg' 
-                          : 'bg-gray-300 hover:bg-gray-400'
-                      }`}
-                    />
+                {/* Featured Article Card */}
+                <FeaturedArticleCard article={featuredArticle} />
+
+                {/* Featured Navigation Dots */}
+                {featuredArticles.length > 1 && (
+                  <div className="flex justify-center space-x-2 mt-6">
+                    {featuredArticles.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentFeatured(index)}
+                        className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                          index === currentFeatured 
+                            ? 'bg-purple-600 scale-110' 
+                            : 'bg-gray-300 hover:bg-gray-400'
+                        }`}
+                        aria-label={`Go to featured article ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                )}
+              </section>
+
+              {/* Recent Stories Grid */}
+              <section className="mb-16">
+                <div className="flex items-center justify-between mb-8">
+                  <h2 className="text-3xl font-bold text-gray-800 heading-block uppercase">
+                    Latest Stories
+                  </h2>
+                  <Link 
+                    to="/stories" 
+                    className="text-purple-600 hover:text-purple-700 font-semibold flex items-center gap-2 transition-colors"
+                  >
+                    View All
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {recentArticles.slice(0, 6).map((article) => (
+                    <EnhancedArticleCard key={article.id} article={article} />
                   ))}
                 </div>
               </section>
 
-              {/* Recent Stories Section */}
-              <section>
-                <div className="flex items-center justify-between mb-10">
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                  >
-                    <h2 className="text-3xl font-bold text-gray-900 mb-2">Recent Stories</h2>
-                    <p className="text-gray-600">The latest from our community contributors</p>
-                  </motion.div>
-                  <motion.button 
-                    whileHover={{ scale: 1.05, x: 5 }}
-                    className="text-blkout-primary hover:text-blkout-warm font-semibold flex items-center transition-colors"
-                  >
-                    View All Stories
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </motion.button>
-                </div>
-                
-                {/* Enhanced ArticleGrid */}
-                <div className="space-y-8">
-                  {mockRecentArticles.map((article, index) => (
-                    <motion.div
-                      key={article.id}
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.6, delay: index * 0.1 }}
-                      className="bg-white rounded-2xl border border-gray-200/60 p-6 shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer"
-                    >
-                      <div className="flex items-start space-x-6">
-                        <div className="flex-1">
-                          <div className="flex items-center mb-3">
-                            <div className={`w-3 h-3 rounded-full bg-gradient-to-r ${CONTENT_CATEGORIES[article.category].gradient} mr-3`}></div>
-                            <span className={`text-sm font-semibold ${CONTENT_CATEGORIES[article.category].textColor}`}>
-                              {article.category}
-                            </span>
-                            <span className="mx-2 text-gray-400">•</span>
-                            <span className="text-sm text-gray-500">{article.publishedAt}</span>
-                          </div>
-                          
-                          <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-gray-700 transition-colors">
-                            {article.title}
-                          </h3>
-                          
-                          <p className="text-gray-700 mb-4 leading-relaxed">
-                            {article.excerpt}
-                          </p>
-                          
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-4">
-                              <div className="flex items-center space-x-2">
-                                <div className={`w-8 h-8 bg-gradient-to-br ${CONTENT_CATEGORIES[article.category].gradient} rounded-full flex items-center justify-center`}>
-                                  <span className="text-white text-xs font-medium">
-                                    {article.author.avatar}
-                                  </span>
-                                </div>
-                                <div>
-                                  <p className="text-sm font-medium text-gray-900">
-                                    {article.author.name}
-                                  </p>
-                                  <p className="text-xs text-gray-500">
-                                    {article.readTime} min read
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                            
-                            <div className="flex items-center space-x-4 text-sm text-gray-500">
-                              <div className="flex items-center">
-                                <Heart className="w-4 h-4 mr-1" />
-                                {article.likes}
-                              </div>
-                              <div className="flex items-center">
-                                <MessageCircle className="w-4 h-4 mr-1" />
-                                {article.comments}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </section>
+              {/* Content Category Key */}
+              <ContentCategoryKey />
+              
             </main>
 
-            {/* Enhanced Sidebar - 4 columns */}
-            <aside className="lg:col-span-4">
-              <div className="space-y-8 lg:sticky lg:top-24">
-                <EventsWidget />
-                <IVORWidget />
-                <CommunityActivityWidget />
-                <MembershipWidget />
-                <ContentCategoryKey />
+            {/* Sidebar - 4 columns */}
+            <aside className="lg:col-span-4 space-y-8">
+              
+              {/* Community Stats Widget */}
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6">
+                <h3 className="text-lg font-bold text-gray-800 mb-4 heading-block uppercase">
+                  Community Impact
+                </h3>
+                <div className="space-y-4">
+                  {[
+                    { label: 'Stories Published', value: liveStoryArchive.length.toString(), trend: '+5', color: 'text-purple-600' },
+                    { label: 'Community Voices', value: '89', trend: '+12', color: 'text-emerald-600' },
+                    { label: 'Categories Covered', value: Object.keys(CONTENT_CATEGORIES).length.toString(), trend: '+2', color: 'text-blue-600' },
+                    { label: 'Active Contributors', value: '47', trend: '+8', color: 'text-orange-600' }
+                  ].map((stat) => (
+                    <div key={stat.label} className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600 font-medium">{stat.label}</span>
+                      <div className="text-right">
+                        <div className={`text-lg font-bold ${stat.color}`}>{stat.value}</div>
+                        <div className="text-xs text-emerald-500 font-medium">+{stat.trend} this week</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
+
+              {/* Events Widget */}
+              <EventsWidget />
+
+              {/* I.V.O.R. Widget */}
+              <IVORWidget />
+
+              {/* Community Activity Widget */}
+              <CommunityActivityWidget />
+
+              {/* Membership Widget */}
+              <MembershipWidget />
+              
             </aside>
           </div>
         </div>

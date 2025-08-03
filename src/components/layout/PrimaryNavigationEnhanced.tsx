@@ -3,11 +3,21 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Menu, X, Search, Home } from 'lucide-react'
+import { Menu, X, Search, Home, ChevronDown } from 'lucide-react'
 
 const navigationItems = [
   { name: 'Latest Issue', href: '/platform', description: 'Current stories and featured content' },
   { name: 'Story Archive', href: '/stories', description: 'Complete archive of stories and analysis' },
+  { 
+    name: 'Media', 
+    href: '/media', 
+    description: 'Community media platforms',
+    submenu: [
+      { name: 'Channel BLKOUT', href: '/media/channel', description: 'Video content and live streaming' },
+      { name: 'Storylab', href: '/media/storylab', description: 'Community storytelling platform' },
+      { name: 'Newsroom', href: '/media/newsroom', description: 'News aggregation and analysis' }
+    ]
+  },
   { name: 'I.V.O.R.', href: '/ivor', description: 'AI assistant and resource finder' },
   { name: 'Events', href: '/events', description: 'Community events calendar' },
   { name: 'Our Movement', href: '/movement', description: 'Movement principles and community values' },
@@ -31,7 +41,11 @@ export default function PrimaryNavigationEnhanced({ className = '' }: PrimaryNav
   }
 
   return (
-    <nav className={`bg-indigo-950 border-b border-indigo-800/30 sticky top-0 z-50 backdrop-blur-sm ${className}`}>
+    <nav 
+      role="navigation" 
+      aria-label="Main navigation"
+      className={`bg-indigo-950 border-b border-indigo-800/30 sticky top-0 z-50 backdrop-blur-sm ${className}`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           
@@ -41,7 +55,7 @@ export default function PrimaryNavigationEnhanced({ className = '' }: PrimaryNav
               <div className="w-12 h-12 flex items-center justify-center">
                 <img 
                   src="/images/BLKOUT25INV.png" 
-                  alt="BLKOUT" 
+                  alt="BLKOUT UK logo - Bold letters representing Black queer liberation community platform" 
                   className="w-10 h-10 object-contain"
                   onError={(e) => {
                     // Fallback to text if logo doesn't load
@@ -49,7 +63,11 @@ export default function PrimaryNavigationEnhanced({ className = '' }: PrimaryNav
                     target.style.display = 'none';
                     const fallback = document.createElement('div');
                     fallback.className = 'w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center';
-                    fallback.innerHTML = '<span class="text-white font-black text-lg heading-block">B</span>';
+                    const span = document.createElement('span');
+                    span.className = 'text-white font-black text-lg heading-block';
+                    span.textContent = 'B';
+                    fallback.appendChild(span);
+                    fallback.setAttribute('aria-label', 'BLKOUT logo fallback');
                     target.parentNode?.appendChild(fallback);
                   }}
                 />
@@ -73,31 +91,55 @@ export default function PrimaryNavigationEnhanced({ className = '' }: PrimaryNav
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-2">
             {navigationItems.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className={`px-6 py-3 text-sm font-bold transition-all duration-300 relative group heading-block uppercase tracking-wide ${
-                  isActive(item.href)
-                    ? 'text-white bg-indigo-700/50 backdrop-blur-sm'
-                    : 'text-indigo-200 hover:text-white hover:bg-indigo-800/30'
-                }`}
-              >
-                {item.name}
-                {isActive(item.href) && (
-                  <motion.div
-                    layoutId="activeTab"
-                    className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-400 to-violet-400"
-                    initial={false}
-                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                  />
-                )}
+              <div key={item.name} className="relative group">
+                <Link
+                  to={item.href}
+                  className={`px-6 py-3 text-sm font-bold transition-all duration-300 relative heading-block uppercase tracking-wide flex items-center space-x-1 ${
+                    isActive(item.href)
+                      ? 'text-white bg-indigo-700/50 backdrop-blur-sm'
+                      : 'text-indigo-200 hover:text-white hover:bg-indigo-800/30'
+                  }`}
+                >
+                  <span>{item.name}</span>
+                  {item.submenu && (
+                    <ChevronDown className="w-4 h-4 transition-transform group-hover:rotate-180" />
+                  )}
+                  {isActive(item.href) && (
+                    <motion.div
+                      layoutId="activeTab"
+                      className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-400 to-violet-400"
+                      initial={false}
+                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    />
+                  )}
+                  
+                  {/* Enhanced Tooltip */}
+                  {!item.submenu && (
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-3 w-72 p-4 bg-gradient-to-br from-indigo-950 to-slate-950 border border-indigo-700/50 text-indigo-100 text-sm rounded-none opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 backdrop-blur-sm">
+                      <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-indigo-950 rotate-45 border-t border-l border-indigo-700/50"></div>
+                      <p className="font-light leading-relaxed">{item.description}</p>
+                    </div>
+                  )}
+                </Link>
                 
-                {/* Enhanced Tooltip */}
-                <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-3 w-72 p-4 bg-gradient-to-br from-indigo-950 to-slate-950 border border-indigo-700/50 text-indigo-100 text-sm rounded-none opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 backdrop-blur-sm">
-                  <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-indigo-950 rotate-45 border-t border-l border-indigo-700/50"></div>
-                  <p className="font-light leading-relaxed">{item.description}</p>
-                </div>
-              </Link>
+                {/* Dropdown Menu */}
+                {item.submenu && (
+                  <div className="absolute top-full left-0 w-80 bg-gradient-to-br from-indigo-950 to-slate-950 border border-indigo-700/50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 backdrop-blur-sm">
+                    <div className="py-4">
+                      {item.submenu.map((subItem) => (
+                        <Link
+                          key={subItem.name}
+                          to={subItem.href}
+                          className="block px-6 py-3 text-indigo-200 hover:text-white hover:bg-indigo-800/30 transition-all"
+                        >
+                          <div className="font-bold text-sm uppercase tracking-wide mb-1">{subItem.name}</div>
+                          <div className="text-xs text-indigo-400 font-light normal-case tracking-normal">{subItem.description}</div>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             ))}
           </div>
 
@@ -109,11 +151,13 @@ export default function PrimaryNavigationEnhanced({ className = '' }: PrimaryNav
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-indigo-400" />
                 <input
+                  id="desktop-search"
                   type="text"
                   placeholder="Search stories..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-72 pl-12 pr-4 py-3 bg-indigo-900/50 border border-indigo-700/50 text-white placeholder-indigo-300 focus:outline-none focus:border-indigo-500 focus:bg-indigo-900/70 transition-all backdrop-blur-sm font-light"
+                  aria-label="Search stories, articles, and community content"
+                  className="w-72 pl-12 pr-4 py-3 bg-indigo-900/50 border border-indigo-700/50 text-white placeholder-indigo-300 focus:outline-none focus:border-indigo-500 focus:bg-indigo-900/70 focus:ring-2 focus:ring-indigo-400 transition-all backdrop-blur-sm font-light"
                 />
               </div>
             </div>
@@ -122,7 +166,9 @@ export default function PrimaryNavigationEnhanced({ className = '' }: PrimaryNav
             {/* Mobile menu button */}
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="lg:hidden p-3 text-indigo-300 hover:text-white hover:bg-indigo-800/30 transition-all"
+              aria-label={isOpen ? "Close mobile menu" : "Open mobile menu"}
+              aria-expanded={isOpen}
+              className="lg:hidden p-3 text-indigo-300 hover:text-white hover:bg-indigo-800/30 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all"
             >
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -155,21 +201,44 @@ export default function PrimaryNavigationEnhanced({ className = '' }: PrimaryNav
 
               {/* Enhanced Mobile Navigation Items */}
               {navigationItems.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  onClick={() => setIsOpen(false)}
-                  className={`block px-6 py-4 text-sm font-bold transition-all heading-block uppercase tracking-wide ${
-                    isActive(item.href)
-                      ? 'text-white bg-indigo-700/50 border-r-4 border-indigo-400'
-                      : 'text-indigo-200 hover:text-white hover:bg-indigo-800/30'
-                  }`}
-                >
-                  <div>
-                    <div className="font-black mb-1">{item.name}</div>
-                    <div className="text-xs text-indigo-400 font-light normal-case tracking-normal">{item.description}</div>
-                  </div>
-                </Link>
+                <div key={item.name} className="space-y-1">
+                  <Link
+                    to={item.href}
+                    onClick={() => setIsOpen(false)}
+                    className={`block px-6 py-4 text-sm font-bold transition-all heading-block uppercase tracking-wide ${
+                      isActive(item.href)
+                        ? 'text-white bg-indigo-700/50 border-r-4 border-indigo-400'
+                        : 'text-indigo-200 hover:text-white hover:bg-indigo-800/30'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="font-black mb-1">{item.name}</div>
+                        <div className="text-xs text-indigo-400 font-light normal-case tracking-normal">{item.description}</div>
+                      </div>
+                      {item.submenu && (
+                        <ChevronDown className="w-4 h-4 text-indigo-400" />
+                      )}
+                    </div>
+                  </Link>
+                  
+                  {/* Mobile Submenu */}
+                  {item.submenu && (
+                    <div className="bg-indigo-900/30 ml-4">
+                      {item.submenu.map((subItem) => (
+                        <Link
+                          key={subItem.name}
+                          to={subItem.href}
+                          onClick={() => setIsOpen(false)}
+                          className="block px-6 py-3 text-indigo-300 hover:text-white hover:bg-indigo-800/30 transition-all"
+                        >
+                          <div className="font-bold text-sm uppercase tracking-wide mb-1">{subItem.name}</div>
+                          <div className="text-xs text-indigo-400 font-light normal-case tracking-normal">{subItem.description}</div>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
               ))}
 
             </div>

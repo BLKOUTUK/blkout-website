@@ -8,85 +8,22 @@ import ArticlePage from './ArticlePage'
 import PrimaryNavigationEnhanced from '../layout/PrimaryNavigationEnhanced'
 import PlatformFooter from '../layout/PlatformFooter'
 
-// Content categories with masculine colors
-const CONTENT_CATEGORIES = {
-  'Original Commentary': { 
-    color: 'bg-indigo-600', 
-    textColor: 'text-indigo-400',
-    gradient: 'from-indigo-500 via-indigo-600 to-indigo-700',
-    glowColor: 'shadow-indigo-500/25'
-  },
-  'Curated Content': { 
-    color: 'bg-slate-600', 
-    textColor: 'text-slate-400',
-    gradient: 'from-slate-500 via-slate-600 to-slate-700',
-    glowColor: 'shadow-slate-500/25'
-  },
-  'Event Coverage': { 
-    color: 'bg-blue-600', 
-    textColor: 'text-blue-400',
-    gradient: 'from-blue-500 via-blue-600 to-blue-700',
-    glowColor: 'shadow-blue-500/25'
-  },
-  'Community Response': { 
-    color: 'bg-emerald-600', 
-    textColor: 'text-emerald-400',
-    gradient: 'from-emerald-500 via-emerald-600 to-emerald-700',
-    glowColor: 'shadow-emerald-500/25'
-  },
-  'Video/Audio/Photo': { 
-    color: 'bg-violet-600', 
-    textColor: 'text-violet-400',
-    gradient: 'from-violet-500 via-violet-600 to-violet-700',
-    glowColor: 'shadow-violet-500/25'
-  }
-}
+// Content categories and real data
+import { CONTENT_CATEGORIES, getCategoryIndicator } from '../../lib/constants'
+import { liveStoryArchive } from '../../data/liveStoryArchive'
 
-// Mock articles for the enhanced stories page
-const mockArticles = [
-  {
-    id: '1',
-    title: 'BUILDING COOPERATIVE OWNERSHIP IN DIGITAL SPACES',
-    excerpt: 'How Black queer communities are reimagining platform ownership and digital sovereignty through collective action and radical imagination.',
-    author: { name: 'Marcus Johnson', avatar: 'MJ' },
-    publishedAt: '2025-01-29',
-    readTime: 8,
-    category: 'Original Commentary' as keyof typeof CONTENT_CATEGORIES,
-    featured: true,
-    image: '/images/squared/WELLDEF_SQUARED.png',
-    tags: ['Digital Rights', 'Cooperative', 'Liberation'],
-    likes: 234,
-    comments: 47
-  },
-  {
-    id: '2',
-    title: 'COMMUNITY RESPONSE: MENTAL HEALTH RESOURCES LAUNCH',
-    excerpt: 'Community members share their experiences with the new peer support networks and resource accessibility.',
-    author: { name: 'Devon Williams', avatar: 'DW' },
-    publishedAt: '2025-01-28',
-    readTime: 5,
-    category: 'Community Response' as keyof typeof CONTENT_CATEGORIES,
-    featured: false,
-    image: '/images/squared/BlackSQUARED.png',
-    tags: ['Mental Health', 'Community', 'Resources'],
-    likes: 189,
-    comments: 32
-  },
-  {
-    id: '3',
-    title: 'THE ART OF BLACK JOY: VISUAL STORIES FROM OUR COMMUNITY',
-    excerpt: 'A multimedia exploration of how Black joy manifests in everyday moments, celebrations, and acts of resistance across the UK.',
-    author: { name: 'Aisha Clarke', avatar: 'AC' },
-    publishedAt: '2025-01-27',  
-    readTime: 6,
-    category: 'Video/Audio/Photo' as keyof typeof CONTENT_CATEGORIES,
-    featured: false,
-    image: '/images/squared/BLKOUT25INV.png',
-    tags: ['Black Joy', 'Photography', 'Community'],
-    likes: 312,
-    comments: 58
-  }
-]
+// Use real data from liveStoryArchive instead of mock data
+const stories = liveStoryArchive.map(story => ({
+  ...story,
+  // Add missing fields for compatibility
+  likes: Math.floor(Math.random() * 300) + 50, // Generate placeholder engagement
+  comments: Math.floor(Math.random() * 80) + 10,
+  image: story.category === 'Technology' ? '/images/squared/WELLDEF_SQUARED.png' :
+         story.category === 'Community' ? '/images/squared/BlackSQUARED.png' :
+         '/images/squared/BLKOUT25INV.png' // Placeholder images based on category
+}))
+
+
 
 // Stories Hero Section
 const StoriesHero = () => (
@@ -347,7 +284,7 @@ export default function StoriesPageEnhanced() {
     setCurrentView('article')
   }
 
-  const filteredArticles = mockArticles.filter(article => {
+  const filteredArticles = stories.filter(article => {
     const matchesCategory = selectedCategory === 'All' || article.category === selectedCategory
     const matchesSearch = searchQuery === '' || 
       article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||

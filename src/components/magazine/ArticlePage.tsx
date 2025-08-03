@@ -174,8 +174,12 @@ export default function ArticlePage({ article = mockArticle, onBack }: ArticlePa
           style={{
             lineHeight: '1.8',
           }}
-          dangerouslySetInnerHTML={{ __html: article.content }}
-        />
+        >
+          {/* Temporarily render as text to eliminate XSS risk - TODO: Implement proper HTML sanitization */}
+          <div className="whitespace-pre-wrap">
+            {article.content.replace(/<[^>]*>/g, '').trim()}
+          </div>
+        </div>
 
         {/* Tags */}
         <div className="mt-12 pt-8 border-t border-gray-200">

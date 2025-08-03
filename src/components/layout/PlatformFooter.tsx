@@ -77,8 +77,8 @@ export default function PlatformFooter() {
                   { label: 'Community', href: '/community' },
                   { label: 'Events', href: '/events' },
                   { label: 'I.V.O.R. Resources', href: '/ivor' },
-                  { label: 'Newsroom', href: '/newsroom' },
-                  { label: 'Movement', href: '/movement' }
+                  { label: 'Media Hub', href: '/media' },
+                { label: 'Movement', href: '/movement' }
                 ].map((link, index) => (
                   <li key={index}>
                     <Link
@@ -135,6 +135,39 @@ export default function PlatformFooter() {
                     <ExternalLink className="w-3 h-3 ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </Link>
                 </li>
+              </ul>
+            </motion.div>
+          </div>
+          
+          {/* Media Links */}
+          <div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.25 }}
+            >
+              <h4 className="text-lg font-black text-white heading-block mb-6 uppercase">
+                <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                  MEDIA
+                </span>
+              </h4>
+              <ul className="space-y-4">
+                {[
+                  { label: 'Channel BLKOUT', href: '/media/channel' },
+                  { label: 'Storylab', href: '/media/storylab' },
+                  { label: 'Newsroom', href: '/media/newsroom' },
+                  { label: 'Media Hub', href: '/media' }
+                ].map((link, index) => (
+                  <li key={index}>
+                    <Link
+                      to={link.href}
+                      className="text-indigo-200 hover:text-white font-medium transition-colors duration-300 flex items-center group"
+                    >
+                      {link.label}
+                      <ExternalLink className="w-3 h-3 ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </motion.div>
           </div>
