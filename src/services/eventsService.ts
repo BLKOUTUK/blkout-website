@@ -32,14 +32,14 @@ class EventsService {
     // Try to connect to the events calendar backend
     // Priority: production URL, then localhost, then fallback to mock
     this.baseUrl = process.env.NODE_ENV === 'production' 
-      ? 'https://blkout-events-api.vercel.app/api'    // Community events backend (when available)
-      : 'http://localhost:5173/api'                    // Local development
+      ? 'https://events-deploy.vercel.app'           // Real BLKOUT events backend
+      : 'http://localhost:5173/api'                  // Local development
   }
 
   async getAllEvents(): Promise<Event[]> {
     try {
       // First try to connect to real backend
-      const response = await fetch(`${this.baseUrl}/events`, {
+      const response = await fetch(`${this.baseUrl}/api/events`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -51,7 +51,28 @@ class EventsService {
       }
 
       const data = await response.json()
-      return data.events || data || []
+      if (data.success && data.events) {
+        // Map backend format to frontend format
+        return data.events.map((event: any) => ({
+          id: event.id,
+          title: event.title,
+          description: event.description,
+          date: event.date,
+          startTime: event.time,
+          endTime: event.endTime, // May not exist in backend
+          location: typeof event.location === 'string' ? event.location : event.location?.address || 'TBD',
+          url: event.url || event.registrationUrl,
+          source: event.category?.toLowerCase() || 'community',
+          status: event.status === 'published' ? 'approved' : event.status,
+          cost: event.cost || (event.capacity ? 'Free' : 'Free'),
+          organizer: event.organizer,
+          image: event.image,
+          tags: event.tags || [],
+          createdAt: event.createdAt,
+          updatedAt: event.updatedAt || event.createdAt
+        }))
+      }
+      return []
     } catch (error) {
       console.warn('Events backend not available, using mock data:', error)
       // Fallback to mock data if backend is unavailable
