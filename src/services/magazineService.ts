@@ -35,13 +35,13 @@ class MagazineService {
   
   constructor() {
     this.baseUrl = process.env.NODE_ENV === 'production' 
-      ? 'https://magazine-deploy-7o60bmqy4-robs-projects-54d653d3.vercel.app'
-      : 'http://localhost:3003/api'          // Local development
+      ? 'https://magazine-deploy.vercel.app'        // Real BLKOUT magazine backend
+      : 'http://localhost:3003/api'                 // Local development
   }
 
   async checkConnection(): Promise<boolean> {
     try {
-      const response = await fetch(`${this.baseUrl}/health`, {
+      const response = await fetch(`${this.baseUrl.replace('/api', '')}/health`, {
         method: 'GET',
         timeout: 5000,
       })
@@ -76,7 +76,7 @@ class MagazineService {
       if (filters?.limit) queryParams.append('limit', filters.limit.toString())
       if (filters?.page) queryParams.append('page', filters.page.toString())
 
-      const response = await fetch(`${this.baseUrl}/articles?${queryParams}`, {
+      const response = await fetch(`${this.baseUrl}/api/articles?${queryParams}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -104,7 +104,7 @@ class MagazineService {
         return this.getFallbackArticle(id)
       }
 
-      const response = await fetch(`${this.baseUrl}/articles/${id}`, {
+      const response = await fetch(`${this.baseUrl}/api/articles/${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

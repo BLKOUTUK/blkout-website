@@ -33,13 +33,13 @@ class NewsroomService {
   
   constructor() {
     this.baseUrl = process.env.NODE_ENV === 'production' 
-      ? 'https://newsroom-deploy-c7ytvorfi-robs-projects-54d653d3.vercel.app'
-      : 'http://localhost:3002/api'          // Local development          // Local development
+      ? 'https://newsroom-deploy.vercel.app'    // Real BLKOUT newsroom backend
+      : 'http://localhost:3002/api'             // Local development
   }
 
   async checkConnection(): Promise<boolean> {
     try {
-      const response = await fetch(`${this.baseUrl}/health`, {
+      const response = await fetch(`${this.baseUrl.replace('/api', '')}/health`, {
         method: 'GET',
         timeout: 5000,
       })
@@ -74,7 +74,7 @@ class NewsroomService {
       if (filters?.limit) queryParams.append('limit', filters.limit.toString())
       if (filters?.page) queryParams.append('page', filters.page.toString())
 
-      const response = await fetch(`${this.baseUrl}/articles?${queryParams}`, {
+      const response = await fetch(`${this.baseUrl}/api/articles?${queryParams}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -102,7 +102,7 @@ class NewsroomService {
         return this.getFallbackArticle(id)
       }
 
-      const response = await fetch(`${this.baseUrl}/articles/${id}`, {
+      const response = await fetch(`${this.baseUrl}/api/articles/${id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

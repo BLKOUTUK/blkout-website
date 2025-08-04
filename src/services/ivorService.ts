@@ -20,8 +20,8 @@ class IVORService {
   
   constructor() {
     this.baseUrl = process.env.NODE_ENV === 'production' 
-      ? 'https://services-mq90q6mqo-robs-projects-54d653d3.vercel.app/api'  // Production IVOR backend
-      : 'http://localhost:8000/api'      // Local development - IVOR is running on port 8000
+      ? process.env.IVOR_BACKEND_URL || 'https://fallback-ivor.vercel.app/api'  // IVOR backend (fallback until deployed)
+      : 'http://localhost:8000/api'      // Local development
   }
 
   async checkConnection(): Promise<boolean> {
