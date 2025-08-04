@@ -790,7 +790,7 @@ const FullPageScrollytellingOptimized: React.FC = () => {
               loop 
               playsInline
               preload="auto"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
               src={slide.videoUrl}
               onLoadedData={() => console.log('Video loaded successfully:', slide.videoUrl)}
               onError={(e) => {
