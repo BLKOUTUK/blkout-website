@@ -19,25 +19,62 @@ class IVORService {
   private isConnected: boolean = false
   
   constructor() {
+    // Try multiple backend URLs - sophisticated services backend first, then fallback
+    const productionUrls = [
+      'https://services-deploy.vercel.app',    // Primary: Full services backend
+      'https://ivor.vercel.app',               // Fallback 1: IVOR-specific deployment  
+      'https://blkout-ivor-api.vercel.app'     // Fallback 2: Alternative naming
+    ]
+    
     this.baseUrl = process.env.NODE_ENV === 'production' 
-      ? process.env.IVOR_BACKEND_URL || 'https://fallback-ivor.vercel.app/api'  // IVOR backend (fallback until deployed)
-      : 'http://localhost:8000/api'      // Local development
+      ? productionUrls[0]  // Will test all URLs in checkConnection()
+      : 'http://localhost:8000/api'
   }
 
   async checkConnection(): Promise<boolean> {
-    try {
-      const response = await fetch(`${this.baseUrl.replace('/api', '')}/health`, {
-        method: 'GET',
-        timeout: 5000,
-      })
-      
-      this.isConnected = response.ok
-      return this.isConnected
-    } catch (error) {
-      console.warn('IVOR backend not available:', error)
-      this.isConnected = false
-      return false
+    if (process.env.NODE_ENV !== 'production') {
+      // Development mode - single URL check
+      try {
+        const response = await fetch(`${this.baseUrl}/health`, {
+          method: 'GET',
+          timeout: 5000,
+        })
+        this.isConnected = response.ok
+        return this.isConnected
+      } catch (error) {
+        console.warn('IVOR backend not available:', error)
+        this.isConnected = false
+        return false
+      }
     }
+
+    // Production mode - try multiple URLs
+    const productionUrls = [
+      'https://services-deploy.vercel.app',
+      'https://ivor.vercel.app', 
+      'https://blkout-ivor-api.vercel.app'
+    ]
+
+    for (const url of productionUrls) {
+      try {
+        const response = await fetch(`${url}/api/health`, {
+          method: 'GET',
+          timeout: 3000,
+        })
+        
+        if (response.ok) {
+          this.baseUrl = url
+          this.isConnected = true
+          console.log(`Connected to IVOR backend: ${url}`)
+          return true
+        }
+      } catch (error) {
+        console.warn(`IVOR backend ${url} not available:`, error)
+      }
+    }
+    
+    this.isConnected = false
+    return false
   }
 
   async sendMessage(message: string, context?: any): Promise<IVORResponse> {
@@ -51,7 +88,7 @@ class IVORService {
         return this.getFallbackResponse(message)
       }
 
-      const response = await fetch(`${this.baseUrl}/chat`, {
+      const response = await fetch(`${this.baseUrl}/api/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -141,9 +178,18 @@ class IVORService {
     }
   }
 
-  // Fallback responses when backend is unavailable
+  // Enhanced fallback responses when backend is unavailable
   private getFallbackResponse(message: string): IVORResponse {
     const lowercaseMessage = message.toLowerCase()
+    
+    // Check for pathway context from localStorage
+    const pathwayContext = localStorage.getItem('pathwayContext')
+    let pathwayData = null
+    try {
+      pathwayData = pathwayContext ? JSON.parse(pathwayContext) : null
+    } catch (e) {
+      // Ignore parsing errors
+    }
     
     if (lowercaseMessage.includes('mental health') || lowercaseMessage.includes('therapy')) {
       return {
@@ -178,12 +224,38 @@ class IVORService {
       }
     }
     
-    // General fallback
+    // Pathway-aware general fallback
+    let responseMessage = "I'm currently operating in offline mode, but I'm still here to help! "
+    
+    if (pathwayData?.pathway) {
+      switch (pathwayData.pathway) {
+        case 'Community Healer':
+          responseMessage += `As someone identified as a Community Healer, you're focused on healing trauma and supporting collective wellness. `
+          break
+        case 'Culture Keeper':
+          responseMessage += `As a Culture Keeper, you're vital to preserving and sharing our community's rich heritage. `
+          break
+        case 'System Disruptor':
+          responseMessage += `As a System Disruptor, your work challenges oppression and creates systemic change. `
+          break
+        case 'Wisdom Keeper':
+          responseMessage += `As a Wisdom Keeper, you carry essential knowledge and insights for our community. `
+          break
+      }
+    }
+    
+    responseMessage += "BLKOUT provides comprehensive support for Black QTIPOC communities including mental health resources, housing assistance, legal advocacy, and community connections. How can I point you toward the support you need?"
+    
     return {
-      message: "I'm currently operating in offline mode, but I'm still here to help! BLKOUT provides comprehensive support for Black QTIPOC communities including mental health resources, housing assistance, legal advocacy, and community connections. How can I point you toward the support you need?",
-      suggestions: [
+      message: responseMessage,
+      suggestions: pathwayData?.pathway ? [
+        `Explore ${pathwayData.pathway} resources`,
+        "Connect with similar pathway holders",
+        "Access specialized support networks",
+        "Join pathway-specific discussions"
+      ] : [
         "Browse community resources",
-        "Connect with local support groups",
+        "Connect with local support groups", 
         "Access liberation pathways",
         "Join community discussions"
       ]
