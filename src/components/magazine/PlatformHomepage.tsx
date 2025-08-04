@@ -71,7 +71,87 @@ interface Article {
   comments?: number
 }
 
-// Featured and recent articles will be loaded from backend or fallback data
+// Mock data for featured articles (fallback until backend integration)
+const mockFeaturedArticles: Article[] = [
+  {
+    id: '1',
+    title: 'Building Cooperative Ownership in Digital Spaces',
+    excerpt: 'How Black queer communities are reimagining platform ownership and digital sovereignty through collective action.',
+    author: { name: 'Marcus Johnson', avatar: 'MJ' },
+    publishedAt: '2025-01-29',
+    readTime: 8,
+    category: 'Original Commentary',
+    featured: true,
+    image: '/images/squared/WELLDEF_SQUARED.png',
+    tags: ['Digital Rights', 'Cooperative', 'Liberation']
+  },
+  {
+    id: '2', 
+    title: 'Community Response: Mental Health Resources Launch',
+    excerpt: 'Community members share their experiences with the new peer support networks and resource accessibility.',
+    author: { name: 'Devon Williams', avatar: 'DW' },
+    publishedAt: '2025-01-28',
+    readTime: 5,
+    category: 'Community Response',
+    featured: true,
+    image: '/images/squared/BlackSQUARED.png',
+    tags: ['Mental Health', 'Community', 'Resources']
+  },
+  {
+    id: '3',
+    title: 'Liberation Through Digital Storytelling',
+    excerpt: 'Exploring how community members use multimedia platforms to share authentic narratives and build collective power.',
+    author: { name: 'Taylor Brown', avatar: 'TB' },
+    publishedAt: '2025-01-27',
+    readTime: 6,
+    category: 'Video/Audio/Photo',
+    featured: true,
+    image: '/images/squared/RESINSQD.png',
+    tags: ['Storytelling', 'Digital Media', 'Community']
+  }
+]
+
+const mockRecentArticles: Article[] = [
+  {
+    id: '4',
+    title: 'Event Coverage: Black History Month Planning Session',
+    excerpt: 'Key highlights from the community planning session for BHM 2025 celebrations.',
+    author: { name: 'Jordan Clarke', avatar: 'JC' },
+    publishedAt: '2025-01-27',
+    readTime: 4,
+    category: 'Event Coverage',
+    featured: false,
+    tags: ['Events', 'Black History Month'],
+    likes: 45,
+    comments: 12
+  },
+  {
+    id: '5',
+    title: 'Curated: Policy Changes Affecting QTIPOC+ Communities',
+    excerpt: 'Analysis of recent policy developments and their impact on Black queer communities.',
+    author: { name: 'Alex Thompson', avatar: 'AT' },
+    publishedAt: '2025-01-26',
+    readTime: 6,
+    category: 'Curated Content',
+    featured: false,
+    tags: ['Policy', 'QTIPOC', 'Rights'],
+    likes: 78,
+    comments: 23
+  },
+  {
+    id: '6',
+    title: 'Community Healing Circles: Building Resilience Together',
+    excerpt: 'How regular community gatherings are fostering healing and collective resilience.',
+    author: { name: 'Sam Rivers', avatar: 'SR' },
+    publishedAt: '2025-01-25',
+    readTime: 5,
+    category: 'Community Response',
+    featured: false,
+    tags: ['Healing', 'Community', 'Resilience'],
+    likes: 67,
+    comments: 18
+  }
+]
 
 // Platform Hero Section
 const PlatformHero = () => (
@@ -333,10 +413,13 @@ export default function PlatformHomepage() {
   // Auto-rotate featured articles every 12 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentFeatured((prev) => (prev + 1) % 3)
+      setCurrentFeatured((prev) => (prev + 1) % mockFeaturedArticles.length)
     }, 12000)
     return () => clearInterval(interval)
   }, [])
+
+  // Get current featured article
+  const featuredArticle = mockFeaturedArticles[currentFeatured]
 
   // Platform will now use real backend data via magazineService fallback
 
