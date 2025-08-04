@@ -32,8 +32,8 @@ class EventsService {
     // Try to connect to the events calendar backend
     // Priority: production URL, then localhost, then fallback to mock
     this.baseUrl = process.env.NODE_ENV === 'production' 
-      ? 'https://api.blkoutuk.com/events'    // Updated production URL
-      : 'http://localhost:5173/api'           // Local development
+      ? 'https://blkout-events-api.vercel.app/api'    // Community events backend (when available)
+      : 'http://localhost:5173/api'                    // Local development
   }
 
   async getAllEvents(): Promise<Event[]> {
@@ -189,6 +189,7 @@ class EventsService {
         startTime: '18:30',
         endTime: '20:30',
         location: 'East London Wellness Center',
+        url: 'https://healingjusticecollective.org/wellness-wednesday',
         source: 'wellness',
         status: 'approved',
         organizer: 'Healing Justice Collective',
@@ -205,6 +206,7 @@ class EventsService {
         startTime: '11:00',
         endTime: '13:30',
         location: 'Starting from Piccadilly Circus, London',
+        url: 'https://blackhistorywalks.uk/queer-history-tour',
         source: 'education',
         status: 'approved',
         organizer: 'Black History Walks UK',
@@ -221,6 +223,7 @@ class EventsService {
         startTime: '15:00',
         endTime: '18:00',
         location: 'North London Library, Digital Hub',
+        url: 'https://techjusticecollective.org/digital-security-workshop',
         source: 'education',
         status: 'approved',
         organizer: 'Tech Justice Collective',

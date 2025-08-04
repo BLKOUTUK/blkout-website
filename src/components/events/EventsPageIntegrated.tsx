@@ -519,6 +519,27 @@ const EventsPageIntegrated: React.FC = () => {
           </div>
         </div>
 
+        {/* Mock Data Notice */}
+        {backendStatus === 'offline' && (
+          <motion.div 
+            className="bg-amber-900/40 backdrop-blur-sm border border-amber-600/40 rounded-2xl p-6 mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+          >
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="w-4 h-4 bg-amber-400 rounded-full"></div>
+              <span className="text-amber-300 font-bold heading-block text-sm uppercase">
+                SHOWING EXAMPLE COMMUNITY EVENTS
+              </span>
+            </div>
+            <p className="text-amber-100 leading-relaxed">
+              These are example events to demonstrate functionality. The community events backend is not currently connected. 
+              Real community events will be displayed when the events API is available.
+            </p>
+          </motion.div>
+        )}
+
         {/* Filters */}
         <FilterBar filters={filters} onFiltersChange={setFilters} />
 
