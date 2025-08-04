@@ -15,8 +15,149 @@ interface FilterOptions {
   searchTerm: string
 }
 
+// Event Detail Modal Component
+const EventDetailModal: React.FC<{ 
+  event: Event | null
+  isOpen: boolean
+  onClose: () => void 
+}> = ({ event, isOpen, onClose }) => {
+  if (!isOpen || !event) return null
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric'
+    })
+  }
+
+  const formatTime = (timeString?: string) => {
+    if (!timeString) return ''
+    const [hours, minutes] = timeString.split(':')
+    const date = new Date()
+    date.setHours(parseInt(hours), parseInt(minutes))
+    return date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit'
+    })
+  }
+
+  return (
+    <motion.div
+      className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={onClose}
+    >
+      <motion.div
+        className="bg-yellow-900/90 backdrop-blur-sm border border-yellow-600/40 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-8"
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex justify-between items-start mb-6">
+          <h2 className="text-3xl font-bold text-yellow-100">{event.title}</h2>
+          <button
+            onClick={onClose}
+            className="text-yellow-400 hover:text-yellow-300 text-2xl"
+          >
+            ×
+          </button>
+        </div>
+
+        <div className="space-y-6">
+          <div>
+            <h3 className="text-xl font-semibold text-yellow-200 mb-3">Event Details</h3>
+            <p className="text-yellow-100 leading-relaxed">{event.description}</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-3">
+              <div className="flex items-center text-yellow-200">
+                <Calendar className="w-5 h-5 mr-3 text-yellow-400" />
+                <div>
+                  <div className="font-semibold">{formatDate(event.date)}</div>
+                  {event.startTime && (
+                    <div className="text-sm">
+                      {formatTime(event.startTime)}
+                      {event.endTime && ` - ${formatTime(event.endTime)}`}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {event.location && (
+                <div className="flex items-center text-yellow-200">
+                  <svg className="w-5 h-5 mr-3 text-yellow-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                  </svg>
+                  <span>{event.location}</span>
+                </div>
+              )}
+
+              {event.organizer && (
+                <div className="flex items-center text-yellow-200">
+                  <User className="w-5 h-5 mr-3 text-yellow-400" />
+                  <span>{event.organizer}</span>
+                </div>
+              )}
+
+              {event.cost && (
+                <div className="flex items-center text-yellow-200">
+                  <svg className="w-5 h-5 mr-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                  </svg>
+                  <span>{event.cost}</span>
+                </div>
+              )}
+            </div>
+
+            <div>
+              {event.tags && event.tags.length > 0 && (
+                <div>
+                  <h4 className="text-lg font-semibold text-yellow-200 mb-3">Tags</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {event.tags.map((tag, index) => (
+                      <span
+                        key={index}
+                        className="px-3 py-1 text-sm bg-yellow-600/40 text-yellow-100 rounded-full border border-yellow-500/50"
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {event.url && (
+            <div className="pt-4 border-t border-yellow-600/30">
+              <a
+                href={event.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center px-6 py-3 bg-yellow-600 hover:bg-yellow-500 text-white font-semibold rounded-lg transition-colors group"
+              >
+                Visit Event Page
+                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+              </a>
+            </div>
+          )}
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}
+
 // Event Card Component
-const EventCard: React.FC<{ event: Event }> = ({ event }) => {
+const EventCard: React.FC<{ 
+  event: Event
+  onClick: (event: Event) => void 
+}> = ({ event, onClick }) => {
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       weekday: 'short',
@@ -39,11 +180,12 @@ const EventCard: React.FC<{ event: Event }> = ({ event }) => {
 
   return (
     <motion.div 
-      className="bg-yellow-800/20 backdrop-blur-sm border border-yellow-600/30 rounded-2xl overflow-hidden hover:bg-yellow-800/30 hover:border-yellow-500/50 transition-all duration-300 group"
+      className="bg-yellow-800/20 backdrop-blur-sm border border-yellow-600/30 rounded-2xl overflow-hidden hover:bg-yellow-800/30 hover:border-yellow-500/50 transition-all duration-300 group cursor-pointer"
       whileHover={{ scale: 1.02 }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
+      onClick={() => onClick(event)}
     >
       {event.image && (
         <div className="h-48 bg-gradient-to-br from-yellow-600 to-amber-500"></div>
@@ -215,12 +357,24 @@ const EventsPageIntegrated: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [backendStatus, setBackendStatus] = useState<'checking' | 'connected' | 'offline'>('checking')
   const [stats, setStats] = useState({ pending: 0, approved: 0, rejected: 0, total: 0 })
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [filters, setFilters] = useState<FilterOptions>({
     dateRange: 'all',
     source: 'all',
     location: '',
     searchTerm: ''
   })
+
+  const handleEventClick = (event: Event) => {
+    setSelectedEvent(event)
+    setIsModalOpen(true)
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+    setSelectedEvent(null)
+  }
 
   // Load events on component mount
   useEffect(() => {
@@ -396,7 +550,7 @@ const EventsPageIntegrated: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 * index }}
               >
-                <EventCard event={event} />
+                <EventCard event={event} onClick={handleEventClick} />
               </motion.div>
             ))}
           </motion.div>
@@ -472,6 +626,17 @@ const EventsPageIntegrated: React.FC = () => {
       </div>
       
       <PlatformFooter />
+
+      {/* Event Detail Modal */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <EventDetailModal
+            event={selectedEvent}
+            isOpen={isModalOpen}
+            onClose={handleCloseModal}
+          />
+        )}
+      </AnimatePresence>
     </div>
   )
 }

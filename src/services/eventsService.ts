@@ -32,8 +32,8 @@ class EventsService {
     // Try to connect to the events calendar backend
     // Priority: production URL, then localhost, then fallback to mock
     this.baseUrl = process.env.NODE_ENV === 'production' 
-      ? 'https://events-deploy-cd1iid2ht-robs-projects-54d653d3.vercel.app/api'  // Production URL
-      : 'http://localhost:5173/api'         // Local development
+      ? 'https://api.blkoutuk.com/events'    // Updated production URL
+      : 'http://localhost:5173/api'           // Local development
   }
 
   async getAllEvents(): Promise<Event[]> {
@@ -138,6 +138,7 @@ class EventsService {
         startTime: '18:00',
         endTime: '21:00',
         location: 'Community Center, Brixton, London',
+        url: 'https://www.eventbrite.com/e/black-qtipoc-community-gathering-tickets',
         source: 'community',
         status: 'approved',
         organizer: 'BLKOUT Community',
@@ -154,6 +155,7 @@ class EventsService {
         startTime: '14:00',
         endTime: '17:00',
         location: 'Online via Zoom',
+        url: 'https://liberation-collective.org/workshops/part-1',
         source: 'education',
         status: 'approved',
         organizer: 'Liberation Collective',
@@ -170,6 +172,7 @@ class EventsService {
         startTime: '19:00',
         endTime: '23:00',
         location: 'South London Community Space',
+        url: 'https://blacktranscollectiveuk.org/events/joy-celebration',
         source: 'celebration',
         status: 'approved',
         organizer: 'Black Trans Collective UK',
