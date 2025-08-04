@@ -68,7 +68,7 @@ const featuredResources: Resource[] = [
     description: 'Complete guide to forming worker-owned businesses, from legal structures to governance models.',
     type: 'guide',
     category: 'Cooperative Development',
-    downloadUrl: '#',
+    downloadUrl: '/resources/cooperative-guide.pdf',
     isNew: true
   },
   {
@@ -77,7 +77,7 @@ const featuredResources: Resource[] = [
     description: 'Resources for creating community-controlled land ownership and preventing displacement.',
     type: 'toolkit',
     category: 'Housing Justice',
-    downloadUrl: '#'
+    downloadUrl: '/resources/community-land-trust-toolkit.pdf'
   },
   {
     id: '3',
@@ -85,7 +85,7 @@ const featuredResources: Resource[] = [
     description: 'Video series documenting successful cooperative businesses led by communities of color.',
     type: 'video',
     category: 'Case Studies',
-    previewUrl: '#'
+    previewUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
   },
   {
     id: '4',
@@ -93,7 +93,7 @@ const featuredResources: Resource[] = [
     description: 'Organizational templates and best practices for community support networks.',
     type: 'template',
     category: 'Community Care',
-    downloadUrl: '#'
+    downloadUrl: '/resources/mutual-aid-template.zip'
   },
   {
     id: '5',
@@ -101,7 +101,7 @@ const featuredResources: Resource[] = [
     description: 'Annual report on cooperative economy growth and impact in Black communities.',
     type: 'report',
     category: 'Research',
-    downloadUrl: '#'
+    downloadUrl: '/resources/state-of-movement-2024.pdf'
   },
   {
     id: '6',
@@ -109,7 +109,7 @@ const featuredResources: Resource[] = [
     description: 'Alternative funding strategies that maintain community ownership and values.',
     type: 'guide',
     category: 'Finance',
-    downloadUrl: '#'
+    downloadUrl: '/resources/cooperative-fundraising-guide.pdf'
   }
 ]
 

@@ -31,6 +31,14 @@ interface PrimaryNavigationProps {
 export default function PrimaryNavigationEnhanced({ className = '' }: PrimaryNavigationProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      // Navigate to stories page with search query
+      window.location.href = `/stories?search=${encodeURIComponent(searchQuery.trim())}`
+    }
+  }
   const location = useLocation()
 
   const isActive = (href: string) => {
@@ -102,7 +110,7 @@ export default function PrimaryNavigationEnhanced({ className = '' }: PrimaryNav
 
           {/* Search Bar - Hidden on mobile, visible on desktop */}
           <div className="hidden lg:flex items-center space-x-4">
-            <div className="relative">
+            <form onSubmit={handleSearch} className="relative">
               <input
                 type="text"
                 placeholder="Search stories..."
@@ -110,8 +118,10 @@ export default function PrimaryNavigationEnhanced({ className = '' }: PrimaryNav
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-64 px-4 py-2 text-sm bg-indigo-900/50 border border-indigo-700 rounded-lg text-white placeholder-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               />
-              <Search className="absolute right-3 top-2.5 w-4 h-4 text-indigo-300" />
-            </div>
+              <button type="submit" className="absolute right-3 top-2.5 text-indigo-300 hover:text-white transition-colors">
+                <Search className="w-4 h-4" />
+              </button>
+            </form>
           </div>
 
           {/* Mobile menu button - Enhanced touch target */}
@@ -134,7 +144,7 @@ export default function PrimaryNavigationEnhanced({ className = '' }: PrimaryNav
               
               {/* Mobile Search */}
               <div className="px-2 pb-4">
-                <div className="relative">
+                <form onSubmit={handleSearch} className="relative">
                   <input
                     type="text"
                     placeholder="Search stories..."
@@ -142,8 +152,10 @@ export default function PrimaryNavigationEnhanced({ className = '' }: PrimaryNav
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="w-full px-4 py-3 text-sm bg-indigo-900/50 border border-indigo-700 rounded-lg text-white placeholder-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   />
-                  <Search className="absolute right-3 top-3.5 w-4 h-4 text-indigo-300" />
-                </div>
+                  <button type="submit" className="absolute right-3 top-3.5 text-indigo-300 hover:text-white transition-colors">
+                    <Search className="w-4 h-4" />
+                  </button>
+                </form>
               </div>
 
               {/* Mobile Navigation Links */}
