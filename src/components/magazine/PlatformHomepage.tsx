@@ -409,19 +409,93 @@ const CommunityWidget = () => (
 // Main component
 export default function PlatformHomepage() {
   const [currentFeatured, setCurrentFeatured] = useState(0)
+  const [featuredArticles, setFeaturedArticles] = useState<Article[]>([])
+  const [recentArticles, setRecentArticles] = useState<Article[]>([])
+  const [loading, setLoading] = useState(true)
+
+  // Load real backend data via magazineService
+  useEffect(() => {
+    const loadArticles = async () => {
+      try {
+        setLoading(true)
+        
+        // Get featured and recent articles from real backend
+        const featured = await magazineService.getFeaturedArticles()
+        const recent = await magazineService.getRecentArticles()
+        
+        // Convert to local Article interface format
+        const convertedFeatured: Article[] = featured.articles.slice(0, 3).map(article => ({
+          id: article.id,
+          title: article.title,
+          excerpt: article.excerpt,
+          author: article.author,
+          publishedAt: article.publishedAt,
+          readTime: article.readTime,
+          category: article.category as keyof typeof CONTENT_CATEGORIES,
+          featured: article.featured,
+          image: article.imageUrl,
+          tags: article.tags,
+          likes: article.likes,
+          comments: article.comments
+        }))
+        
+        const convertedRecent: Article[] = recent.articles.slice(0, 3).map(article => ({
+          id: article.id,
+          title: article.title,
+          excerpt: article.excerpt,
+          author: article.author,
+          publishedAt: article.publishedAt,
+          readTime: article.readTime,
+          category: article.category as keyof typeof CONTENT_CATEGORIES,
+          featured: article.featured,
+          image: article.imageUrl,
+          tags: article.tags,
+          likes: article.likes,
+          comments: article.comments
+        }))
+
+        setFeaturedArticles(convertedFeatured.length > 0 ? convertedFeatured : mockFeaturedArticles)
+        setRecentArticles(convertedRecent.length > 0 ? convertedRecent : mockRecentArticles.slice(0, 3))
+      } catch (error) {
+        console.error('Failed to load articles, using fallback data:', error)
+        setFeaturedArticles(mockFeaturedArticles)
+        setRecentArticles(mockRecentArticles.slice(0, 3))
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    loadArticles()
+  }, [])
 
   // Auto-rotate featured articles every 12 seconds
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentFeatured((prev) => (prev + 1) % mockFeaturedArticles.length)
-    }, 12000)
-    return () => clearInterval(interval)
-  }, [])
+    if (featuredArticles.length > 1) {
+      const interval = setInterval(() => {
+        setCurrentFeatured((prev) => (prev + 1) % featuredArticles.length)
+      }, 12000)
+      return () => clearInterval(interval)
+    }
+  }, [featuredArticles.length])
 
   // Get current featured article
-  const featuredArticle = mockFeaturedArticles[currentFeatured]
+  const featuredArticle = featuredArticles[currentFeatured] || featuredArticles[0]
 
-  // Platform will now use real backend data via magazineService fallback
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-indigo-900 to-slate-900 flex items-center justify-center">
+        <div className="text-white text-2xl font-bold">Loading Platform...</div>
+      </div>
+    )
+  }
+
+  if (!featuredArticle) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-indigo-900 to-slate-900 flex items-center justify-center">
+        <div className="text-white text-2xl font-bold">No content available</div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-indigo-900 to-slate-900">
@@ -528,7 +602,7 @@ export default function PlatformHomepage() {
                 
                 {/* Story indicator */}
                 <div className="flex justify-center mt-12 space-x-4">
-                  {mockFeaturedArticles.map((_, index) => (
+                  {featuredArticles.map((_, index) => (
                     <button
                       key={index}
                       onClick={() => setCurrentFeatured(index)}
@@ -559,7 +633,7 @@ export default function PlatformHomepage() {
                 </div>
                 
                 <div className="space-y-8">
-                  {mockRecentArticles.map((article, index) => (
+                  {recentArticles.map((article, index) => (
                     <motion.div
                       key={article.id}
                       initial={{ opacity: 0, y: 30 }}
