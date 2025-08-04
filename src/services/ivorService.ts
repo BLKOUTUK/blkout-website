@@ -20,13 +20,13 @@ class IVORService {
   
   constructor() {
     this.baseUrl = process.env.NODE_ENV === 'production' 
-      ? 'https://ivor.blkoutuk.com/api'  // Production URL
+      ? 'https://services-mq90q6mqo-robs-projects-54d653d3.vercel.app/api'  // Production IVOR backend
       : 'http://localhost:8000/api'      // Local development - IVOR is running on port 8000
   }
 
   async checkConnection(): Promise<boolean> {
     try {
-      const response = await fetch(`${this.baseUrl.replace('/api', '')}/health/`, {
+      const response = await fetch(`${this.baseUrl.replace('/api', '')}/health`, {
         method: 'GET',
         timeout: 5000,
       })
@@ -51,15 +51,14 @@ class IVORService {
         return this.getFallbackResponse(message)
       }
 
-      const response = await fetch(`${this.baseUrl.replace('/api', '')}/chat/message`, {
+      const response = await fetch(`${this.baseUrl}/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           message,
-          context,
-          source: 'blkout-website'
+          context
         }),
       })
 
@@ -124,8 +123,10 @@ class IVORService {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          pathwayData,
-          source: 'liberation-quiz'
+          pathway: pathwayData.pathway,
+          focus: pathwayData.focus,
+          description: pathwayData.description,
+          userId: pathwayData.userId || 'website-user'
         }),
       })
 

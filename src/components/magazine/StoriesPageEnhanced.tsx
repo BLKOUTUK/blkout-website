@@ -12,12 +12,10 @@ import PlatformFooter from '../layout/PlatformFooter'
 import { CONTENT_CATEGORIES, getCategoryIndicator } from '../../lib/constants'
 import { liveStoryArchive } from '../../data/liveStoryArchive'
 
-// Use real data from liveStoryArchive instead of mock data
+// Use real data from liveStoryArchive
 const stories = liveStoryArchive.map(story => ({
   ...story,
-  // Add missing fields for compatibility
-  likes: Math.floor(Math.random() * 300) + 50, // Generate placeholder engagement
-  comments: Math.floor(Math.random() * 80) + 10,
+  // Add missing fields for compatibility - removed fake engagement metrics
   image: story.category === 'Technology' ? '/images/squared/WELLDEF_SQUARED.png' :
          story.category === 'Community' ? '/images/squared/BlackSQUARED.png' :
          '/images/squared/BLKOUT25INV.png' // Placeholder images based on category
@@ -246,12 +244,8 @@ const EnhancedArticleCard = ({ article, index }: { article: any, index: number }
           <div className="flex items-center space-x-6">
             <div className="flex items-center space-x-4 text-sm text-indigo-300">
               <div className="flex items-center">
-                <Heart className="w-4 h-4 mr-1" />
-                {article.likes}
-              </div>
-              <div className="flex items-center">
-                <MessageCircle className="w-4 h-4 mr-1" />
-                {article.comments}
+                <Clock className="w-4 h-4 mr-1" />
+                <span>{article.readTime} min read</span>
               </div>
             </div>
             <motion.button

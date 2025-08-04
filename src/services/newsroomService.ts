@@ -33,8 +33,8 @@ class NewsroomService {
   
   constructor() {
     this.baseUrl = process.env.NODE_ENV === 'production' 
-      ? 'https://newsroom.blkoutuk.com/api'  // Production URL
-      : 'http://localhost:3002/api'          // Local development
+      ? 'https://newsroom-deploy-c7ytvorfi-robs-projects-54d653d3.vercel.app'
+      : 'http://localhost:3002/api'          // Local development          // Local development
   }
 
   async checkConnection(): Promise<boolean> {

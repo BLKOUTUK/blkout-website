@@ -32,7 +32,7 @@ class EventsService {
     // Try to connect to the events calendar backend
     // Priority: production URL, then localhost, then fallback to mock
     this.baseUrl = process.env.NODE_ENV === 'production' 
-      ? 'https://events.blkoutuk.com/api'  // Production URL
+      ? 'https://events-deploy-cd1iid2ht-robs-projects-54d653d3.vercel.app/api'  // Production URL
       : 'http://localhost:5173/api'         // Local development
   }
 

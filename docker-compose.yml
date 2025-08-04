@@ -1,8 +1,334 @@
+version: '3.8'
+
 services:
+  # Frontend Website
   blkoutwebsite:
-    image: blkoutwebsite
     build:
       context: .
       dockerfile: ./Dockerfile
+    container_name: blkout-frontend
     environment:
       NODE_ENV: production
+      VITE_API_BASE_URL: https://api.blkoutuk.com
+      VITE_IVOR_API_URL: https://ivor.blkoutuk.com/api
+      VITE_EVENTS_API_URL: https://events.blkoutuk.com/api
+      VITE_NEWSROOM_API_URL: https://newsroom.blkoutuk.com/api
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/ssl/certs:ro
+    depends_on:
+      - ivor-backend
+      - events-backend
+      - newsroom-backend
+    networks:
+      - blkout-network
+    restart: unless-stopped
+
+  # IVOR AI Backend
+  ivor-backend:
+    build:
+      context: ./backend/ivor
+      dockerfile: ./Dockerfile
+    container_name: blkout-ivor
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=postgresql://ivor_user:${IVOR_DB_PASSWORD}@postgres:5432/ivor_db
+      - REDIS_URL=redis://redis:6379/0
+      - CORS_ORIGINS=https://blkoutuk.com,https://www.blkoutuk.com,https://ivor.blkoutuk.com
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - JWT_SECRET=${JWT_SECRET}
+      - LOG_LEVEL=info
+      - RATE_LIMIT_REQUESTS=100
+      - RATE_LIMIT_WINDOW=900
+    ports:
+      - "8000:8000"
+    volumes:
+      - ivor-logs:/app/logs
+      - ivor-data:/app/data
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - blkout-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Events Calendar Backend
+  events-backend:
+    build:
+      context: ./backend/events
+      dockerfile: ./Dockerfile
+    container_name: blkout-events
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGODB_URL=mongodb://mongo:27017/blkout_events
+      - REDIS_URL=redis://redis:6379/1
+      - CORS_ORIGINS=https://blkoutuk.com,https://www.blkoutuk.com,https://events.blkoutuk.com
+      - JWT_SECRET=${JWT_SECRET}
+      - EMAIL_USER=${EMAIL_USER}
+      - EMAIL_PASS=${EMAIL_PASS}
+    ports:
+      - "5000:5000"
+    volumes:
+      - events-logs:/app/logs
+      - events-data:/app/data
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      - blkout-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Newsroom Backend
+  newsroom-backend:
+    build:
+      context: ./backend/newsroom
+      dockerfile: ./Dockerfile
+    container_name: blkout-newsroom
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - MONGODB_URL=mongodb://mongo:27017/blkout_newsroom
+      - REDIS_URL=redis://redis:6379/2
+      - CORS_ORIGINS=https://blkoutuk.com,https://www.blkoutuk.com,https://newsroom.blkoutuk.com
+      - JWT_SECRET=${JWT_SECRET}
+      - UPLOAD_PATH=/app/uploads
+      - MAX_FILE_SIZE=5242880
+    ports:
+      - "3000:3000"
+    volumes:
+      - newsroom-logs:/app/logs
+      - newsroom-uploads:/app/uploads
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      - blkout-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # PostgreSQL Database (for IVOR)
+  postgres:
+    image: postgres:15-alpine
+    container_name: blkout-postgres
+    environment:
+      - POSTGRES_DB=ivor_db
+      - POSTGRES_USER=ivor_user
+      - POSTGRES_PASSWORD=${IVOR_DB_PASSWORD}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./backend/ivor/sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - blkout-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ivor_user -d ivor_db"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # MongoDB Database (for Events & Newsroom)
+  mongo:
+    image: mongo:7
+    container_name: blkout-mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=blkout_events
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+      - ./backend/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - blkout-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: blkout-redis
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+      - ./backend/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    networks:
+      - blkout-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Nginx Load Balancer & Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: blkout-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./ssl:/etc/nginx/ssl:ro
+      - nginx-logs:/var/log/nginx
+    depends_on:
+      - blkoutwebsite
+      - ivor-backend
+      - events-backend
+      - newsroom-backend
+    networks:
+      - blkout-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Prometheus Monitoring
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: blkout-prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    networks:
+      - blkout-network
+    restart: unless-stopped
+
+  # Grafana Dashboard
+  grafana:
+    image: grafana/grafana:latest
+    container_name: blkout-grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+    depends_on:
+      - prometheus
+    networks:
+      - blkout-network
+    restart: unless-stopped
+
+  # ELK Stack for Logging
+  elasticsearch:
+    image: elasticsearch:8.11.0
+    container_name: blkout-elasticsearch
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - blkout-network
+    restart: unless-stopped
+
+  logstash:
+    image: logstash:8.11.0
+    container_name: blkout-logstash
+    volumes:
+      - ./logging/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+    ports:
+      - "5044:5044"
+    depends_on:
+      - elasticsearch
+    networks:
+      - blkout-network
+    restart: unless-stopped
+
+  kibana:
+    image: kibana:8.11.0
+    container_name: blkout-kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    networks:
+      - blkout-network
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+    driver: local
+  mongo-data:
+    driver: local
+  redis-data:
+    driver: local
+  ivor-logs:
+    driver: local
+  ivor-data:
+    driver: local
+  events-logs:
+    driver: local
+  events-data:
+    driver: local
+  newsroom-logs:
+    driver: local
+  newsroom-uploads:
+    driver: local
+  nginx-logs:
+    driver: local
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
+  elasticsearch-data:
+    driver: local
+
+networks:
+  blkout-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

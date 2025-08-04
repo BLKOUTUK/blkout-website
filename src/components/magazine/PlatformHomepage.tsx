@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom'
 import ArticleGrid from './ArticleGrid'
 import PrimaryNavigationEnhanced from '../layout/PrimaryNavigationEnhanced'
 import PlatformFooter from '../layout/PlatformFooter'
+import { magazineService, type MagazineArticle } from '../../services/magazineService'
 
 // Masculine indigo color scheme
 const PLATFORM_COLORS = {
@@ -70,80 +71,7 @@ interface Article {
   comments?: number
 }
 
-// Mock data with engagement metrics
-const mockFeaturedArticles: Article[] = [
-  {
-    id: '1',
-    title: 'BUILDING COOPERATIVE OWNERSHIP IN DIGITAL SPACES',
-    excerpt: 'How Black queer communities are reimagining platform ownership and digital sovereignty through collective action and radical imagination.',
-    author: { name: 'Marcus Johnson', avatar: 'MJ' },
-    publishedAt: '2025-01-29',
-    readTime: 8,
-    category: 'Original Commentary',
-    featured: true,
-    image: '/images/squared/WELLDEF_SQUARED.png',
-    tags: ['Digital Rights', 'Cooperative', 'Liberation'],
-    likes: 234,
-    comments: 47
-  },
-  {
-    id: '2', 
-    title: 'COMMUNITY RESPONSE: MENTAL HEALTH RESOURCES LAUNCH',
-    excerpt: 'Community members share their experiences with the new peer support networks and resource accessibility in this collection.',
-    author: { name: 'Devon Williams', avatar: 'DW' },
-    publishedAt: '2025-01-28',
-    readTime: 5,
-    category: 'Community Response',
-    featured: true,
-    image: '/images/squared/BlackSQUARED.png',
-    tags: ['Mental Health', 'Community', 'Resources'],
-    likes: 189,
-    comments: 32
-  },
-  {
-    id: '3', 
-    title: 'THE ART OF BLACK JOY: VISUAL STORIES FROM OUR COMMUNITY',
-    excerpt: 'A multimedia exploration of how Black joy manifests in everyday moments, celebrations, and acts of resistance across the UK.',
-    author: { name: 'Aisha Clarke', avatar: 'AC' },
-    publishedAt: '2025-01-27',
-    readTime: 6,
-    category: 'Video/Audio/Photo',
-    featured: true,
-    image: '/images/squared/BLKOUT25INV.png',
-    tags: ['Black Joy', 'Photography', 'Community'],
-    likes: 312,
-    comments: 58
-  }
-]
-
-const mockRecentArticles: Article[] = [
-  {
-    id: '4',
-    title: 'EVENT COVERAGE: BLACK HISTORY MONTH PLANNING SESSION',
-    excerpt: 'Key highlights from the community planning session for BHM 2025 celebrations.',
-    author: { name: 'Jordan Clarke', avatar: 'JC' },
-    publishedAt: '2025-01-27',
-    readTime: 4,
-    category: 'Event Coverage',
-    featured: false,
-    tags: ['Events', 'Black History Month'],
-    likes: 156,
-    comments: 23
-  },
-  {
-    id: '5',
-    title: 'CURATED: POLICY CHANGES AFFECTING QTIPOC+ COMMUNITIES',
-    excerpt: 'Analysis of recent policy developments and their impact on Black queer communities.',
-    author: { name: 'Alex Thompson', avatar: 'AT' },
-    publishedAt: '2025-01-26',
-    readTime: 6,
-    category: 'Curated Content',
-    featured: false,
-    tags: ['Policy', 'QTIPOC', 'Rights'],
-    likes: 203,
-    comments: 41
-  }
-]
+// Featured and recent articles will be loaded from backend or fallback data
 
 // Platform Hero Section
 const PlatformHero = () => (
@@ -405,12 +333,12 @@ export default function PlatformHomepage() {
   // Auto-rotate featured articles every 12 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentFeatured((prev) => (prev + 1) % mockFeaturedArticles.length)
+      setCurrentFeatured((prev) => (prev + 1) % 3)
     }, 12000)
     return () => clearInterval(interval)
   }, [])
 
-  const featuredArticle = mockFeaturedArticles[currentFeatured]
+  // Platform will now use real backend data via magazineService fallback
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-indigo-900 to-slate-900">

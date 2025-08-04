@@ -1,0 +1,271 @@
+name: 'Comprehensive Health Check'
+description: 'Performs comprehensive health checks on deployed applications'
+inputs:
+  url:
+    description: 'URL to health check'
+    required: true
+  timeout:
+    description: 'Timeout in seconds'
+    required: false
+    default: '30'
+  retries:
+    description: 'Number of retries'
+    required: false
+    default: '3'
+  wait-time:
+    description: 'Wait time before starting checks'
+    required: false
+    default: '30'
+  check-routes:
+    description: 'Comma-separated list of routes to check'
+    required: false
+    default: '/newsroom,/magazine,/community'
+  check-content:
+    description: 'Content to verify exists'
+    required: false
+    default: 'BLKOUTUK'
+  performance-threshold:
+    description: 'Response time threshold in seconds'
+    required: false
+    default: '5.0'
+
+outputs:
+  status:
+    description: 'Health check status (healthy/degraded/unhealthy)'
+    value: ${{ steps.evaluate.outputs.status }}
+  response-time:
+    description: 'Average response time'
+    value: ${{ steps.main-check.outputs.response-time }}
+  http-status:
+    description: 'HTTP status code'
+    value: ${{ steps.main-check.outputs.http-status }}
+  issues:
+    description: 'Comma-separated list of issues found'
+    value: ${{ steps.evaluate.outputs.issues }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: ⏱️ Wait for Deployment
+      if: inputs.wait-time != '0'
+      shell: bash
+      run: |
+        echo "⏱️ Waiting ${{ inputs.wait-time }} seconds for deployment to be ready..."
+        sleep ${{ inputs.wait-time }}
+    
+    - name: 🔍 Main Health Check
+      id: main-check
+      shell: bash
+      run: |
+        echo "🔍 Starting health check for: ${{ inputs.url }}"
+        
+        RETRIES=${{ inputs.retries }}
+        TIMEOUT=${{ inputs.timeout }}
+        URL="${{ inputs.url }}"
+        
+        TOTAL_TIME=0
+        SUCCESS_COUNT=0
+        FINAL_STATUS=0
+        
+        for i in $(seq 1 $RETRIES); do
+          echo "🔄 Attempt $i/$RETRIES"
+          
+          RESPONSE=$(curl -s -w "HTTPSTATUS:%{http_code};TIME:%{time_total}" --max-time $TIMEOUT "$URL" || echo "HTTPSTATUS:000;TIME:999")
+          
+          HTTP_STATUS=$(echo $RESPONSE | grep -o "HTTPSTATUS:[0-9]*" | cut -d: -f2)
+          RESPONSE_TIME=$(echo $RESPONSE | grep -o "TIME:[0-9.]*" | cut -d: -f2)
+          
+          echo "  Status: $HTTP_STATUS, Time: ${RESPONSE_TIME}s"
+          
+          if [ "$HTTP_STATUS" = "200" ]; then
+            SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
+            TOTAL_TIME=$(echo "$TOTAL_TIME + $RESPONSE_TIME" | bc -l)
+            FINAL_STATUS=$HTTP_STATUS
+            FINAL_RESPONSE="$RESPONSE"
+          fi
+          
+          # Small delay between retries
+          if [ $i -lt $RETRIES ]; then
+            sleep 2
+          fi
+        done
+        
+        if [ $SUCCESS_COUNT -gt 0 ]; then
+          AVG_TIME=$(echo "scale=3; $TOTAL_TIME / $SUCCESS_COUNT" | bc -l)
+        else
+          AVG_TIME="999.999"
+        fi
+        
+        echo "📊 Results: $SUCCESS_COUNT/$RETRIES successful"
+        echo "📊 Average response time: ${AVG_TIME}s"
+        
+        echo "http-status=$FINAL_STATUS" >> $GITHUB_OUTPUT
+        echo "response-time=$AVG_TIME" >> $GITHUB_OUTPUT
+        echo "success-count=$SUCCESS_COUNT" >> $GITHUB_OUTPUT
+        echo "total-attempts=$RETRIES" >> $GITHUB_OUTPUT
+        echo "response-body=$(echo $FINAL_RESPONSE | sed 's/HTTPSTATUS:.*//g')" >> $GITHUB_OUTPUT
+    
+    - name: 🔍 Content Verification
+      id: content-check
+      shell: bash
+      run: |
+        echo "🔍 Verifying content..."
+        
+        CONTENT_CHECK="${{ inputs.check-content }}"
+        RESPONSE_BODY="${{ steps.main-check.outputs.response-body }}"
+        
+        if [ -n "$CONTENT_CHECK" ] && [ -n "$RESPONSE_BODY" ]; then
+          if echo "$RESPONSE_BODY" | grep -q "$CONTENT_CHECK"; then
+            echo "✅ Content verification passed: '$CONTENT_CHECK' found"
+            echo "content-verified=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Content verification failed: '$CONTENT_CHECK' not found"
+            echo "content-verified=false" >> $GITHUB_OUTPUT
+          fi
+        else
+          echo "⏭️ Content verification skipped"
+          echo "content-verified=true" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: 🛣️ Route Testing
+      id: route-check
+      shell: bash
+      run: |
+        echo "🛣️ Testing critical routes..."
+        
+        ROUTES="${{ inputs.check-routes }}"
+        BASE_URL="${{ inputs.url }}"
+        
+        if [ -z "$ROUTES" ]; then
+          echo "⏭️ No routes specified for testing"
+          echo "routes-tested=0" >> $GITHUB_OUTPUT
+          echo "routes-passed=0" >> $GITHUB_OUTPUT
+          exit 0
+        fi
+        
+        IFS=',' read -ra ROUTE_ARRAY <<< "$ROUTES"
+        TOTAL_ROUTES=${#ROUTE_ARRAY[@]}
+        PASSED_ROUTES=0
+        FAILED_ROUTES=()
+        
+        for route in "${ROUTE_ARRAY[@]}"; do
+          ROUTE_URL="$BASE_URL$route"
+          echo "🔍 Testing: $ROUTE_URL"
+          
+          if curl -f -s --max-time 10 "$ROUTE_URL" > /dev/null; then
+            echo "  ✅ $route"
+            PASSED_ROUTES=$((PASSED_ROUTES + 1))
+          else
+            echo "  ❌ $route"
+            FAILED_ROUTES+=("$route")
+          fi
+        done
+        
+        echo "📊 Route results: $PASSED_ROUTES/$TOTAL_ROUTES passed"
+        
+        if [ ${#FAILED_ROUTES[@]} -gt 0 ]; then
+          echo "⚠️ Failed routes: ${FAILED_ROUTES[*]}"
+        fi
+        
+        echo "routes-tested=$TOTAL_ROUTES" >> $GITHUB_OUTPUT
+        echo "routes-passed=$PASSED_ROUTES" >> $GITHUB_OUTPUT
+        echo "failed-routes=${FAILED_ROUTES[*]}" >> $GITHUB_OUTPUT
+    
+    - name: 📊 Evaluate Overall Health
+      id: evaluate
+      shell: bash
+      run: |
+        echo "📊 Evaluating overall health..."
+        
+        HTTP_STATUS="${{ steps.main-check.outputs.http-status }}"
+        SUCCESS_COUNT="${{ steps.main-check.outputs.success-count }}"
+        TOTAL_ATTEMPTS="${{ steps.main-check.outputs.total-attempts }}"
+        RESPONSE_TIME="${{ steps.main-check.outputs.response-time }}"
+        CONTENT_VERIFIED="${{ steps.content-check.outputs.content-verified }}"
+        ROUTES_TESTED="${{ steps.route-check.outputs.routes-tested }}"
+        ROUTES_PASSED="${{ steps.route-check.outputs.routes-passed }}"
+        FAILED_ROUTES="${{ steps.route-check.outputs.failed-routes }}"
+        
+        PERFORMANCE_THRESHOLD="${{ inputs.performance-threshold }}"
+        
+        HEALTH_STATUS="healthy"
+        ISSUES=()
+        
+        # Check HTTP status
+        if [ "$HTTP_STATUS" != "200" ]; then
+          HEALTH_STATUS="unhealthy"
+          ISSUES+=("HTTP Status: $HTTP_STATUS")
+        fi
+        
+        # Check success rate
+        SUCCESS_RATE=$(echo "scale=2; $SUCCESS_COUNT * 100 / $TOTAL_ATTEMPTS" | bc -l)
+        if (( $(echo "$SUCCESS_RATE < 100" | bc -l) )); then
+          if (( $(echo "$SUCCESS_RATE < 50" | bc -l) )); then
+            HEALTH_STATUS="unhealthy"
+            ISSUES+=("Low success rate: ${SUCCESS_RATE}%")
+          else
+            if [ "$HEALTH_STATUS" = "healthy" ]; then
+              HEALTH_STATUS="degraded"
+            fi
+            ISSUES+=("Partial failures: ${SUCCESS_RATE}%")
+          fi
+        fi
+        
+        # Check response time
+        if (( $(echo "$RESPONSE_TIME > $PERFORMANCE_THRESHOLD" | bc -l) )); then
+          if [ "$HEALTH_STATUS" = "healthy" ]; then
+            HEALTH_STATUS="degraded"
+          fi
+          ISSUES+=("Slow response: ${RESPONSE_TIME}s")
+        fi
+        
+        # Check content verification
+        if [ "$CONTENT_VERIFIED" = "false" ]; then
+          if [ "$HEALTH_STATUS" = "healthy" ]; then
+            HEALTH_STATUS="degraded"
+          fi
+          ISSUES+=("Content verification failed")
+        fi
+        
+        # Check routes
+        if [ "$ROUTES_TESTED" -gt 0 ] && [ "$ROUTES_PASSED" -lt "$ROUTES_TESTED" ]; then
+          if [ "$ROUTES_PASSED" -eq 0 ]; then
+            HEALTH_STATUS="unhealthy"
+            ISSUES+=("All routes failed")
+          else
+            if [ "$HEALTH_STATUS" = "healthy" ]; then
+              HEALTH_STATUS="degraded"
+            fi
+            ISSUES+=("Some routes failed: $FAILED_ROUTES")
+          fi
+        fi
+        
+        # Output results
+        echo "status=$HEALTH_STATUS" >> $GITHUB_OUTPUT
+        echo "issues=${ISSUES[*]}" >> $GITHUB_OUTPUT
+        
+        echo "📊 HEALTH CHECK SUMMARY:"
+        echo "  🎯 Status: $HEALTH_STATUS"
+        echo "  📡 HTTP Status: $HTTP_STATUS"
+        echo "  ⚡ Response Time: ${RESPONSE_TIME}s"
+        echo "  ✅ Success Rate: ${SUCCESS_RATE}%"
+        echo "  🛣️ Routes: $ROUTES_PASSED/$ROUTES_TESTED passed"
+        echo "  📝 Content: $CONTENT_VERIFIED"
+        
+        if [ ${#ISSUES[@]} -gt 0 ]; then
+          echo "  ⚠️ Issues: ${ISSUES[*]}"
+        else
+          echo "  ✅ No issues detected"
+        fi
+        
+        # Set overall result
+        if [ "$HEALTH_STATUS" = "healthy" ]; then
+          echo "✅ Health check PASSED"
+          exit 0
+        elif [ "$HEALTH_STATUS" = "degraded" ]; then
+          echo "⚠️ Health check DEGRADED"
+          exit 0
+        else
+          echo "❌ Health check FAILED"
+          exit 1
+        fi

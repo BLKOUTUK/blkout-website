@@ -132,6 +132,7 @@ const IVORHero = () => (
             className="flex flex-col sm:flex-row gap-6"
           >
             <motion.button 
+              onClick={() => setShowChat(true)}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="px-12 py-4 bg-gradient-to-r from-emerald-600 to-indigo-600 text-white font-black text-lg hover:from-emerald-500 hover:to-indigo-500 transition-all duration-300 shadow-xl hover:shadow-2xl heading-block uppercase tracking-wide flex items-center justify-center"
@@ -379,6 +380,7 @@ const IVORFeatures = () => (
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <motion.button
+              onClick={() => setShowChat(true)}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="px-12 py-4 bg-white text-indigo-900 font-black text-lg hover:bg-gray-100 transition-colors heading-block uppercase flex items-center justify-center"

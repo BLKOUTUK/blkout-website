@@ -1,16 +1,28 @@
 import React from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
+
+// Scroll to top on route change
+function ScrollToTop() {
+  const { pathname } = useLocation()
+  
+  React.useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+  
+  return null
+}
 import { Calendar } from 'lucide-react'
 import FullPageScrollytellingOptimized from './components/blkout/FullPageScrollytellingOptimized'
 import ProjectHub from './components/blkout/ProjectHub'
 import IntegrationDashboard from './components/blkout/IntegrationDashboard'
+import ModerationDashboard from './components/admin/ModerationDashboard'
 import CommunityGatewayEnhanced from './components/community/CommunityGatewayEnhanced'
 import MagazineLayout from './components/magazine/MagazineLayout'
 import PlatformHomepage from './components/magazine/PlatformHomepage'
 import MagazineHomepageEnhanced from './components/magazine/MagazineHomepageEnhanced'
 import StoriesPageEnhanced from './components/magazine/StoriesPageEnhanced'
 import MovementIntroEnhanced from './components/movement/MovementIntroEnhanced'
-import JoinDiscussionEnhanced from './components/community/JoinDiscussionEnhanced'
+import BLKOUTHUBPromoPage from './components/community/BLKOUTHUBPromoPage'
 import HubReports from './components/community/HubReports'
 import IVORInterfaceEnhanced from './components/ivor/IVORInterfaceEnhanced'
 import NewsroomEnhanced from './components/newsroom/NewsroomEnhanced'
@@ -185,32 +197,43 @@ const GovernancePage = () => (
 )
 
 // Media platform components from PRD
-const ChannelBLKOUTPage = () => (
-  <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
-    <div className="text-center">
-      <h1 className="text-4xl font-bold mb-4">Channel BLKOUT</h1>
-      <p className="text-xl text-gray-300 mb-4">Community video content and live streaming</p>
-      <p className="text-lg text-gray-400 mb-8">Video platform for liberation stories, educational content, and community events</p>
-      <a href="/" className="text-blue-400 hover:text-blue-300">← Back to Home</a>
+const ChannelBLKOUTPage = () => {
+  React.useEffect(() => {
+    window.location.href = 'https://blkoutnxtchannel.carrd.co'
+  }, [])
+  
+  return (
+    <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold mb-4">Redirecting to Channel BLKOUT...</h1>
+        <p className="text-xl text-gray-300 mb-8">Taking you to our video platform</p>
+        <a href="https://blkoutnxtchannel.carrd.co" className="text-blue-400 hover:text-blue-300">Click here if not redirected</a>
+      </div>
     </div>
-  </div>
-)
+  )
+}
 
-const StorylabPage = () => (
-  <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
-    <div className="text-center">
-      <h1 className="text-4xl font-bold mb-4">Storylab</h1>
-      <p className="text-xl text-gray-300 mb-4">Community storytelling platform</p>
-      <p className="text-lg text-gray-400 mb-8">Share your stories: realness, voices, creative expression, and community analysis</p>
-      <a href="/" className="text-blue-400 hover:text-blue-300">← Back to Home</a>
+const StorylabPage = () => {
+  React.useEffect(() => {
+    window.location.href = 'https://blkoutnxtstory.carrd.co'
+  }, [])
+  
+  return (
+    <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold mb-4">Redirecting to Storylab...</h1>
+        <p className="text-xl text-gray-300 mb-8">Taking you to our storytelling platform</p>
+        <a href="https://blkoutnxtstory.carrd.co" className="text-blue-400 hover:text-blue-300">Click here if not redirected</a>
+      </div>
     </div>
-  </div>
-)
+  )
+}
 
 function App() {
   return (
     <Router>
       <SkipNavigation />
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<FullPageScrollytellingOptimized />} />
         <Route path="/platform" element={<PlatformHomepage />} />
@@ -218,14 +241,15 @@ function App() {
         <Route path="/home" element={<MagazineHomepageEnhanced />} />
         <Route path="/dashboard" element={<ProjectHub />} />
         <Route path="/admin" element={<IntegrationDashboard />} />
+        <Route path="/admin/moderation" element={<ModerationDashboard />} />
         <Route path="/community" element={<CommunityGatewayEnhanced />} />
         <Route path="/stories" element={<StoriesPageEnhanced />} />
         <Route path="/movement" element={<MovementIntroEnhanced />} />
-        <Route path="/discussions" element={<JoinDiscussionEnhanced />} />
+        <Route path="/discussions" element={<BLKOUTHUBPromoPage />} />
         <Route path="/reports" element={<HubReports />} />
         <Route path="/newsroom" element={<NewsroomEnhanced />} />
         <Route path="/media" element={<ChannelBLKOUTPage />} />
-        <Route path="/events" element={<EventsPage />} />
+        <Route path="/events" element={<EventsPageIntegrated />} />
         <Route path="/ivor" element={<IVORInterfaceEnhanced />} />
         <Route path="/governance" element={<GovernancePage />} />
         <Route path="/media/newsroom" element={<NewsroomEnhanced />} />

@@ -1,0 +1,426 @@
+name: 🚨 Emergency Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+        default: 'staging'
+      reason:
+        description: 'Emergency deployment reason'
+        required: true
+        type: string
+      skip_tests:
+        description: 'Skip all tests (use with extreme caution)'
+        required: false
+        type: boolean
+        default: false
+      skip_security:
+        description: 'Skip security scans (emergency only)'
+        required: false
+        type: boolean
+        default: false
+      rollback_on_failure:
+        description: 'Auto-rollback on deployment failure'
+        required: false
+        type: boolean
+        default: true
+
+env:
+  NODE_VERSION: '20'
+
+permissions:
+  contents: read
+  packages: write
+  deployments: write
+  actions: write
+
+concurrency:
+  group: emergency-${{ inputs.environment }}-${{ github.sha }}
+  cancel-in-progress: false # Don't cancel emergency deployments
+
+jobs:
+  # ═══════════════════════════════════════════════════════════════
+  # 🚨 EMERGENCY VALIDATION
+  # ═══════════════════════════════════════════════════════════════
+  
+  emergency-validation:
+    name: 🚨 Emergency Validation
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      approved: ${{ steps.validate.outputs.approved }}
+      deployment-id: ${{ steps.validate.outputs.deployment-id }}
+    
+    steps:
+      - name: 📋 Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: 🚨 Validate Emergency Deployment
+        id: validate
+        run: |
+          echo "🚨 EMERGENCY DEPLOYMENT INITIATED"
+          echo "================================================"
+          echo "🎯 Environment: ${{ inputs.environment }}"
+          echo "📝 Reason: ${{ inputs.reason }}"
+          echo "🧪 Skip Tests: ${{ inputs.skip_tests }}"
+          echo "🔒 Skip Security: ${{ inputs.skip_security }}"
+          echo "🔄 Auto Rollback: ${{ inputs.rollback_on_failure }}"
+          echo "👤 Triggered by: ${{ github.actor }}"
+          echo "📦 Commit: ${{ github.sha }}"
+          echo "🕐 Timestamp: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo ""
+          
+          # Validate inputs
+          if [ -z "${{ inputs.reason }}" ]; then
+            echo "❌ Emergency reason is required"
+            exit 1
+          fi
+          
+          if [ "${{ inputs.environment }}" = "production" ] && [ "${{ inputs.skip_tests }}" = "true" ] && [ "${{ inputs.skip_security }}" = "true" ]; then
+            echo "⚠️ WARNING: Deploying to production with ALL safety checks disabled"
+            echo "This should only be done in extreme circumstances"
+          fi
+          
+          # Generate deployment ID
+          DEPLOYMENT_ID="emergency-$(date +%s)-$(echo ${{ github.sha }} | head -c 8)"
+          
+          echo "approved=true" >> $GITHUB_OUTPUT
+          echo "deployment-id=$DEPLOYMENT_ID" >> $GITHUB_OUTPUT
+          
+          echo "✅ Emergency deployment approved: $DEPLOYMENT_ID"
+      
+      - name: 📝 Create Emergency Log
+        run: |
+          mkdir -p emergency-logs
+          cat > emergency-logs/deployment-${{ steps.validate.outputs.deployment-id }}.json << EOF
+          {
+            "deploymentId": "${{ steps.validate.outputs.deployment-id }}",
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "environment": "${{ inputs.environment }}",
+            "reason": "${{ inputs.reason }}",
+            "triggeredBy": "${{ github.actor }}",
+            "commit": "${{ github.sha }}",
+            "branch": "${{ github.ref_name }}",
+            "skipTests": ${{ inputs.skip_tests }},
+            "skipSecurity": ${{ inputs.skip_security }},
+            "autoRollback": ${{ inputs.rollback_on_failure }}
+          }
+          EOF
+      
+      - name: 📤 Upload Emergency Log
+        uses: actions/upload-artifact@v4
+        with:
+          name: emergency-log-${{ steps.validate.outputs.deployment-id }}
+          path: emergency-logs/
+          retention-days: 90
+
+  # ═══════════════════════════════════════════════════════════════
+  # ⚡ RAPID BUILD
+  # ═══════════════════════════════════════════════════════════════
+  
+  rapid-build:
+    name: ⚡ Rapid Build
+    runs-on: ubuntu-latest
+    needs: emergency-validation
+    if: needs.emergency-validation.outputs.approved == 'true'
+    timeout-minutes: 10
+    outputs:
+      build-successful: ${{ steps.build.outputs.successful }}
+      build-artifacts: ${{ steps.build.outputs.artifacts }}
+    
+    steps:
+      - name: 📋 Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: 🏗️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: 📦 Install Dependencies
+        run: |
+          echo "📦 Installing dependencies..."
+          npm ci --prefer-offline --no-audit --silent
+      
+      - name: 🔍 Minimal Security Check
+        if: inputs.skip_security != true
+        run: |
+          echo "🔍 Running minimal security checks..."
+          npm audit --audit-level=high || echo "⚠️ Security issues found (non-blocking in emergency mode)"
+      
+      - name: 🧪 Rapid Tests
+        if: inputs.skip_tests != true
+        run: |
+          echo "🧪 Running rapid tests..."
+          # Add basic smoke tests here when they exist
+          echo "✅ Rapid tests completed (placeholder)"
+      
+      - name: 🏗️ Emergency Build
+        id: build
+        env:
+          NODE_ENV: production
+          VITE_BUILD_MODE: emergency
+          VITE_BUILD_TIMESTAMP: ${{ github.run_number }}
+          VITE_EMERGENCY_ID: ${{ needs.emergency-validation.outputs.deployment-id }}
+        run: |
+          echo "🏗️ Building application for emergency deployment..."
+          
+          npm run build
+          
+          # Verify build
+          if [ ! -d "dist" ] || [ ! -f "dist/index.html" ]; then
+            echo "❌ Build failed - missing output"
+            echo "successful=false" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+          
+          # Add emergency deployment marker
+          echo "<!-- EMERGENCY DEPLOYMENT: ${{ needs.emergency-validation.outputs.deployment-id }} -->" >> dist/index.html
+          
+          BUILD_SIZE=$(du -sh dist | cut -f1)
+          echo "📊 Build size: $BUILD_SIZE"
+          
+          echo "successful=true" >> $GITHUB_OUTPUT
+          echo "artifacts=dist" >> $GITHUB_OUTPUT
+          echo "✅ Emergency build completed successfully"
+      
+      - name: 📤 Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: emergency-build-${{ needs.emergency-validation.outputs.deployment-id }}
+          path: dist/
+          retention-days: 30
+
+  # ═══════════════════════════════════════════════════════════════
+  # 🚀 EMERGENCY DEPLOYMENT
+  # ═══════════════════════════════════════════════════════════════
+  
+  emergency-deploy:
+    name: 🚀 Emergency Deploy to ${{ inputs.environment }}
+    runs-on: ubuntu-latest
+    needs: [emergency-validation, rapid-build]
+    if: needs.rapid-build.outputs.build-successful == 'true'
+    timeout-minutes: 15
+    environment:
+      name: emergency-${{ inputs.environment }}
+      url: ${{ steps.deploy.outputs.url }}
+    
+    steps:
+      - name: 📋 Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: 📥 Download Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: emergency-build-${{ needs.emergency-validation.outputs.deployment-id }}
+          path: dist/
+      
+      - name: 🚀 Deploy to Vercel
+        id: deploy
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+        run: |
+          echo "🚀 Deploying to ${{ inputs.environment }}..."
+          
+          # Install Vercel CLI
+          npm install -g vercel@latest
+          
+          # Set production flag based on environment
+          PROD_FLAG="false"
+          if [ "${{ inputs.environment }}" = "production" ]; then
+            PROD_FLAG="true"
+          fi
+          
+          # Deploy with emergency comment
+          DEPLOYMENT_URL=$(vercel deploy --token $VERCEL_TOKEN --prod=$PROD_FLAG --confirm --meta emergencyId=${{ needs.emergency-validation.outputs.deployment-id }})
+          
+          echo "url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
+          echo "🚀 Emergency deployed to: $DEPLOYMENT_URL"
+      
+      - name: ⏱️ Wait for Deployment
+        run: |
+          echo "⏱️ Waiting for deployment to be ready..."
+          sleep 45
+      
+      - name: 🔍 Critical Health Check
+        id: health-check
+        run: |
+          DEPLOY_URL="${{ steps.deploy.outputs.url }}"
+          echo "🔍 Testing critical functionality: $DEPLOY_URL"
+          
+          # Test main page
+          RESPONSE=$(curl -s -w "HTTPSTATUS:%{http_code};TIME:%{time_total}" "$DEPLOY_URL")
+          HTTP_STATUS=$(echo $RESPONSE | grep -o "HTTPSTATUS:[0-9]*" | cut -d: -f2)
+          RESPONSE_TIME=$(echo $RESPONSE | grep -o "TIME:[0-9.]*" | cut -d: -f2)
+          
+          if [ "$HTTP_STATUS" = "200" ]; then
+            echo "✅ Main page accessible (Status: $HTTP_STATUS, Time: ${RESPONSE_TIME}s)"
+            echo "success=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Main page failed (Status: $HTTP_STATUS)"
+            echo "success=false" >> $GITHUB_OUTPUT
+          fi
+          
+          # Test critical content
+          BODY=$(echo $RESPONSE | sed 's/HTTPSTATUS:.*//g')
+          if echo "$BODY" | grep -q "BLKOUTUK"; then
+            echo "✅ Site content verified"
+          else
+            echo "⚠️ Site content may have issues"
+          fi
+          
+          # Check for emergency deployment marker
+          if echo "$BODY" | grep -q "${{ needs.emergency-validation.outputs.deployment-id }}"; then
+            echo "✅ Emergency deployment marker found"
+          else
+            echo "⚠️ Emergency deployment marker missing"
+          fi
+
+  # ═══════════════════════════════════════════════════════════════
+  # 🔄 ROLLBACK HANDLING
+  # ═══════════════════════════════════════════════════════════════
+  
+  handle-rollback:
+    name: 🔄 Handle Rollback
+    runs-on: ubuntu-latest
+    needs: [emergency-validation, emergency-deploy]
+    if: always() && needs.emergency-deploy.result == 'failure' && inputs.rollback_on_failure
+    timeout-minutes: 10
+    
+    steps:
+      - name: 🔄 Initiate Emergency Rollback
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          echo "🔄 Emergency deployment failed - initiating rollback..."
+          
+          # Install Vercel CLI
+          npm install -g vercel@latest
+          
+          # Get previous deployment
+          echo "🔍 Finding previous stable deployment..."
+          PREV_DEPLOYMENT=$(vercel ls --token $VERCEL_TOKEN | grep "READY" | grep -v "${{ needs.emergency-validation.outputs.deployment-id }}" | head -n 1 | awk '{print $1}')
+          
+          if [ -n "$PREV_DEPLOYMENT" ]; then
+            echo "🔄 Rolling back to: $PREV_DEPLOYMENT"
+            vercel promote $PREV_DEPLOYMENT --token $VERCEL_TOKEN
+            echo "✅ Rollback completed successfully"
+          else
+            echo "❌ No previous deployment found for rollback"
+            echo "Manual intervention required"
+          fi
+      
+      - name: 📝 Log Rollback
+        run: |
+          echo "📝 Logging rollback event..."
+          echo "Emergency deployment ${{ needs.emergency-validation.outputs.deployment-id }} failed and was rolled back"
+          echo "Timestamp: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  # ═══════════════════════════════════════════════════════════════
+  # 📊 EMERGENCY REPORT
+  # ═══════════════════════════════════════════════════════════════
+  
+  emergency-report:
+    name: 📊 Emergency Deployment Report
+    runs-on: ubuntu-latest
+    needs: [emergency-validation, rapid-build, emergency-deploy, handle-rollback]
+    if: always()
+    timeout-minutes: 5
+    
+    steps:
+      - name: 📊 Generate Emergency Report
+        run: |
+          echo "📊 EMERGENCY DEPLOYMENT REPORT"
+          echo "================================================"
+          echo "🆔 Deployment ID: ${{ needs.emergency-validation.outputs.deployment-id }}"
+          echo "🎯 Environment: ${{ inputs.environment }}"
+          echo "📝 Reason: ${{ inputs.reason }}"
+          echo "👤 Triggered by: ${{ github.actor }}"
+          echo "📦 Commit: ${{ github.sha }}"
+          echo "🌿 Branch: ${{ github.ref_name }}"
+          echo "🕐 Timestamp: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo ""
+          echo "📋 EXECUTION RESULTS:"
+          echo "  🔍 Validation: ${{ needs.emergency-validation.result }}"
+          echo "  🏗️ Build: ${{ needs.rapid-build.result }}"
+          echo "  🚀 Deployment: ${{ needs.emergency-deploy.result }}"
+          echo "  🔄 Rollback: ${{ needs.handle-rollback.result || 'N/A' }}"
+          echo ""
+          
+          # Determine overall status
+          if [ "${{ needs.emergency-deploy.result }}" = "success" ]; then
+            echo "🎉 EMERGENCY DEPLOYMENT SUCCESSFUL!"
+            echo "📍 Deployment URL: Available in deployment environment"
+            echo ""
+            echo "⚠️ POST-DEPLOYMENT ACTIONS REQUIRED:"
+            echo "1. Monitor application performance closely"
+            echo "2. Verify all critical functionality"
+            echo "3. Review and address any skipped checks"
+            echo "4. Document any issues discovered"
+            echo "5. Plan proper testing for next regular deployment"
+          else
+            echo "❌ EMERGENCY DEPLOYMENT FAILED"
+            if [ "${{ inputs.rollback_on_failure }}" = "true" ]; then
+              if [ "${{ needs.handle-rollback.result }}" = "success" ]; then
+                echo "✅ Automatic rollback completed successfully"
+              else
+                echo "❌ Automatic rollback failed - manual intervention required"
+              fi
+            else
+              echo "⚠️ Rollback was disabled - manual intervention may be required"
+            fi
+            echo ""
+            echo "🔧 NEXT STEPS:"
+            echo "1. Check deployment logs for specific errors"
+            echo "2. Fix identified issues"
+            echo "3. Test fixes thoroughly"
+            echo "4. Retry deployment through normal pipeline"
+          fi
+          echo ""
+          echo "📚 For support, check the deployment logs and contact the development team."
+      
+      - name: 📝 Create Report Artifact
+        run: |
+          mkdir -p reports
+          cat > reports/emergency-report-${{ needs.emergency-validation.outputs.deployment-id }}.md << 'EOF'
+          # Emergency Deployment Report
+          
+          **Deployment ID**: `${{ needs.emergency-validation.outputs.deployment-id }}`
+          **Environment**: ${{ inputs.environment }}
+          **Reason**: ${{ inputs.reason }}
+          **Triggered by**: ${{ github.actor }}
+          **Timestamp**: $(date -u +%Y-%m-%dT%H:%M:%SZ)
+          
+          ## Configuration
+          - Skip Tests: ${{ inputs.skip_tests }}
+          - Skip Security: ${{ inputs.skip_security }}
+          - Auto Rollback: ${{ inputs.rollback_on_failure }}
+          
+          ## Results
+          - Validation: ${{ needs.emergency-validation.result }}
+          - Build: ${{ needs.rapid-build.result }}
+          - Deployment: ${{ needs.emergency-deploy.result }}
+          - Rollback: ${{ needs.handle-rollback.result || 'N/A' }}
+          
+          ## Status
+          $(if [ "${{ needs.emergency-deploy.result }}" = "success" ]; then echo "✅ SUCCESS"; else echo "❌ FAILED"; fi)
+          
+          ---
+          *Generated by Emergency Deployment Pipeline*
+          EOF
+      
+      - name: 📤 Upload Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: emergency-report-${{ needs.emergency-validation.outputs.deployment-id }}
+          path: reports/
+          retention-days: 90

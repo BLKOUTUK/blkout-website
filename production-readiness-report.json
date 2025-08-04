@@ -1,0 +1,467 @@
+{
+  "timestamp": "2025-08-04T02:51:17.687Z",
+  "duration": 5,
+  "summary": {
+    "total": 9,
+    "passed": 7,
+    "failed": 1,
+    "critical": 1,
+    "warnings": 23,
+    "successRate": 78,
+    "deploymentReady": false,
+    "deploymentRisk": "HIGH"
+  },
+  "deploymentBlockers": [
+    {
+      "name": "Mock Data Detection",
+      "success": false,
+      "critical": true,
+      "blocksDeployment": true,
+      "message": "6 critical mock data issues found",
+      "warnings": [
+        "components/blkout/BentoBoxLayout.tsx: 1 Debug console.log statements",
+        "components/blkout/CommunityEmailCapture.tsx: 2 Placeholder content",
+        "components/blkout/FullPageScrollytelling.backup.tsx: 5 Debug console.log statements",
+        "components/blkout/FullPageScrollytelling.current-backup.tsx: 3 Debug console.log statements",
+        "components/blkout/FullPageScrollytelling.tsx: 1 Debug console.log statements",
+        "components/blkout/FullPageScrollytelling.tsx: 4 Placeholder content",
+        "components/blkout/FullPageScrollytellingOptimized.tsx: 3 Debug console.log statements",
+        "components/blkout/FullPageScrollytellingOptimized.tsx: 4 Placeholder content",
+        "components/blkout/IvorChatbot.tsx: 1 Placeholder content",
+        "components/blkout/RetroImage.tsx: 1 Placeholder content"
+      ],
+      "details": {
+        "criticalIssues": [
+          "components/community/CommunityGateway.tsx: 4 Mock implementations",
+          "components/magazine/ArticleGrid.tsx: 3 Mock implementations",
+          "components/magazine/ArticlePage.tsx: 2 Mock implementations",
+          "components/magazine/MagazineHomepage.tsx: 6 Mock implementations",
+          "components/magazine/PlatformHomepage.tsx: 6 Mock implementations",
+          "components/newsroom/NewsroomEnhanced.tsx: 4 Mock implementations"
+        ],
+        "totalMatches": 95
+      }
+    }
+  ],
+  "criticalIssues": [
+    {
+      "name": "Mock Data Detection",
+      "success": false,
+      "critical": true,
+      "blocksDeployment": true,
+      "message": "6 critical mock data issues found",
+      "warnings": [
+        "components/blkout/BentoBoxLayout.tsx: 1 Debug console.log statements",
+        "components/blkout/CommunityEmailCapture.tsx: 2 Placeholder content",
+        "components/blkout/FullPageScrollytelling.backup.tsx: 5 Debug console.log statements",
+        "components/blkout/FullPageScrollytelling.current-backup.tsx: 3 Debug console.log statements",
+        "components/blkout/FullPageScrollytelling.tsx: 1 Debug console.log statements",
+        "components/blkout/FullPageScrollytelling.tsx: 4 Placeholder content",
+        "components/blkout/FullPageScrollytellingOptimized.tsx: 3 Debug console.log statements",
+        "components/blkout/FullPageScrollytellingOptimized.tsx: 4 Placeholder content",
+        "components/blkout/IvorChatbot.tsx: 1 Placeholder content",
+        "components/blkout/RetroImage.tsx: 1 Placeholder content"
+      ],
+      "details": {
+        "criticalIssues": [
+          "components/community/CommunityGateway.tsx: 4 Mock implementations",
+          "components/magazine/ArticleGrid.tsx: 3 Mock implementations",
+          "components/magazine/ArticlePage.tsx: 2 Mock implementations",
+          "components/magazine/MagazineHomepage.tsx: 6 Mock implementations",
+          "components/magazine/PlatformHomepage.tsx: 6 Mock implementations",
+          "components/newsroom/NewsroomEnhanced.tsx: 4 Mock implementations"
+        ],
+        "totalMatches": 95
+      }
+    }
+  ],
+  "performanceIssues": [],
+  "tests": [
+    {
+      "name": "Environment Configuration",
+      "success": true,
+      "critical": true,
+      "blocksDeployment": false,
+      "message": "Environment configuration valid",
+      "warnings": [
+        "Development URLs found in production config: VITE_FALLBACK_IVOR_URL, VITE_FALLBACK_EVENTS_URL"
+      ],
+      "duration": 0
+    },
+    {
+      "name": "Mock Data Detection",
+      "success": false,
+      "critical": true,
+      "blocksDeployment": true,
+      "message": "6 critical mock data issues found",
+      "warnings": [
+        "components/blkout/BentoBoxLayout.tsx: 1 Debug console.log statements",
+        "components/blkout/CommunityEmailCapture.tsx: 2 Placeholder content",
+        "components/blkout/FullPageScrollytelling.backup.tsx: 5 Debug console.log statements",
+        "components/blkout/FullPageScrollytelling.current-backup.tsx: 3 Debug console.log statements",
+        "components/blkout/FullPageScrollytelling.tsx: 1 Debug console.log statements",
+        "components/blkout/FullPageScrollytelling.tsx: 4 Placeholder content",
+        "components/blkout/FullPageScrollytellingOptimized.tsx: 3 Debug console.log statements",
+        "components/blkout/FullPageScrollytellingOptimized.tsx: 4 Placeholder content",
+        "components/blkout/IvorChatbot.tsx: 1 Placeholder content",
+        "components/blkout/RetroImage.tsx: 1 Placeholder content"
+      ],
+      "details": {
+        "criticalIssues": [
+          "components/community/CommunityGateway.tsx: 4 Mock implementations",
+          "components/magazine/ArticleGrid.tsx: 3 Mock implementations",
+          "components/magazine/ArticlePage.tsx: 2 Mock implementations",
+          "components/magazine/MagazineHomepage.tsx: 6 Mock implementations",
+          "components/magazine/PlatformHomepage.tsx: 6 Mock implementations",
+          "components/newsroom/NewsroomEnhanced.tsx: 4 Mock implementations"
+        ],
+        "totalMatches": 95
+      },
+      "duration": 14
+    },
+    {
+      "name": "Build System Validation",
+      "success": true,
+      "critical": true,
+      "blocksDeployment": false,
+      "message": "Build system functional",
+      "warnings": [],
+      "duration": 5029
+    },
+    {
+      "name": "Security Validation",
+      "success": true,
+      "critical": true,
+      "blocksDeployment": false,
+      "message": "No critical security vulnerabilities detected",
+      "warnings": [
+        "components/blkout/BentoBoxLayout.tsx: Potential credential exposure (1 occurrences)",
+        "components/blkout/EnhancedQuiz.tsx: Potential credential exposure (4 occurrences)",
+        "components/blkout/FullPageScrollytelling.backup.tsx: Potential credential exposure (25 occurrences)",
+        "components/blkout/FullPageScrollytelling.current-backup.tsx: Potential credential exposure (2 occurrences)",
+        "components/blkout/FullPageScrollytelling.tsx: Potential credential exposure (9 occurrences)",
+        "components/blkout/FullPageScrollytellingOptimized.tsx: Potential credential exposure (7 occurrences)",
+        "components/blkout/HeroVideoCarousel.tsx: Potential credential exposure (3 occurrences)",
+        "components/blkout/HorizontalScrollPrinciples.tsx: Potential credential exposure (3 occurrences)",
+        "components/blkout/IntegrationDashboard.tsx: Potential credential exposure (3 occurrences)",
+        "components/blkout/InteractiveRevelation.tsx: Potential credential exposure (1 occurrences)"
+      ],
+      "details": {
+        "criticalVulnerabilities": [],
+        "securityWarnings": [
+          "components/blkout/BentoBoxLayout.tsx: Potential credential exposure (1 occurrences)",
+          "components/blkout/EnhancedQuiz.tsx: Potential credential exposure (4 occurrences)",
+          "components/blkout/FullPageScrollytelling.backup.tsx: Potential credential exposure (25 occurrences)",
+          "components/blkout/FullPageScrollytelling.current-backup.tsx: Potential credential exposure (2 occurrences)",
+          "components/blkout/FullPageScrollytelling.tsx: Potential credential exposure (9 occurrences)",
+          "components/blkout/FullPageScrollytellingOptimized.tsx: Potential credential exposure (7 occurrences)",
+          "components/blkout/HeroVideoCarousel.tsx: Potential credential exposure (3 occurrences)",
+          "components/blkout/HorizontalScrollPrinciples.tsx: Potential credential exposure (3 occurrences)",
+          "components/blkout/IntegrationDashboard.tsx: Potential credential exposure (3 occurrences)",
+          "components/blkout/InteractiveRevelation.tsx: Potential credential exposure (1 occurrences)",
+          "components/blkout/IvorChatbot.tsx: Potential credential exposure (2 occurrences)",
+          "components/blkout/MediaGallery.tsx: Potential credential exposure (1 occurrences)",
+          "components/blkout/ParallaxCommunityValues.tsx: Potential credential exposure (1 occurrences)",
+          "components/blkout/ProjectHub.tsx: Potential credential exposure (2 occurrences)",
+          "components/blkout/SimpleScrollytelling.tsx: Potential credential exposure (2 occurrences)",
+          "components/community/CommunityGateway.tsx: Potential credential exposure (1 occurrences)",
+          "components/community/CommunityGatewayEnhanced.tsx: Potential credential exposure (4 occurrences)",
+          "components/community/HubReports.tsx: Potential credential exposure (7 occurrences)",
+          "components/community/JoinDiscussionEnhanced.tsx: Potential credential exposure (7 occurrences)",
+          "components/events/EventsPageIntegrated.tsx: Potential credential exposure (3 occurrences)",
+          "components/ivor/IVORInterfaceEnhanced.tsx: Potential credential exposure (10 occurrences)",
+          "components/layout/PlatformFooter.tsx: Potential credential exposure (5 occurrences)",
+          "components/layout/PrimaryNavigation.tsx: Potential credential exposure (2 occurrences)",
+          "components/layout/PrimaryNavigationEnhanced.tsx: Potential credential exposure (4 occurrences)",
+          "components/magazine/ArticleGrid.tsx: Potential credential exposure (3 occurrences)",
+          "components/magazine/ArticlePage.tsx: Potential credential exposure (3 occurrences)",
+          "components/magazine/MagazineHomepage.tsx: Potential credential exposure (9 occurrences)",
+          "components/magazine/MagazineHomepageEnhanced.tsx: Potential credential exposure (10 occurrences)",
+          "components/magazine/PlatformHomepage.tsx: Potential credential exposure (9 occurrences)",
+          "components/magazine/StoriesPageEnhanced.tsx: Potential credential exposure (3 occurrences)",
+          "components/movement/MovementIntro.tsx: Potential credential exposure (2 occurrences)",
+          "components/movement/MovementIntroEnhanced.tsx: Potential credential exposure (2 occurrences)",
+          "components/newsroom/NewsroomEnhanced.tsx: Potential credential exposure (4 occurrences)",
+          "hooks/useLayoutPreference.ts: Potential credential exposure (4 occurrences)",
+          "lib/constants.ts: Potential credential exposure (1 occurrences)"
+        ]
+      },
+      "duration": 6
+    },
+    {
+      "name": "Asset Performance",
+      "success": false,
+      "critical": false,
+      "message": "Large total bundle size: 221980KB (recommended: <5MB); Excessive image assets: 123204KB (consider optimization)",
+      "warnings": [
+        "Large assets found: images/BLACK.png (4262KB), images/Finalfinalwelcome ‑ Made With Flexclip.mp4 (7722KB), images/LIBERATION.png (1341KB), images/WELL DEFINED FINAL -.png (1314KB), images/animated graded fist.mp4 (1128KB), images/blkoutuk.com v3/John Henry.png (5881KB), images/blkoutuk.com v3/ancientlove.png (10295KB), images/blkoutuk.com v3/capacity.png (10730KB), images/blkoutuk.com v3/cube intro.mp4 (7764KB), images/blkoutuk.com v3/cube2 intro.mp4 (9138KB), images/blkoutuk.com v3/facecard.png (5073KB), images/blkoutuk.com v3/goldsmile  intro.mp4 (2884KB), images/blkoutuk.com v3/roller intro.mp4 (5025KB), images/blkoutuk.com v3/seat with baldwin.png (1582KB), images/blkoutuk.com v3/sunrise.png (2769KB), images/blkoutuk.com v3/travel intro.mp4 (6543KB), images/blkoutuk.com v3/tumblr_8d6d12538284c9062fca59225b80b35f_2b2dc944_500.webp (2129KB), images/blkoutuk.com v3/tumblr_b0d9293f446c8df8164cbce9ac26c3fa_b7a851c9_500.webp (1895KB), images/blkoutuk.com v3/tumblr_b565ed3f0ba2877ad21be3e6609cdb45_94de8fbb_540.webp (3012KB), images/blkoutuk.com v3/tumblr_pvb0gnG0bi1rchkzlo2_500.webp (1211KB), images/blkoutuk.com v3/tumblr_rcamhkmfNl1qhr6j3.mp4 (1947KB), images/blkoutvalues.png (1419KB), images/imagine.png (1766KB), images/ivorintrovid.mp4 (1706KB), images/men-.png (1396KB), images/out -.png (3359KB), images/photo collage.png (5709KB), images/projects fist.gif (20695KB), images/projects.png (1034KB), images/realness uleashed.mp4 (4133KB), images/squared/BlackSQUARED.png (2105KB), images/squared/Finalfinalwelcome SQUARED.mp4 (3719KB), images/squared/Story Powered Squared).mp4 (5261KB), images/squared/WELLDEF_SQUARED.png (1658KB), images/squared/capacitySQUARED.png (2744KB), images/squared/facecard SQUARED.png (1484KB), images/squared/imagine SQUARED.png (4262KB), images/squared/kissingtimeSQUARED.png (4334KB), images/squared/menSQUARED.png (2140KB), images/squared/outSQUARED.png (2458KB), images/squared/photo collage Video.mp4 (15051KB), images/squared/queerSQUARED.PNG (1577KB), images/squared/seat with baldwin SQUARED.png (1371KB), images/squared/story powered SQUARED).mp4 (14615KB), images/squared/sunrise SQUARED.png (1367KB), images/story powered full width (Video).mp4 (11352KB)"
+      ],
+      "details": {
+        "totalSize": 221980,
+        "imageSize": 123204,
+        "largeAssets": [
+          {
+            "file": "images/BLACK.png",
+            "size": 4262
+          },
+          {
+            "file": "images/Finalfinalwelcome ‑ Made With Flexclip.mp4",
+            "size": 7722
+          },
+          {
+            "file": "images/LIBERATION.png",
+            "size": 1341
+          },
+          {
+            "file": "images/WELL DEFINED FINAL -.png",
+            "size": 1314
+          },
+          {
+            "file": "images/animated graded fist.mp4",
+            "size": 1128
+          },
+          {
+            "file": "images/blkoutuk.com v3/John Henry.png",
+            "size": 5881
+          },
+          {
+            "file": "images/blkoutuk.com v3/ancientlove.png",
+            "size": 10295
+          },
+          {
+            "file": "images/blkoutuk.com v3/capacity.png",
+            "size": 10730
+          },
+          {
+            "file": "images/blkoutuk.com v3/cube intro.mp4",
+            "size": 7764
+          },
+          {
+            "file": "images/blkoutuk.com v3/cube2 intro.mp4",
+            "size": 9138
+          },
+          {
+            "file": "images/blkoutuk.com v3/facecard.png",
+            "size": 5073
+          },
+          {
+            "file": "images/blkoutuk.com v3/goldsmile  intro.mp4",
+            "size": 2884
+          },
+          {
+            "file": "images/blkoutuk.com v3/roller intro.mp4",
+            "size": 5025
+          },
+          {
+            "file": "images/blkoutuk.com v3/seat with baldwin.png",
+            "size": 1582
+          },
+          {
+            "file": "images/blkoutuk.com v3/sunrise.png",
+            "size": 2769
+          },
+          {
+            "file": "images/blkoutuk.com v3/travel intro.mp4",
+            "size": 6543
+          },
+          {
+            "file": "images/blkoutuk.com v3/tumblr_8d6d12538284c9062fca59225b80b35f_2b2dc944_500.webp",
+            "size": 2129
+          },
+          {
+            "file": "images/blkoutuk.com v3/tumblr_b0d9293f446c8df8164cbce9ac26c3fa_b7a851c9_500.webp",
+            "size": 1895
+          },
+          {
+            "file": "images/blkoutuk.com v3/tumblr_b565ed3f0ba2877ad21be3e6609cdb45_94de8fbb_540.webp",
+            "size": 3012
+          },
+          {
+            "file": "images/blkoutuk.com v3/tumblr_pvb0gnG0bi1rchkzlo2_500.webp",
+            "size": 1211
+          },
+          {
+            "file": "images/blkoutuk.com v3/tumblr_rcamhkmfNl1qhr6j3.mp4",
+            "size": 1947
+          },
+          {
+            "file": "images/blkoutvalues.png",
+            "size": 1419
+          },
+          {
+            "file": "images/imagine.png",
+            "size": 1766
+          },
+          {
+            "file": "images/ivorintrovid.mp4",
+            "size": 1706
+          },
+          {
+            "file": "images/men-.png",
+            "size": 1396
+          },
+          {
+            "file": "images/out -.png",
+            "size": 3359
+          },
+          {
+            "file": "images/photo collage.png",
+            "size": 5709
+          },
+          {
+            "file": "images/projects fist.gif",
+            "size": 20695
+          },
+          {
+            "file": "images/projects.png",
+            "size": 1034
+          },
+          {
+            "file": "images/realness uleashed.mp4",
+            "size": 4133
+          },
+          {
+            "file": "images/squared/BlackSQUARED.png",
+            "size": 2105
+          },
+          {
+            "file": "images/squared/Finalfinalwelcome SQUARED.mp4",
+            "size": 3719
+          },
+          {
+            "file": "images/squared/Story Powered Squared).mp4",
+            "size": 5261
+          },
+          {
+            "file": "images/squared/WELLDEF_SQUARED.png",
+            "size": 1658
+          },
+          {
+            "file": "images/squared/capacitySQUARED.png",
+            "size": 2744
+          },
+          {
+            "file": "images/squared/facecard SQUARED.png",
+            "size": 1484
+          },
+          {
+            "file": "images/squared/imagine SQUARED.png",
+            "size": 4262
+          },
+          {
+            "file": "images/squared/kissingtimeSQUARED.png",
+            "size": 4334
+          },
+          {
+            "file": "images/squared/menSQUARED.png",
+            "size": 2140
+          },
+          {
+            "file": "images/squared/outSQUARED.png",
+            "size": 2458
+          },
+          {
+            "file": "images/squared/photo collage Video.mp4",
+            "size": 15051
+          },
+          {
+            "file": "images/squared/queerSQUARED.PNG",
+            "size": 1577
+          },
+          {
+            "file": "images/squared/seat with baldwin SQUARED.png",
+            "size": 1371
+          },
+          {
+            "file": "images/squared/story powered SQUARED).mp4",
+            "size": 14615
+          },
+          {
+            "file": "images/squared/sunrise SQUARED.png",
+            "size": 1367
+          },
+          {
+            "file": "images/story powered full width (Video).mp4",
+            "size": 11352
+          }
+        ],
+        "imageCount": 47
+      },
+      "duration": 3
+    },
+    {
+      "name": "Backend Integration",
+      "success": true,
+      "critical": false,
+      "blocksDeployment": false,
+      "message": "1/3 services online. IVOR Backend: ✅ Online (200), Events API: ❌ Offline, Newsroom API: ❌ Offline",
+      "warnings": [],
+      "details": {
+        "onlineServices": 1,
+        "offlineServices": 2,
+        "serviceResults": [
+          "IVOR Backend: ✅ Online (200)",
+          "Events API: ❌ Offline",
+          "Newsroom API: ❌ Offline"
+        ]
+      },
+      "duration": 51
+    },
+    {
+      "name": "TypeScript Validation",
+      "success": true,
+      "critical": false,
+      "message": "TypeScript validation passed",
+      "warnings": [
+        "TypeScript tool configuration issue - manual validation required"
+      ],
+      "duration": 357
+    },
+    {
+      "name": "Accessibility Validation",
+      "success": true,
+      "critical": false,
+      "message": "No major accessibility issues found",
+      "warnings": [],
+      "details": {
+        "a11yIssues": []
+      },
+      "duration": 13
+    },
+    {
+      "name": "Monitoring Setup",
+      "success": true,
+      "critical": false,
+      "message": "Monitoring setup: 2 scripts available",
+      "warnings": [],
+      "duration": 0
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": "CRITICAL",
+      "action": "Address all critical issues before deployment",
+      "details": "Critical issues can cause complete application failure in production"
+    },
+    {
+      "priority": "HIGH",
+      "action": "Fix deployment blocking issues",
+      "details": "These issues will prevent successful deployment"
+    },
+    {
+      "priority": "MEDIUM",
+      "action": "Address excessive warnings",
+      "details": "High warning count indicates potential stability issues"
+    },
+    {
+      "priority": "LOW",
+      "action": "Set up continuous monitoring",
+      "details": "Implement performance and error monitoring for production"
+    },
+    {
+      "priority": "LOW",
+      "action": "Establish rollback procedures",
+      "details": "Prepare rollback plan in case of deployment issues"
+    }
+  ]
+}

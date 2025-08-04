@@ -1,0 +1,518 @@
+name: 🔍 Continuous Monitoring & Health Checks
+
+on:
+  schedule:
+    # Every 15 minutes during business hours (UTC)
+    - cron: '*/15 8-20 * * 1-5'
+    # Every hour during off-hours
+    - cron: '0 */1 * * *'
+  workflow_dispatch:
+    inputs:
+      check_type:
+        description: 'Type of health check to run'
+        required: false
+        type: choice
+        options:
+          - all
+          - frontend
+          - backend
+          - performance
+          - security
+        default: 'all'
+      environment:
+        description: 'Environment to check'
+        required: false
+        type: choice
+        options:
+          - production
+          - staging
+          - all
+        default: 'production'
+
+env:
+  NODE_VERSION: '20'
+
+permissions:
+  contents: read
+  issues: write
+  actions: write
+
+concurrency:
+  group: monitoring-${{ github.workflow }}-${{ inputs.environment || 'scheduled' }}
+  cancel-in-progress: true
+
+jobs:
+  # ═══════════════════════════════════════════════════════════════
+  # 🌐 FRONTEND HEALTH CHECKS
+  # ═══════════════════════════════════════════════════════════════
+  
+  frontend-health:
+    name: 🌐 Frontend Health Monitoring
+    runs-on: ubuntu-latest
+    if: inputs.check_type == 'all' || inputs.check_type == 'frontend' || github.event_name == 'schedule'
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        environment: [production, staging]
+      fail-fast: false
+    
+    outputs:
+      production-status: ${{ steps.check-prod.outputs.status }}
+      staging-status: ${{ steps.check-staging.outputs.status }}
+    
+    steps:
+      - name: 🌐 Check Frontend Health
+        id: check-${{ matrix.environment }}
+        run: |
+          echo "🌐 Checking ${{ matrix.environment }} frontend health..."
+          
+          # Set URL based on environment
+          if [ "${{ matrix.environment }}" = "production" ]; then
+            URL="https://blkout-website.vercel.app"
+          else
+            URL="https://blkout-website-staging.vercel.app"  # Adjust as needed
+          fi
+          
+          echo "🔍 Testing: $URL"
+          
+          # Comprehensive health check
+          RESPONSE=$(curl -s -w "HTTPSTATUS:%{http_code};TIME:%{time_total};SIZE:%{size_download}" "$URL" || echo "HTTPSTATUS:000;TIME:999;SIZE:0")
+          
+          HTTP_STATUS=$(echo $RESPONSE | grep -o "HTTPSTATUS:[0-9]*" | cut -d: -f2)
+          RESPONSE_TIME=$(echo $RESPONSE | grep -o "TIME:[0-9.]*" | cut -d: -f2)
+          RESPONSE_SIZE=$(echo $RESPONSE | grep -o "SIZE:[0-9]*" | cut -d: -f2)
+          
+          echo "📊 Results:"
+          echo "  Status: $HTTP_STATUS"
+          echo "  Time: ${RESPONSE_TIME}s"
+          echo "  Size: ${RESPONSE_SIZE} bytes"
+          
+          # Evaluate health
+          HEALTH_STATUS="healthy"
+          ISSUES=()
+          
+          if [ "$HTTP_STATUS" != "200" ]; then
+            HEALTH_STATUS="unhealthy"
+            ISSUES+=("HTTP Status: $HTTP_STATUS")
+          fi
+          
+          if (( $(echo "$RESPONSE_TIME > 5.0" | bc -l) )); then
+            HEALTH_STATUS="degraded"
+            ISSUES+=("Slow response: ${RESPONSE_TIME}s")
+          fi
+          
+          if [ "$RESPONSE_SIZE" -lt 1000 ]; then
+            HEALTH_STATUS="degraded"
+            ISSUES+=("Small response size: $RESPONSE_SIZE bytes")
+          fi
+          
+          # Check content
+          BODY=$(echo $RESPONSE | sed 's/HTTPSTATUS:.*//g')
+          if ! echo "$BODY" | grep -q "BLKOUTUK"; then
+            HEALTH_STATUS="degraded"
+            ISSUES+=("Missing expected content")
+          fi
+          
+          echo "status=$HEALTH_STATUS" >> $GITHUB_OUTPUT
+          echo "issues=${ISSUES[*]}" >> $GITHUB_OUTPUT
+          echo "url=$URL" >> $GITHUB_OUTPUT
+          echo "response_time=$RESPONSE_TIME" >> $GITHUB_OUTPUT
+          
+          if [ "$HEALTH_STATUS" = "healthy" ]; then
+            echo "✅ ${{ matrix.environment }} frontend is healthy"
+          else
+            echo "⚠️ ${{ matrix.environment }} frontend has issues: ${ISSUES[*]}"
+          fi
+      
+      - name: 🔍 Check Critical Routes
+        run: |
+          BASE_URL=$(if [ "${{ matrix.environment }}" = "production" ]; then echo "https://blkout-website.vercel.app"; else echo "https://blkout-website-staging.vercel.app"; fi)
+          
+          echo "🔍 Testing critical routes on ${{ matrix.environment }}..."
+          
+          ROUTES=("/newsroom" "/magazine" "/community" "/events")
+          FAILED_ROUTES=()
+          
+          for route in "${ROUTES[@]}"; do
+            echo "Testing: $BASE_URL$route"
+            
+            if curl -f -s "$BASE_URL$route" > /dev/null; then
+              echo "  ✅ $route"
+            else
+              echo "  ❌ $route"
+              FAILED_ROUTES+=("$route")
+            fi
+          done
+          
+          if [ ${#FAILED_ROUTES[@]} -eq 0 ]; then
+            echo "✅ All critical routes accessible"
+          else
+            echo "⚠️ Failed routes: ${FAILED_ROUTES[*]}"
+          fi
+
+  # ═══════════════════════════════════════════════════════════════
+  # 🔧 BACKEND SERVICES HEALTH
+  # ═══════════════════════════════════════════════════════════════
+  
+  backend-health:
+    name: 🔧 Backend Services Health
+    runs-on: ubuntu-latest
+    if: inputs.check_type == 'all' || inputs.check_type == 'backend' || github.event_name == 'schedule'
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        service: [newsroom, ivor, events]
+      fail-fast: false
+    
+    steps:
+      - name: 🔧 Check ${{ matrix.service }} Service
+        id: check-service
+        run: |
+          echo "🔧 Checking ${{ matrix.service }} service health..."
+          
+          # Service URLs (from memory)
+          case "${{ matrix.service }}" in
+            newsroom)
+              SERVICE_URL="https://blkout-newsroom-backend-ptfjb4krx-robs-projects-54d653d3.vercel.app"
+              ;;
+            ivor)
+              SERVICE_URL="https://blkout-ivor-fresh-jklmotmfs-robs-projects-54d653d3.vercel.app"
+              ;;
+            events)
+              SERVICE_URL="https://blkout-events-service.vercel.app"  # Placeholder
+              ;;
+          esac
+          
+          echo "🔍 Testing: $SERVICE_URL"
+          
+          # Test health endpoint
+          HEALTH_RESPONSE=$(curl -s -w "HTTPSTATUS:%{http_code}" "$SERVICE_URL/health" || echo "HTTPSTATUS:000")
+          HEALTH_STATUS=$(echo $HEALTH_RESPONSE | grep -o "HTTPSTATUS:[0-9]*" | cut -d: -f2)
+          
+          echo "📊 Health endpoint status: $HEALTH_STATUS"
+          
+          # Test API endpoints
+          case "${{ matrix.service }}" in
+            newsroom)
+              API_RESPONSE=$(curl -s -w "HTTPSTATUS:%{http_code}" "$SERVICE_URL/api/articles" || echo "HTTPSTATUS:000")
+              ;;
+            ivor)
+              API_RESPONSE=$(curl -s -w "HTTPSTATUS:%{http_code}" "$SERVICE_URL/api/capabilities" || echo "HTTPSTATUS:000")
+              ;;
+            events)
+              API_RESPONSE=$(curl -s -w "HTTPSTATUS:%{http_code}" "$SERVICE_URL/api/events" || echo "HTTPSTATUS:000")
+              ;;
+          esac
+          
+          API_STATUS=$(echo $API_RESPONSE | grep -o "HTTPSTATUS:[0-9]*" | cut -d: -f2)
+          echo "📊 API endpoint status: $API_STATUS"
+          
+          # Evaluate overall health
+          if [ "$HEALTH_STATUS" = "200" ] && [ "$API_STATUS" = "200" ]; then
+            echo "✅ ${{ matrix.service }} service is healthy"
+            echo "status=healthy" >> $GITHUB_OUTPUT
+          elif [ "$HEALTH_STATUS" = "200" ] || [ "$API_STATUS" = "200" ]; then
+            echo "⚠️ ${{ matrix.service }} service is partially healthy"
+            echo "status=degraded" >> $GITHUB_OUTPUT
+          else
+            echo "❌ ${{ matrix.service }} service is unhealthy"
+            echo "status=unhealthy" >> $GITHUB_OUTPUT
+          fi
+          
+          echo "url=$SERVICE_URL" >> $GITHUB_OUTPUT
+
+  # ═══════════════════════════════════════════════════════════════
+  # ⚡ PERFORMANCE MONITORING
+  # ═══════════════════════════════════════════════════════════════
+  
+  performance-check:
+    name: ⚡ Performance Monitoring
+    runs-on: ubuntu-latest
+    if: inputs.check_type == 'all' || inputs.check_type == 'performance' || github.event_name == 'schedule'
+    timeout-minutes: 10
+    
+    steps:
+      - name: 📋 Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: 🏗️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      
+      - name: ⚡ Performance Audit
+        run: |
+          echo "⚡ Running performance audit..."
+          
+          # Install Lighthouse CLI
+          npm install -g @lhci/cli@0.12.x
+          
+          # Run Lighthouse audit
+          PROD_URL="https://blkout-website.vercel.app"
+          
+          echo "🔍 Auditing: $PROD_URL"
+          
+          # Create lighthouse config
+          cat > lighthouse.config.js << 'EOF'
+          module.exports = {
+            ci: {
+              collect: {
+                url: ['https://blkout-website.vercel.app'],
+                numberOfRuns: 3,
+                settings: {
+                  preset: 'desktop',
+                  chromeFlags: '--no-sandbox --headless'
+                }
+              },
+              assert: {
+                assertions: {
+                  'categories:performance': ['warn', {minScore: 0.7}],
+                  'categories:accessibility': ['error', {minScore: 0.9}],
+                  'categories:best-practices': ['warn', {minScore: 0.8}],
+                  'categories:seo': ['warn', {minScore: 0.8}]
+                }
+              }
+            }
+          };
+          EOF
+          
+          # Run audit (allow failures for monitoring)
+          lhci autorun --config=lighthouse.config.js || true
+          
+          echo "✅ Performance audit completed"
+      
+      - name: 📊 Resource Timing Check
+        run: |
+          echo "📊 Checking resource loading times..."
+          
+          PROD_URL="https://blkout-website.vercel.app"
+          
+          # Use curl to get timing info
+          curl -w "
+          📊 Performance Metrics:
+            DNS Lookup:     %{time_namelookup}s
+            Connect:        %{time_connect}s
+            SSL Handshake:  %{time_appconnect}s
+            Pre-transfer:   %{time_pretransfer}s
+            Redirect:       %{time_redirect}s
+            Start Transfer: %{time_starttransfer}s
+            Total:          %{time_total}s
+            Size:           %{size_download} bytes
+          " -s -o /dev/null "$PROD_URL"
+
+  # ═══════════════════════════════════════════════════════════════
+  # 🔒 SECURITY MONITORING
+  # ═══════════════════════════════════════════════════════════════
+  
+  security-check:
+    name: 🔒 Security Monitoring
+    runs-on: ubuntu-latest
+    if: inputs.check_type == 'all' || inputs.check_type == 'security' || github.event_name == 'schedule'
+    timeout-minutes: 10
+    
+    steps:
+      - name: 📋 Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: 🔒 Security Headers Check
+        run: |
+          echo "🔒 Checking security headers..."
+          
+          PROD_URL="https://blkout-website.vercel.app"
+          
+          echo "🔍 Testing security headers for: $PROD_URL"
+          
+          # Get headers
+          HEADERS=$(curl -s -I "$PROD_URL")
+          
+          echo "📋 Security Headers Analysis:"
+          
+          # Check for important security headers
+          if echo "$HEADERS" | grep -qi "strict-transport-security"; then
+            echo "  ✅ HSTS Header present"
+          else
+            echo "  ⚠️ HSTS Header missing"
+          fi
+          
+          if echo "$HEADERS" | grep -qi "x-frame-options"; then
+            echo "  ✅ X-Frame-Options present"
+          else
+            echo "  ⚠️ X-Frame-Options missing"
+          fi
+          
+          if echo "$HEADERS" | grep -qi "x-content-type-options"; then
+            echo "  ✅ X-Content-Type-Options present"
+          else
+            echo "  ⚠️ X-Content-Type-Options missing"
+          fi
+          
+          if echo "$HEADERS" | grep -qi "content-security-policy"; then
+            echo "  ✅ CSP Header present"
+          else
+            echo "  ⚠️ CSP Header missing"
+          fi
+      
+      - name: 🔍 SSL Certificate Check
+        run: |
+          echo "🔍 Checking SSL certificate..."
+          
+          DOMAIN="blkout-website.vercel.app"
+          
+          # Check SSL certificate expiration
+          CERT_INFO=$(echo | openssl s_client -servername $DOMAIN -connect $DOMAIN:443 2>/dev/null | openssl x509 -noout -dates)
+          
+          echo "📋 SSL Certificate Info:"
+          echo "$CERT_INFO"
+          
+          # Extract expiration date
+          EXPIRY=$(echo "$CERT_INFO" | grep "notAfter" | cut -d= -f2)
+          EXPIRY_EPOCH=$(date -d "$EXPIRY" +%s)
+          CURRENT_EPOCH=$(date +%s)
+          
+          DAYS_UNTIL_EXPIRY=$(( (EXPIRY_EPOCH - CURRENT_EPOCH) / 86400 ))
+          
+          echo "📅 Certificate expires in $DAYS_UNTIL_EXPIRY days"
+          
+          if [ $DAYS_UNTIL_EXPIRY -gt 30 ]; then
+            echo "✅ SSL certificate is valid"
+          elif [ $DAYS_UNTIL_EXPIRY -gt 7 ]; then
+            echo "⚠️ SSL certificate expires soon ($DAYS_UNTIL_EXPIRY days)"
+          else
+            echo "❌ SSL certificate expires very soon ($DAYS_UNTIL_EXPIRY days)"
+          fi
+
+  # ═══════════════════════════════════════════════════════════════
+  # 📊 MONITORING REPORT
+  # ═══════════════════════════════════════════════════════════════
+  
+  monitoring-report:
+    name: 📊 Generate Monitoring Report
+    runs-on: ubuntu-latest
+    needs: [frontend-health, backend-health, performance-check, security-check]
+    if: always()
+    timeout-minutes: 5
+    
+    steps:
+      - name: 📊 Compile Monitoring Results
+        run: |
+          echo "📊 HEALTH MONITORING REPORT"
+          echo "================================================"
+          echo "🕐 Timestamp: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "🎯 Check Type: ${{ inputs.check_type || 'scheduled' }}"
+          echo "🌍 Environment: ${{ inputs.environment || 'all' }}"
+          echo ""
+          
+          echo "🌐 FRONTEND HEALTH:"
+          echo "  Production: ${{ needs.frontend-health.outputs.production-status || 'N/A' }}"
+          echo "  Staging: ${{ needs.frontend-health.outputs.staging-status || 'N/A' }}"
+          echo ""
+          
+          echo "🔧 BACKEND SERVICES:"
+          echo "  Overall Status: ${{ needs.backend-health.result || 'N/A' }}"
+          echo ""
+          
+          echo "⚡ PERFORMANCE:"
+          echo "  Check Status: ${{ needs.performance-check.result || 'N/A' }}"
+          echo ""
+          
+          echo "🔒 SECURITY:"
+          echo "  Check Status: ${{ needs.security-check.result || 'N/A' }}"
+          echo ""
+          
+          # Determine overall health
+          CRITICAL_ISSUES=0
+          
+          if [ "${{ needs.frontend-health.result }}" = "failure" ]; then
+            CRITICAL_ISSUES=$((CRITICAL_ISSUES + 1))
+          fi
+          
+          if [ "${{ needs.backend-health.result }}" = "failure" ]; then
+            CRITICAL_ISSUES=$((CRITICAL_ISSUES + 1))
+          fi
+          
+          echo "📈 OVERALL STATUS:"
+          if [ $CRITICAL_ISSUES -eq 0 ]; then
+            echo "  ✅ All systems operational"
+          elif [ $CRITICAL_ISSUES -eq 1 ]; then
+            echo "  ⚠️ Minor issues detected"
+          else
+            echo "  ❌ Multiple issues detected - investigation required"
+          fi
+          
+          echo ""
+          echo "📋 Next monitoring check: $(date -u -d '+15 minutes' +%Y-%m-%dT%H:%M:%SZ)"
+      
+      - name: 📝 Create Health Report
+        run: |
+          mkdir -p monitoring-reports
+          cat > monitoring-reports/health-report-$(date +%Y%m%d-%H%M).json << EOF
+          {
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "checkType": "${{ inputs.check_type || 'scheduled' }}",
+            "environment": "${{ inputs.environment || 'all' }}",
+            "results": {
+              "frontend": {
+                "status": "${{ needs.frontend-health.result || 'skipped' }}",
+                "production": "${{ needs.frontend-health.outputs.production-status || 'N/A' }}",
+                "staging": "${{ needs.frontend-health.outputs.staging-status || 'N/A' }}"
+              },
+              "backend": {
+                "status": "${{ needs.backend-health.result || 'skipped' }}"
+              },
+              "performance": {
+                "status": "${{ needs.performance-check.result || 'skipped' }}"
+              },
+              "security": {
+                "status": "${{ needs.security-check.result || 'skipped' }}"
+              }
+            },
+            "runNumber": "${{ github.run_number }}",
+            "runId": "${{ github.run_id }}"
+          }
+          EOF
+      
+      - name: 📤 Upload Health Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: health-report-$(date +%Y%m%d-%H%M)
+          path: monitoring-reports/
+          retention-days: 30
+      
+      - name: 🚨 Create Issue on Critical Failures
+        if: needs.frontend-health.result == 'failure' || needs.backend-health.result == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `🚨 Critical System Health Alert - ${new Date().toISOString()}`;
+            const body = `
+            ## 🚨 Critical Health Monitoring Alert
+            
+            **Timestamp**: ${new Date().toUTCString()}
+            **Run**: #${{ github.run_number }}
+            
+            ### Failed Components
+            ${needs.frontend-health.result === 'failure' ? '- 🌐 Frontend Health Check' : ''}
+            ${needs.backend-health.result === 'failure' ? '- 🔧 Backend Services' : ''}
+            
+            ### Actions Required
+            1. Check the [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) for detailed logs
+            2. Investigate failing components immediately
+            3. Consider emergency deployment if necessary
+            4. Update this issue with findings and resolution
+            
+            ### Monitoring Data
+            - Frontend Production: ${{ needs.frontend-health.outputs.production-status || 'N/A' }}
+            - Frontend Staging: ${{ needs.frontend-health.outputs.staging-status || 'N/A' }}
+            - Backend Status: ${{ needs.backend-health.result || 'N/A' }}
+            
+            ---
+            *Automatically generated by health monitoring system*
+            `;
+            
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['critical', 'monitoring', 'health-check']
+            });

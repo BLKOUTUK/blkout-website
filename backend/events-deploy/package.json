@@ -1,0 +1,16 @@
+{
+  "name": "blkout-events-backend",
+  "version": "1.0.0",
+  "description": "BLKOUT Events Calendar Backend - Production Ready",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

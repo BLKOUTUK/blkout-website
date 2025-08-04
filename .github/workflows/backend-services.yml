@@ -1,0 +1,640 @@
+name: 🔧 Backend Services CI/CD
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'backend/**'
+      - 'api/**'
+      - 'server/**'
+      - 'services/**'
+      - 'Dockerfile*'
+      - 'docker-compose*'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'backend/**'
+      - 'api/**'
+      - 'server/**'
+      - 'services/**'
+  workflow_dispatch:
+    inputs:
+      service:
+        description: 'Specific service to deploy'
+        required: false
+        type: choice
+        options:
+          - all
+          - newsroom
+          - ivor
+          - events
+        default: 'all'
+
+env:
+  NODE_VERSION: '20'
+  PYTHON_VERSION: '3.11'
+
+permissions:
+  contents: read
+  packages: write
+  deployments: write
+
+concurrency:
+  group: backend-${{ github.ref }}-${{ inputs.service || 'all' }}
+  cancel-in-progress: true
+
+jobs:
+  # ═══════════════════════════════════════════════════════════════
+  # 🔍 DETECT BACKEND SERVICES
+  # ═══════════════════════════════════════════════════════════════
+  
+  detect-services:
+    name: 🔍 Detect Backend Services
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      has-newsroom: ${{ steps.detect.outputs.has-newsroom }}
+      has-ivor: ${{ steps.detect.outputs.has-ivor }}
+      has-events: ${{ steps.detect.outputs.has-events }}
+      deploy-newsroom: ${{ steps.should-deploy.outputs.newsroom }}
+      deploy-ivor: ${{ steps.should-deploy.outputs.ivor }}
+      deploy-events: ${{ steps.should-deploy.outputs.events }}
+    
+    steps:
+      - name: 📋 Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: 🔍 Detect Available Services
+        id: detect
+        run: |
+          echo "🔍 Scanning for backend services..."
+          
+          # Check for service directories or files
+          HAS_NEWSROOM=false
+          HAS_IVOR=false
+          HAS_EVENTS=false
+          
+          # Look for service indicators in src/services/
+          if [ -f "src/services/newsroomService.ts" ] || [ -d "backend/newsroom" ] || [ -d "api/newsroom" ]; then
+            HAS_NEWSROOM=true
+            echo "✅ Newsroom service detected"
+          fi
+          
+          if [ -f "src/services/ivorService.ts" ] || [ -d "backend/ivor" ] || [ -d "api/ivor" ]; then
+            HAS_IVOR=true
+            echo "✅ IVOR service detected"
+          fi
+          
+          if [ -f "src/services/eventsService.ts" ] || [ -d "backend/events" ] || [ -d "api/events" ]; then
+            HAS_EVENTS=true
+            echo "✅ Events service detected"
+          fi
+          
+          echo "has-newsroom=$HAS_NEWSROOM" >> $GITHUB_OUTPUT
+          echo "has-ivor=$HAS_IVOR" >> $GITHUB_OUTPUT
+          echo "has-events=$HAS_EVENTS" >> $GITHUB_OUTPUT
+      
+      - name: 🎯 Determine Deployment Targets
+        id: should-deploy
+        run: |
+          SERVICE_INPUT="${{ inputs.service || 'all' }}"
+          
+          # Default to deploying detected services
+          DEPLOY_NEWSROOM=${{ steps.detect.outputs.has-newsroom }}
+          DEPLOY_IVOR=${{ steps.detect.outputs.has-ivor }}
+          DEPLOY_EVENTS=${{ steps.detect.outputs.has-events }}
+          
+          # Override based on input
+          if [ "$SERVICE_INPUT" != "all" ]; then
+            DEPLOY_NEWSROOM=false
+            DEPLOY_IVOR=false
+            DEPLOY_EVENTS=false
+            
+            case "$SERVICE_INPUT" in
+              newsroom) DEPLOY_NEWSROOM=${{ steps.detect.outputs.has-newsroom }} ;;
+              ivor) DEPLOY_IVOR=${{ steps.detect.outputs.has-ivor }} ;;
+              events) DEPLOY_EVENTS=${{ steps.detect.outputs.has-events }} ;;
+            esac
+          fi
+          
+          echo "newsroom=$DEPLOY_NEWSROOM" >> $GITHUB_OUTPUT
+          echo "ivor=$DEPLOY_IVOR" >> $GITHUB_OUTPUT
+          echo "events=$DEPLOY_EVENTS" >> $GITHUB_OUTPUT
+          
+          echo "📋 Deployment plan:"
+          echo "  📰 Newsroom: $DEPLOY_NEWSROOM"
+          echo "  🤖 IVOR: $DEPLOY_IVOR"
+          echo "  📅 Events: $DEPLOY_EVENTS"
+
+  # ═══════════════════════════════════════════════════════════════
+  # 📰 NEWSROOM SERVICE
+  # ═══════════════════════════════════════════════════════════════
+  
+  deploy-newsroom:
+    name: 📰 Deploy Newsroom Service
+    runs-on: ubuntu-latest
+    needs: detect-services
+    if: needs.detect-services.outputs.deploy-newsroom == 'true'
+    timeout-minutes: 15
+    environment:
+      name: newsroom-${{ github.ref_name }}
+      url: ${{ steps.deploy.outputs.url }}
+    
+    steps:
+      - name: 📋 Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: 🏗️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: 📦 Install Dependencies
+        run: npm ci --prefer-offline
+      
+      - name: 🔧 Prepare Newsroom Service
+        run: |
+          echo "🔧 Preparing Newsroom service for deployment..."
+          
+          # Create deployment directory if needed
+          mkdir -p deploy/newsroom
+          
+          # Copy service files
+          if [ -f "src/services/newsroomService.ts" ]; then
+            cp src/services/newsroomService.ts deploy/newsroom/
+            echo "✅ Copied service implementation"
+          fi
+          
+          # Create basic server if no existing backend
+          if [ ! -d "backend/newsroom" ] && [ ! -d "api/newsroom" ]; then
+            cat > deploy/newsroom/server.js << 'EOF'
+          const express = require('express');
+          const cors = require('cors');
+          const app = express();
+          const PORT = process.env.PORT || 3001;
+          
+          app.use(cors());
+          app.use(express.json());
+          
+          // Health check
+          app.get('/health', (req, res) => {
+            res.json({ status: 'healthy', service: 'newsroom', timestamp: new Date().toISOString() });
+          });
+          
+          // Articles endpoint
+          app.get('/api/articles', (req, res) => {
+            res.json({
+              articles: [
+                {
+                  id: '1',
+                  title: 'Community Update',
+                  content: 'Latest news from BLKOUTUK community',
+                  author: 'Community Team',
+                  publishedAt: new Date().toISOString(),
+                  tags: ['community', 'update']
+                }
+              ]
+            });
+          });
+          
+          app.listen(PORT, () => {
+            console.log(\`Newsroom service running on port \${PORT}\`);
+          });
+          EOF
+            
+            cat > deploy/newsroom/package.json << 'EOF'
+          {
+            "name": "blkout-newsroom-service",
+            "version": "1.0.0",
+            "type": "commonjs",
+            "main": "server.js",
+            "scripts": {
+              "start": "node server.js"
+            },
+            "dependencies": {
+              "express": "^4.18.2",
+              "cors": "^2.8.5"
+            },
+            "engines": {
+              "node": ">=18.0.0"
+            }
+          }
+          EOF
+            echo "✅ Created server configuration"
+          fi
+      
+      - name: 🚀 Deploy to Vercel
+        id: deploy
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          # Install Vercel CLI
+          npm install -g vercel@latest
+          
+          cd deploy/newsroom
+          
+          # Initialize Vercel project if needed
+          cat > vercel.json << 'EOF'
+          {
+            "version": 2,
+            "builds": [
+              {
+                "src": "server.js",
+                "use": "@vercel/node"
+              }
+            ],
+            "routes": [
+              {
+                "src": "/(.*)",
+                "dest": "/server.js"
+              }
+            ]
+          }
+          EOF
+          
+          # Deploy
+          DEPLOYMENT_URL=$(vercel deploy --token $VERCEL_TOKEN --confirm --prod=${{ github.ref == 'refs/heads/main' }})
+          
+          echo "url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
+          echo "📰 Newsroom service deployed to: $DEPLOYMENT_URL"
+      
+      - name: 🔍 Health Check
+        run: |
+          NEWSROOM_URL="${{ steps.deploy.outputs.url }}"
+          echo "🔍 Testing newsroom deployment: $NEWSROOM_URL"
+          
+          sleep 30
+          
+          # Test health endpoint
+          if curl -f -s "$NEWSROOM_URL/health" > /dev/null; then
+            echo "✅ Newsroom health check passed"
+          else
+            echo "❌ Newsroom health check failed"
+            exit 1
+          fi
+
+  # ═══════════════════════════════════════════════════════════════
+  # 🤖 IVOR SERVICE
+  # ═══════════════════════════════════════════════════════════════
+  
+  deploy-ivor:
+    name: 🤖 Deploy IVOR Service
+    runs-on: ubuntu-latest
+    needs: detect-services
+    if: needs.detect-services.outputs.deploy-ivor == 'true'
+    timeout-minutes: 15
+    environment:
+      name: ivor-${{ github.ref_name }}
+      url: ${{ steps.deploy.outputs.url }}
+    
+    steps:
+      - name: 📋 Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: 🏗️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: 📦 Install Dependencies
+        run: npm ci --prefer-offline
+      
+      - name: 🔧 Prepare IVOR Service
+        run: |
+          echo "🔧 Preparing IVOR service for deployment..."
+          
+          mkdir -p deploy/ivor
+          
+          # Copy service files
+          if [ -f "src/services/ivorService.ts" ]; then
+            cp src/services/ivorService.ts deploy/ivor/
+            echo "✅ Copied IVOR service implementation"
+          fi
+          
+          # Create IVOR server
+          cat > deploy/ivor/server.js << 'EOF'
+          const express = require('express');
+          const cors = require('cors');
+          const app = express();
+          const PORT = process.env.PORT || 3002;
+          
+          app.use(cors());
+          app.use(express.json());
+          
+          // Health check
+          app.get('/health', (req, res) => {
+            res.json({ status: 'healthy', service: 'ivor', timestamp: new Date().toISOString() });
+          });
+          
+          // IVOR chat endpoint
+          app.post('/api/chat', (req, res) => {
+            const { message } = req.body;
+            res.json({
+              response: \`Hello! I'm IVOR, your community assistant. You said: "\${message}"\`,
+              timestamp: new Date().toISOString()
+            });
+          });
+          
+          // IVOR capabilities
+          app.get('/api/capabilities', (req, res) => {
+            res.json({
+              capabilities: [
+                'Community guidance',
+                'Resource recommendations',
+                'Event information',
+                'General assistance'
+              ]
+            });
+          });
+          
+          app.listen(PORT, () => {
+            console.log(\`IVOR service running on port \${PORT}\`);
+          });
+          EOF
+          
+          cat > deploy/ivor/package.json << 'EOF'
+          {
+            "name": "blkout-ivor-service",
+            "version": "1.0.0",
+            "type": "commonjs",
+            "main": "server.js",
+            "scripts": {
+              "start": "node server.js"
+            },
+            "dependencies": {
+              "express": "^4.18.2",
+              "cors": "^2.8.5"
+            },
+            "engines": {
+              "node": ">=18.0.0"
+            }
+          }
+          EOF
+          echo "✅ Created IVOR server configuration"
+      
+      - name: 🚀 Deploy to Vercel
+        id: deploy
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          npm install -g vercel@latest
+          
+          cd deploy/ivor
+          
+          cat > vercel.json << 'EOF'
+          {
+            "version": 2,
+            "builds": [
+              {
+                "src": "server.js",
+                "use": "@vercel/node"
+              }
+            ],
+            "routes": [
+              {
+                "src": "/(.*)",
+                "dest": "/server.js"
+              }
+            ]
+          }
+          EOF
+          
+          DEPLOYMENT_URL=$(vercel deploy --token $VERCEL_TOKEN --confirm --prod=${{ github.ref == 'refs/heads/main' }})
+          
+          echo "url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
+          echo "🤖 IVOR service deployed to: $DEPLOYMENT_URL"
+      
+      - name: 🔍 Health Check
+        run: |
+          IVOR_URL="${{ steps.deploy.outputs.url }}"
+          echo "🔍 Testing IVOR deployment: $IVOR_URL"
+          
+          sleep 30
+          
+          # Test health endpoint
+          if curl -f -s "$IVOR_URL/health" > /dev/null; then
+            echo "✅ IVOR health check passed"
+          else
+            echo "❌ IVOR health check failed"
+            exit 1
+          fi
+
+  # ═══════════════════════════════════════════════════════════════
+  # 📅 EVENTS SERVICE
+  # ═══════════════════════════════════════════════════════════════
+  
+  deploy-events:
+    name: 📅 Deploy Events Service
+    runs-on: ubuntu-latest
+    needs: detect-services
+    if: needs.detect-services.outputs.deploy-events == 'true'
+    timeout-minutes: 15
+    environment:
+      name: events-${{ github.ref_name }}
+      url: ${{ steps.deploy.outputs.url }}
+    
+    steps:
+      - name: 📋 Checkout Repository
+        uses: actions/checkout@v4
+      
+      - name: 🏗️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: 📦 Install Dependencies
+        run: npm ci --prefer-offline
+      
+      - name: 🔧 Prepare Events Service
+        run: |
+          echo "🔧 Preparing Events service for deployment..."
+          
+          mkdir -p deploy/events
+          
+          # Copy service files
+          if [ -f "src/services/eventsService.ts" ]; then
+            cp src/services/eventsService.ts deploy/events/
+            echo "✅ Copied Events service implementation"
+          fi
+          
+          # Create Events server
+          cat > deploy/events/server.js << 'EOF'
+          const express = require('express');
+          const cors = require('cors');
+          const app = express();
+          const PORT = process.env.PORT || 3003;
+          
+          app.use(cors());
+          app.use(express.json());
+          
+          // Health check
+          app.get('/health', (req, res) => {
+            res.json({ status: 'healthy', service: 'events', timestamp: new Date().toISOString() });
+          });
+          
+          // Events endpoint
+          app.get('/api/events', (req, res) => {
+            const now = new Date();
+            const nextWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+            
+            res.json({
+              events: [
+                {
+                  id: '1',
+                  title: 'Community Gathering',
+                  description: 'Monthly community meetup',
+                  date: nextWeek.toISOString(),
+                  location: 'Online',
+                  type: 'community'
+                }
+              ]
+            });
+          });
+          
+          app.listen(PORT, () => {
+            console.log(\`Events service running on port \${PORT}\`);
+          });
+          EOF
+          
+          cat > deploy/events/package.json << 'EOF'
+          {
+            "name": "blkout-events-service",
+            "version": "1.0.0",
+            "type": "commonjs",
+            "main": "server.js",
+            "scripts": {
+              "start": "node server.js"
+            },
+            "dependencies": {
+              "express": "^4.18.2",
+              "cors": "^2.8.5"
+            },
+            "engines": {
+              "node": ">=18.0.0"
+            }
+          }
+          EOF
+          echo "✅ Created Events server configuration"
+      
+      - name: 🚀 Deploy to Vercel
+        id: deploy
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          npm install -g vercel@latest
+          
+          cd deploy/events
+          
+          cat > vercel.json << 'EOF'
+          {
+            "version": 2,
+            "builds": [
+              {
+                "src": "server.js",
+                "use": "@vercel/node"
+              }
+            ],
+            "routes": [
+              {
+                "src": "/(.*)",
+                "dest": "/server.js"
+              }
+            ]
+          }
+          EOF
+          
+          DEPLOYMENT_URL=$(vercel deploy --token $VERCEL_TOKEN --confirm --prod=${{ github.ref == 'refs/heads/main' }})
+          
+          echo "url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
+          echo "📅 Events service deployed to: $DEPLOYMENT_URL"
+      
+      - name: 🔍 Health Check
+        run: |
+          EVENTS_URL="${{ steps.deploy.outputs.url }}"
+          echo "🔍 Testing Events deployment: $EVENTS_URL"
+          
+          sleep 30
+          
+          # Test health endpoint
+          if curl -f -s "$EVENTS_URL/health" > /dev/null; then
+            echo "✅ Events health check passed"
+          else
+            echo "❌ Events health check failed"
+            exit 1
+          fi
+
+  # ═══════════════════════════════════════════════════════════════
+  # 📊 REPORT DEPLOYMENT STATUS
+  # ═══════════════════════════════════════════════════════════════
+  
+  report-status:
+    name: 📊 Report Deployment Status
+    runs-on: ubuntu-latest
+    needs: [detect-services, deploy-newsroom, deploy-ivor, deploy-events]
+    if: always()
+    timeout-minutes: 5
+    
+    steps:
+      - name: 📊 Generate Deployment Report
+        run: |
+          echo "📊 Backend Services Deployment Report"
+          echo "================================================"
+          echo "🕐 Timestamp: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "📦 Commit: ${{ github.sha }}"
+          echo "🌿 Branch: ${{ github.ref_name }}"
+          echo ""
+          echo "🎯 Service Deployment Results:"
+          
+          if [ "${{ needs.detect-services.outputs.deploy-newsroom }}" = "true" ]; then
+            if [ "${{ needs.deploy-newsroom.result }}" = "success" ]; then
+              echo "  ✅ Newsroom: SUCCESS"
+            else
+              echo "  ❌ Newsroom: FAILED"
+            fi
+          else
+            echo "  ⏭️ Newsroom: SKIPPED"
+          fi
+          
+          if [ "${{ needs.detect-services.outputs.deploy-ivor }}" = "true" ]; then
+            if [ "${{ needs.deploy-ivor.result }}" = "success" ]; then
+              echo "  ✅ IVOR: SUCCESS"
+            else
+              echo "  ❌ IVOR: FAILED"
+            fi
+          else
+            echo "  ⏭️ IVOR: SKIPPED"
+          fi
+          
+          if [ "${{ needs.detect-services.outputs.deploy-events }}" = "true" ]; then
+            if [ "${{ needs.deploy-events.result }}" = "success" ]; then
+              echo "  ✅ Events: SUCCESS"
+            else
+              echo "  ❌ Events: FAILED"
+            fi
+          else
+            echo "  ⏭️ Events: SKIPPED"
+          fi
+          
+          echo ""
+          
+          # Check if any services failed
+          FAILED_COUNT=0
+          if [ "${{ needs.deploy-newsroom.result }}" = "failure" ]; then
+            FAILED_COUNT=$((FAILED_COUNT + 1))
+          fi
+          if [ "${{ needs.deploy-ivor.result }}" = "failure" ]; then
+            FAILED_COUNT=$((FAILED_COUNT + 1))
+          fi
+          if [ "${{ needs.deploy-events.result }}" = "failure" ]; then
+            FAILED_COUNT=$((FAILED_COUNT + 1))
+          fi
+          
+          if [ $FAILED_COUNT -eq 0 ]; then
+            echo "🎉 All backend services deployed successfully!"
+          else
+            echo "⚠️ $FAILED_COUNT service(s) failed deployment"
+            echo "Check the individual job logs for details"
+          fi

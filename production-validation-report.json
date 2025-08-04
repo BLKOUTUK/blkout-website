@@ -1,9 +1,9 @@
 {
-  "timestamp": "2025-08-03T08:58:13.161Z",
-  "duration": 3,
+  "timestamp": "2025-08-04T02:47:56.812Z",
+  "duration": 5,
   "results": {
-    "passed": 3,
-    "failed": 3,
+    "passed": 4,
+    "failed": 2,
     "warnings": 0,
     "tests": [
       {
@@ -14,7 +14,7 @@
       {
         "name": "Mock Data Detection",
         "success": false,
-        "message": "Found 16 files with mock data: components/blkout/FakeQuizPopup.tsx: 2 fake references, components/blkout/FullPageScrollytelling.backup.tsx: 3 fake references, components/blkout/FullPageScrollytelling.current-backup.tsx: 1 fake references, components/blkout/FullPageScrollytelling.tsx: 3 fake references, components/blkout/FullPageScrollytellingOptimized.tsx: 3 fake references, components/community/CommunityGateway.tsx: 3 mock references, components/community/JoinDiscussionEnhanced.tsx: 1 mock references, components/events/EventsPageIntegrated.tsx: 1 mock references, components/magazine/ArticleGrid.tsx: 3 mock references, components/magazine/ArticlePage.tsx: 2 mock references, components/magazine/MagazineHomepage.tsx: 3 mock references, components/magazine/MagazineHomepageEnhanced.tsx: 3 mock references, components/magazine/PlatformHomepage.tsx: 3 mock references, components/magazine/StoriesPageEnhanced.tsx: 3 mock references, components/newsroom/NewsroomEnhanced.tsx: 3 mock references, services/eventsService.ts: 3 mock references"
+        "message": "Found 16 files with mock data: components/blkout/FakeQuizPopup.tsx: 2 fake references, components/blkout/FullPageScrollytelling.backup.tsx: 3 fake references, components/blkout/FullPageScrollytelling.current-backup.tsx: 1 fake references, components/blkout/FullPageScrollytelling.tsx: 3 fake references, components/blkout/FullPageScrollytellingOptimized.tsx: 3 fake references, components/community/CommunityGateway.tsx: 3 mock references, components/community/JoinDiscussionEnhanced.tsx: 1 mock references, components/events/EventsPageIntegrated.tsx: 1 mock references, components/magazine/ArticleGrid.tsx: 3 mock references, components/magazine/ArticlePage.tsx: 2 mock references, components/magazine/ArticlePage.tsx: 1 TODO references, components/magazine/MagazineHomepage.tsx: 3 mock references, components/magazine/PlatformHomepage.tsx: 3 mock references, components/magazine/StoriesPageEnhanced.tsx: 1 mock references, components/newsroom/NewsroomEnhanced.tsx: 3 mock references, services/eventsService.ts: 3 mock references"
       },
       {
         "name": "Environment Configuration",
@@ -23,26 +23,26 @@
       },
       {
         "name": "Security Scan",
-        "success": false,
-        "message": "Security issues found: components/layout/PrimaryNavigationEnhanced.tsx: innerHTML assignment detected, components/magazine/ArticlePage.tsx: dangerouslySetInnerHTML usage detected"
+        "success": true,
+        "message": "No security vulnerabilities detected"
       },
       {
         "name": "Performance Validation",
         "success": true,
-        "message": "Performance good: 724KB total, 6 assets"
+        "message": "Performance good: 762KB total, 6 assets"
       },
       {
         "name": "Backend Services Connectivity",
         "success": true,
-        "message": "IVOR Backend: ❌ Offline, Events Calendar: ✅ Online"
+        "message": "IVOR Backend: ✅ Online, Events Calendar: ❌ Offline"
       }
     ]
   },
   "summary": {
     "total": 6,
-    "passed": 3,
-    "failed": 3,
-    "percentage": 50,
+    "passed": 4,
+    "failed": 2,
+    "percentage": 67,
     "status": "NEEDS_WORK"
   }
 }

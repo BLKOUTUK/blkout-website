@@ -35,7 +35,7 @@ class MagazineService {
   
   constructor() {
     this.baseUrl = process.env.NODE_ENV === 'production' 
-      ? 'https://magazine.blkoutuk.com/api'  // Production URL
+      ? 'https://magazine-deploy-7o60bmqy4-robs-projects-54d653d3.vercel.app'
       : 'http://localhost:3003/api'          // Local development
   }
 

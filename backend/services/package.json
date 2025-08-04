@@ -1,0 +1,17 @@
+{
+  "name": "blkout-backend-services",
+  "version": "1.0.0",
+  "description": "BLKOUT Backend Services - Production Ready",
+  "main": "ivor-backend.js",
+  "scripts": {
+    "start": "node ivor-backend.js",
+    "dev": "node ivor-backend.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

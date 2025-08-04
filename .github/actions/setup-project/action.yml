@@ -1,0 +1,112 @@
+name: 'Setup Project Environment'
+description: 'Reusable action to setup Node.js, install dependencies, and prepare project'
+inputs:
+  node-version:
+    description: 'Node.js version to use'
+    required: false
+    default: '20'
+  install-deps:
+    description: 'Whether to install dependencies'
+    required: false
+    default: 'true'
+  cache-key-suffix:
+    description: 'Additional cache key suffix'
+    required: false
+    default: ''
+  skip-audit:
+    description: 'Skip npm audit during install'
+    required: false
+    default: 'false'
+
+outputs:
+  cache-hit:
+    description: 'Whether cache was hit'
+    value: ${{ steps.cache.outputs.cache-hit }}
+  node-version:
+    description: 'Node.js version used'
+    value: ${{ steps.setup-node.outputs.node-version }}
+  npm-version:
+    description: 'npm version'
+    value: ${{ steps.versions.outputs.npm-version }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 🏗️ Setup Node.js
+      id: setup-node
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: 'npm'
+        cache-dependency-path: package-lock.json
+    
+    - name: 📊 Get Versions
+      id: versions
+      shell: bash
+      run: |
+        NODE_VERSION=$(node --version)
+        NPM_VERSION=$(npm --version)
+        echo "node-version=$NODE_VERSION" >> $GITHUB_OUTPUT
+        echo "npm-version=$NPM_VERSION" >> $GITHUB_OUTPUT
+        echo "📊 Environment:"
+        echo "  Node.js: $NODE_VERSION"
+        echo "  npm: $NPM_VERSION"
+    
+    - name: 📦 Install Dependencies
+      if: inputs.install-deps == 'true'
+      shell: bash
+      run: |
+        echo "📦 Installing dependencies..."
+        
+        INSTALL_FLAGS="--prefer-offline"
+        
+        if [ "${{ inputs.skip-audit }}" = "true" ]; then
+          INSTALL_FLAGS="$INSTALL_FLAGS --no-audit"
+        fi
+        
+        echo "🔧 Using flags: $INSTALL_FLAGS"
+        npm ci $INSTALL_FLAGS
+        
+        echo "✅ Dependencies installed successfully"
+    
+    - name: 🔍 Verify Installation
+      if: inputs.install-deps == 'true'
+      shell: bash
+      run: |
+        echo "🔍 Verifying installation..."
+        
+        # Check if node_modules exists
+        if [ ! -d "node_modules" ]; then
+          echo "❌ node_modules directory not found"
+          exit 1
+        fi
+        
+        # Check key dependencies
+        KEY_DEPS=("react" "vite" "typescript")
+        MISSING_DEPS=()
+        
+        for dep in "${KEY_DEPS[@]}"; do
+          if [ ! -d "node_modules/$dep" ]; then
+            MISSING_DEPS+=("$dep")
+          fi
+        done
+        
+        if [ ${#MISSING_DEPS[@]} -eq 0 ]; then
+          echo "✅ All key dependencies verified"
+        else
+          echo "⚠️ Missing dependencies: ${MISSING_DEPS[*]}"
+        fi
+        
+        # Show installed package count
+        PACKAGE_COUNT=$(find node_modules -maxdepth 1 -type d | wc -l)
+        echo "📊 Installed packages: $((PACKAGE_COUNT - 1))"
+    
+    - name: 🔧 Project Info
+      shell: bash
+      run: |
+        echo "🔧 Project Information:"
+        echo "  Name: $(jq -r '.name' package.json)"
+        echo "  Version: $(jq -r '.version' package.json)"
+        echo "  Cache Key Suffix: ${{ inputs.cache-key-suffix }}"
+        echo "  Working Directory: $(pwd)"
+        echo "  Timestamp: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
