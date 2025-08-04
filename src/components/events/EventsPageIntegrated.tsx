@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, Settings, Heart, Shield, Mail, LogIn, LogOut, User, Zap, Users, Globe, Rss, BarChart3, Calendar, ArrowRight } from 'lucide-react'
 import PrimaryNavigationEnhanced from '../layout/PrimaryNavigationEnhanced'
 import PlatformFooter from '../layout/PlatformFooter'
