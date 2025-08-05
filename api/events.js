@@ -1,5 +1,11 @@
-// Vercel serverless function to handle events with real storage
-let events = [
+// Vercel serverless function to handle events with persistent storage
+import { promises as fs } from 'fs'
+import path from 'path'
+
+// Use /tmp directory for serverless storage (temporary but persists during function lifecycle)
+const STORAGE_PATH = '/tmp/events.json'
+
+const DEFAULT_EVENTS = [
   {
     id: "evt_001",
     title: "Community Healing Circle",
@@ -24,6 +30,27 @@ let events = [
   }
 ]
 
+async function loadEvents() {
+  try {
+    const data = await fs.readFile(STORAGE_PATH, 'utf8')
+    return JSON.parse(data)
+  } catch (error) {
+    // File doesn't exist, return defaults
+    await saveEvents(DEFAULT_EVENTS)
+    return DEFAULT_EVENTS
+  }
+}
+
+async function saveEvents(events) {
+  try {
+    await fs.writeFile(STORAGE_PATH, JSON.stringify(events, null, 2))
+    return true
+  } catch (error) {
+    console.error('Failed to save events:', error)
+    return false
+  }
+}
+
 export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -36,6 +63,8 @@ export default async function handler(req, res) {
   }
 
   try {
+    const events = await loadEvents()
+
     if (req.method === 'GET') {
       // Return all events
       console.log('Returning events:', events.length)
@@ -60,6 +89,7 @@ export default async function handler(req, res) {
       }
       
       events.push(newEvent)
+      await saveEvents(events)
       console.log('Event created successfully:', newEvent.id)
       
       res.status(201).json({
@@ -87,6 +117,8 @@ export default async function handler(req, res) {
         updatedAt: new Date().toISOString()
       }
       
+      await saveEvents(events)
+      
       res.status(200).json({
         success: true,
         event: events[eventIndex],
@@ -106,6 +138,7 @@ export default async function handler(req, res) {
       }
       
       events.splice(eventIndex, 1)
+      await saveEvents(events)
       
       res.status(200).json({
         success: true,

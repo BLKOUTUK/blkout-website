@@ -3,7 +3,19 @@
   "buildCommand": "vite build",
   "outputDirectory": "dist",
   "framework": null,
+  "functions": {
+    "api/events.js": {
+      "memory": 1024
+    },
+    "api/articles.js": {
+      "memory": 1024
+    }
+  },
   "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    },
     {
       "source": "/(.*)",
       "destination": "/index.html"

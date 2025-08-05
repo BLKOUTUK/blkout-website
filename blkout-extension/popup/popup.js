@@ -1,5 +1,5 @@
 // BLKOUT Extension Popup Logic
-const API_BASE = 'https://blkout-website.vercel.app/api';
+const API_BASE = 'https://blkout-beta.vercel.app/api';
 
 class BlkoutPopup {
   constructor() {

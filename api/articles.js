@@ -1,5 +1,11 @@
-// Vercel serverless function to handle articles with real storage
-let articles = [
+// Vercel serverless function to handle articles with persistent storage
+import { promises as fs } from 'fs'
+import path from 'path'
+
+// Use /tmp directory for serverless storage
+const STORAGE_PATH = '/tmp/articles.json'
+
+const DEFAULT_ARTICLES = [
   {
     id: "art_001",
     title: "Building Safe Spaces: A Community Guide",
@@ -32,6 +38,27 @@ let articles = [
   }
 ]
 
+async function loadArticles() {
+  try {
+    const data = await fs.readFile(STORAGE_PATH, 'utf8')
+    return JSON.parse(data)
+  } catch (error) {
+    // File doesn't exist, return defaults
+    await saveArticles(DEFAULT_ARTICLES)
+    return DEFAULT_ARTICLES
+  }
+}
+
+async function saveArticles(articles) {
+  try {
+    await fs.writeFile(STORAGE_PATH, JSON.stringify(articles, null, 2))
+    return true
+  } catch (error) {
+    console.error('Failed to save articles:', error)
+    return false
+  }
+}
+
 export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -44,6 +71,8 @@ export default async function handler(req, res) {
   }
 
   try {
+    const articles = await loadArticles()
+
     if (req.method === 'GET') {
       // Return all articles
       console.log('Returning articles:', articles.length)
@@ -69,6 +98,7 @@ export default async function handler(req, res) {
       }
       
       articles.push(newArticle)
+      await saveArticles(articles)
       console.log('Article created successfully:', newArticle.id)
       
       res.status(201).json({
@@ -96,6 +126,8 @@ export default async function handler(req, res) {
         updatedAt: new Date().toISOString()
       }
       
+      await saveArticles(articles)
+      
       res.status(200).json({
         success: true,
         article: articles[articleIndex],
@@ -115,6 +147,7 @@ export default async function handler(req, res) {
       }
       
       articles.splice(articleIndex, 1)
+      await saveArticles(articles)
       
       res.status(200).json({
         success: true,
