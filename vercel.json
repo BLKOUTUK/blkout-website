@@ -9,6 +9,12 @@
     },
     "api/articles.js": {
       "memory": 1024
+    },
+    "api/webhooks/n8n-events.js": {
+      "memory": 512
+    },
+    "api/webhooks/n8n-newsroom.js": {
+      "memory": 512
     }
   },
   "rewrites": [

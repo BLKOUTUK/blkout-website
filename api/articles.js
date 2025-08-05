@@ -59,6 +59,26 @@ async function saveArticles(articles) {
   }
 }
 
+async function triggerN8nWorkflow(action, articleData, baseUrl = 'https://blkout-beta.vercel.app') {
+  try {
+    const webhookUrl = `${baseUrl}/api/webhooks/n8n-newsroom`
+    
+    await fetch(webhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        action,
+        articleData,
+        articleId: articleData?.id
+      })
+    })
+  } catch (error) {
+    console.log('n8n workflow trigger failed (non-critical):', error.message)
+  }
+}
+
 export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -101,6 +121,9 @@ export default async function handler(req, res) {
       await saveArticles(articles)
       console.log('Article created successfully:', newArticle.id)
       
+      // Trigger n8n workflow for article creation
+      await triggerN8nWorkflow('created', newArticle)
+      
       res.status(201).json({
         success: true,
         article: newArticle,
@@ -120,6 +143,7 @@ export default async function handler(req, res) {
         })
       }
       
+      const oldStatus = articles[articleIndex].status
       articles[articleIndex] = {
         ...articles[articleIndex],
         ...articleData,
@@ -127,6 +151,23 @@ export default async function handler(req, res) {
       }
       
       await saveArticles(articles)
+      
+      // Trigger n8n workflows based on status changes
+      const newStatus = articles[articleIndex].status
+      if (oldStatus !== newStatus) {
+        if (newStatus === 'approved') {
+          await triggerN8nWorkflow('approved', articles[articleIndex])
+        } else if (newStatus === 'published') {
+          await triggerN8nWorkflow('published', articles[articleIndex])
+        } else if (newStatus === 'rejected') {
+          await triggerN8nWorkflow('rejected', articles[articleIndex])
+        } else if (newStatus === 'archived') {
+          await triggerN8nWorkflow('archived', articles[articleIndex])
+        }
+      } else {
+        // Trigger update workflow for content changes
+        await triggerN8nWorkflow('updated', articles[articleIndex])
+      }
       
       res.status(200).json({
         success: true,

@@ -51,6 +51,26 @@ async function saveEvents(events) {
   }
 }
 
+async function triggerN8nWorkflow(action, eventData, baseUrl = 'https://blkout-beta.vercel.app') {
+  try {
+    const webhookUrl = `${baseUrl}/api/webhooks/n8n-events`
+    
+    await fetch(webhookUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        action,
+        eventData,
+        eventId: eventData?.id
+      })
+    })
+  } catch (error) {
+    console.log('n8n workflow trigger failed (non-critical):', error.message)
+  }
+}
+
 export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -92,6 +112,9 @@ export default async function handler(req, res) {
       await saveEvents(events)
       console.log('Event created successfully:', newEvent.id)
       
+      // Trigger n8n workflow for event creation
+      await triggerN8nWorkflow('created', newEvent)
+      
       res.status(201).json({
         success: true,
         event: newEvent,
@@ -111,6 +134,7 @@ export default async function handler(req, res) {
         })
       }
       
+      const oldStatus = events[eventIndex].status
       events[eventIndex] = {
         ...events[eventIndex],
         ...eventData,
@@ -118,6 +142,18 @@ export default async function handler(req, res) {
       }
       
       await saveEvents(events)
+      
+      // Trigger n8n workflows based on status changes
+      const newStatus = events[eventIndex].status
+      if (oldStatus !== newStatus) {
+        if (newStatus === 'approved') {
+          await triggerN8nWorkflow('approved', events[eventIndex])
+        } else if (newStatus === 'published') {
+          await triggerN8nWorkflow('published', events[eventIndex])
+        } else if (newStatus === 'rejected') {
+          await triggerN8nWorkflow('rejected', events[eventIndex])
+        }
+      }
       
       res.status(200).json({
         success: true,
