@@ -119,53 +119,38 @@ export default function NewsroomAdminDashboard() {
 
   const loadArticles = async () => {
     try {
-      const response = await fetch('https://newsroom-deploy.vercel.app/api/articles')
+      const response = await fetch('/api/articles')
       const data = await response.json()
-      if (data.success) {
-        setArticles(data.articles)
+      if (data.success && data.articles) {
+        // Transform API data to match Article interface
+        const transformedArticles = data.articles.map((article: any) => ({
+          id: article.id,
+          title: article.title,
+          excerpt: article.description || article.excerpt || 'No excerpt available',
+          content: article.content || article.description || 'No content available',
+          author: article.author || 'Unknown Author',
+          publishedAt: article.publishedAt || article.createdAt,
+          updatedAt: article.updatedAt || article.createdAt,
+          status: article.status as Article['status'],
+          category: article.category || 'General',
+          tags: Array.isArray(article.tags) ? article.tags : [],
+          featured: article.featured || false,
+          image: article.image,
+          source: article.source,
+          sourceUrl: article.sourceUrl,
+          submittedVia: article.submittedVia,
+          views: article.views || 0,
+          shares: article.shares || 0,
+          comments: article.comments || 0,
+          type: article.type || 'original' as Article['type'],
+          priority: article.priority || 'medium' as Article['priority']
+        }))
+        setArticles(transformedArticles)
       }
     } catch (error) {
       console.error('Failed to load articles:', error)
-      // Use sample data for demo
-      setArticles([
-        {
-          id: '1',
-          title: 'UK Government Announces New LGBTQ+ Rights Protections',
-          excerpt: 'Historic legislation provides stronger workplace protections and healthcare access for QTIPOC+ communities.',
-          content: 'Full article content would go here...',
-          author: 'BLKOUT News Team',
-          publishedAt: '2025-01-30T10:30:00Z',
-          updatedAt: '2025-01-30T10:30:00Z',
-          status: 'published',
-          category: 'Breaking News',
-          tags: ['LGBTQ+', 'Policy', 'Rights'],
-          featured: true,
-          image: '/images/squared/WELLDEF_SQUARED.png',
-          views: 1250,
-          shares: 89,
-          comments: 23,
-          type: 'curated',
-          priority: 'high'
-        },
-        {
-          id: '2',
-          title: 'Community Response: Mental Health Resources Launch',
-          excerpt: 'Local community members share their experiences with new peer support networks.',
-          content: 'Community article content...',
-          author: 'Community Correspondent',
-          publishedAt: '2025-01-29T15:45:00Z',
-          updatedAt: '2025-01-29T15:45:00Z',
-          status: 'published',
-          category: 'Community News',
-          tags: ['Mental Health', 'Community', 'Resources'],
-          featured: false,
-          views: 876,
-          shares: 34,
-          comments: 12,
-          type: 'community_response',
-          priority: 'medium'
-        }
-      ])
+      // Show empty state on error
+      setArticles([])
     } finally {
       setLoading(false)
     }
@@ -175,31 +160,55 @@ export default function NewsroomAdminDashboard() {
     e.preventDefault()
     
     try {
-      const articleData: Article = {
-        ...formData,
-        id: editingArticle?.id || `art_${Date.now()}`,
+      const articleData = {
+        title: formData.title,
+        description: formData.excerpt,
+        content: formData.content,
+        author: formData.author,
+        category: formData.category,
         tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
-        publishedAt: editingArticle?.publishedAt || new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        status: 'draft',
-        views: editingArticle?.views || 0,
-        shares: editingArticle?.shares || 0,
-        comments: editingArticle?.comments || 0
+        featured: formData.featured,
+        image: formData.image,
+        source: formData.source,
+        sourceUrl: formData.sourceUrl,
+        type: formData.type,
+        priority: formData.priority,
+        status: editingArticle?.status || 'draft'
       }
 
       if (editingArticle) {
-        setArticles(prev => prev.map(article => 
-          article.id === editingArticle.id ? { ...articleData, status: article.status } : article
-        ))
+        // Update existing article
+        const response = await fetch(`/api/articles?id=${editingArticle.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(articleData)
+        })
+
+        if (!response.ok) throw new Error('Failed to update article')
+        
+        alert('Article updated successfully!')
       } else {
-        setArticles(prev => [...prev, articleData])
+        // Create new article
+        const response = await fetch('/api/articles', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(articleData)
+        })
+
+        if (!response.ok) throw new Error('Failed to create article')
+        
+        alert('Article created successfully!')
       }
 
+      // Reload articles to reflect changes
+      await loadArticles()
+      
       setFormData(initialFormData)
       setEditingArticle(null)
       setShowForm(false)
     } catch (error) {
       console.error('Failed to save article:', error)
+      alert('Failed to save article. Please try again.')
     }
   }
 
@@ -224,19 +233,51 @@ export default function NewsroomAdminDashboard() {
 
   const handleDelete = async (articleId: string) => {
     if (confirm('Are you sure you want to delete this article?')) {
-      setArticles(prev => prev.filter(article => article.id !== articleId))
+      try {
+        const response = await fetch(`/api/articles?id=${articleId}`, {
+          method: 'DELETE'
+        })
+
+        if (!response.ok) throw new Error('Failed to delete article')
+        
+        // Remove from local state
+        setArticles(prev => prev.filter(article => article.id !== articleId))
+        alert('Article deleted successfully!')
+      } catch (error) {
+        console.error('Failed to delete article:', error)
+        alert('Failed to delete article. Please try again.')
+      }
     }
   }
 
   const handleStatusChange = async (articleId: string, newStatus: Article['status']) => {
-    setArticles(prev => prev.map(article => 
-      article.id === articleId ? { 
-        ...article, 
-        status: newStatus, 
-        updatedAt: new Date().toISOString(),
-        publishedAt: newStatus === 'published' ? new Date().toISOString() : article.publishedAt
-      } : article
-    ))
+    try {
+      const response = await fetch(`/api/articles?id=${articleId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          status: newStatus,
+          publishedAt: newStatus === 'published' ? new Date().toISOString() : undefined
+        })
+      })
+
+      if (!response.ok) throw new Error('Failed to update article status')
+      
+      // Update local state
+      setArticles(prev => prev.map(article => 
+        article.id === articleId ? { 
+          ...article, 
+          status: newStatus, 
+          updatedAt: new Date().toISOString(),
+          publishedAt: newStatus === 'published' ? new Date().toISOString() : article.publishedAt
+        } : article
+      ))
+
+      alert(`Article ${newStatus} successfully!`)
+    } catch (error) {
+      console.error('Failed to update article status:', error)
+      alert('Failed to update article status. Please try again.')
+    }
   }
 
   const getStatusColor = (status: Article['status']) => {
