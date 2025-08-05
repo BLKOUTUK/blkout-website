@@ -49,83 +49,146 @@ const ModerationDashboard: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
 
-  // Mock data for demonstration
+  // Load real data from API endpoints
   useEffect(() => {
-    const mockQueue: ModerationItem[] = [
-      {
-        id: '1',
-        type: 'newsroom_article',
-        title: 'New QTIPOC+ Housing Initiative Launches',
-        content: { excerpt: 'Community-led housing cooperative provides safe, affordable homes...' },
-        submittedBy: 'marcus.johnson@example.com',
-        submittedAt: new Date('2025-08-04T08:30:00'),
-        status: 'pending',
-        flags: ['auto-detected', 'high-relevance'],
-        priority: 'high'
-      },
-      {
-        id: '2',
-        type: 'event',
-        title: 'Birmingham Black Pride 2025 Planning Meeting',
-        content: { 
-          date: '2025-08-15T19:00:00',
-          location: 'Birmingham Community Center',
-          description: 'Community planning meeting for Birmingham Black Pride 2025...'
-        },
-        submittedBy: 'jordan.clarke@example.com',
-        submittedAt: new Date('2025-08-04T07:15:00'),
-        status: 'pending',
-        flags: ['community-submitted'],
-        priority: 'medium'
-      },
-      {
-        id: '3',
-        type: 'newsroom_article',
-        title: 'Mental Health Resources Network Launch',
-        content: { excerpt: 'New directory of Black QTIPOC+-affirming mental health professionals...' },
-        submittedBy: 'dr.williams@example.com',
-        submittedAt: new Date('2025-08-04T06:45:00'),
-        status: 'flagged',
-        flags: ['needs-verification', 'medical-content'],
-        priority: 'high'
-      }
-    ];
-
-    setModerationQueue(mockQueue);
-    setLoading(false);
+    loadModerationQueue();
   }, []);
+
+  const loadModerationQueue = async () => {
+    try {
+      setLoading(true);
+      
+      // Fetch events and articles from real API endpoints
+      const [eventsResponse, articlesResponse] = await Promise.all([
+        fetch('/api/events').then(res => res.json()),
+        fetch('/api/articles').then(res => res.json())
+      ]);
+
+      const combinedQueue: ModerationItem[] = [];
+
+      // Add events with status 'draft' to moderation queue
+      if (eventsResponse.success && eventsResponse.events) {
+        eventsResponse.events
+          .filter((event: any) => event.status === 'draft')
+          .forEach((event: any) => {
+            combinedQueue.push({
+              id: event.id,
+              type: 'event',
+              title: event.title,
+              content: {
+                description: event.description,
+                date: event.date,
+                time: event.time,
+                location: event.location?.address || 'TBD'
+              },
+              submittedBy: event.submittedVia === 'chrome-extension' ? 'Chrome Extension' : event.organizer,
+              submittedAt: new Date(event.createdAt),
+              status: 'pending',
+              flags: event.tags?.includes('community-submitted') ? ['community-submitted'] : [],
+              priority: 'medium'
+            });
+          });
+      }
+
+      // Add articles with status 'draft' to moderation queue  
+      if (articlesResponse.success && articlesResponse.articles) {
+        articlesResponse.articles
+          .filter((article: any) => article.status === 'draft')
+          .forEach((article: any) => {
+            combinedQueue.push({
+              id: article.id,
+              type: 'newsroom_article',
+              title: article.title,
+              content: { excerpt: article.description || article.excerpt },
+              submittedBy: article.submittedVia === 'chrome-extension' ? 'Chrome Extension' : article.author,
+              submittedAt: new Date(article.createdAt),
+              status: 'pending',
+              flags: article.tags?.includes('community-submitted') ? ['community-submitted'] : [],
+              priority: 'medium'
+            });
+          });
+      }
+
+      // Sort by submission date (newest first)
+      combinedQueue.sort((a, b) => b.submittedAt.getTime() - a.submittedAt.getTime());
+
+      setModerationQueue(combinedQueue);
+      
+      // Update stats
+      const eventsCount = combinedQueue.filter(item => item.type === 'event').length;
+      const articlesCount = combinedQueue.filter(item => item.type === 'newsroom_article').length;
+      
+      setStats({
+        pendingCount: combinedQueue.length,
+        todayActions: 0, // Would need to track this separately
+        activeModerators: 1,
+        newsroomQueue: articlesCount,
+        eventsQueue: eventsCount,
+        communityQueue: 0
+      });
+
+    } catch (error) {
+      console.error('Failed to load moderation queue:', error);
+      // Fall back to empty queue on error
+      setModerationQueue([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleModerationAction = async (itemId: string, action: string, notes?: string) => {
     try {
-      // In real implementation, this would call the moderation API
-      // Taking moderation action
-      
-      // Update local state
-      setModerationQueue(prev => 
-        prev.map(item => 
-          item.id === itemId 
-            ? { 
-                ...item, 
-                status: action as any,
-                moderatorNotes: notes,
-                moderatedAt: new Date(),
-                moderatedBy: 'current-moderator'
-              }
-            : item
-        )
-      );
+      // Find the item to determine its type
+      const item = moderationQueue.find(i => i.id === itemId);
+      if (!item) return;
+
+      // Update the item in the appropriate API endpoint
+      if (item.type === 'event') {
+        const response = await fetch(`/api/events?id=${itemId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            status: action === 'approved' ? 'published' : 'rejected',
+            moderatorNotes: notes,
+            moderatedAt: new Date().toISOString(),
+            moderatedBy: 'admin'
+          })
+        });
+        
+        if (!response.ok) throw new Error('Failed to update event');
+      } else if (item.type === 'newsroom_article') {
+        const response = await fetch(`/api/articles?id=${itemId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            status: action === 'approved' ? 'published' : 'rejected',
+            moderatorNotes: notes,
+            moderatedAt: new Date().toISOString(),
+            moderatedBy: 'admin'
+          })
+        });
+        
+        if (!response.ok) throw new Error('Failed to update article');
+      }
+
+      // Remove from moderation queue (since it's no longer pending)
+      setModerationQueue(prev => prev.filter(i => i.id !== itemId));
 
       // Update stats
       setStats(prev => ({
         ...prev,
         pendingCount: prev.pendingCount - 1,
         todayActions: prev.todayActions + 1,
-        newsroomQueue: action === 'approved' ? prev.newsroomQueue - 1 : prev.newsroomQueue,
-        eventsQueue: action === 'approved' ? prev.eventsQueue - 1 : prev.eventsQueue
+        newsroomQueue: item.type === 'newsroom_article' ? prev.newsroomQueue - 1 : prev.newsroomQueue,
+        eventsQueue: item.type === 'event' ? prev.eventsQueue - 1 : prev.eventsQueue
       }));
+
+      // Show success message
+      alert(`${item.type === 'event' ? 'Event' : 'Article'} ${action} successfully!`);
 
     } catch (error) {
       console.error('Moderation action failed:', error);
+      alert('Failed to process moderation action. Please try again.');
     }
   };
 
