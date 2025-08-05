@@ -325,12 +325,33 @@ export default function NewsroomEnhanced() {
   const [selectedCategory, setSelectedCategory] = useState('All')
   
   useEffect(() => {
-    // Check if newsroom backend is running and fetch articles
-    fetch('http://localhost:3001/api/articles')
+    // Fetch articles from the live API
+    fetch('/api/articles')
       .then(res => res.json())
       .then(data => {
-        if (data.articles && data.articles.length > 0) {
-          setArticles(data.articles)
+        if (data.success && data.articles && data.articles.length > 0) {
+          // Transform API data to match expected format
+          const transformedArticles = data.articles
+            .filter(article => article.status === 'published') // Only show published articles
+            .map(article => ({
+              id: article.id,
+              title: article.title,
+              excerpt: article.description || article.excerpt || 'No excerpt available',
+              category: article.category || 'General',
+              author: article.author || 'BLKOUT Team',
+              publishedAt: article.publishedAt || article.createdAt,
+              image: article.image || '/images/squared/WELLDEF_SQUARED.png',
+              featured: article.featured || false,
+              tags: Array.isArray(article.tags) ? article.tags : [],
+              priority: article.priority || 'medium'
+            }))
+          
+          if (transformedArticles.length > 0) {
+            setArticles(transformedArticles)
+          } else {
+            // No published articles, show mock data
+            setArticles(mockArticles)
+          }
         } else {
           // Keep mock articles if no real articles available
           setArticles(mockArticles)
