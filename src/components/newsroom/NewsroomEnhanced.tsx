@@ -336,14 +336,17 @@ export default function NewsroomEnhanced() {
             .map(article => ({
               id: article.id,
               title: article.title,
-              excerpt: article.description || article.excerpt || 'No excerpt available',
+              excerpt: article.excerpt || article.description || article.content?.substring(0, 200) || 'No excerpt available',
               category: article.category || 'General',
               author: article.author || 'BLKOUT Team',
               publishedAt: article.publishedAt || article.createdAt,
               image: article.image || '/images/squared/WELLDEF_SQUARED.png',
               featured: article.featured || false,
               tags: Array.isArray(article.tags) ? article.tags : [],
-              priority: article.priority || 'medium'
+              priority: article.priority || 'medium',
+              readTime: Math.max(1, Math.ceil((article.content?.length || 0) / 1000)),
+              isBreaking: article.priority === 'high' || article.featured,
+              source: article.submittedVia === 'chrome-extension' ? 'Community Submitted' : (article.author || 'BLKOUT Team')
             }))
           
           if (transformedArticles.length > 0) {
