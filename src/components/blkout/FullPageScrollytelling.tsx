@@ -889,7 +889,7 @@ const FullPageScrollytelling: React.FC = () => {
           <IVORShowcase 
             userPathway={allUserData.pathway}
             onInteraction={(data) => {
-              console.log('IVOR interaction:', data)
+              // IVOR interaction handled
             }}
           />
         )

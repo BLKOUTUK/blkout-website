@@ -29,28 +29,33 @@ class EventsService {
   private baseUrl: string
   
   constructor() {
-    // Try to connect to the events calendar backend
-    // Priority: production URL, then localhost, then fallback to mock
+    // Use proxy API to avoid CORS issues
     this.baseUrl = process.env.NODE_ENV === 'production' 
-      ? 'https://events-deploy.vercel.app'           // Real BLKOUT events backend
+      ? '/api'                                       // Vercel proxy to real backend
       : 'http://localhost:5173/api'                  // Local development
   }
 
   async getAllEvents(): Promise<Event[]> {
     try {
+      console.log('🔗 Attempting to connect to backend:', this.baseUrl)
+      
       // First try to connect to real backend
-      const response = await fetch(`${this.baseUrl}/api/events`, {
+      const response = await fetch(`${this.baseUrl}/events`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
       })
 
+      console.log('📡 Backend response status:', response.status)
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
 
       const data = await response.json()
+      console.log('📊 Backend data received:', data)
+      
       if (data.success && data.events) {
         // Map backend format to frontend format
         return data.events.map((event: any) => ({
@@ -74,7 +79,8 @@ class EventsService {
       }
       return []
     } catch (error) {
-      console.warn('Events backend not available, using mock data:', error)
+      console.error('❌ Events backend failed, using mock data:', error)
+      console.log('🔄 Falling back to mock data')
       // Fallback to mock data if backend is unavailable
       return this.getMockEvents()
     }

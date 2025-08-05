@@ -234,7 +234,6 @@ export default function BentoBoxLayout({ onToggleLayout }: BentoBoxLayoutProps) 
       window.open(section.href, '_blank')
     } else {
       // Handle internal navigation
-      console.log('Navigate to:', section.href)
     }
   }
 

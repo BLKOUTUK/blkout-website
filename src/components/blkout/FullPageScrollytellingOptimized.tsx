@@ -194,11 +194,11 @@ interface Slide {
 
 // Optimized slides with performance in mind
 const slides: Slide[] = [
-  // Welcome video - optimized
+  // Welcome video - first slide after logo
   {
     id: 'welcome',
     type: 'video',
-    videoUrl: '/images/squared/Finalfinalwelcome SQUARED.mp4',
+    videoUrl: '/images/squared/FinalfinalwelcomeSQUARED.mp4',
     title: '',
     subtitle: '',
     content: '',
@@ -792,12 +792,12 @@ const FullPageScrollytellingOptimized: React.FC = () => {
               preload="auto"
               className="w-full h-full object-contain"
               src={slide.videoUrl}
-              onLoadedData={() => console.log('Video loaded successfully:', slide.videoUrl)}
+              onLoadedData={() => {}}
               onError={(e) => {
                 console.error('Video failed to load:', slide.videoUrl)
                 console.error('Error details:', e)
               }}
-              onCanPlay={() => console.log('Video can play:', slide.videoUrl)}
+              onCanPlay={() => {}}
             >
               <source src={slide.videoUrl} type="video/mp4" />
               Your browser does not support the video tag.
@@ -1169,7 +1169,7 @@ const FullPageScrollytellingOptimized: React.FC = () => {
                         className="w-full bg-white text-blkout-primary hover:bg-gray-100 px-6 py-3 rounded-xl font-bold transition-all shadow-lg text-lg"
                         onClick={() => {
                           // Handle other CTA actions
-                          console.log('CTA clicked:', slide.sections[0].action);
+                          // CTA clicked
                         }}
                       >
                         {slide.sections[0].action}

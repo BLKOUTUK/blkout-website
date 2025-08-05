@@ -42,7 +42,7 @@ function StorySubmissionForm({ backendStatus }: StorySubmissionFormProps) {
         const result = await response.json()
         setSubmitted(true)
         setFormData({ title: '', content: '', category: 'Community', author: '' })
-        console.log('✅ Story submitted:', result)
+        // Story submitted successfully
       } else {
         throw new Error('Submission failed')
       }
@@ -266,7 +266,7 @@ export default function CommunityGateway() {
         
         setBackendStatus('connected')
       } catch (error) {
-        console.log('Backend connection test:', error)
+        // Backend connection test failed
         setBackendStatus('offline')
       }
     }

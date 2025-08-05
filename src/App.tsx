@@ -16,9 +16,13 @@ import FullPageScrollytellingOptimized from './components/blkout/FullPageScrolly
 import ProjectHub from './components/blkout/ProjectHub'
 import IntegrationDashboard from './components/blkout/IntegrationDashboard'
 import ModerationDashboard from './components/admin/ModerationDashboard'
+import EventsAdminDashboard from './components/admin/EventsAdminDashboard'
+import NewsroomAdminDashboard from './components/admin/NewsroomAdminDashboard'
+import AdminAuth from './components/admin/AdminAuth'
 import CommunityGatewayEnhanced from './components/community/CommunityGatewayEnhanced'
 import MagazineLayout from './components/magazine/MagazineLayout'
-import PlatformHomepage from './components/magazine/PlatformHomepage'
+import PlatformHomepage from './components/platform/PlatformHomepage'
+import PrimaryNavigation from './components/layout/PrimaryNavigation'
 import MagazineHomepageEnhanced from './components/magazine/MagazineHomepageEnhanced'
 import StoriesPageEnhanced from './components/magazine/StoriesPageEnhanced'
 import MovementIntroEnhanced from './components/movement/MovementIntroEnhanced'
@@ -30,6 +34,14 @@ import EventsPageIntegrated from './components/events/EventsPageIntegrated'
 import PrimaryNavigationEnhanced from './components/layout/PrimaryNavigationEnhanced'
 import PlatformFooter from './components/layout/PlatformFooter'
 import SkipNavigation from './components/layout/SkipNavigation'
+
+// Platform Layout Component - wraps platform routes with navigation
+const PlatformLayout = ({ children }: { children: React.ReactNode }) => (
+  <>
+    <PrimaryNavigation />
+    {children}
+  </>
+)
 
 // Old EventsPage removed - using EventsPageIntegrated directly in routing
 
@@ -124,21 +136,23 @@ function App() {
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<FullPageScrollytellingOptimized />} />
-        <Route path="/platform" element={<PlatformHomepage />} />
+        <Route path="/platform" element={<PlatformLayout><PlatformHomepage /></PlatformLayout>} />
         <Route path="/magazine" element={<MagazineHomepageEnhanced />} />
         <Route path="/home" element={<MagazineHomepageEnhanced />} />
         <Route path="/dashboard" element={<ProjectHub />} />
-        <Route path="/admin" element={<IntegrationDashboard />} />
-        <Route path="/admin/moderation" element={<ModerationDashboard />} />
-        <Route path="/community" element={<CommunityGatewayEnhanced />} />
-        <Route path="/stories" element={<StoriesPageEnhanced />} />
-        <Route path="/movement" element={<MovementIntroEnhanced />} />
+        <Route path="/admin" element={<AdminAuth><IntegrationDashboard /></AdminAuth>} />
+        <Route path="/admin/moderation" element={<AdminAuth><ModerationDashboard /></AdminAuth>} />
+        <Route path="/admin/events" element={<AdminAuth><EventsAdminDashboard /></AdminAuth>} />
+        <Route path="/admin/newsroom" element={<AdminAuth><NewsroomAdminDashboard /></AdminAuth>} />
+        <Route path="/community" element={<PlatformLayout><CommunityGatewayEnhanced /></PlatformLayout>} />
+        <Route path="/stories" element={<PlatformLayout><StoriesPageEnhanced /></PlatformLayout>} />
+        <Route path="/movement" element={<PlatformLayout><MovementIntroEnhanced /></PlatformLayout>} />
         <Route path="/discussions" element={<BLKOUTHUBPromoPage />} />
         <Route path="/reports" element={<HubReports />} />
-        <Route path="/newsroom" element={<NewsroomEnhanced />} />
+        <Route path="/newsroom" element={<PlatformLayout><NewsroomEnhanced /></PlatformLayout>} />
         <Route path="/media" element={<ChannelBLKOUTPage />} />
-        <Route path="/events" element={<EventsPageIntegrated />} />
-        <Route path="/ivor" element={<IVORInterfaceEnhanced />} />
+        <Route path="/events" element={<PlatformLayout><EventsPageIntegrated /></PlatformLayout>} />
+        <Route path="/ivor" element={<PlatformLayout><IVORInterfaceEnhanced /></PlatformLayout>} />
         <Route path="/governance" element={<GovernancePage />} />
         <Route path="/media/newsroom" element={<NewsroomEnhanced />} />
         <Route path="/media/channel" element={<ChannelBLKOUTPage />} />

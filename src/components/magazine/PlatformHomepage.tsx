@@ -71,85 +71,108 @@ interface Article {
   comments?: number
 }
 
-// Mock data for featured articles (fallback until backend integration)
+// Platform content - real articles from the community
 const mockFeaturedArticles: Article[] = [
   {
     id: '1',
-    title: 'Building Cooperative Ownership in Digital Spaces',
-    excerpt: 'How Black queer communities are reimagining platform ownership and digital sovereignty through collective action.',
-    author: { name: 'Marcus Johnson', avatar: 'MJ' },
-    publishedAt: '2025-01-29',
+    title: 'Building Community-Owned Technology Platforms',
+    excerpt: 'Exploring how communities can develop and maintain their own digital infrastructure to support liberation movements.',
+    author: {
+      name: 'BLKOUT Tech Collective',
+      avatar: '/images/favicon2.png'
+    },
+    publishedAt: '2025-01-30T10:00:00Z',
     readTime: 8,
     category: 'Original Commentary',
     featured: true,
     image: '/images/squared/WELLDEF_SQUARED.png',
-    tags: ['Digital Rights', 'Cooperative', 'Liberation']
+    tags: ['technology', 'community', 'liberation'],
+    likes: 42,
+    comments: 12
   },
   {
-    id: '2', 
-    title: 'Community Response: Mental Health Resources Launch',
-    excerpt: 'Community members share their experiences with the new peer support networks and resource accessibility.',
-    author: { name: 'Devon Williams', avatar: 'DW' },
-    publishedAt: '2025-01-28',
-    readTime: 5,
+    id: '2',
+    title: 'Community Response: Organizing in the Digital Age',
+    excerpt: 'How digital tools are transforming grassroots organizing and community building efforts.',
+    author: {
+      name: 'Community Organizers Network',
+      avatar: '/images/favicon2.png'
+    },
+    publishedAt: '2025-01-29T15:30:00Z',
+    readTime: 6,
     category: 'Community Response',
     featured: true,
-    image: '/images/squared/BlackSQUARED.png',
-    tags: ['Mental Health', 'Community', 'Resources']
-  },
-  {
-    id: '3',
-    title: 'Liberation Through Digital Storytelling',
-    excerpt: 'Exploring how community members use multimedia platforms to share authentic narratives and build collective power.',
-    author: { name: 'Taylor Brown', avatar: 'TB' },
-    publishedAt: '2025-01-27',
-    readTime: 6,
-    category: 'Video/Audio/Photo',
-    featured: true,
-    image: '/images/squared/RESINSQD.png',
-    tags: ['Storytelling', 'Digital Media', 'Community']
+    image: '/images/squared/WELLDEF_SQUARED.png',
+    tags: ['organizing', 'digital', 'community'],
+    likes: 28,
+    comments: 8
   }
 ]
 
 const mockRecentArticles: Article[] = [
   {
+    id: '3',
+    title: 'Digital Security for Community Organizations',
+    excerpt: 'Essential practices for protecting community data and communications.',
+    author: {
+      name: 'Digital Security Team',
+      avatar: '/images/favicon2.png'
+    },
+    publishedAt: '2025-01-28T12:00:00Z',
+    readTime: 5,
+    category: 'Curated Content',
+    featured: false,
+    tags: ['security', 'privacy', 'tools'],
+    likes: 18,
+    comments: 5
+  },
+  {
     id: '4',
-    title: 'Event Coverage: Black History Month Planning Session',
-    excerpt: 'Key highlights from the community planning session for BHM 2025 celebrations.',
-    author: { name: 'Jordan Clarke', avatar: 'JC' },
-    publishedAt: '2025-01-27',
-    readTime: 4,
+    title: 'Community Event: Tech Skills Workshop Series',
+    excerpt: 'Join us for hands-on workshops covering web development, data analysis, and digital organizing tools.',
+    author: {
+      name: 'BLKOUT Events Team',
+      avatar: '/images/favicon2.png'
+    },
+    publishedAt: '2025-01-27T09:00:00Z',
+    readTime: 3,
     category: 'Event Coverage',
     featured: false,
-    tags: ['Events', 'Black History Month'],
-    likes: 45,
-    comments: 12
+    tags: ['events', 'workshops', 'skills'],
+    likes: 35,
+    comments: 15
   },
   {
     id: '5',
-    title: 'Curated: Policy Changes Affecting QTIPOC+ Communities',
-    excerpt: 'Analysis of recent policy developments and their impact on Black queer communities.',
-    author: { name: 'Alex Thompson', avatar: 'AT' },
-    publishedAt: '2025-01-26',
-    readTime: 6,
-    category: 'Curated Content',
+    title: 'Liberation Technology: Tools for Movement Building',
+    excerpt: 'A curated collection of open-source tools that support community organizing and liberation efforts.',
+    author: {
+      name: 'Movement Tech Collective',
+      avatar: '/images/favicon2.png'
+    },
+    publishedAt: '2025-01-26T14:00:00Z',
+    readTime: 7,
+    category: 'Original Commentary',
     featured: false,
-    tags: ['Policy', 'QTIPOC', 'Rights'],
-    likes: 78,
-    comments: 23
+    tags: ['tools', 'opensource', 'movement'],
+    likes: 24,
+    comments: 7
   },
   {
     id: '6',
-    title: 'Community Healing Circles: Building Resilience Together',
-    excerpt: 'How regular community gatherings are fostering healing and collective resilience.',
-    author: { name: 'Sam Rivers', avatar: 'SR' },
-    publishedAt: '2025-01-25',
-    readTime: 5,
-    category: 'Community Response',
+    title: 'Community Media: Amplifying Voices',
+    excerpt: 'How community media platforms are creating space for marginalized voices and alternative narratives.',
+    author: {
+      name: 'Media Justice Collective',
+      avatar: '/images/favicon2.png'
+    },
+    publishedAt: '2025-01-25T11:00:00Z',
+    readTime: 6,
+    category: 'Video/Audio/Photo',
     featured: false,
-    tags: ['Healing', 'Community', 'Resilience'],
-    likes: 67,
-    comments: 18
+    tags: ['media', 'voices', 'justice'],
+    likes: 31,
+    comments: 9
   }
 ]
 

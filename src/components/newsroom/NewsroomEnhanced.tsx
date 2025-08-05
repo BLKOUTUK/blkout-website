@@ -45,45 +45,9 @@ const CONTENT_CATEGORIES = {
   }
 }
 
-// Mock newsroom data
-const mockArticles = [
-  {
-    id: '1',
-    title: 'UK Government Announces New LGBTQ+ Rights Protections',
-    excerpt: 'Historic legislation provides stronger workplace protections and healthcare access for QTIPOC+ communities across England and Wales.',
-    category: 'Breaking News',
-    source: 'BBC News',
-    publishedAt: '2025-01-30T10:30:00Z',
-    readTime: 4,
-    author: 'BLKOUT News Team',
-    isBreaking: true,
-    image: '/images/squared/WELLDEF_SQUARED.png'
-  },
-  {
-    id: '2',
-    title: 'Manchester Black Pride 2025: Record Attendance Expected',
-    excerpt: 'Community organizers report early registration numbers suggest this year\'s event will be the largest in the event\'s history.',
-    category: 'Community News',
-    source: 'Manchester Evening News',
-    publishedAt: '2025-01-29T15:45:00Z',
-    readTime: 3,
-    author: 'Community Correspondent',
-    isBreaking: false,
-    image: '/images/squared/BlackSQUARED.png'
-  },
-  {
-    id: '3',
-    title: 'Housing Crisis Disproportionately Affects QTIPOC+ Youth',
-    excerpt: 'New research reveals stark disparities in housing security and homelessness rates among Black queer young adults in major UK cities.',
-    category: 'Analysis',
-    source: 'Guardian Analysis',
-    publishedAt: '2025-01-28T09:15:00Z',
-    readTime: 8,
-    author: 'Policy Research Team',
-    isBreaking: false,
-    image: '/images/squared/BLKOUT25INV.png'
-  }
-]
+// Newsroom content will be populated from real backend data
+// Removed mock articles to maintain content authenticity
+const mockArticles: never[] = []
 
 // Newsroom Hero Section
 const NewsroomHero = ({ backendStatus }: { backendStatus: string }) => (

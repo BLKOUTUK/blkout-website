@@ -1,6 +1,6 @@
 {
-  "timestamp": "2025-08-04T02:51:17.687Z",
-  "duration": 5,
+  "timestamp": "2025-08-04T19:53:15.461Z",
+  "duration": 4,
   "summary": {
     "total": 9,
     "passed": 7,
@@ -17,21 +17,22 @@
       "success": false,
       "critical": true,
       "blocksDeployment": true,
-      "message": "6 critical mock data issues found",
+      "message": "7 critical mock data issues found",
       "warnings": [
-        "components/blkout/BentoBoxLayout.tsx: 1 Debug console.log statements",
+        "components/admin/ModerationDashboard.tsx: 1 Placeholder content",
         "components/blkout/CommunityEmailCapture.tsx: 2 Placeholder content",
         "components/blkout/FullPageScrollytelling.backup.tsx: 5 Debug console.log statements",
         "components/blkout/FullPageScrollytelling.current-backup.tsx: 3 Debug console.log statements",
-        "components/blkout/FullPageScrollytelling.tsx: 1 Debug console.log statements",
         "components/blkout/FullPageScrollytelling.tsx: 4 Placeholder content",
-        "components/blkout/FullPageScrollytellingOptimized.tsx: 3 Debug console.log statements",
         "components/blkout/FullPageScrollytellingOptimized.tsx: 4 Placeholder content",
         "components/blkout/IvorChatbot.tsx: 1 Placeholder content",
-        "components/blkout/RetroImage.tsx: 1 Placeholder content"
+        "components/blkout/RetroImage.tsx: 1 Placeholder content",
+        "components/blkout/RetroVideo.tsx: 1 Placeholder content",
+        "components/blkout/SimpleScrollytelling.tsx: 2 Debug console.log statements"
       ],
       "details": {
         "criticalIssues": [
+          "components/admin/ModerationDashboard.tsx: 2 Mock implementations",
           "components/community/CommunityGateway.tsx: 4 Mock implementations",
           "components/magazine/ArticleGrid.tsx: 3 Mock implementations",
           "components/magazine/ArticlePage.tsx: 2 Mock implementations",
@@ -39,7 +40,7 @@
           "components/magazine/PlatformHomepage.tsx: 6 Mock implementations",
           "components/newsroom/NewsroomEnhanced.tsx: 4 Mock implementations"
         ],
-        "totalMatches": 95
+        "totalMatches": 93
       }
     }
   ],
@@ -49,21 +50,22 @@
       "success": false,
       "critical": true,
       "blocksDeployment": true,
-      "message": "6 critical mock data issues found",
+      "message": "7 critical mock data issues found",
       "warnings": [
-        "components/blkout/BentoBoxLayout.tsx: 1 Debug console.log statements",
+        "components/admin/ModerationDashboard.tsx: 1 Placeholder content",
         "components/blkout/CommunityEmailCapture.tsx: 2 Placeholder content",
         "components/blkout/FullPageScrollytelling.backup.tsx: 5 Debug console.log statements",
         "components/blkout/FullPageScrollytelling.current-backup.tsx: 3 Debug console.log statements",
-        "components/blkout/FullPageScrollytelling.tsx: 1 Debug console.log statements",
         "components/blkout/FullPageScrollytelling.tsx: 4 Placeholder content",
-        "components/blkout/FullPageScrollytellingOptimized.tsx: 3 Debug console.log statements",
         "components/blkout/FullPageScrollytellingOptimized.tsx: 4 Placeholder content",
         "components/blkout/IvorChatbot.tsx: 1 Placeholder content",
-        "components/blkout/RetroImage.tsx: 1 Placeholder content"
+        "components/blkout/RetroImage.tsx: 1 Placeholder content",
+        "components/blkout/RetroVideo.tsx: 1 Placeholder content",
+        "components/blkout/SimpleScrollytelling.tsx: 2 Debug console.log statements"
       ],
       "details": {
         "criticalIssues": [
+          "components/admin/ModerationDashboard.tsx: 2 Mock implementations",
           "components/community/CommunityGateway.tsx: 4 Mock implementations",
           "components/magazine/ArticleGrid.tsx: 3 Mock implementations",
           "components/magazine/ArticlePage.tsx: 2 Mock implementations",
@@ -71,7 +73,7 @@
           "components/magazine/PlatformHomepage.tsx: 6 Mock implementations",
           "components/newsroom/NewsroomEnhanced.tsx: 4 Mock implementations"
         ],
-        "totalMatches": 95
+        "totalMatches": 93
       }
     }
   ],
@@ -93,21 +95,22 @@
       "success": false,
       "critical": true,
       "blocksDeployment": true,
-      "message": "6 critical mock data issues found",
+      "message": "7 critical mock data issues found",
       "warnings": [
-        "components/blkout/BentoBoxLayout.tsx: 1 Debug console.log statements",
+        "components/admin/ModerationDashboard.tsx: 1 Placeholder content",
         "components/blkout/CommunityEmailCapture.tsx: 2 Placeholder content",
         "components/blkout/FullPageScrollytelling.backup.tsx: 5 Debug console.log statements",
         "components/blkout/FullPageScrollytelling.current-backup.tsx: 3 Debug console.log statements",
-        "components/blkout/FullPageScrollytelling.tsx: 1 Debug console.log statements",
         "components/blkout/FullPageScrollytelling.tsx: 4 Placeholder content",
-        "components/blkout/FullPageScrollytellingOptimized.tsx: 3 Debug console.log statements",
         "components/blkout/FullPageScrollytellingOptimized.tsx: 4 Placeholder content",
         "components/blkout/IvorChatbot.tsx: 1 Placeholder content",
-        "components/blkout/RetroImage.tsx: 1 Placeholder content"
+        "components/blkout/RetroImage.tsx: 1 Placeholder content",
+        "components/blkout/RetroVideo.tsx: 1 Placeholder content",
+        "components/blkout/SimpleScrollytelling.tsx: 2 Debug console.log statements"
       ],
       "details": {
         "criticalIssues": [
+          "components/admin/ModerationDashboard.tsx: 2 Mock implementations",
           "components/community/CommunityGateway.tsx: 4 Mock implementations",
           "components/magazine/ArticleGrid.tsx: 3 Mock implementations",
           "components/magazine/ArticlePage.tsx: 2 Mock implementations",
@@ -115,9 +118,9 @@
           "components/magazine/PlatformHomepage.tsx: 6 Mock implementations",
           "components/newsroom/NewsroomEnhanced.tsx: 4 Mock implementations"
         ],
-        "totalMatches": 95
+        "totalMatches": 93
       },
-      "duration": 14
+      "duration": 9
     },
     {
       "name": "Build System Validation",
@@ -126,7 +129,7 @@
       "blocksDeployment": false,
       "message": "Build system functional",
       "warnings": [],
-      "duration": 5029
+      "duration": 4206
     },
     {
       "name": "Security Validation",
@@ -135,6 +138,7 @@
       "blocksDeployment": false,
       "message": "No critical security vulnerabilities detected",
       "warnings": [
+        "components/admin/ModerationDashboard.tsx: Potential credential exposure (2 occurrences)",
         "components/blkout/BentoBoxLayout.tsx: Potential credential exposure (1 occurrences)",
         "components/blkout/EnhancedQuiz.tsx: Potential credential exposure (4 occurrences)",
         "components/blkout/FullPageScrollytelling.backup.tsx: Potential credential exposure (25 occurrences)",
@@ -143,12 +147,12 @@
         "components/blkout/FullPageScrollytellingOptimized.tsx: Potential credential exposure (7 occurrences)",
         "components/blkout/HeroVideoCarousel.tsx: Potential credential exposure (3 occurrences)",
         "components/blkout/HorizontalScrollPrinciples.tsx: Potential credential exposure (3 occurrences)",
-        "components/blkout/IntegrationDashboard.tsx: Potential credential exposure (3 occurrences)",
-        "components/blkout/InteractiveRevelation.tsx: Potential credential exposure (1 occurrences)"
+        "components/blkout/IntegrationDashboard.tsx: Potential credential exposure (3 occurrences)"
       ],
       "details": {
         "criticalVulnerabilities": [],
         "securityWarnings": [
+          "components/admin/ModerationDashboard.tsx: Potential credential exposure (2 occurrences)",
           "components/blkout/BentoBoxLayout.tsx: Potential credential exposure (1 occurrences)",
           "components/blkout/EnhancedQuiz.tsx: Potential credential exposure (4 occurrences)",
           "components/blkout/FullPageScrollytelling.backup.tsx: Potential credential exposure (25 occurrences)",
@@ -164,11 +168,12 @@
           "components/blkout/ParallaxCommunityValues.tsx: Potential credential exposure (1 occurrences)",
           "components/blkout/ProjectHub.tsx: Potential credential exposure (2 occurrences)",
           "components/blkout/SimpleScrollytelling.tsx: Potential credential exposure (2 occurrences)",
+          "components/community/BLKOUTHUBPromoPage.tsx: Potential credential exposure (1 occurrences)",
           "components/community/CommunityGateway.tsx: Potential credential exposure (1 occurrences)",
           "components/community/CommunityGatewayEnhanced.tsx: Potential credential exposure (4 occurrences)",
           "components/community/HubReports.tsx: Potential credential exposure (7 occurrences)",
           "components/community/JoinDiscussionEnhanced.tsx: Potential credential exposure (7 occurrences)",
-          "components/events/EventsPageIntegrated.tsx: Potential credential exposure (3 occurrences)",
+          "components/events/EventsPageIntegrated.tsx: Potential credential exposure (4 occurrences)",
           "components/ivor/IVORInterfaceEnhanced.tsx: Potential credential exposure (10 occurrences)",
           "components/layout/PlatformFooter.tsx: Potential credential exposure (5 occurrences)",
           "components/layout/PrimaryNavigation.tsx: Potential credential exposure (2 occurrences)",
@@ -177,27 +182,27 @@
           "components/magazine/ArticlePage.tsx: Potential credential exposure (3 occurrences)",
           "components/magazine/MagazineHomepage.tsx: Potential credential exposure (9 occurrences)",
           "components/magazine/MagazineHomepageEnhanced.tsx: Potential credential exposure (10 occurrences)",
-          "components/magazine/PlatformHomepage.tsx: Potential credential exposure (9 occurrences)",
+          "components/magazine/PlatformHomepage.tsx: Potential credential exposure (10 occurrences)",
           "components/magazine/StoriesPageEnhanced.tsx: Potential credential exposure (3 occurrences)",
           "components/movement/MovementIntro.tsx: Potential credential exposure (2 occurrences)",
-          "components/movement/MovementIntroEnhanced.tsx: Potential credential exposure (2 occurrences)",
+          "components/movement/MovementIntroEnhanced.tsx: Potential credential exposure (1 occurrences)",
           "components/newsroom/NewsroomEnhanced.tsx: Potential credential exposure (4 occurrences)",
           "hooks/useLayoutPreference.ts: Potential credential exposure (4 occurrences)",
           "lib/constants.ts: Potential credential exposure (1 occurrences)"
         ]
       },
-      "duration": 6
+      "duration": 5
     },
     {
       "name": "Asset Performance",
       "success": false,
       "critical": false,
-      "message": "Large total bundle size: 221980KB (recommended: <5MB); Excessive image assets: 123204KB (consider optimization)",
+      "message": "Large total bundle size: 222005KB (recommended: <5MB); Excessive image assets: 123204KB (consider optimization)",
       "warnings": [
         "Large assets found: images/BLACK.png (4262KB), images/Finalfinalwelcome ‑ Made With Flexclip.mp4 (7722KB), images/LIBERATION.png (1341KB), images/WELL DEFINED FINAL -.png (1314KB), images/animated graded fist.mp4 (1128KB), images/blkoutuk.com v3/John Henry.png (5881KB), images/blkoutuk.com v3/ancientlove.png (10295KB), images/blkoutuk.com v3/capacity.png (10730KB), images/blkoutuk.com v3/cube intro.mp4 (7764KB), images/blkoutuk.com v3/cube2 intro.mp4 (9138KB), images/blkoutuk.com v3/facecard.png (5073KB), images/blkoutuk.com v3/goldsmile  intro.mp4 (2884KB), images/blkoutuk.com v3/roller intro.mp4 (5025KB), images/blkoutuk.com v3/seat with baldwin.png (1582KB), images/blkoutuk.com v3/sunrise.png (2769KB), images/blkoutuk.com v3/travel intro.mp4 (6543KB), images/blkoutuk.com v3/tumblr_8d6d12538284c9062fca59225b80b35f_2b2dc944_500.webp (2129KB), images/blkoutuk.com v3/tumblr_b0d9293f446c8df8164cbce9ac26c3fa_b7a851c9_500.webp (1895KB), images/blkoutuk.com v3/tumblr_b565ed3f0ba2877ad21be3e6609cdb45_94de8fbb_540.webp (3012KB), images/blkoutuk.com v3/tumblr_pvb0gnG0bi1rchkzlo2_500.webp (1211KB), images/blkoutuk.com v3/tumblr_rcamhkmfNl1qhr6j3.mp4 (1947KB), images/blkoutvalues.png (1419KB), images/imagine.png (1766KB), images/ivorintrovid.mp4 (1706KB), images/men-.png (1396KB), images/out -.png (3359KB), images/photo collage.png (5709KB), images/projects fist.gif (20695KB), images/projects.png (1034KB), images/realness uleashed.mp4 (4133KB), images/squared/BlackSQUARED.png (2105KB), images/squared/Finalfinalwelcome SQUARED.mp4 (3719KB), images/squared/Story Powered Squared).mp4 (5261KB), images/squared/WELLDEF_SQUARED.png (1658KB), images/squared/capacitySQUARED.png (2744KB), images/squared/facecard SQUARED.png (1484KB), images/squared/imagine SQUARED.png (4262KB), images/squared/kissingtimeSQUARED.png (4334KB), images/squared/menSQUARED.png (2140KB), images/squared/outSQUARED.png (2458KB), images/squared/photo collage Video.mp4 (15051KB), images/squared/queerSQUARED.PNG (1577KB), images/squared/seat with baldwin SQUARED.png (1371KB), images/squared/story powered SQUARED).mp4 (14615KB), images/squared/sunrise SQUARED.png (1367KB), images/story powered full width (Video).mp4 (11352KB)"
       ],
       "details": {
-        "totalSize": 221980,
+        "totalSize": 222005,
         "imageSize": 123204,
         "largeAssets": [
           {
@@ -387,7 +392,7 @@
         ],
         "imageCount": 47
       },
-      "duration": 3
+      "duration": 2
     },
     {
       "name": "Backend Integration",
@@ -405,7 +410,7 @@
           "Newsroom API: ❌ Offline"
         ]
       },
-      "duration": 51
+      "duration": 34
     },
     {
       "name": "TypeScript Validation",
@@ -415,7 +420,7 @@
       "warnings": [
         "TypeScript tool configuration issue - manual validation required"
       ],
-      "duration": 357
+      "duration": 209
     },
     {
       "name": "Accessibility Validation",
@@ -426,7 +431,7 @@
       "details": {
         "a11yIssues": []
       },
-      "duration": 13
+      "duration": 10
     },
     {
       "name": "Monitoring Setup",

@@ -160,7 +160,7 @@ export default function ArticleGrid({ articles: propArticles, featuredArticle }:
             }
             setArticles(convertedArticles)
             setBackendStatus('connected')
-            console.log('✅ Successfully connected to newsroom backend')
+            // Successfully connected to newsroom backend
           } else {
             throw new Error('Invalid response format')
           }
@@ -168,7 +168,7 @@ export default function ArticleGrid({ articles: propArticles, featuredArticle }:
           throw new Error(`HTTP ${response.status}`)
         }
       } catch (error) {
-        console.log('📡 Backend offline, using mock data:', error)
+        // Backend offline, using fallback data
         setBackendStatus('offline')
         setArticles(mockArticles)
       } finally {

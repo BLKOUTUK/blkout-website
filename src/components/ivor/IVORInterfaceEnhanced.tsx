@@ -646,7 +646,7 @@ export default function IVORInterfaceEnhanced() {
         // Clear the context after using it
         localStorage.removeItem('pathwayContext')
       } catch (error) {
-        console.log('Error parsing pathway context:', error)
+        // Pathway context parsing failed - using default state
       }
     }
   }, [])

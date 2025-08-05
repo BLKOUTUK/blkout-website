@@ -1,0 +1,50 @@
+{
+  "manifest_version": 3,
+  "name": "BLKOUT Community Submission Tool",
+  "version": "1.0.0",
+  "description": "Submit events and stories to BLKOUT platform with one click",
+  
+  "permissions": [
+    "activeTab",
+    "storage",
+    "contextMenus"
+  ],
+  
+  "host_permissions": [
+    "https://blkout-website.vercel.app/*",
+    "https://blkout-beta.vercel.app/*",
+    "https://*.eventbrite.com/*",
+    "https://*.facebook.com/*",
+    "https://*.meetup.com/*"
+  ],
+  
+  "background": {
+    "service_worker": "background.js"
+  },
+  
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content-scripts/detector.js", "content-scripts/form-injector.js"],
+      "css": ["popup/popup.css"]
+    }
+  ],
+  
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "Submit to BLKOUT",
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "32": "assets/icon32.png",
+      "48": "assets/icon48.png",
+      "128": "assets/icon128.png"
+    }
+  },
+  
+  "icons": {
+    "16": "assets/icon16.png",
+    "32": "assets/icon32.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  }
+}

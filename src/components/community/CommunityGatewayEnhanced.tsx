@@ -265,7 +265,7 @@ function EnhancedStorySubmissionForm({ backendStatus }: StorySubmissionFormProps
         const result = await response.json()
         setSubmitted(true)
         setFormData({ title: '', content: '', category: 'Community Response', author: '' })
-        console.log('✅ Story submitted:', result)
+        // Story submitted successfully
       } else {
         throw new Error('Submission failed')
       }

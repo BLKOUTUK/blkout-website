@@ -61,57 +61,9 @@ const movementPrinciples: Principle[] = [
   }
 ]
 
-const featuredResources: Resource[] = [
-  {
-    id: '1',
-    title: 'STARTING A WORKER COOPERATIVE',
-    description: 'Complete guide to forming worker-owned businesses, from legal structures to governance models.',
-    type: 'guide',
-    category: 'Cooperative Development',
-    downloadUrl: '/resources/cooperative-guide.pdf',
-    isNew: true
-  },
-  {
-    id: '2',
-    title: 'COMMUNITY LAND TRUST TOOLKIT',
-    description: 'Resources for creating community-controlled land ownership and preventing displacement.',
-    type: 'toolkit',
-    category: 'Housing Justice',
-    downloadUrl: '/resources/community-land-trust-toolkit.pdf'
-  },
-  {
-    id: '3',
-    title: 'ECONOMIC DEMOCRACY IN ACTION',
-    description: 'Video series documenting successful cooperative businesses led by communities of color.',
-    type: 'video',
-    category: 'Case Studies',
-    previewUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
-  },
-  {
-    id: '4',
-    title: 'MUTUAL AID NETWORK TEMPLATE',
-    description: 'Organizational templates and best practices for community support networks.',
-    type: 'template',
-    category: 'Community Care',
-    downloadUrl: '/resources/mutual-aid-template.zip'
-  },
-  {
-    id: '5',
-    title: 'STATE OF THE MOVEMENT 2024',
-    description: 'Annual report on cooperative economy growth and impact in Black communities.',
-    type: 'report',
-    category: 'Research',
-    downloadUrl: '/resources/state-of-movement-2024.pdf'
-  },
-  {
-    id: '6',
-    title: 'FUNDRAISING FOR COOPERATIVES',
-    description: 'Alternative funding strategies that maintain community ownership and values.',
-    type: 'guide',
-    category: 'Finance',
-    downloadUrl: '/resources/cooperative-fundraising-guide.pdf'
-  }
-]
+// Resources will be populated from real backend data
+// Removed fake resources to maintain content authenticity
+const featuredResources: Resource[] = []
 
 // Movement Hero Section
 const MovementHero = () => (
@@ -291,134 +243,113 @@ const MovementPrinciples = () => (
   </section>
 )
 
-// Enhanced Resources Section
+// Resources In Development Section - Authentic messaging
 const ResourcesSection = () => {
-  const getResourceIcon = (type: string) => {
-    switch (type) {
-      case 'guide': return BookOpen
-      case 'toolkit': return Target
-      case 'report': return FileText
-      case 'video': return PlayCircle
-      case 'template': return Download
-      default: return FileText
-    }
-  }
-
-  const getResourceGradient = (type: string) => {
-    switch (type) {
-      case 'guide': return 'from-indigo-500 to-violet-600'
-      case 'toolkit': return 'from-emerald-500 to-blue-600'
-      case 'report': return 'from-slate-500 to-indigo-600'
-      case 'video': return 'from-violet-500 to-emerald-600'
-      case 'template': return 'from-blue-500 to-slate-600'
-      default: return 'from-gray-500 to-gray-600'
-    }
-  }
-
   return (
     <section className="py-24">
       <div className="max-w-6xl mx-auto px-8">
-        <div className="flex items-center justify-between mb-16">
-          <div>
-            <motion.h2 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-4xl md:text-5xl font-black heading-block mb-4 uppercase"
-            >
-              <span className="bg-gradient-to-r from-slate-400 to-indigo-400 bg-clip-text text-transparent">
-                ESSENTIAL
-              </span>
-              <span className="bg-gradient-to-r from-violet-400 to-emerald-400 bg-clip-text text-transparent ml-4">
-                RESOURCES
-              </span>
-            </motion.h2>
-            <p className="text-indigo-200 font-light text-lg">
-              Tools and guides for building cooperative power in your community
-            </p>
-          </div>
-          
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="px-8 py-3 bg-gradient-to-r from-emerald-600 to-indigo-600 text-white font-bold hover:from-emerald-500 hover:to-indigo-500 transition-all heading-block uppercase flex items-center"
+        <div className="text-center mb-16">
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-4xl md:text-5xl font-black heading-block mb-6 uppercase"
           >
-            FULL LIBRARY
-            <ExternalLink className="w-4 h-4 ml-2" />
-          </motion.button>
+            <span className="bg-gradient-to-r from-slate-400 to-indigo-400 bg-clip-text text-transparent">
+              RESOURCES IN
+            </span>
+            <span className="bg-gradient-to-r from-violet-400 to-emerald-400 bg-clip-text text-transparent ml-4">
+              DEVELOPMENT
+            </span>
+          </motion.h2>
+          <p className="text-xl text-indigo-100 font-light leading-relaxed max-w-3xl mx-auto mb-8">
+            We're actively building a comprehensive library of tools, guides, and resources 
+            for cooperative movement building. Our community is developing authentic content 
+            rooted in real organizing experience.
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {featuredResources.map((resource, index) => {
-            const IconComponent = getResourceIcon(resource.type)
-            const gradient = getResourceGradient(resource.type)
-            
-            return (
-              <motion.div
-                key={resource.id}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ scale: 1.02, y: -3 }}
-                className="bg-indigo-900/20 backdrop-blur-sm border border-indigo-700/20 p-8 hover:bg-indigo-900/40 transition-all duration-500 cursor-pointer group"
-              >
-                <div className="flex items-start justify-between mb-6">
-                  <div className={`w-12 h-12 bg-gradient-to-br ${gradient} flex items-center justify-center`}>
-                    <IconComponent className="w-6 h-6 text-white" />
-                  </div>
-                  
-                  {resource.isNew && (
-                    <span className="px-3 py-1 bg-emerald-500 text-white text-xs font-bold heading-block uppercase">
-                      NEW
-                    </span>
-                  )}
-                </div>
+        {/* Development Status Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="bg-indigo-900/20 backdrop-blur-sm border border-indigo-700/20 p-8 text-center"
+          >
+            <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-blue-600 flex items-center justify-center mx-auto mb-6">
+              <BookOpen className="w-8 h-8 text-white" />
+            </div>
+            <h3 className="text-xl font-black heading-block mb-4 uppercase text-emerald-400">
+              ORGANIZING GUIDES
+            </h3>
+            <p className="text-indigo-100 leading-relaxed font-light">
+              Community-tested strategies for building cooperative power
+            </p>
+          </motion.div>
 
-                <span className="px-3 py-1 bg-indigo-800/50 text-indigo-200 text-xs font-bold heading-block uppercase mb-4 inline-block">
-                  {resource.category}
-                </span>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="bg-indigo-900/20 backdrop-blur-sm border border-indigo-700/20 p-8 text-center"
+          >
+            <div className="w-16 h-16 bg-gradient-to-br from-violet-500 to-emerald-600 flex items-center justify-center mx-auto mb-6">
+              <Target className="w-8 h-8 text-white" />
+            </div>
+            <h3 className="text-xl font-black heading-block mb-4 uppercase text-violet-400">
+              PRACTICAL TOOLKITS
+            </h3>
+            <p className="text-indigo-100 leading-relaxed font-light">
+              Ready-to-use templates and frameworks from successful cooperatives
+            </p>
+          </motion.div>
 
-                <h3 className="text-xl font-black heading-block mb-4 leading-tight uppercase">
-                  <span className={`bg-gradient-to-r ${gradient} bg-clip-text text-transparent`}>
-                    {resource.title}
-                  </span>
-                </h3>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="bg-indigo-900/20 backdrop-blur-sm border border-indigo-700/20 p-8 text-center"
+          >
+            <div className="w-16 h-16 bg-gradient-to-br from-slate-500 to-indigo-600 flex items-center justify-center mx-auto mb-6">
+              <FileText className="w-8 h-8 text-white" />
+            </div>
+            <h3 className="text-xl font-black heading-block mb-4 uppercase text-slate-400">
+              IMPACT REPORTS
+            </h3>
+            <p className="text-indigo-100 leading-relaxed font-light">
+              Data and stories from cooperative movements worldwide
+            </p>
+          </motion.div>
+        </div>
 
-                <p className="text-indigo-100 mb-6 leading-relaxed font-light">
-                  {resource.description}
-                </p>
-
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-indigo-400 uppercase tracking-wide font-bold heading-block">
-                    {resource.type}
-                  </span>
-                  
-                  <div className="flex items-center space-x-3">
-                    {resource.previewUrl && (
-                      <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="p-2 text-indigo-400 hover:text-white transition-colors"
-                      >
-                        <PlayCircle className="w-5 h-5" />
-                      </motion.button>
-                    )}
-                    
-                    {resource.downloadUrl && (
-                      <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="p-2 text-indigo-400 hover:text-white transition-colors"
-                      >
-                        <Download className="w-5 h-5" />
-                      </motion.button>
-                    )}
-                    
-                    <ArrowRight className="w-5 h-5 text-indigo-400 group-hover:text-white group-hover:translate-x-1 transition-all" />
-                  </div>
-                </div>
-              </motion.div>
-            )
-          })}
+        {/* Community Contribution CTA */}
+        <div className="bg-gradient-to-br from-emerald-600/20 to-violet-600/20 border border-emerald-500/30 p-12 text-center">
+          <h3 className="text-3xl font-black heading-block mb-6 uppercase">
+            <span className="bg-gradient-to-r from-emerald-400 to-violet-400 bg-clip-text text-transparent">
+              BUILD WITH US
+            </span>
+          </h3>
+          <p className="text-xl text-indigo-100 mb-8 max-w-2xl mx-auto leading-relaxed font-light">
+            Have organizing experience to share? Resources from your cooperative? 
+            We're building this library together with input from practitioners doing the work.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              to="/community"
+              className="px-8 py-4 bg-gradient-to-r from-emerald-600 to-indigo-600 text-white font-black hover:from-emerald-500 hover:to-indigo-500 transition-all heading-block uppercase flex items-center justify-center"
+            >
+              <Users className="w-5 h-5 mr-3" />
+              CONTRIBUTE RESOURCES
+            </Link>
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="px-8 py-4 border-2 border-indigo-400 text-indigo-100 font-black hover:bg-indigo-400 hover:text-indigo-900 transition-all heading-block uppercase flex items-center justify-center"
+            >
+              <Globe className="w-5 h-5 mr-3" />
+              GET UPDATES
+            </motion.button>
+          </div>
         </div>
       </div>
     </section>

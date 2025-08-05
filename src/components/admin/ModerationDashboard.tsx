@@ -98,7 +98,7 @@ const ModerationDashboard: React.FC = () => {
   const handleModerationAction = async (itemId: string, action: string, notes?: string) => {
     try {
       // In real implementation, this would call the moderation API
-      console.log(`Taking action ${action} on item ${itemId}`, { notes });
+      // Taking moderation action
       
       // Update local state
       setModerationQueue(prev => 
