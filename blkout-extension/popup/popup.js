@@ -305,8 +305,10 @@ class BlkoutPopup {
     };
     
     if (type === 'event') {
+      // Event-specific fields
       submitData.date = formData.get('date') || new Date().toISOString().split('T')[0];
       submitData.time = formData.get('time') || '18:00';
+      submitData.duration = 120; // Default 2 hours
       submitData.organizer = 'Community Submitted';
       submitData.category = 'Community';
       submitData.location = {
@@ -318,18 +320,28 @@ class BlkoutPopup {
       submitData.status = 'draft';
       submitData.tags = ['community-submitted'];
     } else {
-      submitData.category = formData.get('category') || 'community-response';
+      // Article-specific fields - match API structure
+      submitData.excerpt = submitData.description; // API expects 'excerpt' not 'description'
+      submitData.content = submitData.description; // Full content same as description for now
+      submitData.category = formData.get('category') || 'Community Response';
       submitData.priority = 'medium';
-      submitData.type = formData.get('category') || 'community-response';
+      submitData.type = 'community_response'; // Fixed type
       submitData.author = 'Community Submitted';
       submitData.status = 'draft';
       submitData.tags = ['community-submitted'];
+      submitData.featured = false;
+      
+      // Remove description since API uses excerpt/content
+      delete submitData.description;
     }
     
     this.showStatus('Submitting...', 'info');
     
     try {
       const endpoint = type === 'event' ? '/events' : '/articles';
+      console.log('Submitting to:', API_BASE + endpoint);
+      console.log('Submit data:', submitData);
+      
       const response = await fetch(API_BASE + endpoint, {
         method: 'POST',
         headers: {
@@ -338,17 +350,21 @@ class BlkoutPopup {
         body: JSON.stringify(submitData)
       });
       
-      if (response.ok) {
+      console.log('Response status:', response.status);
+      const responseData = await response.json();
+      console.log('Response data:', responseData);
+      
+      if (response.ok && responseData.success) {
         this.showStatus('✅ Successfully submitted to BLKOUT! Moderators will review it shortly.', 'success');
         setTimeout(() => {
           window.close();
         }, 2000);
       } else {
-        throw new Error('Submission failed');
+        throw new Error(`Submission failed: ${responseData.message || responseData.error || 'Unknown error'}`);
       }
     } catch (error) {
       console.error('Submission error:', error);
-      this.showStatus('❌ Submission failed. Please try again or use the website directly.', 'error');
+      this.showStatus(`❌ Submission failed: ${error.message}. Please try again or use the website directly.`, 'error');
     }
   }
   
