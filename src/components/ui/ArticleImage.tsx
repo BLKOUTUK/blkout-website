@@ -14,14 +14,20 @@ const ArticleImage: React.FC<ArticleImageProps> = ({
   const imageOptions = ArticleImageGenerator.generateImageOptions(article)
   const dimensions = imageSizes[size]
   
-  // Determine which image to show
+  // Determine which image to show - prioritize Black queer culture images
   const getImageSrc = (): string => {
+    // If article has a specific image and it hasn't errored, use it
     if (article.image && !imageError) {
       return article.image
     }
-    if (imageError || !article.image) {
-      return showGradientFallback ? imageOptions.gradient : imageOptions.primary
+    
+    // Default to our beautiful Black queer culture imagery
+    // Use thumbnail/squared for small sizes, primary for larger sizes
+    if (size === 'thumbnail') {
+      return imageOptions.squared
     }
+    
+    // For error cases or articles without images, use our culture imagery
     return imageOptions.primary
   }
 

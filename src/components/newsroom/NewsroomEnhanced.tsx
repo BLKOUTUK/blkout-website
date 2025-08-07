@@ -47,7 +47,24 @@ const CONTENT_CATEGORIES = {
 
 // Newsroom content will be populated from real backend data
 // Removed mock articles to maintain content authenticity
-const mockArticles: never[] = []
+// Fallback articles for when API is unavailable
+const fallbackArticles = [
+  {
+    id: 'fallback_001',
+    title: 'BLKOUT Newsroom Loading',
+    excerpt: 'Loading live content from our community contributors and newsroom team.',
+    category: 'System',
+    author: 'BLKOUT Team',
+    publishedAt: new Date().toISOString(),
+    image: '/images/squared/WELLDEF_SQUARED.png',
+    featured: false,
+    tags: ['loading'],
+    priority: 'medium',
+    readTime: 1,
+    isBreaking: false,
+    source: 'System'
+  }
+]
 
 // Newsroom Hero Section
 const NewsroomHero = ({ backendStatus }: { backendStatus: string }) => (
@@ -319,17 +336,25 @@ const NewsArticlesGrid = ({ articles }: { articles: any[] }) => (
 )
 
 export default function NewsroomEnhanced() {
-  const [articles, setArticles] = useState(mockArticles)
+  const [articles, setArticles] = useState(fallbackArticles)
   const [loading, setLoading] = useState(true)
   const [backendStatus, setBackendStatus] = useState<'checking' | 'connected' | 'offline'>('checking')
   const [selectedCategory, setSelectedCategory] = useState('All')
   
   useEffect(() => {
-    // Fetch articles from the live API
-    fetch('/api/articles')
-      .then(res => res.json())
-      .then(data => {
-        if (data.success && data.articles && data.articles.length > 0) {
+    const fetchArticles = async () => {
+      try {
+        console.log('🔄 Fetching articles from /api/articles')
+        const response = await fetch('/api/articles')
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+        }
+        
+        const data = await response.json()
+        console.log('📰 Articles API response:', data)
+        
+        if (data.success && data.articles && Array.isArray(data.articles)) {
           // Transform API data to match expected format
           const transformedArticles = data.articles
             .filter(article => article.status === 'published') // Only show published articles
@@ -349,25 +374,29 @@ export default function NewsroomEnhanced() {
               source: article.submittedVia === 'chrome-extension' ? 'Community Submitted' : (article.author || 'BLKOUT Team')
             }))
           
+          console.log(`✅ Transformed ${transformedArticles.length} published articles`)
+          
           if (transformedArticles.length > 0) {
             setArticles(transformedArticles)
+            setBackendStatus('connected')
           } else {
-            // No published articles, show mock data
-            setArticles(mockArticles)
+            console.log('⚠️ No published articles found, keeping fallback')
+            // Keep fallback articles if no published content
+            setBackendStatus('connected')
           }
         } else {
-          // Keep mock articles if no real articles available
-          setArticles(mockArticles)
+          throw new Error('Invalid API response format')
         }
-        setBackendStatus('connected')
-      })
-      .catch(() => {
+      } catch (error) {
+        console.error('❌ Error fetching articles:', error)
         setBackendStatus('offline')
-        setArticles(mockArticles) // Use mock data as fallback
-      })
-      .finally(() => {
+        // Keep fallback articles on error
+      } finally {
         setLoading(false)
-      })
+      }
+    }
+    
+    fetchArticles()
   }, [])
 
   const filteredArticles = articles.filter(article => 

@@ -15,17 +15,27 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@pinecone-database/pinecone": "^6.1.2",
     "@radix-ui/react-slot": "^1.0.0",
+    "@supabase/supabase-js": "^2.53.1",
     "@tailwindcss/typography": "^0.5.0",
+    "@types/cheerio": "^0.22.35",
+    "@vercel/blob": "^1.1.1",
+    "cheerio": "^1.1.2",
+    "chromadb-client": "^2.4.6",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "elasticsearch": "^16.7.3",
     "framer-motion": "^11.0.0",
     "gsap": "^3.13.0",
+    "ioredis": "^5.7.0",
     "lucide-react": "^0.408.0",
+    "openai": "^4.104.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^7.7.1",
     "react-scroll-parallax": "^3.4.5",
+    "rss-parser": "^3.13.0",
     "tailwind-merge": "^2.0.0"
   },
   "devDependencies": {

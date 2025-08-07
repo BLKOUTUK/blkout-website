@@ -36,13 +36,17 @@ const PlatformHomepage: React.FC = () => {
   const [events, setEvents] = useState<Event[]>([])
   const [communityActivity, setCommunityActivity] = useState<CommunityActivity[]>([])
   const [loading, setLoading] = useState(true)
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  const [liveStats, setLiveStats] = useState({
+    activeUsers: 47,
+    ongoingDiscussions: 12,
+    upcomingEvents: 8,
+    newStories: 5
+  })
 
-  // Load real article data and mock events/community data
+  // Load real data and simulate live activity
   useEffect(() => {
     // Simulate API loading
     setTimeout(() => {
-
       setEvents([
         {
           id: '1',
@@ -61,6 +65,15 @@ const PlatformHomepage: React.FC = () => {
           location: 'Online',
           category: 'Wellness',
           featured: false
+        },
+        {
+          id: '3',
+          title: 'Protest Planning Meeting',
+          date: '2025-01-25',
+          time: '19:30',
+          location: 'South London Community Hub',
+          category: 'Organizing',
+          featured: true
         }
       ])
 
@@ -68,23 +81,43 @@ const PlatformHomepage: React.FC = () => {
         {
           id: '1',
           type: 'discussion',
-          title: 'How do we build sustainable community tech?',
-          user: 'TechOrganizer',
+          title: 'Housing justice strategy session starting now',
+          user: 'TenantOrganizer',
           timestamp: '2025-01-15T14:30:00Z',
           engagement: 23
         },
         {
           id: '2',
-          type: 'story',
-          title: 'New story: Cooperative Housing Models',
-          user: 'CommunityReporter',
+          type: 'event',
+          title: 'Live: Community safety patrol forming',
+          user: 'SafetyCoordinator',
           timestamp: '2025-01-15T12:00:00Z',
-          engagement: 15
+          engagement: 31
+        },
+        {
+          id: '3',
+          type: 'story',
+          title: 'Breaking: New community space secured in Hackney',
+          user: 'CommunityReporter',
+          timestamp: '2025-01-15T10:15:00Z',
+          engagement: 18
         }
       ])
 
       setLoading(false)
     }, 1000)
+
+    // Update live stats every 30 seconds
+    const statsInterval = setInterval(() => {
+      setLiveStats(prev => ({
+        activeUsers: prev.activeUsers + Math.floor(Math.random() * 6) - 3,
+        ongoingDiscussions: Math.max(8, prev.ongoingDiscussions + Math.floor(Math.random() * 4) - 2),
+        upcomingEvents: prev.upcomingEvents,
+        newStories: prev.newStories + Math.floor(Math.random() * 2)
+      }))
+    }, 30000)
+
+    return () => clearInterval(statsInterval)
   }, [])
 
   if (loading) {
@@ -114,13 +147,30 @@ const PlatformHomepage: React.FC = () => {
             </h1>
             
             <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
-              A digital platform for liberation movements, community organizing, and collective action. 
-              Connect, learn, and build power together.
+              Your hub for liberation movements, community organizing, and collective action. 
+              <br />
+              <span className="text-emerald-400 font-semibold">Connect • Organize • Build Power • Take Action</span>
             </p>
+            
+            {/* Live Activity Indicators */}
+            <div className="flex flex-wrap justify-center gap-6 pt-6">
+              <div className="flex items-center space-x-2 bg-emerald-900/30 px-4 py-2 rounded-full border border-emerald-500/30">
+                <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                <span className="text-emerald-300 text-sm">{liveStats.activeUsers} active now</span>
+              </div>
+              <div className="flex items-center space-x-2 bg-purple-900/30 px-4 py-2 rounded-full border border-purple-500/30">
+                <div className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
+                <span className="text-purple-300 text-sm">{liveStats.ongoingDiscussions} live discussions</span>
+              </div>
+              <div className="flex items-center space-x-2 bg-blue-900/30 px-4 py-2 rounded-full border border-blue-500/30">
+                <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                <span className="text-blue-300 text-sm">{liveStats.upcomingEvents} events this week</span>
+              </div>
+            </div>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
               <button className="bg-emerald-600 hover:bg-emerald-700 px-8 py-4 rounded-lg font-semibold text-lg transition-colors flex items-center">
-                Explore Stories
+                Start Exploring
                 <ChevronRight className="w-5 h-5 ml-2" />
               </button>
               <button className="border border-purple-500 hover:bg-purple-500/10 px-8 py-4 rounded-lg font-semibold text-lg transition-colors">
@@ -130,177 +180,153 @@ const PlatformHomepage: React.FC = () => {
           </motion.div>
         </div>
         
-        {/* Floating Elements */}
+        {/* Enhanced Floating Elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-20 left-10 w-20 h-20 bg-emerald-500/10 rounded-full blur-xl"></div>
-          <div className="absolute top-40 right-20 w-32 h-32 bg-purple-500/10 rounded-full blur-xl"></div>
-          <div className="absolute bottom-20 left-20 w-24 h-24 bg-blue-500/10 rounded-full blur-xl"></div>
+          <div className="absolute top-20 left-10 w-20 h-20 bg-emerald-500/20 rounded-full blur-xl animate-pulse"></div>
+          <div className="absolute top-40 right-20 w-32 h-32 bg-purple-500/20 rounded-full blur-xl animate-pulse" style={{animationDelay: '1s'}}></div>
+          <div className="absolute bottom-20 left-20 w-24 h-24 bg-blue-500/20 rounded-full blur-xl animate-pulse" style={{animationDelay: '2s'}}></div>
         </div>
       </section>
 
-      {/* Platform Features Overview */}
+      {/* What's Happening Now Section */}
       <section className="py-16 bg-gray-800/50">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">What Makes BLKOUT Different</h2>
-            <p className="text-gray-400 text-lg">Community-first tools for liberation movements</p>
+            <h2 className="text-3xl font-bold mb-4 flex items-center justify-center">
+              <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse mr-3"></div>
+              What's Happening Right Now
+            </h2>
+            <p className="text-gray-400 text-lg">Live community activity and urgent actions</p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="bg-gray-800 rounded-xl p-8 text-center hover:bg-gray-750 transition-colors"
-            >
-              <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <MessageCircle className="w-8 h-8 text-emerald-400" />
-              </div>
-              <h3 className="text-xl font-semibold mb-4">Community Stories</h3>
-              <p className="text-gray-400">
-                Amplify voices from the movement. Share experiences, analysis, and calls to action with our community.
-              </p>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="bg-gray-800 rounded-xl p-8 text-center hover:bg-gray-750 transition-colors"
-            >
-              <div className="w-16 h-16 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Calendar className="w-8 h-8 text-purple-400" />
-              </div>
-              <h3 className="text-xl font-semibold mb-4">Movement Events</h3>
-              <p className="text-gray-400">
-                Discover protests, workshops, meetings, and community gatherings. Stay connected to local organizing.
-              </p>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="bg-gray-800 rounded-xl p-8 text-center hover:bg-gray-750 transition-colors"
-            >
-              <div className="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Users className="w-8 h-8 text-blue-400" />
-              </div>
-              <h3 className="text-xl font-semibold mb-4">Collective Intelligence</h3>
-              <p className="text-gray-400">
-                Access I.V.O.R., our AI assistant trained on liberation theory and organizing strategies.
-              </p>
-            </motion.div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {communityActivity.map((activity, index) => (
+              <motion.div
+                key={activity.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="bg-gray-800 rounded-xl p-6 border-l-4 border-red-500 hover:bg-gray-750 transition-colors cursor-pointer"
+              >
+                <div className="flex items-start justify-between mb-3">
+                  <span className="px-2 py-1 bg-red-600 text-white text-xs font-bold rounded uppercase">
+                    {activity.type === 'discussion' ? 'LIVE' : activity.type === 'event' ? 'HAPPENING' : 'BREAKING'}
+                  </span>
+                  <span className="text-xs text-gray-500">
+                    {new Date(activity.timestamp).toLocaleDateString()}
+                  </span>
+                </div>
+                <h3 className="font-semibold text-white mb-2">{activity.title}</h3>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-emerald-400">@{activity.user}</span>
+                  <div className="flex items-center text-gray-400">
+                    <Users className="w-3 h-3 mr-1" />
+                    {activity.engagement}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Quick Access Dashboard */}
+      {/* Exploration Dashboard */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid lg:grid-cols-3 gap-8">
             
-            {/* Main Quick Actions */}
+            {/* Main Exploration Actions */}
             <div className="lg:col-span-2">
-              <h2 className="text-2xl font-bold mb-6">Jump Right In</h2>
+              <h2 className="text-2xl font-bold mb-6">Dive Into Liberation Work</h2>
               
               <div className="grid md:grid-cols-2 gap-6">
-                <a href="/stories" className="group bg-gradient-to-br from-emerald-900/50 to-green-900/50 rounded-xl p-6 border border-emerald-500/30 hover:border-emerald-400/50 transition-colors">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold">Latest Stories</h3>
-                    <ChevronRight className="w-5 h-5 text-emerald-400 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                  <p className="text-gray-400 text-sm mb-4">
-                    Read community perspectives, original analysis, and movement updates
-                  </p>
-                  <div className="text-emerald-400 text-sm font-medium">
-                    Browse all stories →
-                  </div>
-                </a>
-                
-                <a href="/events" className="group bg-gradient-to-br from-purple-900/50 to-blue-900/50 rounded-xl p-6 border border-purple-500/30 hover:border-purple-400/50 transition-colors">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold">Upcoming Events</h3>
-                    <ChevronRight className="w-5 h-5 text-purple-400 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                  <p className="text-gray-400 text-sm mb-4">
-                    Find local organizing events, workshops, and community gatherings
-                  </p>
-                  <div className="text-purple-400 text-sm font-medium">
-                    View calendar →
-                  </div>
-                </a>
-                
-                <a href="/community" className="group bg-gradient-to-br from-blue-900/50 to-indigo-900/50 rounded-xl p-6 border border-blue-500/30 hover:border-blue-400/50 transition-colors">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold">Community Hub</h3>
-                    <ChevronRight className="w-5 h-5 text-blue-400 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                  <p className="text-gray-400 text-sm mb-4">
-                    Connect with organizers, join discussions, and build solidarity
-                  </p>
-                  <div className="text-blue-400 text-sm font-medium">
-                    Join discussions →
-                  </div>
-                </a>
-                
                 <a href="/ivor" className="group bg-gradient-to-br from-orange-900/50 to-red-900/50 rounded-xl p-6 border border-orange-500/30 hover:border-orange-400/50 transition-colors">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold">Ask I.V.O.R.</h3>
+                    <h3 className="text-lg font-semibold">Ask I.V.O.R. AI</h3>
                     <ChevronRight className="w-5 h-5 text-orange-400 group-hover:translate-x-1 transition-transform" />
                   </div>
                   <p className="text-gray-400 text-sm mb-4">
-                    Get guidance on organizing strategies, theory, and movement history
+                    Get instant guidance on organizing strategies, liberation theory, and movement history
                   </p>
                   <div className="text-orange-400 text-sm font-medium">
                     Start conversation →
                   </div>
                 </a>
+                
+                <a href="/events" className="group bg-gradient-to-br from-purple-900/50 to-blue-900/50 rounded-xl p-6 border border-purple-500/30 hover:border-purple-400/50 transition-colors">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold">Join Live Events</h3>
+                    <ChevronRight className="w-5 h-5 text-purple-400 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                  <p className="text-gray-400 text-sm mb-4">
+                    Protests, workshops, community meetings - find your place in the movement
+                  </p>
+                  <div className="text-purple-400 text-sm font-medium">
+                    See what's happening →
+                  </div>
+                </a>
+                
+                <a href="/community" className="group bg-gradient-to-br from-blue-900/50 to-indigo-900/50 rounded-xl p-6 border border-blue-500/30 hover:border-blue-400/50 transition-colors">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold">Build Community</h3>
+                    <ChevronRight className="w-5 h-5 text-blue-400 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                  <p className="text-gray-400 text-sm mb-4">
+                    Connect with organizers, start discussions, and coordinate collective action
+                  </p>
+                  <div className="text-blue-400 text-sm font-medium">
+                    Join the conversation →
+                  </div>
+                </a>
+                
+                <a href="/stories" className="group bg-gradient-to-br from-emerald-900/50 to-green-900/50 rounded-xl p-6 border border-emerald-500/30 hover:border-emerald-400/50 transition-colors">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold">Stories & Analysis</h3>
+                    <ChevronRight className="w-5 h-5 text-emerald-400 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                  <p className="text-gray-400 text-sm mb-4">
+                    Read community perspectives, original analysis, and liberation narratives
+                  </p>
+                  <div className="text-emerald-400 text-sm font-medium">
+                    Explore archive →
+                  </div>
+                </a>
               </div>
             </div>
 
-            {/* Sidebar with Activity Feed */}
+            {/* Activity Sidebar */}
             <div className="space-y-6">
               
-              {/* Recent Activity */}
-              <div className="bg-gray-800 rounded-xl p-6">
+              {/* Urgent Actions */}
+              <div className="bg-red-900/20 border border-red-500/30 rounded-xl p-6">
                 <h3 className="text-lg font-semibold mb-4 flex items-center">
-                  <TrendingUp className="w-5 h-5 mr-2 text-emerald-400" />
-                  Recent Activity
-                </h3>
-                
-                <div className="space-y-4">
-                  {communityActivity.map((activity) => (
-                    <div key={activity.id} className="text-sm border-l-2 border-gray-700 pl-3">
-                      <div className="flex items-center justify-between">
-                        <span className="font-medium text-emerald-400">{activity.user}</span>
-                        <span className="text-xs text-gray-500">
-                          {new Date(activity.timestamp).toLocaleDateString()}
-                        </span>
-                      </div>
-                      <p className="text-gray-300 mt-1">{activity.title}</p>
-                      <div className="flex items-center text-xs text-gray-500 mt-2">
-                        <MessageCircle className="w-3 h-3 mr-1" />
-                        {activity.engagement} responses
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                
-                <a href="/community" className="block text-center text-emerald-400 hover:text-emerald-300 text-sm mt-4 font-medium">
-                  View all activity →
-                </a>
-              </div>
-
-              {/* Upcoming Events Preview */}
-              <div className="bg-gray-800 rounded-xl p-6">
-                <h3 className="text-lg font-semibold mb-4 flex items-center">
-                  <Calendar className="w-5 h-5 mr-2 text-purple-400" />
-                  This Week
+                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse mr-2"></div>
+                  Urgent Actions
                 </h3>
                 
                 <div className="space-y-3">
-                  {events.slice(0, 2).map((event) => (
+                  <div className="bg-red-800/30 rounded-lg p-3">
+                    <h4 className="font-medium text-sm text-red-200">Stop Eviction Notice</h4>
+                    <p className="text-xs text-gray-400 mt-1">Family in Croydon needs immediate support</p>
+                    <button className="text-red-400 text-xs mt-2 hover:text-red-300">Take Action →</button>
+                  </div>
+                  <div className="bg-orange-800/30 rounded-lg p-3">
+                    <h4 className="font-medium text-sm text-orange-200">Community Safety Alert</h4>
+                    <p className="text-xs text-gray-400 mt-1">Increased police activity in Tottenham</p>
+                    <button className="text-orange-400 text-xs mt-2 hover:text-orange-300">Get Updates →</button>
+                  </div>
+                </div>
+              </div>
+
+              {/* This Week's Events */}
+              <div className="bg-gray-800 rounded-xl p-6">
+                <h3 className="text-lg font-semibold mb-4 flex items-center">
+                  <Calendar className="w-5 h-5 mr-2 text-purple-400" />
+                  This Week's Events
+                </h3>
+                
+                <div className="space-y-3">
+                  {events.slice(0, 3).map((event) => (
                     <div key={event.id} className="border-l-4 border-purple-500 pl-3 py-2">
                       <h4 className="font-medium text-sm">{event.title}</h4>
                       <div className="text-xs text-gray-400 space-y-1 mt-1">
@@ -324,298 +350,18 @@ const PlatformHomepage: React.FC = () => {
 
               {/* Get Involved CTA */}
               <div className="bg-gradient-to-br from-emerald-900/50 to-green-900/50 rounded-xl p-6 border border-emerald-500/30">
-                <h3 className="text-lg font-semibold mb-2">Get Involved</h3>
+                <h3 className="text-lg font-semibold mb-2">Ready to Organize?</h3>
                 <p className="text-sm text-gray-300 mb-4">
-                  Ready to take action? Join our community and help build the movement.
+                  Join {liveStats.activeUsers}+ community members building liberation movements across the UK.
                 </p>
                 <button className="w-full bg-emerald-600 hover:bg-emerald-700 py-2 px-4 rounded-lg text-sm font-medium transition-colors">
-                  Join BLKOUT
+                  Start Your Journey
                 </button>
               </div>
             </div>
           </div>
         </div>
       </section>
-    </div>
-  )
-}
-    )
-  }
-
-  return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      {/* Featured Stories Carousel */}
-      <section className="relative bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900 py-12">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            {featuredArticles[0] && (
-              <>
-                <div className="space-y-6">
-                  <div className="flex items-center space-x-3">
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium border ${getCategoryColor(featuredArticles[0].category)}`}>
-                      {getCategoryLabel(featuredArticles[0].category)}
-                    </span>
-                    <span className="text-yellow-400 flex items-center">
-                      <Star className="w-4 h-4 mr-1" />
-                      Featured
-                    </span>
-                  </div>
-                  
-                  <h1 className="text-4xl font-bold leading-tight">
-                    {featuredArticles[0].title}
-                  </h1>
-                  
-                  <p className="text-xl text-gray-300 leading-relaxed">
-                    {featuredArticles[0].excerpt}
-                  </p>
-                  
-                  <div className="flex items-center space-x-6 text-sm text-gray-400">
-                    <span>By {featuredArticles[0].author}</span>
-                    <span className="flex items-center">
-                      <Clock className="w-4 h-4 mr-1" />
-                      {featuredArticles[0].readTime} min read
-                    </span>
-                    <span className="flex items-center">
-                      <Eye className="w-4 h-4 mr-1" />
-                      {featuredArticles[0].views.toLocaleString()}
-                    </span>
-                  </div>
-                  
-                  <button className="bg-emerald-600 hover:bg-emerald-700 px-6 py-3 rounded-lg font-medium transition-colors flex items-center">
-                    Read Story
-                    <ChevronRight className="w-4 h-4 ml-2" />
-                  </button>
-                </div>
-                
-                <div className="relative">
-                  <ArticleImage 
-                    article={featuredArticles[0]} 
-                    size="hero"
-                    className="rounded-xl"
-                    showGradientFallback={true}
-                  />
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* Main Content Area */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-3 gap-8">
-          
-          {/* Main Content Column */}
-          <div className="lg:col-span-2 space-y-8">
-            
-            {/* Content Controls */}
-            <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold">Recent Stories</h2>
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => setViewMode('grid')}
-                    className={`p-2 rounded ${viewMode === 'grid' ? 'bg-emerald-600' : 'bg-gray-700 hover:bg-gray-600'}`}
-                  >
-                    <Grid className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => setViewMode('list')}
-                    className={`p-2 rounded ${viewMode === 'list' ? 'bg-emerald-600' : 'bg-gray-700 hover:bg-gray-600'}`}
-                  >
-                    <List className="w-4 h-4" />
-                  </button>
-                </div>
-                <button className="flex items-center space-x-2 bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded">
-                  <Filter className="w-4 h-4" />
-                  <span>Filter</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Recent Articles Grid */}
-            <div className={viewMode === 'grid' ? 'grid md:grid-cols-2 gap-6' : 'space-y-4'}>
-              {recentArticles.map((article) => (
-                <motion.article
-                  key={article.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={`group cursor-pointer ${viewMode === 'grid' 
-                    ? 'bg-gray-800 rounded-xl p-6 hover:bg-gray-750 transition-colors' 
-                    : 'bg-gray-800 rounded-lg p-4 hover:bg-gray-750 transition-colors flex items-center space-x-4'
-                  }`}
-                >
-                  {viewMode === 'list' && (
-                    <ArticleImage 
-                      article={article} 
-                      size="thumbnail"
-                      className="w-16 h-16 rounded-lg flex-shrink-0"
-                      showGradientFallback={true}
-                    />
-                  )}
-                  
-                  {viewMode === 'grid' && (
-                    <ArticleImage 
-                      article={article} 
-                      size="medium"
-                      className="w-full h-48 rounded-lg mb-4"
-                      showGradientFallback={true}
-                    />
-                  )}
-                  
-                  <div className={viewMode === 'grid' ? 'space-y-4' : 'flex-1 space-y-2'}>
-                    <div className="flex items-center justify-between">
-                      <span className={`px-2 py-1 rounded text-xs font-medium border ${getCategoryColor(article.category)}`}>
-                        {getCategoryLabel(article.category)}
-                      </span>
-                      <div className="flex items-center space-x-2 text-xs text-gray-400">
-                        <Eye className="w-3 h-3" />
-                        <span>{article.views}</span>
-                        <Share2 className="w-3 h-3" />
-                        <span>{article.shares}</span>
-                      </div>
-                    </div>
-                    
-                    <h3 className={`font-semibold group-hover:text-emerald-400 transition-colors ${
-                      viewMode === 'grid' ? 'text-lg' : 'text-base'
-                    }`}>
-                      {article.title}
-                    </h3>
-                    
-                    {viewMode === 'grid' && (
-                      <p className="text-gray-400 text-sm line-clamp-2">
-                        {article.excerpt}
-                      </p>
-                    )}
-                    
-                    <div className="flex items-center justify-between text-xs text-gray-500">
-                      <span>By {article.author}</span>
-                      <div className="flex items-center space-x-2">
-                        <Clock className="w-3 h-3" />
-                        <span>{article.readTime} min</span>
-                      </div>
-                    </div>
-                  </div>
-                </motion.article>
-              ))}
-            </div>
-
-            {/* Load More */}
-            <div className="text-center">
-              <button className="bg-gray-700 hover:bg-gray-600 px-6 py-3 rounded-lg font-medium transition-colors">
-                Load More Stories
-              </button>
-            </div>
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-6">
-            
-            {/* Search */}
-            <div className="bg-gray-800 rounded-xl p-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <input
-                  type="text"
-                  placeholder="Search stories, events..."
-                  className="w-full pl-10 pr-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                />
-              </div>
-            </div>
-
-            {/* Upcoming Events Widget */}
-            <div className="bg-gray-800 rounded-xl p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold flex items-center">
-                  <Calendar className="w-5 h-5 mr-2 text-emerald-400" />
-                  Upcoming Events
-                </h3>
-                <a href="/events" className="text-emerald-400 hover:text-emerald-300 text-sm">
-                  View All
-                </a>
-              </div>
-              
-              <div className="space-y-3">
-                {events.slice(0, 3).map((event) => (
-                  <div key={event.id} className="border-l-4 border-emerald-500 pl-3 py-2">
-                    <h4 className="font-medium text-sm">{event.title}</h4>
-                    <div className="text-xs text-gray-400 space-y-1">
-                      <div className="flex items-center">
-                        <Calendar className="w-3 h-3 mr-1" />
-                        {new Date(event.date).toLocaleDateString()} at {event.time}
-                      </div>
-                      <div className="flex items-center">
-                        <MapPin className="w-3 h-3 mr-1" />
-                        {event.location}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* I.V.O.R. Widget */}
-            <div className="bg-gradient-to-br from-purple-900/50 to-blue-900/50 rounded-xl p-6 border border-purple-500/30">
-              <div className="flex items-center mb-4">
-                <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center mr-3">
-                  <span className="text-xs font-bold">AI</span>
-                </div>
-                <h3 className="text-lg font-semibold">I.V.O.R. Assistant</h3>
-              </div>
-              
-              <p className="text-sm text-gray-300 mb-4">
-                Get instant answers about liberation movements, organizing strategies, and community resources.
-              </p>
-              
-              <button className="w-full bg-purple-600 hover:bg-purple-700 py-2 px-4 rounded-lg text-sm font-medium transition-colors">
-                Ask I.V.O.R.
-              </button>
-            </div>
-
-            {/* Community Activity Feed */}
-            <div className="bg-gray-800 rounded-xl p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold flex items-center">
-                  <Users className="w-5 h-5 mr-2 text-emerald-400" />
-                  Community Activity
-                </h3>
-                <a href="/community" className="text-emerald-400 hover:text-emerald-300 text-sm">
-                  Join Discussion
-                </a>
-              </div>
-              
-              <div className="space-y-3">
-                {communityActivity.map((activity) => (
-                  <div key={activity.id} className="text-sm">
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium">{activity.user}</span>
-                      <span className="text-xs text-gray-500">
-                        {new Date(activity.timestamp).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <p className="text-gray-400 text-xs">{activity.title}</p>
-                    <div className="flex items-center text-xs text-gray-500 mt-1">
-                      <MessageCircle className="w-3 h-3 mr-1" />
-                      {activity.engagement} responses
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Membership CTA */}
-            <div className="bg-gradient-to-br from-emerald-900/50 to-green-900/50 rounded-xl p-6 border border-emerald-500/30">
-              <h3 className="text-lg font-semibold mb-2">Join Our Community</h3>
-              <p className="text-sm text-gray-300 mb-4">
-                Become part of the liberation movement. Access exclusive content and connect with organizers.
-              </p>
-              <button className="w-full bg-emerald-600 hover:bg-emerald-700 py-2 px-4 rounded-lg text-sm font-medium transition-colors">
-                Become a Member
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   )
 }

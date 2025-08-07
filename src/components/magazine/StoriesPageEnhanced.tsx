@@ -12,13 +12,11 @@ import PlatformFooter from '../layout/PlatformFooter'
 import { CONTENT_CATEGORIES, getCategoryIndicator } from '../../lib/constants'
 import { liveStoryArchive } from '../../data/liveStoryArchive'
 
-// Use real data from liveStoryArchive
+// Use real data from liveStoryArchive with automatic Black queer culture imagery
 const stories = liveStoryArchive.map(story => ({
   ...story,
-  // Add missing fields for compatibility - removed fake engagement metrics
-  image: story.category === 'Technology' ? '/images/squared/WELLDEF_SQUARED.png' :
-         story.category === 'Community' ? '/images/squared/BlackSQUARED.png' :
-         '/images/squared/BLKOUT25INV.png' // Placeholder images based on category
+  // Remove hardcoded images - let ArticleImageGenerator handle beautiful Black queer culture imagery
+  // Images will be automatically selected based on category and story ID from our curated collection
 }))
 
 
