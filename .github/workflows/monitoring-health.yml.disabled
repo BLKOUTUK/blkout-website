@@ -57,12 +57,11 @@ jobs:
       fail-fast: false
     
     outputs:
-      production-status: ${{ steps.check-prod.outputs.status }}
-      staging-status: ${{ steps.check-staging.outputs.status }}
+      status: ${{ steps.frontend-health-check.outputs.status }}
     
     steps:
       - name: 🌐 Check Frontend Health
-        id: check-${{ matrix.environment }}
+        id: frontend-health-check
         run: |
           echo "🌐 Checking ${{ matrix.environment }} frontend health..."
           
