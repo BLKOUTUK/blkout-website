@@ -339,9 +339,8 @@ const PlatformHomepage: React.FC = () => {
     </div>
   )
 }
-    )
-  }
 
+const PlatformHomepage = () => {
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       {/* Featured Stories Carousel */}
