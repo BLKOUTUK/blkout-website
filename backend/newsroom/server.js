@@ -236,55 +236,125 @@ app.get('/api/articles', async (req, res) => {
       search
     } = req.query;
 
-    // Check cache first
-    const cacheKey = `articles:${JSON.stringify(req.query)}`;
-    if (redisClient?.isReady) {
-      const cached = await redisClient.get(cacheKey);
-      if (cached) {
-        return res.json(JSON.parse(cached));
+    let articles;
+    let total;
+
+    if (isUsingInMemory) {
+      // Mock articles for zero-budget deployment
+      const mockArticles = [
+        {
+          _id: '1',
+          title: 'BREAKING: New QTIPOC+ Housing Initiative Launched in Manchester',
+          excerpt: 'Community-led housing cooperative provides safe, affordable homes for Black queer men in Greater Manchester area.',
+          author: { name: 'Marcus Johnson', avatar: '/images/authors/mj.jpg' },
+          publishedAt: new Date('2025-08-01'),
+          readTime: 5,
+          category: 'Breaking News',
+          featured: true,
+          tags: ['Housing', 'Community', 'Manchester'],
+          status: 'breaking',
+          views: 234,
+          likes: 45,
+          shares: 12
+        },
+        {
+          _id: '2',
+          title: 'POLICY ANALYSIS: Impact of Recent Gender Recognition Changes',
+          excerpt: 'Comprehensive analysis of new gender recognition legislation and its effects on Black trans and non-binary communities.',
+          author: { name: 'Dr. Alex Thompson', avatar: '/images/authors/at.jpg' },
+          publishedAt: new Date('2025-07-30'),
+          readTime: 8,
+          category: 'Analysis',
+          featured: true,
+          tags: ['Policy', 'Trans Rights', 'Legal'],
+          status: 'published',
+          views: 456,
+          likes: 89,
+          shares: 23
+        },
+        {
+          _id: '3',
+          title: 'COMMUNITY SPOTLIGHT: Birmingham Pride Planning Update',
+          excerpt: 'Local organizing committee shares plans for Birmingham Black Pride 2025 celebration.',
+          author: { name: 'Jordan Clarke', avatar: '/images/authors/jc.jpg' },
+          publishedAt: new Date('2025-07-28'),
+          readTime: 4,
+          category: 'Community News',
+          featured: false,
+          tags: ['Pride', 'Birmingham', 'Events'],
+          status: 'published',
+          views: 178,
+          likes: 34,
+          shares: 8
+        }
+      ];
+
+      articles = mockArticles.filter(article => article.status === status);
+      
+      // Apply filters
+      if (category) {
+        articles = articles.filter(article => article.category === category);
+      }
+      if (featured !== undefined) {
+        articles = articles.filter(article => article.featured === (featured === 'true'));
+      }
+      
+      total = articles.length;
+      
+      // Apply pagination
+      const skip = (parseInt(page) - 1) * parseInt(limit);
+      articles = articles.slice(skip, skip + parseInt(limit));
+    } else {
+      // Check cache first
+      const cacheKey = `articles:${JSON.stringify(req.query)}`;
+      if (redisClient?.isReady) {
+        const cached = await redisClient.get(cacheKey);
+        if (cached) {
+          return res.json(JSON.parse(cached));
+        }
+      }
+
+      const query = { status };
+      
+      // Add filters
+      if (category) {
+        query.category = category;
+      }
+      
+      if (featured !== undefined) {
+        query.featured = featured === 'true';
+      }
+      
+      if (tags) {
+        query.tags = { $in: tags.split(',') };
+      }
+      
+      if (search) {
+        query.$text = { $search: search };
+      }
+
+      const skip = (parseInt(page) - 1) * parseInt(limit);
+      articles = await Article.find(query)
+        .sort({ featured: -1, publishedAt: -1 })
+        .skip(skip)
+        .limit(parseInt(limit))
+        .lean();
+
+      total = await Article.countDocuments(query);
+
+      // Cache the response
+      if (redisClient?.isReady) {
+        await redisClient.setEx(cacheKey, 300, JSON.stringify({ articles, total })); // 5 minutes
       }
     }
-
-    const query = { status };
-    
-    // Add filters
-    if (category) {
-      query.category = category;
-    }
-    
-    if (featured !== undefined) {
-      query.featured = featured === 'true';
-    }
-    
-    if (tags) {
-      query.tags = { $in: tags.split(',') };
-    }
-    
-    if (search) {
-      query.$text = { $search: search };
-    }
-
-    const skip = (parseInt(page) - 1) * parseInt(limit);
-    const articles = await Article.find(query)
-      .sort({ featured: -1, publishedAt: -1 })
-      .skip(skip)
-      .limit(parseInt(limit))
-      .lean();
-
-    const total = await Article.countDocuments(query);
 
     const result = {
       articles,
       total,
       page: parseInt(page),
       limit: parseInt(limit),
-      hasMore: skip + articles.length < total
+      hasMore: isUsingInMemory ? false : (((parseInt(page) - 1) * parseInt(limit)) + articles.length < total)
     };
-
-    // Cache the response
-    if (redisClient?.isReady) {
-      await redisClient.setEx(cacheKey, 300, JSON.stringify(result)); // 5 minutes
-    }
 
     res.json(result);
   } catch (error) {
