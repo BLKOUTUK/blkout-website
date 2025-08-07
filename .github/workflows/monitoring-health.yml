@@ -62,7 +62,7 @@ jobs:
     
     steps:
       - name: 🌐 Check Frontend Health
-        id: check-${{ matrix.environment }}
+        id: frontend-health-check
         run: |
           echo "🌐 Checking ${{ matrix.environment }} frontend health..."
           
