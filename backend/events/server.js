@@ -96,13 +96,25 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
-// MongoDB connection
-mongoose.connect(config.mongoUrl, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => logger.info('Connected to MongoDB'))
-.catch(err => logger.error('MongoDB connection error:', err));
+// In-memory storage for zero-budget deployment
+let inMemoryEvents = [];
+let isUsingInMemory = config.mongoUrl.includes('memory://');
+
+if (!isUsingInMemory) {
+  // MongoDB connection for production
+  mongoose.connect(config.mongoUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => logger.info('Connected to MongoDB'))
+  .catch(err => {
+    logger.error('MongoDB connection error:', err);
+    logger.info('Falling back to in-memory storage');
+    isUsingInMemory = true;
+  });
+} else {
+  logger.info('Using in-memory storage for events (zero-budget mode)');
+}
 
 // Redis connection (optional)
 let redisClient;
