@@ -157,6 +157,11 @@ function App() {
         <Route path="/media/newsroom" element={<NewsroomEnhanced />} />
         <Route path="/media/channel" element={<ChannelBLKOUTPage />} />
         <Route path="/media/storylab" element={<StorylabPage />} />
+        
+        {/* Extension Downloads */}
+        <Route path="/extension" element={<ExtensionDownloadSimple />} />
+        <Route path="/downloads" element={<ExtensionDownloadSimple />} />
+        <Route path="/chrome-extension" element={<ExtensionDownloadSimple />} />
       </Routes>
     </Router>
   )
