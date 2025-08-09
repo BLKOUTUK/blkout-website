@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { showSuccess, showError } from '../../utils/notifications';
 import { 
   CheckCircle, XCircle, Clock, Flag, Edit3, Eye, 
   Filter, Search, Calendar, FileText, Users, 
@@ -148,7 +149,7 @@ const ModerationDashboard: React.FC = () => {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            status: action === 'approved' ? 'published' : 'rejected',
+            status: action === 'approved' ? 'approved' : 'rejected',
             moderatorNotes: notes,
             moderatedAt: new Date().toISOString(),
             moderatedBy: 'admin'
@@ -161,7 +162,7 @@ const ModerationDashboard: React.FC = () => {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            status: action === 'approved' ? 'published' : 'rejected',
+            status: action === 'approved' ? 'approved' : 'rejected',
             moderatorNotes: notes,
             moderatedAt: new Date().toISOString(),
             moderatedBy: 'admin'
@@ -184,11 +185,11 @@ const ModerationDashboard: React.FC = () => {
       }));
 
       // Show success message
-      alert(`${item.type === 'event' ? 'Event' : 'Article'} ${action} successfully!`);
+      showSuccess(`${item.type === 'event' ? 'Event' : 'Article'} ${action}`, `The ${item.type} has been ${action} successfully`);
 
     } catch (error) {
       console.error('Moderation action failed:', error);
-      alert('Failed to process moderation action. Please try again.');
+      showError('Moderation Failed', 'Failed to process moderation action. Please try again.');
     }
   };
 

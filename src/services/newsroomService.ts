@@ -34,7 +34,7 @@ class NewsroomService {
   constructor() {
     this.baseUrl = process.env.NODE_ENV === 'production' 
       ? '/api'                                  // Vercel proxy to real backend
-      : 'http://localhost:3002/api'             // Local development
+      : '/api'                                  // Production proxy
   }
 
   async checkConnection(): Promise<boolean> {

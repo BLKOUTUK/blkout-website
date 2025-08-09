@@ -36,7 +36,7 @@ class MagazineService {
   constructor() {
     this.baseUrl = process.env.NODE_ENV === 'production' 
       ? 'https://magazine-deploy.vercel.app'        // Real BLKOUT magazine backend
-      : 'http://localhost:3003/api'                 // Local development
+      : '/api'                                      // Production proxy
   }
 
   async checkConnection(): Promise<boolean> {

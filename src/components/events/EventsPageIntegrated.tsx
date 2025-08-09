@@ -406,7 +406,7 @@ const EventsPageIntegrated: React.FC = () => {
 
   // Filter events when filters change
   useEffect(() => {
-    let filtered = events.filter(event => event.status === 'approved')
+    let filtered = events.filter(event => event.status === 'approved' || event.status === 'published')
 
     // Apply search filter
     if (filters.searchTerm) {

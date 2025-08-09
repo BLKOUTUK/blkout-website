@@ -28,7 +28,7 @@ class IVORService {
     
     this.baseUrl = process.env.NODE_ENV === 'production' 
       ? productionUrls[0]  // Will test all URLs in checkConnection()
-      : 'http://localhost:8000/api'
+      : 'https://blkout-ivor-fresh-jklmotmfs-robs-projects-54d653d3.vercel.app/api'
   }
 
   async checkConnection(): Promise<boolean> {
@@ -37,7 +37,6 @@ class IVORService {
       try {
         const response = await fetch(`${this.baseUrl}/health`, {
           method: 'GET',
-          timeout: 5000,
         })
         this.isConnected = response.ok
         return this.isConnected
@@ -59,13 +58,12 @@ class IVORService {
       try {
         const response = await fetch(`${url}/api/health`, {
           method: 'GET',
-          timeout: 3000,
         })
         
         if (response.ok) {
           this.baseUrl = url
           this.isConnected = true
-          console.log(`Connected to IVOR backend: ${url}`)
+          // IVOR backend connected
           return true
         }
       } catch (error) {

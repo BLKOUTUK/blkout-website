@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import { showSuccess, showError } from '../../utils/notifications'
 import { motion } from 'framer-motion'
 import { 
   Newspaper, Plus, Edit3, Trash2, Eye, Share2, Filter, Search,
@@ -186,7 +187,7 @@ export default function NewsroomAdminDashboard() {
 
         if (!response.ok) throw new Error('Failed to update article')
         
-        alert('Article updated successfully!')
+        showSuccess('Article Updated', 'Article updated successfully!')
       } else {
         // Create new article
         const response = await fetch('/api/articles', {
@@ -197,7 +198,7 @@ export default function NewsroomAdminDashboard() {
 
         if (!response.ok) throw new Error('Failed to create article')
         
-        alert('Article created successfully!')
+        showSuccess('Article Created', 'Article created successfully!')
       }
 
       // Reload articles to reflect changes
@@ -208,7 +209,7 @@ export default function NewsroomAdminDashboard() {
       setShowForm(false)
     } catch (error) {
       console.error('Failed to save article:', error)
-      alert('Failed to save article. Please try again.')
+      showError('Save Failed', 'Failed to save article. Please try again.')
     }
   }
 
@@ -242,10 +243,10 @@ export default function NewsroomAdminDashboard() {
         
         // Remove from local state
         setArticles(prev => prev.filter(article => article.id !== articleId))
-        alert('Article deleted successfully!')
+        showSuccess('Article Deleted', 'Article deleted successfully!')
       } catch (error) {
         console.error('Failed to delete article:', error)
-        alert('Failed to delete article. Please try again.')
+        showError('Delete Failed', 'Failed to delete article. Please try again.')
       }
     }
   }
@@ -273,10 +274,10 @@ export default function NewsroomAdminDashboard() {
         } : article
       ))
 
-      alert(`Article ${newStatus} successfully!`)
+      showSuccess(`Article ${newStatus}`, `Article ${newStatus} successfully!`)
     } catch (error) {
       console.error('Failed to update article status:', error)
-      alert('Failed to update article status. Please try again.')
+      showError('Update Failed', 'Failed to update article status. Please try again.')
     }
   }
 

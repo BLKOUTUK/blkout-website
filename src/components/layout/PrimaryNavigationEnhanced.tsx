@@ -8,6 +8,10 @@ import { Menu, X, Search, Home, ChevronDown } from 'lucide-react'
 const navigationItems = [
   { name: 'Latest Issue', href: '/platform', description: 'Current stories and featured content' },
   { name: 'Story Archive', href: '/stories', description: 'Complete archive of stories and analysis' },
+  { name: 'I.V.O.R.', href: '/ivor', description: 'AI assistant and resource finder' },
+  { name: 'Events', href: '/events', description: 'Community events calendar' },
+  { name: 'Our Movement', href: '/movement', description: 'Movement principles and community values' },
+  { name: 'Join Discussion', href: '/discussions', description: 'Community discussions and conversations' },
   { 
     name: 'Media', 
     href: '/media', 
@@ -17,12 +21,11 @@ const navigationItems = [
       { name: 'Storylab', href: '/media/storylab', description: 'Community storytelling platform' },
       { name: 'Newsroom', href: '/media/newsroom', description: 'News aggregation and analysis' }
     ]
-  },
-  { name: 'I.V.O.R.', href: '/ivor', description: 'AI assistant and resource finder' },
-  { name: 'Events', href: '/events', description: 'Community events calendar' },
-  { name: 'Chrome Extension', href: '/extension', description: 'Download our content submission extension' },
-  { name: 'Our Movement', href: '/movement', description: 'Movement principles and community values' },
-  { name: 'Join Discussion', href: '/discussions', description: 'Community discussions and conversations' }
+  }
+]
+
+const secondaryItems = [
+  { name: 'Chrome Extension', href: '/extension', description: 'Download our content submission extension' }
 ]
 
 interface PrimaryNavigationProps {

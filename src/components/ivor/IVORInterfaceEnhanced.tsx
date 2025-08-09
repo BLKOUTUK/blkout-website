@@ -448,7 +448,7 @@ const IVORChatInterface = ({ backendStatus, pathwayContext, initialMessage }: {
     setIsTyping(true)
 
     try {
-      const response = await fetch('http://localhost:8000/chat/message', {
+      const response = await fetch('https://blkout-ivor-fresh-jklmotmfs-robs-projects-54d653d3.vercel.app/chat/message', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
