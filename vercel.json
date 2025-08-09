@@ -23,6 +23,14 @@
       "destination": "/api/$1"
     },
     {
+      "source": "/downloads/(.*)",
+      "destination": "/downloads/$1"
+    },
+    {
+      "source": "/extension-download.html",
+      "destination": "/extension-download.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
