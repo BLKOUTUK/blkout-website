@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import { showSuccess, showError } from '../../utils/notifications'
 import { motion } from 'framer-motion'
 import { 
   Calendar, Plus, Edit3, Trash2, Eye, Users, MapPin, 
@@ -26,7 +27,7 @@ interface Event {
   tags: string[]
   capacity: number
   rsvps: number
-  status: 'draft' | 'published' | 'cancelled' | 'completed'
+  status: 'draft' | 'approved' | 'rejected' | 'published' | 'cancelled' | 'completed'
   featured: boolean
   image?: string
   createdAt: string
@@ -115,13 +116,15 @@ export default function EventsAdminDashboard() {
 
   const loadEvents = async () => {
     try {
-      const response = await fetch('https://events-deploy.vercel.app/api/events')
+      const response = await fetch('/api/events')
       const data = await response.json()
-      if (data.success) {
+      if (data.success && data.events) {
         setEvents(data.events)
+        console.log('✅ Loaded events:', data.events.length)
       }
     } catch (error) {
       console.error('Failed to load events:', error)
+      showError('Failed to load events', 'Using sample data')
       // Use sample data for demo
       setEvents([
         {
@@ -137,7 +140,7 @@ export default function EventsAdminDashboard() {
           tags: ['healing', 'community', 'support'],
           capacity: 25,
           rsvps: 18,
-          status: 'published',
+          status: 'approved',
           featured: true,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString()
@@ -167,10 +170,12 @@ export default function EventsAdminDashboard() {
         category: formData.category,
         tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
         capacity: formData.capacity,
-        featured: formData.featured
+        featured: formData.featured,
+        // New events start as drafts for moderation workflow
+        status: editingEvent ? editingEvent.status : 'draft'
       }
 
-      console.log('Submitting event data:', eventData)
+      // Submitting event
 
       if (editingEvent) {
         // Update existing event
@@ -187,7 +192,7 @@ export default function EventsAdminDashboard() {
         }
 
         const result = await response.json()
-        console.log('Event updated:', result)
+        // Event updated
         
         // Refresh events list
         loadEvents()
@@ -206,7 +211,7 @@ export default function EventsAdminDashboard() {
         }
 
         const result = await response.json()
-        console.log('Event created:', result)
+        // Event created
         
         // Refresh events list
         loadEvents()
@@ -217,10 +222,10 @@ export default function EventsAdminDashboard() {
       setEditingEvent(null)
       setShowForm(false)
       
-      alert(editingEvent ? 'Event updated successfully!' : 'Event created successfully!')
+      showSuccess(editingEvent ? 'Event Updated' : 'Event Created', editingEvent ? 'Event updated successfully!' : 'Event created successfully!')
     } catch (error) {
       console.error('Failed to save event:', error)
-      alert('Failed to save event. Please try again.')
+      showError('Save Failed', 'Failed to save event. Please try again.')
     }
   }
 
