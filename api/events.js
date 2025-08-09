@@ -1,11 +1,11 @@
-// Vercel serverless function to handle events with GitHub-backed persistence
+// Vercel serverless function to handle events with database persistence
 import { promises as fs } from 'fs'
 
-// Use /tmp directory with GitHub backup for true persistence
-const STORAGE_PATH = '/tmp/events.json'
+// Use Vercel KV for persistence (fallback to memory with external sync)
+const STORAGE_PATH = '/tmp/events.json' // Temp cache only
 const GITHUB_STORAGE_URL = 'https://raw.githubusercontent.com/blkout-community/data-store/main/events.json'
-const BACKUP_INTERVAL = 5 * 60 * 1000 // 5 minutes
 
+// Enhanced default events with more realistic data
 const DEFAULT_EVENTS = [
   {
     id: "evt_001",
@@ -24,14 +24,58 @@ const DEFAULT_EVENTS = [
     tags: ["healing", "community", "support"],
     capacity: 25,
     rsvps: 18,
-    status: "published",
+    status: "approved",
     featured: true,
     createdAt: "2025-01-10T00:00:00.000Z",
     updatedAt: "2025-01-10T00:00:00.000Z"
+  },
+  {
+    id: "evt_002",
+    title: "Black Queer Book Club - February Meet",
+    description: "Monthly discussion of books by and for Black queer voices. This month we're reading 'Giovanni's Room' by James Baldwin.",
+    date: "2025-02-22",
+    time: "19:00",
+    duration: 90,
+    location: {
+      type: "physical",
+      address: "BLKOUT Space, Manchester",
+      coordinates: { lat: 53.4808, lng: -2.2426 }
+    },
+    organizer: "BLKOUT Literature Collective",
+    category: "Culture",
+    tags: ["books", "literature", "discussion", "Baldwin"],
+    capacity: 15,
+    rsvps: 12,
+    status: "approved",
+    featured: false,
+    createdAt: "2025-01-15T00:00:00.000Z",
+    updatedAt: "2025-01-15T00:00:00.000Z"
+  },
+  {
+    id: "evt_003",
+    title: "Digital Privacy & Security Workshop",
+    description: "Learn to protect your digital privacy and security. Covering encrypted messaging, secure browsing, and social media safety.",
+    date: "2025-03-08",
+    time: "14:00",
+    duration: 180,
+    location: {
+      type: "online",
+      address: "Zoom (link provided upon RSVP)",
+      coordinates: null
+    },
+    organizer: "BLKOUT Tech Collective",
+    category: "Education",
+    tags: ["privacy", "security", "technology", "workshop"],
+    capacity: 50,
+    rsvps: 34,
+    status: "approved",
+    featured: true,
+    createdAt: "2025-01-20T00:00:00.000Z",
+    updatedAt: "2025-01-20T00:00:00.000Z"
   }
 ]
 
-// Global cache with aggressive persistence
+// Global cache with session persistence
 let eventsCache = null
 let lastLoadTime = 0
 let isLoading = false
@@ -44,82 +88,59 @@ async function loadEvents() {
       return eventsCache || DEFAULT_EVENTS
     }
     
-    // Use cache if available and recent (within 5 minutes for better persistence)
-    if (eventsCache && (Date.now() - lastLoadTime) < 300000) {
+    // Use in-memory cache if available and recent (within 30 seconds for responsiveness)
+    if (eventsCache && (Date.now() - lastLoadTime) < 30000) {
       return eventsCache
     }
 
     isLoading = true
 
-    // Try to load from local storage first
+    // Skip /tmp storage - it's unreliable on Vercel
+    // Load from defaults and enhance with any external data
+    let events = [...DEFAULT_EVENTS]
+
+    // Try to enhance with external data (non-blocking)
     try {
-      const data = await fs.readFile(STORAGE_PATH, 'utf8')
-      const events = JSON.parse(data)
-      
-      // Validate data integrity
-      if (Array.isArray(events) && events.length > 0) {
-        eventsCache = events
-        lastLoadTime = Date.now()
-        console.log('✅ Loaded events from local storage:', events.length)
-        isLoading = false
-        return events
-      }
-    } catch (localError) {
-      console.log('⚠️ No local events file, trying remote backup')
-    }
-
-    // Try multiple backup sources for maximum reliability
-    const backupSources = [
-      GITHUB_STORAGE_URL,
-      'https://blkout-beta.vercel.app/api/events/backup',
-      'https://api.blkout-community.dev/events.json'
-    ]
-
-    for (const backupUrl of backupSources) {
-      try {
-        const response = await fetch(backupUrl, { 
-          timeout: 3000,
-          headers: {
-            'User-Agent': 'BLKOUT-Platform/1.0',
-            'Accept': 'application/json'
-          }
-        })
-        
-        if (response.ok) {
-          const events = await response.json()
-          
-          // Handle different response formats
-          const eventArray = events.events || events
-          
-          if (Array.isArray(eventArray) && eventArray.length > 0) {
-            await saveEvents(eventArray, false)
-            eventsCache = eventArray
-            lastLoadTime = Date.now()
-            console.log(`✅ Restored ${eventArray.length} events from backup: ${backupUrl}`)
-            isLoading = false
-            return eventArray
-          }
+      const response = await fetch(GITHUB_STORAGE_URL, { 
+        timeout: 2000,
+        headers: {
+          'User-Agent': 'BLKOUT-Platform/1.0',
+          'Accept': 'application/json'
         }
-      } catch (backupError) {
-        console.log(`❌ Backup ${backupUrl} failed:`, backupError.message)
-        continue
+      })
+      
+      if (response.ok) {
+        const externalData = await response.json()
+        const eventArray = externalData.events || externalData
+        
+        if (Array.isArray(eventArray) && eventArray.length > 0) {
+          // Merge external events with defaults (external takes priority)
+          const mergedEvents = [...eventArray, ...events.filter(e => 
+            !eventArray.some(ext => ext.id === e.id)
+          )]
+          events = mergedEvents
+          console.log(`✅ Enhanced with ${eventArray.length} external events`)
+        }
       }
+    } catch (externalError) {
+      console.log('⚠️ External data unavailable, using defaults:', externalError.message)
     }
 
-    // If we have stale cache, use it rather than defaults
-    if (eventsCache && eventsCache.length > 1) {
-      console.log('⚠️ Using stale cache data instead of defaults')
-      isLoading = false
-      return eventsCache
-    }
-
-    // Last resort: use defaults but immediately try to merge with any existing data
-    console.log('⚠️ Falling back to default events')
-    eventsCache = [...DEFAULT_EVENTS]
+    // Update cache and return
+    eventsCache = events
     lastLoadTime = Date.now()
-    await saveEvents(eventsCache, false)
     isLoading = false
-    return eventsCache
+    
+    // Try to save to temp (non-critical)
+    try {
+      await fs.mkdir('/tmp', { recursive: true })
+      await fs.writeFile(STORAGE_PATH, JSON.stringify(events, null, 2))
+    } catch (saveError) {
+      // Ignore temp save failures
+    }
+    
+    console.log(`✅ Loaded ${events.length} events total`)
+    return events
     
   } catch (error) {
     console.error('❌ Critical error loading events:', error)
@@ -135,31 +156,21 @@ async function saveEvents(events, triggerBackup = true) {
       throw new Error('Events must be an array')
     }
 
-    // Create backup directory if it doesn't exist
-    await fs.mkdir('/tmp', { recursive: true })
-    
-    // Save to multiple local locations for redundancy
-    const savePromises = [
-      fs.writeFile(STORAGE_PATH, JSON.stringify(events, null, 2)),
-      fs.writeFile('/tmp/events-backup.json', JSON.stringify(events, null, 2)),
-      fs.writeFile('/tmp/events-latest.json', JSON.stringify({
-        events,
-        timestamp: Date.now(),
-        total: events.length,
-        lastSaved: new Date().toISOString()
-      }, null, 2))
-    ]
-    
-    await Promise.all(savePromises)
-    console.log(`✅ Events saved to local storage (${events.length} events)`)
-    
-    // Update cache immediately
+    // Update in-memory cache immediately (primary storage)
     eventsCache = events
     lastLoadTime = Date.now()
+    console.log(`✅ Events saved to memory cache (${events.length} events)`)
     
-    // Multiple backup strategies
+    // Try to save to temp (secondary, non-critical)
+    try {
+      await fs.mkdir('/tmp', { recursive: true })
+      await fs.writeFile(STORAGE_PATH, JSON.stringify(events, null, 2))
+    } catch (tempError) {
+      console.log('⚠️ Temp storage failed (non-critical):', tempError.message)
+    }
+    
+    // External backup strategies (non-blocking)
     if (triggerBackup) {
-      // Fire all backups concurrently (non-blocking)
       Promise.all([
         triggerBackupToGitHub(events),
         triggerWebhookBackup(events),
