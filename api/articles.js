@@ -1,8 +1,8 @@
-// Vercel serverless function to handle articles with hybrid persistence
+// Vercel serverless function to handle articles with in-memory persistence
 import { promises as fs } from 'fs'
 
-// Use /tmp directory with backup for persistence
-const STORAGE_PATH = '/tmp/articles.json'
+// Use in-memory cache with external sync (no /tmp dependency)
+const STORAGE_PATH = '/tmp/articles.json' // Temp cache only
 const GITHUB_STORAGE_URL = 'https://raw.githubusercontent.com/blkout-community/data-store/main/articles.json'
 
 const DEFAULT_ARTICLES = [
@@ -38,7 +38,7 @@ const DEFAULT_ARTICLES = [
   }
 ]
 
-// Global cache with aggressive persistence
+// Global cache with session persistence  
 let articlesCache = null
 let lastLoadTime = 0
 let isLoading = false
@@ -51,82 +51,59 @@ async function loadArticles() {
       return articlesCache || DEFAULT_ARTICLES
     }
     
-    // Use cache if available and recent (within 5 minutes for better persistence)
-    if (articlesCache && (Date.now() - lastLoadTime) < 300000) {
+    // Use in-memory cache if available and recent (within 30 seconds for responsiveness)
+    if (articlesCache && (Date.now() - lastLoadTime) < 30000) {
       return articlesCache
     }
 
     isLoading = true
 
-    // Try to load from local storage first
+    // Skip /tmp storage - it's unreliable on Vercel
+    // Load from defaults and enhance with external data
+    let articles = [...DEFAULT_ARTICLES]
+
+    // Try to enhance with external data (non-blocking)
     try {
-      const data = await fs.readFile(STORAGE_PATH, 'utf8')
-      const articles = JSON.parse(data)
-      
-      // Validate data integrity
-      if (Array.isArray(articles) && articles.length > 0) {
-        articlesCache = articles
-        lastLoadTime = Date.now()
-        console.log('✅ Loaded articles from local storage:', articles.length)
-        isLoading = false
-        return articles
-      }
-    } catch (localError) {
-      console.log('⚠️ No local articles file, trying remote backup')
-    }
-
-    // Try multiple backup sources for maximum reliability
-    const backupSources = [
-      GITHUB_STORAGE_URL,
-      'https://blkout-beta.vercel.app/api/articles/backup',
-      'https://api.blkout-community.dev/articles.json'
-    ]
-
-    for (const backupUrl of backupSources) {
-      try {
-        const response = await fetch(backupUrl, { 
-          timeout: 3000,
-          headers: {
-            'User-Agent': 'BLKOUT-Platform/1.0',
-            'Accept': 'application/json'
-          }
-        })
-        
-        if (response.ok) {
-          const articles = await response.json()
-          
-          // Handle different response formats
-          const articleArray = articles.articles || articles
-          
-          if (Array.isArray(articleArray) && articleArray.length > 0) {
-            await saveArticles(articleArray, false)
-            articlesCache = articleArray
-            lastLoadTime = Date.now()
-            console.log(`✅ Restored ${articleArray.length} articles from backup: ${backupUrl}`)
-            isLoading = false
-            return articleArray
-          }
+      const response = await fetch(GITHUB_STORAGE_URL, { 
+        timeout: 2000,
+        headers: {
+          'User-Agent': 'BLKOUT-Platform/1.0',
+          'Accept': 'application/json'
         }
-      } catch (backupError) {
-        console.log(`❌ Backup ${backupUrl} failed:`, backupError.message)
-        continue
+      })
+      
+      if (response.ok) {
+        const externalData = await response.json()
+        const articleArray = externalData.articles || externalData
+        
+        if (Array.isArray(articleArray) && articleArray.length > 0) {
+          // Merge external articles with defaults (external takes priority)
+          const mergedArticles = [...articleArray, ...articles.filter(a => 
+            !articleArray.some(ext => ext.id === a.id)
+          )]
+          articles = mergedArticles
+          console.log(`✅ Enhanced with ${articleArray.length} external articles`)
+        }
       }
+    } catch (externalError) {
+      console.log('⚠️ External data unavailable, using defaults:', externalError.message)
     }
 
-    // If we have stale cache, use it rather than defaults
-    if (articlesCache && articlesCache.length > 1) {
-      console.log('⚠️ Using stale cache data instead of defaults')
-      isLoading = false
-      return articlesCache
-    }
-
-    // Last resort: use defaults but immediately try to merge with any existing data
-    console.log('⚠️ Falling back to default articles')
-    articlesCache = [...DEFAULT_ARTICLES]
+    // Update cache and return
+    articlesCache = articles
     lastLoadTime = Date.now()
-    await saveArticles(articlesCache, false)
     isLoading = false
-    return articlesCache
+    
+    // Try to save to temp (non-critical)
+    try {
+      await fs.mkdir('/tmp', { recursive: true })
+      await fs.writeFile(STORAGE_PATH, JSON.stringify(articles, null, 2))
+    } catch (saveError) {
+      // Ignore temp save failures
+    }
+    
+    console.log(`✅ Loaded ${articles.length} articles total`)
+    return articles
     
   } catch (error) {
     console.error('❌ Critical error loading articles:', error)
@@ -142,31 +119,21 @@ async function saveArticles(articles, triggerBackup = true) {
       throw new Error('Articles must be an array')
     }
 
-    // Create backup directory if it doesn't exist
-    await fs.mkdir('/tmp', { recursive: true })
-    
-    // Save to multiple local locations for redundancy
-    const savePromises = [
-      fs.writeFile(STORAGE_PATH, JSON.stringify(articles, null, 2)),
-      fs.writeFile('/tmp/articles-backup.json', JSON.stringify(articles, null, 2)),
-      fs.writeFile('/tmp/articles-latest.json', JSON.stringify({
-        articles,
-        timestamp: Date.now(),
-        total: articles.length,
-        lastSaved: new Date().toISOString()
-      }, null, 2))
-    ]
-    
-    await Promise.all(savePromises)
-    console.log(`✅ Articles saved to local storage (${articles.length} articles)`)
-    
-    // Update cache immediately
+    // Update in-memory cache immediately (primary storage)
     articlesCache = articles
     lastLoadTime = Date.now()
+    console.log(`✅ Articles saved to memory cache (${articles.length} articles)`)
     
-    // Multiple backup strategies
+    // Try to save to temp (secondary, non-critical)
+    try {
+      await fs.mkdir('/tmp', { recursive: true })
+      await fs.writeFile(STORAGE_PATH, JSON.stringify(articles, null, 2))
+    } catch (tempError) {
+      console.log('⚠️ Temp storage failed (non-critical):', tempError.message)
+    }
+    
+    // External backup strategies (non-blocking)
     if (triggerBackup) {
-      // Fire all backups concurrently (non-blocking)
       Promise.all([
         triggerBackupToGitHub(articles),
         triggerWebhookBackup(articles),
