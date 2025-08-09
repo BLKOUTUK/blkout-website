@@ -20,6 +20,7 @@ const navigationItems = [
   },
   { name: 'I.V.O.R.', href: '/ivor', description: 'AI assistant and resource finder' },
   { name: 'Events', href: '/events', description: 'Community events calendar' },
+  { name: 'Chrome Extension', href: '/extension', description: 'Download our content submission extension' },
   { name: 'Our Movement', href: '/movement', description: 'Movement principles and community values' },
   { name: 'Join Discussion', href: '/discussions', description: 'Community discussions and conversations' }
 ]
