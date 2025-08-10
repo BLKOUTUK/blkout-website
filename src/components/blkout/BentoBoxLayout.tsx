@@ -58,7 +58,7 @@ const bentoSections: BentoSection[] = [
     subtitle: 'Live Discussions',
     description: 'Real conversations happening right now',
     icon: Users,
-    href: '/community',
+    href: 'https://blkouthub.com',
     size: 'medium',
     type: 'stats',
     stats: {
@@ -73,7 +73,7 @@ const bentoSections: BentoSection[] = [
     subtitle: 'Workshops & Gatherings',
     description: 'Connect IRL and in digital spaces',
     icon: Calendar,
-    href: 'http://localhost:5173/',
+    href: '/events',
     size: 'medium',
     type: 'action',
     stats: {
