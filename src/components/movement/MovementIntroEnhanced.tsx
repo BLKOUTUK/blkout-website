@@ -123,13 +123,15 @@ const MovementHero = () => (
             transition={{ duration: 0.8, delay: 0.8 }}
             className="flex flex-col sm:flex-row gap-6"
           >
-            <Link 
-              to="/community"
+            <a 
+              href="https://blkouthub.com"
+              target="_blank"
+              rel="noopener noreferrer"
               className="px-12 py-4 bg-gradient-to-r from-emerald-600 to-indigo-600 text-white font-black text-lg hover:from-emerald-500 hover:to-indigo-500 transition-all duration-300 shadow-xl hover:shadow-2xl heading-block uppercase tracking-wide flex items-center justify-center"
             >
               <Users className="w-6 h-6 mr-3" />
               JOIN THE HUB
-            </Link>
+            </a>
             <motion.button 
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -153,17 +155,7 @@ const MovementHero = () => (
             alt="Breaking through systemic barriers together"
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/80 via-transparent to-transparent"></div>
-          <div className="absolute bottom-8 left-8 right-8">
-            <div className="bg-indigo-900/90 backdrop-blur-sm border border-indigo-700/50 p-6">
-              <h3 className="text-xl font-black text-white heading-block mb-2 uppercase">
-                BREAKING THROUGH SYSTEMS
-              </h3>
-              <p className="text-indigo-100 font-light">
-                Every barrier becomes a doorway when we build together
-              </p>
-            </div>
-          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/40 via-transparent to-transparent"></div>
         </motion.div>
       </div>
 

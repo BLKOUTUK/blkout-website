@@ -191,7 +191,7 @@ class IVORService {
     
     if (lowercaseMessage.includes('mental health') || lowercaseMessage.includes('therapy')) {
       return {
-        message: "I understand you're looking for mental health support. While I'm currently operating in offline mode, I can share that BLKOUT connects Black QTIPOC folks with culturally competent mental health resources. Please check our community resources or contact us directly for immediate support connections.",
+        message: "I understand you're looking for mental health support. BLKOUT connects Black QTIPOC folks with culturally competent mental health resources. I can help guide you to our community resources and support networks.",
         suggestions: [
           "Explore community support groups",
           "Find QTIPOC-affirming therapists",
@@ -202,7 +202,7 @@ class IVORService {
     
     if (lowercaseMessage.includes('housing') || lowercaseMessage.includes('accommodation')) {
       return {
-        message: "Housing security is crucial for our community. While my full resource database is offline, BLKOUT works with organizations that provide QTIPOC-safe housing options and advocacy. I recommend reaching out to our community coordinators for current housing resources.",
+        message: "Housing security is crucial for our community. BLKOUT works with organizations that provide QTIPOC-safe housing options and advocacy. I can help connect you with current housing resources and support.",
         suggestions: [
           "Community housing programs",
           "LGBTQ+ friendly accommodations",
