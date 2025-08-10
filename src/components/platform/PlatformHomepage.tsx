@@ -81,40 +81,40 @@ const PlatformHomepage: React.FC = () => {
     {
       path: '/stories/black-joy-celebration',
       date: '2025-01-15',
-      title: 'Celebrating Black Joy as Resistance',
-      summary: 'Exploring how joy becomes a powerful act of resistance in challenging times and community healing.',
-      tags: ['Original Commentary', 'Black Joy', 'Resistance'],
-      images: ['/images/stories/black-joy.jpg'],
+      title: '[DEMO] Celebrating Black Joy as Resistance',
+      summary: 'DEMO CONTENT: Exploring how joy becomes a powerful act of resistance in challenging times and community healing. This is placeholder content for platform demonstration.',
+      tags: ['Demo Content', 'Black Joy', 'Resistance'],
+      images: ['/images/story archive colours/blue images/tumblr_384f4870a87f4722ccfc66e8bb2fa98d_e8839690_1280.jpg'],
       readingTime: 4,
       author: {
-        name: 'Kai Andrews',
-        avatar: '/images/people/kai.jpg',
+        name: 'Demo Author',
+        avatar: '/images/story archive colours/green images/tumblr_23d169b75b247ba45ea28f5638c1d3d1_62e0d5de_640.jpg',
       },
     },
     {
       path: '/stories/community-arts-spotlight',
       date: '2025-01-12',
-      title: 'Community Arts Program Making Waves in Manchester',
-      summary: 'How a grassroots arts initiative is creating space for Black LGBTQ+ voices and cultural expression.',
-      tags: ['Community Response', 'Arts', 'Manchester'],
-      images: ['/images/stories/manchester-arts.jpg'],
+      title: '[DEMO] Community Arts Program Making Waves in Manchester',
+      summary: 'DEMO CONTENT: How a grassroots arts initiative is creating space for Black LGBTQ+ voices and cultural expression. This is placeholder content for platform demonstration.',
+      tags: ['Demo Content', 'Arts', 'Manchester'],
+      images: ['/images/story archive colours/red images/tumblr_5d9a2ccc0fa2a56133c0501cacc46adf_6a189059_1280.jpg'],
       readingTime: 5,
       author: {
-        name: 'Jasmine Taylor',
-        avatar: '/images/people/jasmine.jpg',
+        name: 'Demo Author',
+        avatar: '/images/story archive colours/blue images/tumblr_477d8815af713c7d7c0d7cb5330ffba4_c0e7416b_1280.jpg',
       },
     },
     {
       path: '/stories/health-equity-discussion',
       date: '2025-01-10',
-      title: 'Health Equity: The Conversation We Need to Have',
-      summary: 'Addressing disparities in healthcare access for marginalized communities and building solutions.',
-      tags: ['Curated', 'Health', 'Equity'],
-      images: ['/images/stories/health-equity.jpg'],
+      title: '[DEMO] Health Equity: The Conversation We Need to Have',
+      summary: 'DEMO CONTENT: Addressing disparities in healthcare access for marginalized communities and building solutions. This is placeholder content for platform demonstration.',
+      tags: ['Demo Content', 'Health', 'Equity'],
+      images: ['/images/story archive colours/green images/tumblr_4ccb3ff837292f82d8ab03ba554e8786_0684d01c_1280.jpg'],
       readingTime: 7,
       author: {
-        name: 'Dr. Michael Robinson',
-        avatar: '/images/people/michael.jpg',
+        name: 'Demo Author',
+        avatar: '/images/story archive colours/red images/tumblr_61baa7d20ae7bdc39fce83128a90eddf_93fb7a80_1280.jpg',
       },
     },
     {
@@ -161,9 +161,9 @@ const PlatformHomepage: React.FC = () => {
   // Event data for upcoming events
   const upcomingEvents = [
     {
-      title: 'Black Writers Workshop',
-      description: 'Monthly workshop for aspiring writers to develop their craft in a supportive community environment.',
-      imageSrc: '/images/events/writers-workshop.jpg',
+      title: '[DEMO] Black Writers Workshop',
+      description: 'DEMO EVENT: Monthly workshop for aspiring writers to develop their craft in a supportive community environment. This is demonstration content.',
+      imageSrc: '/images/blkoutuk.com v3/tumblr_a8ff21cfe9302e86a3d03892c864c5a5_391b148a_1280.jpg',
       topComponent: <Badge variant="secondary">Jan 25</Badge>,
       actionComponent: (
         <Button size="sm" className="w-full">
@@ -172,9 +172,9 @@ const PlatformHomepage: React.FC = () => {
       ),
     },
     {
-      title: 'Community Health Forum',
-      description: 'Panel discussion on addressing health disparities in LGBTQ+ communities of color.',
-      imageSrc: '/images/events/health-forum.jpg',
+      title: '[DEMO] Community Health Forum',
+      description: 'DEMO EVENT: Panel discussion on addressing health disparities in LGBTQ+ communities of color. This is demonstration content.',
+      imageSrc: '/images/blkoutuk.com v3/tumblr_9ccd25b3f9683386cc83b53fc27d1a39_a09d5048_1280.jpg',
       topComponent: <Badge variant="default">Feb 1</Badge>,
       actionComponent: (
         <Button size="sm" className="w-full">
@@ -184,9 +184,9 @@ const PlatformHomepage: React.FC = () => {
       featured: true,
     },
     {
-      title: 'Digital Security Workshop',
-      description: 'Learn essential digital security practices to protect yourself and your community online.',
-      imageSrc: '/images/events/digital-security.jpg',
+      title: '[DEMO] Digital Security Workshop',
+      description: 'DEMO EVENT: Learn essential digital security practices to protect yourself and your community online. This is demonstration content.',
+      imageSrc: '/images/story archive colours/blue images/tumblr_6f66259d5fb67eabf60ecd14a13aeb13_37199e34_1280.jpg',
       topComponent: <Badge variant="destructive">Feb 5</Badge>,
       actionComponent: (
         <Button size="sm" className="w-full">
@@ -199,10 +199,10 @@ const PlatformHomepage: React.FC = () => {
   // Social proof data for community engagement
   const socialProofData = {
     avatarItems: [
-      { imageSrc: '/images/people/person1.jpg', name: 'Marcus' },
-      { imageSrc: '/images/people/person2.jpg', name: 'Zara' },
-      { imageSrc: '/images/people/person3.jpg', name: 'Devon' },
-      { imageSrc: '/images/people/person4.jpg', name: 'Aisha' },
+      { imageSrc: '/images/story archive colours/green images/tumblr_4cef6df755e59e1d12b94b3978420bbe_d8acaffb_640.jpg', name: 'Community' },
+      { imageSrc: '/images/story archive colours/red images/tumblr_8702ad0f24077e755a67dfa85e3a740a_2491a610_1280.jpg', name: 'Member' },
+      { imageSrc: '/images/story archive colours/blue images/tumblr_9fa487782acece6dac4f7a63331a595e_fbc0ad80_500.jpg', name: 'Demo' },
+      { imageSrc: '/images/story archive colours/green images/tumblr_5b1b6534f4a738ceb37e212fb4433518_cf767bfe_1280.jpg', name: 'Avatar' },
     ],
     numberOfUsers: 247,
     suffixText: 'community members discussing',
@@ -211,6 +211,11 @@ const PlatformHomepage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
+      {/* Demo Content Banner */}
+      <div className="bg-gradient-to-r from-yellow-600 to-orange-600 text-black text-center py-3 px-4 font-bold text-sm">
+        ⚠️ DEMO PLATFORM: This page contains demonstration content marked with [DEMO] tags. Real content migration from blkoutuk.com is in progress.
+      </div>
+      
       {/* 1. Magazine-Style Hero Section */}
       <LandingPrimaryImageCtaSection
         titleComponent={
@@ -226,8 +231,8 @@ const PlatformHomepage: React.FC = () => {
           </h1>
         }
         description="Discover bold stories, join meaningful conversations, and connect with a community that puts liberation first. Your voice matters in the movement for Black QTIPOC liberation."
-        imageSrc="/images/hero/community-gathering.jpg"
-        imageAlt="BLKOUT UK Community gathering showing diverse Black QTIPOC people"
+        imageSrc="/images/story archive colours/blue images/tumblr_16174aad10948dae01218ba8e82dd990_1ec97cae_1280.jpg"
+        imageAlt="BLKOUT UK Community - celebrating Black QTIPOC voices and experiences"
         imagePosition="right"
         imageShadow="soft"
         textPosition="left"
@@ -306,8 +311,8 @@ const PlatformHomepage: React.FC = () => {
               </Button>
             </div>
             <img
-              src="/images/platform/stories-section.jpg"
-              alt="Stories section showing people reading and writing"
+              src="/images/story archive colours/green images/tumblr_15efa24c41cb085ad7c50b172a339851_270d4a24_1280.jpg"
+              alt="Stories section - authentic Black QTIPOC narratives"
               className="rounded-lg"
             />
           </div>
@@ -326,8 +331,8 @@ const PlatformHomepage: React.FC = () => {
               </Button>
             </div>
             <img
-              src="/images/platform/community-section.jpg"
-              alt="Community section showing people in discussion"
+              src="/images/story archive colours/red images/tumblr_19cdf90e403a0faab7bf83cf434dabdf_49f4609e_640.jpg"
+              alt="Community building and collective organizing"
               className="rounded-lg"
             />
           </div>
@@ -346,8 +351,8 @@ const PlatformHomepage: React.FC = () => {
               </Button>
             </div>
             <img
-              src="/images/platform/events-section.jpg"
-              alt="Events section showing community gathering"
+              src="/images/blkoutuk.com v3/tumblr_b36867ede4560f83007b9b3947fca29e_98a985b6_1280.jpg"
+              alt="Community events and gatherings"
               className="rounded-lg"
             />
           </div>
@@ -366,8 +371,8 @@ const PlatformHomepage: React.FC = () => {
               </Button>
             </div>
             <img
-              src="/images/platform/ivor-section.jpg"
-              alt="I.V.O.R. AI assistant interface"
+              src="/images/ivor.png"
+              alt="I.V.O.R. AI assistant - mental health and community support"
               className="rounded-lg"
             />
           </div>
@@ -386,8 +391,8 @@ const PlatformHomepage: React.FC = () => {
               </Button>
             </div>
             <img
-              src="/images/platform/resources-section.jpg"
-              alt="Resources section showing support network"
+              src="/images/story archive colours/blue images/tumblr_3729cdb3d6dc7900759b799dd088fbc5_7fd8fb01_1280.jpg"
+              alt="Community resources and mutual aid networks"
               className="rounded-lg"
             />
           </div>
