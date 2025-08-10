@@ -141,68 +141,50 @@ const IVORHero = () => (
               START CONVERSATION
             </motion.button>
             <motion.button 
+              onClick={() => document.getElementById('demo-video')?.scrollIntoView({ behavior: 'smooth' })}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="px-12 py-4 border-2 border-indigo-400 text-indigo-100 font-black text-lg hover:bg-indigo-400 hover:text-indigo-900 transition-all duration-300 heading-block uppercase tracking-wide flex items-center justify-center"
             >
-              <Play className="w-6 h-6 mr-3" />
-              WATCH DEMO
+              <ArrowRight className="w-6 h-6 mr-3" />
+              SEE HOW IT WORKS
             </motion.button>
           </motion.div>
         </motion.div>
 
-        {/* Interactive Chat Preview */}
+        {/* IVOR Demo Video */}
         <motion.div
+          id="demo-video"
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           className="relative"
         >
-          <div className="bg-indigo-900/50 backdrop-blur-sm border border-indigo-700/50 p-8 min-h-[500px]">
+          <div className="bg-indigo-900/50 backdrop-blur-sm border border-indigo-700/50 p-8">
             <div className="flex items-center mb-6 pb-4 border-b border-indigo-700/30">
               <div className="w-10 h-10 bg-gradient-to-br from-emerald-600 to-indigo-600 flex items-center justify-center mr-4">
                 <Brain className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h3 className="font-black text-white heading-block">I.V.O.R.</h3>
-                <p className="text-xs text-emerald-400">Online • Ready to help</p>
+                <h3 className="font-black text-white heading-block">I.V.O.R. IN ACTION</h3>
+                <p className="text-xs text-emerald-400">See how it works</p>
               </div>
             </div>
             
-            {/* Sample Conversation */}
-            <div className="space-y-4 mb-6">
-              <div className="bg-indigo-800/50 p-4 max-w-xs">
-                <p className="text-white font-light">
-                  Hello! I'm IVOR, your community AI assistant. How can I support you today?
-                </p>
-              </div>
-              <div className="bg-emerald-600/50 p-4 max-w-xs ml-auto">
-                <p className="text-white font-light">
-                  I'm looking for mental health resources that understand Black queer experiences
-                </p>
-              </div>
-              <div className="bg-indigo-800/50 p-4 max-w-xs">
-                <p className="text-white font-light">
-                  I found 7 culturally affirming therapists in your area, plus 3 peer support groups. 
-                  Would you like me to share contact details and meeting times?
-                </p>
-              </div>
+            {/* Video Player */}
+            <div className="aspect-video bg-gray-900 rounded-lg overflow-hidden">
+              <video 
+                controls 
+                className="w-full h-full object-cover"
+                poster="/images/ivor.png"
+              >
+                <source src="/images/Ask Ivor.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
             </div>
             
-            {/* Input Field */}
-            <div className="flex items-center space-x-3">
-              <input
-                type="text"
-                placeholder="Ask IVOR anything..."
-                className="flex-1 px-4 py-3 bg-indigo-950/50 border border-indigo-700/50 text-white placeholder-indigo-300 focus:outline-none focus:border-indigo-500 font-light"
-                disabled
-              />
-              <button className="p-3 bg-emerald-600 text-white hover:bg-emerald-500 transition-colors">
-                <Send className="w-5 h-5" />
-              </button>
-            </div>
-            <p className="text-xs text-indigo-400 mt-2 text-center">
-              Interactive demo - Start a real conversation above
+            <p className="text-xs text-indigo-400 mt-4 text-center">
+              Watch how IVOR provides personalized community support and resources
             </p>
           </div>
         </motion.div>
