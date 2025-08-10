@@ -41,7 +41,7 @@ export const LandingBlogPost: React.FC<LandingBlogPostProps> = ({
       transition={{ duration: 0.6, delay: index * 0.1 }}
       className={`group bg-gray-800/50 rounded-2xl overflow-hidden border border-gray-700 hover:border-gray-600 transition-all duration-300 hover:shadow-2xl hover:shadow-emerald-500/10 ${className}`}
     >
-      <Link href={post.path || slug} className="block">
+      <Link to={post.path || slug} className="block">
         {/* Featured Image */}
         {post.images && post.images[0] && (
           <div className="aspect-video overflow-hidden">
