@@ -344,7 +344,7 @@ export default function NewsroomEnhanced() {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        console.log('🔄 Fetching articles from /api/articles')
+        // Fetching articles
         const response = await fetch('/api/articles')
         
         if (!response.ok) {
@@ -352,7 +352,7 @@ export default function NewsroomEnhanced() {
         }
         
         const data = await response.json()
-        console.log('📰 Articles API response:', data)
+        // Articles loaded
         
         if (data.success && data.articles && Array.isArray(data.articles)) {
           // Transform API data to match expected format
@@ -374,13 +374,13 @@ export default function NewsroomEnhanced() {
               source: article.submittedVia === 'chrome-extension' ? 'Community Submitted' : (article.author || 'BLKOUT Team')
             }))
           
-          console.log(`✅ Transformed ${transformedArticles.length} published articles`)
+          // Articles transformed successfully
           
           if (transformedArticles.length > 0) {
             setArticles(transformedArticles)
             setBackendStatus('connected')
           } else {
-            console.log('⚠️ No published articles found, keeping fallback')
+            // Using fallback articles
             // Keep fallback articles if no published content
             setBackendStatus('connected')
           }

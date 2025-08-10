@@ -253,7 +253,7 @@ function EnhancedStorySubmissionForm({ backendStatus }: StorySubmissionFormProps
     setError('')
 
     try {
-      const response = await fetch('http://localhost:8000/api/newsroom/submissions', {
+      const response = await fetch('https://blkout-ivor-fresh-jklmotmfs-robs-projects-54d653d3.vercel.app/api/newsroom/submissions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -426,7 +426,7 @@ const StorySubmissionSection = () => {
 
   useEffect(() => {
     // Check backend status
-    fetch('http://localhost:8000/health/')
+    fetch('https://blkout-ivor-fresh-jklmotmfs-robs-projects-54d653d3.vercel.app/health')
       .then(() => setBackendStatus('connected'))
       .catch(() => setBackendStatus('offline'))
   }, [])

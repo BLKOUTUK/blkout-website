@@ -147,7 +147,7 @@ export default function ArticleGrid({ articles: propArticles, featuredArticle }:
       setBackendStatus('checking')
       
       try {
-        const response = await fetch('http://localhost:8000/api/newsroom/stories')
+        const response = await fetch('https://blkout-ivor-fresh-jklmotmfs-robs-projects-54d653d3.vercel.app/api/newsroom/stories')
         
         if (response.ok) {
           const data = await response.json()

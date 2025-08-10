@@ -34,6 +34,7 @@ import EventsPageIntegrated from './components/events/EventsPageIntegrated'
 import PrimaryNavigationEnhanced from './components/layout/PrimaryNavigationEnhanced'
 import PlatformFooter from './components/layout/PlatformFooter'
 import SkipNavigation from './components/layout/SkipNavigation'
+import ExtensionDownloadSimple from './components/extension/ExtensionDownloadSimple'
 
 // Platform Layout Component - wraps platform routes with navigation
 const PlatformLayout = ({ children }: { children: React.ReactNode }) => (
@@ -50,12 +51,12 @@ const IVORPage = () => {
   
   React.useEffect(() => {
     // Check if IVOR backend is running
-    fetch('http://localhost:8000/health/')
+    fetch('https://blkout-ivor-fresh-jklmotmfs-robs-projects-54d653d3.vercel.app/health')
       .then(res => res.json())
       .then(() => {
         setBackendStatus('running')
         // Redirect to IVOR interface
-        window.location.href = 'http://localhost:8000'
+        window.location.href = 'https://blkout-ivor-fresh-jklmotmfs-robs-projects-54d653d3.vercel.app'
       })
       .catch(() => {
         setBackendStatus('offline')
