@@ -35,6 +35,7 @@ import PrimaryNavigationEnhanced from './components/layout/PrimaryNavigationEnha
 import PlatformFooter from './components/layout/PlatformFooter'
 import SkipNavigation from './components/layout/SkipNavigation'
 import ExtensionDownloadSimple from './components/extension/ExtensionDownloadSimple'
+import ArticleDetail from './components/stories/ArticleDetail'
 
 // Platform Layout Component - wraps platform routes with navigation
 const PlatformLayout = ({ children }: { children: React.ReactNode }) => (
@@ -147,6 +148,7 @@ function App() {
         <Route path="/admin/newsroom" element={<AdminAuth><NewsroomAdminDashboard /></AdminAuth>} />
         <Route path="/community" element={<PlatformLayout><CommunityGatewayEnhanced /></PlatformLayout>} />
         <Route path="/stories" element={<PlatformLayout><StoriesPageEnhanced /></PlatformLayout>} />
+        <Route path="/stories/:slug" element={<ArticleDetail />} />
         <Route path="/movement" element={<PlatformLayout><MovementIntroEnhanced /></PlatformLayout>} />
         <Route path="/discussions" element={<BLKOUTHUBPromoPage />} />
         <Route path="/reports" element={<HubReports />} />
