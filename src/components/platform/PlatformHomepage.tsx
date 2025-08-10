@@ -288,6 +288,10 @@ const PlatformHomepage: React.FC = () => {
             <p className="text-xl font-bold">Events & Gatherings</p>
             <p className="text-gray-400">Find community events, workshops, and organizing opportunities</p>
           </LandingProductTourTrigger>
+          <LandingProductTourTrigger value="newsroom">
+            <p className="text-xl font-bold">Newsroom</p>
+            <p className="text-gray-400">News analysis and community updates that matter to us</p>
+          </LandingProductTourTrigger>
           <LandingProductTourTrigger value="ivor">
             <p className="text-xl font-bold">I.V.O.R. AI Assistant</p>
             <p className="text-gray-400">Get guidance on resources, support, and community connections</p>
@@ -358,6 +362,26 @@ const PlatformHomepage: React.FC = () => {
           </div>
         </LandingProductTourContent>
         
+        <LandingProductTourContent value="newsroom">
+          <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div>
+              <h3 className="text-2xl font-bold text-white mb-4">Community Newsroom</h3>
+              <p className="text-gray-300 mb-6">
+                Stay informed with curated news, analysis, and community updates that matter to Black queer liberation. 
+                Get the stories mainstream media won't tell.
+              </p>
+              <Button size="sm">
+                <Link to="/newsroom">Read Newsroom</Link>
+              </Button>
+            </div>
+            <img
+              src="/images/story archive colours/red images/tumblr_5d9a2ccc0fa2a56133c0501cacc46adf_6a189059_1280.jpg"
+              alt="Newsroom - community news and analysis"
+              className="rounded-lg"
+            />
+          </div>
+        </LandingProductTourContent>
+        
         <LandingProductTourContent value="ivor">
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div>
@@ -399,7 +423,51 @@ const PlatformHomepage: React.FC = () => {
         </LandingProductTourContent>
       </LandingProductTourSection>
 
-      {/* 3. Recent Stories Feed */}
+      {/* 3. Newsroom Highlight Section */}
+      <section className="py-16 bg-gradient-to-r from-indigo-950/80 via-purple-950/80 to-indigo-950/80">
+        <div className="max-w-6xl mx-auto px-8 text-center">
+          <div className="mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+              <span className="bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">
+                Community Newsroom
+              </span>
+            </h2>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+              Stay informed with news analysis and community updates that matter to Black queer liberation. 
+              Get the stories mainstream media won't tell, curated by and for our community.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            <div className="bg-indigo-900/50 p-6 rounded-lg border border-indigo-700/30">
+              <div className="text-3xl mb-4">📰</div>
+              <h3 className="text-xl font-bold text-white mb-2">Breaking News</h3>
+              <p className="text-gray-300 text-sm">Real-time updates on events affecting our community</p>
+            </div>
+            <div className="bg-purple-900/50 p-6 rounded-lg border border-purple-700/30">
+              <div className="text-3xl mb-4">🔍</div>
+              <h3 className="text-xl font-bold text-white mb-2">Deep Analysis</h3>
+              <p className="text-gray-300 text-sm">In-depth commentary on policy and social issues</p>
+            </div>
+            <div className="bg-indigo-900/50 p-6 rounded-lg border border-indigo-700/30">
+              <div className="text-3xl mb-4">🌍</div>
+              <h3 className="text-xl font-bold text-white mb-2">Community Updates</h3>
+              <p className="text-gray-300 text-sm">Local news and community organizing developments</p>
+            </div>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500">
+              <Link to="/newsroom">Read Latest News</Link>
+            </Button>
+            <Button variant="outline" size="lg" className="border-purple-500 text-purple-300 hover:bg-purple-500/10">
+              <Link to="/newsroom">Browse Categories</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Recent Stories Feed */}
       <LandingBlogList
         title="Latest Stories"
         description="The newest content from across our platform - discover authentic voices, engage with important discussions, and share powerful narratives."
@@ -419,7 +487,7 @@ const PlatformHomepage: React.FC = () => {
         ))}
       </LandingBlogList>
 
-      {/* 4. Community Testimonials */}
+      {/* 5. Community Testimonials */}
       <LandingTestimonialGrid
         title="Community Voices"
         description="Hear from real community members about their experiences with BLKOUT UK and how the platform has impacted their lives."
@@ -428,7 +496,7 @@ const PlatformHomepage: React.FC = () => {
         withBackgroundGlow={false}
       />
 
-      {/* 5. Upcoming Events Section */}
+      {/* 6. Upcoming Events Section */}
       <LandingProductCardSection
         title="Upcoming Events"
         description="Join us at upcoming community events, workshops, and organizing opportunities. Connect with fellow community members and build power together."
@@ -452,7 +520,7 @@ const PlatformHomepage: React.FC = () => {
         ))}
       </LandingProductCardSection>
 
-      {/* 6. Video Feature Section */}
+      {/* 7. Video Feature Section */}
       <LandingProductVideoFeature
         title="Platform Overview"
         description="Take a tour of the BLKOUT UK platform and see how our community is building power through storytelling, connection, and collective action."
@@ -468,7 +536,7 @@ const PlatformHomepage: React.FC = () => {
         textPosition="center"
       />
 
-      {/* 7. Membership CTA */}
+      {/* 8. Membership CTA */}
       <LandingSaleCtaSection
         title="Be Part of the Movement"
         description="Join our growing community of Black QTIPOC voices building power, sharing stories, and creating change. Your voice matters in the liberation movement."

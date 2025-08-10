@@ -10,6 +10,7 @@ const navigationItems = [
   { name: 'Story Archive', href: '/stories', description: 'Complete archive of stories and analysis' },
   { name: 'I.V.O.R.', href: '/ivor', description: 'AI assistant and resource finder' },
   { name: 'Events', href: '/events', description: 'Community events calendar' },
+  { name: 'Newsroom', href: '/newsroom', description: 'News analysis and community updates' },
   { name: 'Our Movement', href: '/movement', description: 'Movement principles and community values' },
   { name: 'Join Discussion', href: '/discussions', description: 'Community discussions and conversations' },
   { 
@@ -18,8 +19,7 @@ const navigationItems = [
     description: 'Community media platforms',
     submenu: [
       { name: 'Channel BLKOUT', href: '/media/channel', description: 'Video content and live streaming' },
-      { name: 'Storylab', href: '/media/storylab', description: 'Community storytelling platform' },
-      { name: 'Newsroom', href: '/media/newsroom', description: 'News aggregation and analysis' }
+      { name: 'Storylab', href: '/media/storylab', description: 'Community storytelling platform' }
     ]
   }
 ]
@@ -198,7 +198,14 @@ export default function PrimaryNavigationEnhanced({ className = '' }: PrimaryNav
               ))}
               
               {/* Mobile CTA */}
-              <div className="px-4 pt-4 border-t border-indigo-800/30">
+              <div className="px-4 pt-4 border-t border-indigo-800/30 space-y-3">
+                <Link
+                  to="/newsroom"
+                  className="block w-full py-3 px-4 text-center text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg hover:opacity-90 transition-opacity touch-target focus-enhanced"
+                  onClick={() => setIsOpen(false)}
+                >
+                  📰 Read Newsroom
+                </Link>
                 <Link
                   to="/community"
                   className="block w-full py-3 px-4 text-center text-sm font-medium text-white bg-gradient-to-r from-electric-cyan to-electric-magenta rounded-lg hover:opacity-90 transition-opacity touch-target focus-enhanced"
