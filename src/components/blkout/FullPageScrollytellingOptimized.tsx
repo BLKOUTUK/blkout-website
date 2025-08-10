@@ -1272,6 +1272,25 @@ const FullPageScrollytellingOptimized: React.FC = () => {
                               {section.action}
                             </motion.button>
                           </Link>
+                        ) : section.action === 'Subscribe' ? (
+                          <motion.button
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => {
+                              // Scroll to newsletter section
+                              const newsletterSection = document.getElementById('newsletter-cta')
+                              if (newsletterSection) {
+                                newsletterSection.scrollIntoView({ behavior: 'smooth' })
+                              }
+                            }}
+                            className={`w-full ${
+                              section.highlight
+                                ? 'bg-white text-blkout-primary hover:bg-gray-100'
+                                : 'bg-gray-700 text-white hover:bg-gray-600'
+                            } px-4 py-3 rounded-lg font-bold transition-all shadow-lg text-sm`}
+                          >
+                            {section.action}
+                          </motion.button>
                         ) : (
                           <motion.button
                             whileHover={{ scale: 1.02 }}

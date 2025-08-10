@@ -24,7 +24,7 @@ const DEFAULT_EVENTS = [
     tags: ["healing", "community", "support"],
     capacity: 25,
     rsvps: 18,
-    status: "approved",
+    status: "published",
     featured: true,
     createdAt: "2025-01-10T00:00:00.000Z",
     updatedAt: "2025-01-10T00:00:00.000Z"
@@ -46,7 +46,7 @@ const DEFAULT_EVENTS = [
     tags: ["books", "literature", "discussion", "Baldwin"],
     capacity: 15,
     rsvps: 12,
-    status: "approved",
+    status: "published",
     featured: false,
     createdAt: "2025-01-15T00:00:00.000Z",
     updatedAt: "2025-01-15T00:00:00.000Z"
@@ -68,7 +68,7 @@ const DEFAULT_EVENTS = [
     tags: ["privacy", "security", "technology", "workshop"],
     capacity: 50,
     rsvps: 34,
-    status: "approved",
+    status: "published",
     featured: true,
     createdAt: "2025-01-20T00:00:00.000Z",
     updatedAt: "2025-01-20T00:00:00.000Z"
