@@ -171,11 +171,11 @@ const IVORHero = () => (
               </div>
             </div>
             
-            {/* Video Player */}
-            <div className="aspect-video bg-gray-900 rounded-lg overflow-hidden">
+            {/* Video Player - 1:1 Aspect Ratio */}
+            <div className="aspect-square bg-gray-900 rounded-lg overflow-hidden max-w-md mx-auto">
               <video 
                 controls 
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
                 poster="/images/ivor.png"
               >
                 <source src="/images/Ask Ivor.mp4" type="video/mp4" />
