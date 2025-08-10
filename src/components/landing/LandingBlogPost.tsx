@@ -3,7 +3,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { Clock, User } from 'lucide-react'
-import Link from 'next/link'
+import { Link } from 'react-router-dom'
 
 interface BlogPost {
   path: string

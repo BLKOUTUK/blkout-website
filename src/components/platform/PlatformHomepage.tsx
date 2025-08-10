@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import Link from 'next/link'
+import { Link } from 'react-router-dom'
 import { Button } from '../ui/button'
 import { Badge } from '../ui/badge'
 import {
@@ -244,11 +244,11 @@ const PlatformHomepage: React.FC = () => {
         }
         effectComponent={<LandingCurvedLinesCtaBg variant="primary" />}
       >
-        <Button size="lg" asChild className="bg-emerald-600 hover:bg-emerald-700">
-          <Link href="/stories">Explore Stories</Link>
+        <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700">
+          <Link to="/stories">Explore Stories</Link>
         </Button>
-        <Button variant="outline" size="lg" asChild className="border-purple-500 text-purple-300 hover:bg-purple-500/10">
-          <Link href="https://blkouthub.com">Join Community</Link>
+        <Button variant="outline" size="lg" className="border-purple-500 text-purple-300 hover:bg-purple-500/10">
+          <a href="https://blkouthub.com" target="_blank" rel="noopener noreferrer">Join Community</a>
         </Button>
 
         <LandingSocialProof
@@ -301,8 +301,8 @@ const PlatformHomepage: React.FC = () => {
                 Read authentic narratives from our community members, original commentary on current events, 
                 and curated content that centers Black QTIPOC experiences and perspectives.
               </p>
-              <Button size="sm" asChild>
-                <Link href="/stories">Browse Stories</Link>
+              <Button size="sm">
+                <Link to="/stories">Browse Stories</Link>
               </Button>
             </div>
             <img
@@ -321,8 +321,8 @@ const PlatformHomepage: React.FC = () => {
                 Join our external community hub where you can connect with organizers, participate in discussions, 
                 and coordinate collective action for liberation and social justice.
               </p>
-              <Button size="sm" asChild>
-                <Link href="https://blkouthub.com">Visit BLKOUT Hub</Link>
+              <Button size="sm">
+                <a href="https://blkouthub.com" target="_blank" rel="noopener noreferrer">Visit BLKOUT Hub</a>
               </Button>
             </div>
             <img
@@ -341,8 +341,8 @@ const PlatformHomepage: React.FC = () => {
                 Find community gatherings, educational workshops, protest planning meetings, and cultural events. 
                 Connect with local organizers and build power through collective action.
               </p>
-              <Button size="sm" asChild>
-                <Link href="/events">View Events</Link>
+              <Button size="sm">
+                <Link to="/events">View Events</Link>
               </Button>
             </div>
             <img
@@ -361,8 +361,8 @@ const PlatformHomepage: React.FC = () => {
                 Get personalized guidance on mental health resources, legal support, community connections, 
                 and organizing strategies. I.V.O.R. understands the unique challenges facing Black QTIPOC communities.
               </p>
-              <Button size="sm" asChild>
-                <Link href="/ivor">Chat with I.V.O.R.</Link>
+              <Button size="sm">
+                <Link to="/ivor">Chat with I.V.O.R.</Link>
               </Button>
             </div>
             <img
@@ -381,8 +381,8 @@ const PlatformHomepage: React.FC = () => {
                 Access culturally competent mental health services, legal aid resources, financial support, 
                 and other essential services designed specifically for Black QTIPOC communities.
               </p>
-              <Button size="sm" asChild>
-                <Link href="/resources">Find Resources</Link>
+              <Button size="sm">
+                <Link to="/resources">Find Resources</Link>
               </Button>
             </div>
             <img
@@ -470,11 +470,11 @@ const PlatformHomepage: React.FC = () => {
         withBackground={false}
         variant="primary"
       >
-        <Button size="lg" asChild className="bg-emerald-600 hover:bg-emerald-700">
-          <Link href="https://blkouthub.com">Join Community</Link>
+        <Button size="lg" className="bg-emerald-600 hover:bg-emerald-700">
+          <a href="https://blkouthub.com" target="_blank" rel="noopener noreferrer">Join Community</a>
         </Button>
-        <Button variant="outline" size="lg" asChild className="border-purple-500 text-purple-300 hover:bg-purple-500/10">
-          <Link href="/about">Learn More</Link>
+        <Button variant="outline" size="lg" className="border-purple-500 text-purple-300 hover:bg-purple-500/10">
+          <Link to="/about">Learn More</Link>
         </Button>
       </LandingSaleCtaSection>
     </div>
