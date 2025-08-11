@@ -148,6 +148,9 @@ export default function MovementIntro() {
         >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
+              <div className="bg-red-500 text-white p-2 text-center mb-4 font-bold">
+                🔴 REGULAR MovementIntro.tsx FILE
+              </div>
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
                 Building the Cooperative Economy
               </h1>
@@ -345,7 +348,7 @@ export default function MovementIntro() {
           transition={{ delay: 0.8 }}
           className="text-center"
         >
-          <div className="bg-gradient-to-r from-electric-indigo to-electric-magenta rounded-2xl p-12 text-white">
+          <div className="bg-gradient-to-r from-red-600 to-pink-600 rounded-2xl p-12 text-white">
             <motion.div
               animate={{ scale: [1, 1.1, 1] }}
               transition={{ duration: 3, repeat: Infinity }}

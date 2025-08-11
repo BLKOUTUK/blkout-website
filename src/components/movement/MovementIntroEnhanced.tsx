@@ -81,6 +81,9 @@ const MovementHero = () => (
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
         >
+          <div className="bg-yellow-500 text-black p-2 text-center mb-4 font-bold rounded">
+            🟡 ENHANCED MovementIntroEnhanced.tsx FILE (YELLOW)
+          </div>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
