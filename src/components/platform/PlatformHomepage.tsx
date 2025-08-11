@@ -76,44 +76,44 @@ const PlatformHomepage: React.FC = () => {
     },
   ]
 
-  // Blog post data for recent stories
+  // Blog post data for recent stories - Real content from blkoutuk.com archive
   const blogPosts = [
     {
-      path: '/stories/black-joy-celebration',
-      date: '2025-01-15',
-      title: '[DEMO] Celebrating Black Joy as Resistance',
-      summary: 'DEMO CONTENT: Exploring how joy becomes a powerful act of resistance in challenging times and community healing. This is placeholder content for platform demonstration.',
-      tags: ['Demo Content', 'Black Joy', 'Resistance'],
+      path: 'https://blkoutuk.com/read-the-road-to-the-future',
+      date: '2024-03-03',
+      title: 'The Road to the Future',
+      summary: 'Reflecting on LGBTQ History Month and celebrating four Black British Queer icons: Ivor Cummings, Berto Pasuka, Pearl Alcock, and Justin Fashanu. Examining triumphs and errors to construct templates for possible futures.',
+      tags: ['LGBTQ History', 'Community', 'Icons'],
       images: ['/images/story archive colours/blue images/tumblr_384f4870a87f4722ccfc66e8bb2fa98d_e8839690_1280.jpg'],
-      readingTime: 4,
+      readingTime: 6,
       author: {
-        name: 'Demo Author',
+        name: 'BLKOUT UK',
         avatar: '/images/story archive colours/green images/tumblr_23d169b75b247ba45ea28f5638c1d3d1_62e0d5de_640.jpg',
       },
     },
     {
-      path: '/stories/community-arts-spotlight',
-      date: '2025-01-12',
-      title: '[DEMO] Community Arts Program Making Waves in Manchester',
-      summary: 'DEMO CONTENT: How a grassroots arts initiative is creating space for Black LGBTQ+ voices and cultural expression. This is placeholder content for platform demonstration.',
-      tags: ['Demo Content', 'Arts', 'Manchester'],
+      path: 'https://blkoutuk.com/invitation-to-clubland',
+      date: '2023-09-05',
+      title: 'Invitation to Clubland',
+      summary: 'Creating sustainable, affirming, and transformative spaces for Black gay men. Part of #MAKINGSPACEFORUS initiative, promoting connection, creativity, and self-care within our community.',
+      tags: ['Community Space', 'Creativity', 'Black Gay Men'],
       images: ['/images/story archive colours/red images/tumblr_5d9a2ccc0fa2a56133c0501cacc46adf_6a189059_1280.jpg'],
-      readingTime: 5,
+      readingTime: 4,
       author: {
-        name: 'Demo Author',
+        name: 'BLKOUT UK',
         avatar: '/images/story archive colours/blue images/tumblr_477d8815af713c7d7c0d7cb5330ffba4_c0e7416b_1280.jpg',
       },
     },
     {
-      path: '/stories/health-equity-discussion',
-      date: '2025-01-10',
-      title: '[DEMO] Health Equity: The Conversation We Need to Have',
-      summary: 'DEMO CONTENT: Addressing disparities in healthcare access for marginalized communities and building solutions. This is placeholder content for platform demonstration.',
-      tags: ['Demo Content', 'Health', 'Equity'],
+      path: 'https://blkoutuk.com/read-visibility-vulnerability-and-individualism-part-two',
+      date: '2023-07-21',
+      title: 'Visibility, Vulnerability, and Individualism (Part Two)',
+      summary: 'Exploring the role of audiences in theatre beyond consumers, and examining how Black LGBTQ+ stories are told and received in contemporary performance spaces.',
+      tags: ['Theatre', 'Visibility', 'Arts'],
       images: ['/images/story archive colours/green images/tumblr_4ccb3ff837292f82d8ab03ba554e8786_0684d01c_1280.jpg'],
-      readingTime: 7,
+      readingTime: 8,
       author: {
-        name: 'Demo Author',
+        name: 'BLKOUT UK',
         avatar: '/images/story archive colours/red images/tumblr_61baa7d20ae7bdc39fce83128a90eddf_93fb7a80_1280.jpg',
       },
     },
@@ -158,39 +158,43 @@ const PlatformHomepage: React.FC = () => {
     },
   ]
 
-  // Event data for upcoming events
+  // Event data for community activities
   const upcomingEvents = [
     {
-      title: '[DEMO] Black Writers Workshop',
-      description: 'DEMO EVENT: Monthly workshop for aspiring writers to develop their craft in a supportive community environment. This is demonstration content.',
+      title: 'Cultural Meetups',
+      description: 'Join us for theatre, gallery, and cinema trips that celebrate Black queer culture and art. Connect with community members who share your interests.',
       imageSrc: '/images/blkoutuk.com v3/tumblr_a8ff21cfe9302e86a3d03892c864c5a5_391b148a_1280.jpg',
-      topComponent: <Badge variant="secondary">Jan 25</Badge>,
+      topComponent: <Badge variant="secondary">Ongoing</Badge>,
       actionComponent: (
         <Button size="sm" className="w-full">
-          RSVP
+          <a href="https://blkouthub.com" target="_blank" rel="noopener noreferrer" className="w-full text-center">
+            Join Hub
+          </a>
         </Button>
       ),
     },
     {
-      title: '[DEMO] Community Health Forum',
-      description: 'DEMO EVENT: Panel discussion on addressing health disparities in LGBTQ+ communities of color. This is demonstration content.',
+      title: 'Creative Collaboration',
+      description: 'Contribute writing, photography, or film to BLKOUTUK.com. Share your voice and creative work with our growing community.',
       imageSrc: '/images/blkoutuk.com v3/tumblr_9ccd25b3f9683386cc83b53fc27d1a39_a09d5048_1280.jpg',
-      topComponent: <Badge variant="default">Feb 1</Badge>,
+      topComponent: <Badge variant="default">Open</Badge>,
       actionComponent: (
         <Button size="sm" className="w-full">
-          RSVP
+          <Link to="/contribute">Get Involved</Link>
         </Button>
       ),
       featured: true,
     },
     {
-      title: '[DEMO] Digital Security Workshop',
-      description: 'DEMO EVENT: Learn essential digital security practices to protect yourself and your community online. This is demonstration content.',
+      title: 'Community Wellness',
+      description: 'Peer support gatherings focused on collective healing and mutual aid. Creating spaces where "illness becomes wellness" through community.',
       imageSrc: '/images/story archive colours/blue images/tumblr_6f66259d5fb67eabf60ecd14a13aeb13_37199e34_1280.jpg',
-      topComponent: <Badge variant="destructive">Feb 5</Badge>,
+      topComponent: <Badge variant="default">Monthly</Badge>,
       actionComponent: (
         <Button size="sm" className="w-full">
-          RSVP
+          <a href="https://blkouthub.com" target="_blank" rel="noopener noreferrer" className="w-full text-center">
+            Learn More
+          </a>
         </Button>
       ),
     },
@@ -211,9 +215,9 @@ const PlatformHomepage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      {/* Demo Content Banner */}
-      <div className="bg-gradient-to-r from-yellow-600 to-orange-600 text-black text-center py-3 px-4 font-bold text-sm">
-        ⚠️ DEMO PLATFORM: This page contains demonstration content marked with [DEMO] tags. Real content migration from blkoutuk.com is in progress.
+      {/* Content Migration Banner */}
+      <div className="bg-gradient-to-r from-emerald-600 to-indigo-600 text-white text-center py-3 px-4 font-bold text-sm">
+        ✅ LIVE CONTENT: Now featuring real articles from blkoutuk.com archive alongside curated community content.
       </div>
       
       {/* 1. Magazine-Style Hero Section */}
@@ -496,10 +500,10 @@ const PlatformHomepage: React.FC = () => {
         withBackgroundGlow={false}
       />
 
-      {/* 6. Upcoming Events Section */}
+      {/* 6. Community Activities Section */}
       <LandingProductCardSection
-        title="Upcoming Events"
-        description="Join us at upcoming community events, workshops, and organizing opportunities. Connect with fellow community members and build power together."
+        title="Community Activities"
+        description="Get involved in ongoing community activities, creative collaborations, and wellness initiatives. Connect with fellow community members and build power together."
         withBackground={true}
         withBackgroundGlow={true}
         variant="primary"
