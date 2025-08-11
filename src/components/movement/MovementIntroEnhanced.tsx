@@ -67,7 +67,7 @@ const featuredResources: Resource[] = []
 
 // Movement Hero Section
 const MovementHero = () => (
-  <section className="relative min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-green-950 via-green-900 to-emerald-900 overflow-hidden">
+  <section className="relative min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-yellow-950 via-yellow-900 to-amber-900 overflow-hidden">
     {/* Background pattern */}
     <div className="absolute inset-0 opacity-10">
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500 rounded-full blur-3xl"></div>
@@ -127,7 +127,7 @@ const MovementHero = () => (
               href="https://blkouthub.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-12 py-4 bg-gradient-to-r from-emerald-600 to-indigo-600 text-white font-black text-lg hover:from-emerald-500 hover:to-indigo-500 transition-all duration-300 shadow-xl hover:shadow-2xl heading-block uppercase tracking-wide flex items-center justify-center"
+              className="px-12 py-4 bg-gradient-to-r from-yellow-600 to-amber-600 text-white font-black text-lg hover:from-yellow-500 hover:to-amber-500 transition-all duration-300 shadow-xl hover:shadow-2xl heading-block uppercase tracking-wide flex items-center justify-center"
             >
               <Users className="w-6 h-6 mr-3" />
               JOIN THE HUB
@@ -181,7 +181,7 @@ const MovementHero = () => (
 
 // Movement Principles Section
 const MovementPrinciples = () => (
-  <section className="py-24 bg-green-50/5 backdrop-blur-sm">
+  <section className="py-24 bg-yellow-50/5 backdrop-blur-sm">
     <div className="max-w-6xl mx-auto px-8">
       <div className="text-center mb-16">
         <motion.h2 
@@ -189,7 +189,7 @@ const MovementPrinciples = () => (
           animate={{ opacity: 1, y: 0 }}
           className="text-4xl md:text-5xl font-black heading-block mb-6 uppercase"
         >
-          <span className="bg-gradient-to-r from-emerald-400 to-green-400 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-yellow-400 to-amber-400 bg-clip-text text-transparent">
             OUR
           </span>
           <span className="bg-gradient-to-r from-violet-400 to-slate-400 bg-clip-text text-transparent ml-4">
@@ -212,7 +212,7 @@ const MovementPrinciples = () => (
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.2 }}
               whileHover={{ scale: 1.02, y: -5 }}
-              className="bg-green-900/30 backdrop-blur-sm border border-green-700/30 p-8 hover:bg-green-900/50 transition-all duration-500 text-center group"
+              className="bg-yellow-900/30 backdrop-blur-sm border border-yellow-700/30 p-8 hover:bg-yellow-900/50 transition-all duration-500 text-center group"
             >
               <div className={`w-16 h-16 bg-gradient-to-br ${principle.gradient} flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300`}>
                 <IconComponent className="w-8 h-8 text-white" />
@@ -315,9 +315,9 @@ const ResourcesSection = () => {
         </div>
 
         {/* Community Contribution CTA */}
-        <div className="bg-gradient-to-br from-emerald-600/20 to-violet-600/20 border border-emerald-500/30 p-12 text-center">
+        <div className="bg-gradient-to-br from-yellow-600/20 to-amber-600/20 border border-yellow-500/30 p-12 text-center">
           <h3 className="text-3xl font-black heading-block mb-6 uppercase">
-            <span className="bg-gradient-to-r from-emerald-400 to-violet-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-yellow-400 to-amber-400 bg-clip-text text-transparent">
               BUILD WITH US
             </span>
           </h3>
@@ -328,7 +328,7 @@ const ResourcesSection = () => {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/community"
-              className="px-8 py-4 bg-gradient-to-r from-emerald-600 to-indigo-600 text-white font-black hover:from-emerald-500 hover:to-indigo-500 transition-all heading-block uppercase flex items-center justify-center"
+              className="px-8 py-4 bg-gradient-to-r from-yellow-600 to-amber-600 text-white font-black hover:from-yellow-500 hover:to-amber-500 transition-all heading-block uppercase flex items-center justify-center"
             >
               <Users className="w-5 h-5 mr-3" />
               CONTRIBUTE RESOURCES
@@ -356,7 +356,7 @@ const BlkoutHubCTA = () => (
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="bg-gradient-to-br from-emerald-600 via-indigo-600 to-violet-600 p-16 text-center relative overflow-hidden"
+        className="bg-gradient-to-br from-yellow-600 via-amber-600 to-orange-600 p-16 text-center relative overflow-hidden"
       >
         {/* Background pattern */}
         <div className="absolute inset-0 opacity-10">
@@ -376,7 +376,7 @@ const BlkoutHubCTA = () => (
           <h2 className="text-4xl md:text-5xl font-black text-white heading-block mb-6 uppercase">
             TAKE ACTION IN
             <br />
-            <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-white to-yellow-100 bg-clip-text text-transparent">
               BLKOUTHUB
             </span>
           </h2>
@@ -412,7 +412,7 @@ const BlkoutHubCTA = () => (
 
 export default function MovementIntroEnhanced() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-950 via-green-900 to-emerald-900">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-950 via-yellow-900 to-amber-900">
       {/* Enhanced Navigation */}
       <PrimaryNavigationEnhanced />
       
