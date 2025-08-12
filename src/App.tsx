@@ -37,6 +37,7 @@ import SkipNavigation from './components/layout/SkipNavigation'
 import ExtensionDownloadSimple from './components/extension/ExtensionDownloadSimple'
 import ArticleDetail from './components/stories/ArticleDetail'
 import PhotoCompetition from './components/community/PhotoCompetition'
+import PhotoCompetitionTest from './components/community/PhotoCompetitionTest'
 
 // Platform Layout Component - wraps platform routes with navigation
 const PlatformLayout = ({ children }: { children: React.ReactNode }) => (
@@ -149,6 +150,7 @@ function App() {
         <Route path="/admin/newsroom" element={<AdminAuth><NewsroomAdminDashboard /></AdminAuth>} />
         <Route path="/community" element={<PlatformLayout><CommunityGatewayEnhanced /></PlatformLayout>} />
         <Route path="/photo-competition" element={<PhotoCompetition />} />
+        <Route path="/photo-test" element={<PhotoCompetitionTest />} />
         <Route path="/stories" element={<PlatformLayout><StoriesPageEnhanced /></PlatformLayout>} />
         <Route path="/stories/:slug" element={<ArticleDetail />} />
         <Route path="/movement" element={<PlatformLayout><MovementIntroEnhanced /></PlatformLayout>} />
