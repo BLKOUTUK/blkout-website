@@ -142,10 +142,58 @@ export default async function handler(req, res) {
             // Trigger publication workflow
             await triggerN8nWorkflow(N8N_WORKFLOWS.EVENT_PUBLISHED, targetEvent)
             
-            // Could trigger:
+            // AUTO-TRIGGER: Social media distribution for published events
+            try {
+              const socialResponse = await fetch(`${req.url.split('/api')[0]}/api/webhooks/social-media-automation`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  contentType: 'event',
+                  content: {
+                    ...targetEvent,
+                    url: `https://blkoutuk.com/events/${targetEvent.id}`,
+                    urgent: targetEvent.priority === 'high'
+                  },
+                  platforms: ['linkedin', 'twitter', 'facebook', 'instagram'], // Skip YouTube for events
+                  automationTool: 'auto'
+                })
+              })
+              
+              if (socialResponse.ok) {
+                console.log(`Social media automation triggered for event: ${targetEvent.id}`)
+              }
+            } catch (socialError) {
+              console.error('Social media automation failed:', socialError)
+              // Continue - don't let social media failures block event publication
+            }
+            
+            // AUTO-TRIGGER: BLKOUTHUB cross-posting for community engagement
+            try {
+              const blkouthubResponse = await fetch(`${req.url.split('/api')[0]}/api/webhooks/blkouthub-integration`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  action: 'post',
+                  contentType: 'event',
+                  content: targetEvent
+                })
+              })
+              
+              if (blkouthubResponse.ok) {
+                console.log(`BLKOUTHUB cross-posting triggered for event: ${targetEvent.id}`)
+              }
+            } catch (blkouthubError) {
+              console.error('BLKOUTHUB integration failed:', blkouthubError)
+              // Continue - don't let BLKOUTHUB failures block event publication
+            }
+            
+            // Additional triggers:
             // - Website updates
-            // - Push notifications
-            // - Social media cross-posting
+            // - Push notifications  
             // - Community group notifications
             // - Calendar sync
           }

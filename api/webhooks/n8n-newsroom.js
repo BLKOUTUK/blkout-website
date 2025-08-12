@@ -148,11 +148,59 @@ export default async function handler(req, res) {
             // Trigger publication workflow
             await triggerN8nWorkflow(N8N_WORKFLOWS.ARTICLE_PUBLISHED, targetArticle)
             
-            // Could trigger:
+            // AUTO-TRIGGER: Social media distribution for published articles
+            try {
+              const socialResponse = await fetch(`${req.url.split('/api')[0]}/api/webhooks/social-media-automation`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  contentType: 'article',
+                  content: {
+                    ...targetArticle,
+                    url: `https://blkoutuk.com/newsroom/${targetArticle.id}`,
+                    urgent: targetArticle.priority === 'high' || targetArticle.category === 'Breaking News'
+                  },
+                  platforms: ['linkedin', 'twitter', 'facebook'], // Articles work best on these platforms
+                  automationTool: 'auto'
+                })
+              })
+              
+              if (socialResponse.ok) {
+                console.log(`Social media automation triggered for article: ${targetArticle.id}`)
+              }
+            } catch (socialError) {
+              console.error('Social media automation failed:', socialError)
+              // Continue - don't let social media failures block article publication
+            }
+            
+            // AUTO-TRIGGER: BLKOUTHUB cross-posting for community discussion
+            try {
+              const blkouthubResponse = await fetch(`${req.url.split('/api')[0]}/api/webhooks/blkouthub-integration`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  action: 'post',
+                  contentType: 'article',
+                  content: targetArticle
+                })
+              })
+              
+              if (blkouthubResponse.ok) {
+                console.log(`BLKOUTHUB cross-posting triggered for article: ${targetArticle.id}`)
+              }
+            } catch (blkouthubError) {
+              console.error('BLKOUTHUB integration failed:', blkouthubError)
+              // Continue - don't let BLKOUTHUB failures block article publication
+            }
+            
+            // Additional triggers:
             // - Website cache invalidation
-            // - Social media cross-posting
             // - Newsletter inclusion
-            // - RSS feed update
+            // - RSS feed update  
             // - Search engine indexing
             // - Community notifications
             // - Analytics tracking setup
