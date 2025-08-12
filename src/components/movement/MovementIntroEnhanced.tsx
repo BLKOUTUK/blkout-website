@@ -33,37 +33,67 @@ interface Principle {
 const movementPrinciples: Principle[] = [
   {
     id: '1',
-    title: 'COLLECTIVE OWNERSHIP',
-    description: 'Economic democracy through shared ownership of the means of production and decision-making power.',
+    title: 'COMMUNITY CONTROL',
+    description: 'Democratic governance of content and platform decisions with community-owned data and full export capabilities.',
     icon: Users,
     gradient: 'from-emerald-500 to-indigo-600'
   },
   {
     id: '2',
-    title: 'RACIAL JUSTICE',
-    description: 'Centering Black and Brown liberation in all economic and social transformation work.',
+    title: 'ECONOMIC JUSTICE',
+    description: 'Cooperative ownership model with revenue sharing and fair distribution of platform value to community.',
     icon: Heart,
     gradient: 'from-indigo-500 to-violet-600'
   },
   {
     id: '3',
-    title: 'QUEER LIBERATION',
-    description: 'Building systems that celebrate and protect the full spectrum of gender and sexual identity.',
+    title: 'LIBERATION FOCUS',
+    description: 'All content and technology serves Black queer liberation and community building through cooperative ownership.',
     icon: Shield,
     gradient: 'from-violet-500 to-emerald-600'
   },
   {
     id: '4',
-    title: 'COMMUNITY POWER',
-    description: 'Grassroots organizing that builds collective capacity for systemic change.',
+    title: 'ACCESSIBILITY',
+    description: 'Low barriers to participation with multiple formats and pathways for community contribution and engagement.',
     icon: Zap,
     gradient: 'from-slate-500 to-blue-600'
   }
 ]
 
-// Resources will be populated from real backend data
-// Removed fake resources to maintain content authenticity
-const featuredResources: Resource[] = []
+// Real governance documents and resources from BLKOUT development
+const featuredResources: Resource[] = [
+  {
+    id: 'events-integration-plan',
+    title: 'BLKOUT Events Calendar Integration Plan',
+    description: 'Complete technical architecture for community events discovery, AI-powered relevance scoring, and community moderation systems.',
+    type: 'guide',
+    category: 'Technical Architecture',
+    isNew: true
+  },
+  {
+    id: 'modular-system-architecture',
+    title: 'Modular System Architecture & PRD',
+    description: 'Comprehensive roadmap for community-owned liberation platform with 6-component ecosystem including Newsroom, Channel BLKOUT, and Storylab.',
+    type: 'report',
+    category: 'System Design',
+    isNew: true
+  },
+  {
+    id: 'sparc-development',
+    title: 'SPARC Development Framework',
+    description: 'Systematic development methodology using Specification, Pseudocode, Architecture, Refinement, and Completion phases.',
+    type: 'toolkit',
+    category: 'Development Process'
+  },
+  {
+    id: 'community-governance',
+    title: 'Democratic Decision-Making Processes',
+    description: 'Framework for community-led editorial policies, transparent appeals processes, and democratic platform evolution.',
+    type: 'guide',
+    category: 'Governance'
+  }
+]
 
 // Movement Hero Section
 const MovementHero = () => (
@@ -98,11 +128,11 @@ const MovementHero = () => (
             className="text-5xl md:text-7xl lg:text-8xl font-black heading-block leading-none mb-8"
           >
             <span className="bg-gradient-to-r from-emerald-400 via-indigo-400 to-violet-400 bg-clip-text text-transparent">
-              COOPERATIVE
+              LIBERATION
             </span>
             <br />
             <span className="bg-gradient-to-r from-slate-400 via-blue-400 to-emerald-400 bg-clip-text text-transparent">
-              ECONOMY
+              PLATFORM
             </span>
           </motion.h1>
           
@@ -112,9 +142,9 @@ const MovementHero = () => (
             transition={{ duration: 0.6, delay: 0.6 }}
             className="text-xl md:text-2xl text-indigo-100 leading-relaxed font-light mb-12 max-w-2xl"
           >
-            The future we need won't emerge from individual success in broken systems. 
-            It requires collective ownership, shared power, and economic democracy that 
-            centers racial and queer liberation.
+            Building community-controlled technology for Black queer liberation through 
+            cooperative ownership. A modular platform where community owns data, controls 
+            decisions, and shares in the value we create together.
           </motion.p>
 
           {/* Movement CTAs */}
@@ -237,8 +267,34 @@ const MovementPrinciples = () => (
   </section>
 )
 
-// Resources In Development Section - Authentic messaging
+// Resources Section with Real Governance Documents
 const ResourcesSection = () => {
+  const getResourceIcon = (type: string) => {
+    switch (type) {
+      case 'guide':
+        return BookOpen
+      case 'toolkit':
+        return Target
+      case 'report':
+        return FileText
+      default:
+        return FileText
+    }
+  }
+
+  const getTypeColor = (type: string) => {
+    switch (type) {
+      case 'guide':
+        return 'from-emerald-500 to-blue-600'
+      case 'toolkit':
+        return 'from-violet-500 to-emerald-600'
+      case 'report':
+        return 'from-slate-500 to-indigo-600'
+      default:
+        return 'from-indigo-500 to-violet-600'
+    }
+  }
+
   return (
     <section className="py-24">
       <div className="max-w-6xl mx-auto px-8">
@@ -249,83 +305,84 @@ const ResourcesSection = () => {
             className="text-4xl md:text-5xl font-black heading-block mb-6 uppercase"
           >
             <span className="bg-gradient-to-r from-slate-400 to-indigo-400 bg-clip-text text-transparent">
-              RESOURCES IN
+              GOVERNANCE
             </span>
             <span className="bg-gradient-to-r from-violet-400 to-emerald-400 bg-clip-text text-transparent ml-4">
-              DEVELOPMENT
+              RESOURCES
             </span>
           </motion.h2>
           <p className="text-xl text-indigo-100 font-light leading-relaxed max-w-3xl mx-auto mb-8">
-            We're actively building a comprehensive library of tools, guides, and resources 
-            for cooperative movement building. Our community is developing authentic content 
-            rooted in real organizing experience.
+            Real documents and frameworks from BLKOUT's development process. These resources reflect 
+            our commitment to transparent, community-controlled technology platforms.
           </p>
         </div>
 
-        {/* Development Status Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="bg-indigo-900/20 backdrop-blur-sm border border-indigo-700/20 p-8 text-center"
-          >
-            <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-blue-600 flex items-center justify-center mx-auto mb-6">
-              <BookOpen className="w-8 h-8 text-white" />
-            </div>
-            <h3 className="text-xl font-black heading-block mb-4 uppercase text-emerald-400">
-              ORGANIZING GUIDES
-            </h3>
-            <p className="text-indigo-100 leading-relaxed font-light">
-              Community-tested strategies for building cooperative power
-            </p>
-          </motion.div>
+        {/* Featured Resources Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+          {featuredResources.map((resource, index) => {
+            const IconComponent = getResourceIcon(resource.type)
+            const gradient = getTypeColor(resource.type)
+            
+            return (
+              <motion.div
+                key={resource.id}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                className="bg-indigo-900/20 backdrop-blur-sm border border-indigo-700/20 p-8 hover:bg-indigo-900/30 transition-all duration-300"
+              >
+                <div className="flex items-start gap-6">
+                  <div className={`w-14 h-14 bg-gradient-to-br ${gradient} flex items-center justify-center flex-shrink-0`}>
+                    <IconComponent className="w-7 h-7 text-white" />
+                  </div>
+                  
+                  <div className="flex-1">
+                    <div className="flex items-start justify-between mb-3">
+                      <h3 className="text-xl font-black heading-block uppercase text-indigo-100 leading-tight">
+                        {resource.title}
+                      </h3>
+                      {resource.isNew && (
+                        <span className="bg-gradient-to-r from-emerald-500 to-violet-500 text-white text-xs font-black px-2 py-1 uppercase tracking-wide ml-2">
+                          NEW
+                        </span>
+                      )}
+                    </div>
+                    
+                    <p className="text-indigo-200 text-sm font-mono mb-4 opacity-80">
+                      {resource.category} • {resource.type.toUpperCase()}
+                    </p>
+                    
+                    <p className="text-indigo-100 leading-relaxed font-light mb-6">
+                      {resource.description}
+                    </p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="bg-indigo-900/20 backdrop-blur-sm border border-indigo-700/20 p-8 text-center"
-          >
-            <div className="w-16 h-16 bg-gradient-to-br from-violet-500 to-emerald-600 flex items-center justify-center mx-auto mb-6">
-              <Target className="w-8 h-8 text-white" />
-            </div>
-            <h3 className="text-xl font-black heading-block mb-4 uppercase text-violet-400">
-              PRACTICAL TOOLKITS
-            </h3>
-            <p className="text-indigo-100 leading-relaxed font-light">
-              Ready-to-use templates and frameworks from successful cooperatives
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="bg-indigo-900/20 backdrop-blur-sm border border-indigo-700/20 p-8 text-center"
-          >
-            <div className="w-16 h-16 bg-gradient-to-br from-slate-500 to-indigo-600 flex items-center justify-center mx-auto mb-6">
-              <FileText className="w-8 h-8 text-white" />
-            </div>
-            <h3 className="text-xl font-black heading-block mb-4 uppercase text-slate-400">
-              IMPACT REPORTS
-            </h3>
-            <p className="text-indigo-100 leading-relaxed font-light">
-              Data and stories from cooperative movements worldwide
-            </p>
-          </motion.div>
+                    <div className="flex gap-3">
+                      <button className="px-4 py-2 bg-gradient-to-r from-emerald-600 to-indigo-600 text-white font-black text-sm hover:from-emerald-500 hover:to-indigo-500 transition-all heading-block uppercase flex items-center">
+                        <Download className="w-4 h-4 mr-2" />
+                        ACCESS
+                      </button>
+                      <button className="px-4 py-2 border border-indigo-400 text-indigo-100 font-black text-sm hover:bg-indigo-400 hover:text-indigo-900 transition-all heading-block uppercase flex items-center">
+                        <ExternalLink className="w-4 h-4 mr-2" />
+                        PREVIEW
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )
+          })}
         </div>
 
         {/* Community Contribution CTA */}
         <div className="bg-gradient-to-br from-emerald-600/20 to-violet-600/20 border border-emerald-500/30 p-12 text-center">
           <h3 className="text-3xl font-black heading-block mb-6 uppercase">
             <span className="bg-gradient-to-r from-emerald-400 to-violet-400 bg-clip-text text-transparent">
-              BUILD WITH US
+              TRANSPARENT DEVELOPMENT
             </span>
           </h3>
           <p className="text-xl text-indigo-100 mb-8 max-w-2xl mx-auto leading-relaxed font-light">
-            Have organizing experience to share? Resources from your cooperative? 
-            We're building this library together with input from practitioners doing the work.
+            All BLKOUT governance documents and development processes are open to community review. 
+            We believe in radical transparency as the foundation of community control.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -333,15 +390,15 @@ const ResourcesSection = () => {
               className="px-8 py-4 bg-gradient-to-r from-emerald-600 to-indigo-600 text-white font-black hover:from-emerald-500 hover:to-indigo-500 transition-all heading-block uppercase flex items-center justify-center"
             >
               <Users className="w-5 h-5 mr-3" />
-              CONTRIBUTE RESOURCES
+              JOIN GOVERNANCE
             </Link>
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="px-8 py-4 border-2 border-indigo-400 text-indigo-100 font-black hover:bg-indigo-400 hover:text-indigo-900 transition-all heading-block uppercase flex items-center justify-center"
             >
-              <Globe className="w-5 h-5 mr-3" />
-              GET UPDATES
+              <FileText className="w-5 h-5 mr-3" />
+              VIEW ALL DOCS
             </motion.button>
           </div>
         </div>
