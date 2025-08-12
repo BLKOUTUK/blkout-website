@@ -1,6 +1,6 @@
 {
   "name": "blkout-website",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Community platform for cooperative ownership - Building bridges, not walls",
   "private": true,
   "type": "module",
