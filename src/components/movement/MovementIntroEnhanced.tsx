@@ -75,20 +75,18 @@ const MovementHero = () => (
     </div>
     
     <div className="relative z-10 max-w-7xl mx-auto px-8 py-32">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start lg:items-center">
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
+          className="order-2 lg:order-1"
         >
-          <div className="bg-yellow-500 text-black p-2 text-center mb-4 font-bold rounded">
-            🟡 ENHANCED MovementIntroEnhanced.tsx FILE (YELLOW)
-          </div>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-indigo-300 text-xl font-mono uppercase tracking-widest mb-6"
+            className="text-yellow-300 text-xl font-mono uppercase tracking-widest mb-6"
           >
             MOVEMENT BUILDING
           </motion.p>
@@ -151,14 +149,15 @@ const MovementHero = () => (
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="aspect-[4/3] overflow-hidden relative"
+          className="order-1 lg:order-2"
         >
-          <img
-            src="/images/blkoutuk.com v3/John Henry.png"
-            alt="Breaking through systemic barriers together"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/40 via-transparent to-transparent"></div>
+          <div className="aspect-[4/3] overflow-hidden relative rounded-2xl shadow-2xl">
+            <img
+              src="/images/blkoutuk.com v3/John Henry.png"
+              alt="Breaking through systemic barriers together"
+              className="w-full h-full object-contain bg-yellow-100"
+            />
+          </div>
         </motion.div>
       </div>
 
