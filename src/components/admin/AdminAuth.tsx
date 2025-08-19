@@ -2,26 +2,44 @@
 
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Lock, Shield, Eye, EyeOff } from 'lucide-react'
+import { Lock, Shield, Eye, EyeOff, Calendar, Crown, Users, LogOut } from 'lucide-react'
 
 interface AdminAuthProps {
   children: React.ReactNode
 }
 
-const ADMIN_PASSWORD = 'BLKOUT2025!'
+// 90-day temporary authentication system
+const ADMIN_PASSWORD = 'BLKOUT2025!Admin'
+const MODERATOR_PASSWORD = 'BLKOUT2025!Mod'
+const EXPIRY_DATE = new Date('2025-11-17') // 90 days from August 19, 2025
 
 export default function AdminAuth({ children }: AdminAuthProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [userRole, setUserRole] = useState<'admin' | 'moderator' | null>(null)
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Check if already authenticated in session
-    const authStatus = sessionStorage.getItem('admin_authenticated')
-    if (authStatus === 'true') {
-      setIsAuthenticated(true)
+    // Check if already authenticated and not expired
+    try {
+      const stored = localStorage.getItem('blkout_admin_auth')
+      if (stored) {
+        const authData = JSON.parse(stored)
+        const now = Date.now()
+        
+        // Check if auth has expired (90 days or 24 hours session)
+        if (now > authData.expires || now - authData.authenticatedAt > 24 * 60 * 60 * 1000) {
+          localStorage.removeItem('blkout_admin_auth')
+        } else {
+          setIsAuthenticated(true)
+          setUserRole(authData.role)
+        }
+      }
+    } catch (error) {
+      console.error('Error checking auth:', error)
+      localStorage.removeItem('blkout_admin_auth')
     }
     setLoading(false)
   }, [])
@@ -29,21 +47,47 @@ export default function AdminAuth({ children }: AdminAuthProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (password === ADMIN_PASSWORD) {
-      setIsAuthenticated(true)
-      sessionStorage.setItem('admin_authenticated', 'true')
-      setError('')
-    } else {
-      setError('Invalid password. Please try again.')
-      setPassword('')
+    // Check if temporary auth period has expired
+    const now = new Date()
+    if (now > EXPIRY_DATE) {
+      setError('Temporary authentication has expired. Please contact administrators for updated access.')
+      return
     }
+    
+    let role: 'admin' | 'moderator' | null = null
+    
+    if (password === ADMIN_PASSWORD) {
+      role = 'admin'
+    } else if (password === MODERATOR_PASSWORD) {
+      role = 'moderator'  
+    } else {
+      setError('Invalid password. Contact administrators if you need access.')
+      setPassword('')
+      return
+    }
+
+    // Store auth with expiry
+    const authData = {
+      role,
+      authenticated: true,
+      expires: EXPIRY_DATE.getTime(),
+      authenticatedAt: Date.now()
+    }
+    
+    localStorage.setItem('blkout_admin_auth', JSON.stringify(authData))
+    setIsAuthenticated(true)
+    setUserRole(role)
+    setError('')
   }
 
   const handleLogout = () => {
     setIsAuthenticated(false)
-    sessionStorage.removeItem('admin_authenticated')
+    setUserRole(null)
+    localStorage.removeItem('blkout_admin_auth')
     setPassword('')
   }
+
+  const daysRemaining = Math.ceil((EXPIRY_DATE.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
 
   if (loading) {
     return (
@@ -72,8 +116,21 @@ export default function AdminAuth({ children }: AdminAuthProps) {
               Admin Access Required
             </h1>
             <p className="text-indigo-200">
-              Enter the admin password to access the dashboard
+              Enter admin or moderator password to access the dashboard
             </p>
+            
+            {/* 90-Day Notice */}
+            <div className="bg-yellow-900/30 border border-yellow-700/50 rounded-lg p-3 mt-4">
+              <div className="flex items-center gap-2">
+                <Calendar className="w-4 h-4 text-yellow-400" />
+                <div>
+                  <p className="text-yellow-200 text-xs font-medium">Temporary Access Period</p>
+                  <p className="text-yellow-300 text-xs">
+                    {daysRemaining} days remaining • Expires November 17, 2025
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -146,7 +203,26 @@ export default function AdminAuth({ children }: AdminAuthProps) {
               </div>
               <div>
                 <h1 className="text-lg font-bold text-white">BLKOUT Admin Panel</h1>
-                <p className="text-sm text-indigo-200">Authenticated Session</p>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-1 px-2 py-1 bg-indigo-800/50 rounded">
+                    {userRole === 'admin' ? (
+                      <Crown className="w-3 h-3 text-yellow-400" />
+                    ) : (
+                      <Users className="w-3 h-3 text-blue-400" />
+                    )}
+                    <span className="text-xs text-indigo-200 capitalize font-medium">
+                      {userRole}
+                    </span>
+                  </div>
+                  {daysRemaining <= 30 && (
+                    <div className="flex items-center gap-1 px-2 py-1 bg-yellow-900/30 border border-yellow-700/50 rounded">
+                      <Calendar className="w-3 h-3 text-yellow-400" />
+                      <span className="text-xs text-yellow-200">
+                        {daysRemaining} days left
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -164,12 +240,15 @@ export default function AdminAuth({ children }: AdminAuthProps) {
                   Moderation
                 </a>
               </nav>
-              <button
+              <motion.button
                 onClick={handleLogout}
-                className="px-4 py-2 bg-red-600/20 border border-red-600/30 text-red-200 rounded hover:bg-red-600/30 transition-colors text-sm"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center gap-2 px-3 py-1 bg-red-600/20 border border-red-600/30 text-red-200 rounded hover:bg-red-600/30 transition-colors text-sm"
               >
-                Logout
-              </button>
+                <LogOut className="w-4 h-4" />
+                Sign Out
+              </motion.button>
             </div>
           </div>
         </div>

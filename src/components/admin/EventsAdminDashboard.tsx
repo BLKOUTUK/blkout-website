@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import ProtectedAdminRoute from '../auth/ProtectedAdminRoute'
 import { showSuccess, showError } from '../../utils/notifications'
 import { motion } from 'framer-motion'
 import { 
@@ -8,44 +9,21 @@ import {
   Clock, Filter, Search, CheckCircle, XCircle, AlertCircle,
   Download, Upload, Settings, BarChart3, TrendingUp
 } from 'lucide-react'
+import { useEvents } from '../../hooks/useSupabase'
+import type { Event } from '../../types/supabase'
 
-interface Event {
-  id: string
-  title: string
-  description: string
-  date: string
-  time: string
-  duration: number
-  location: {
-    type: 'physical' | 'virtual' | 'hybrid'
-    address?: string
-    url?: string
-    coordinates?: { lat: number, lng: number }
-  }
-  organizer: string
-  category: string
-  tags: string[]
-  capacity: number
-  rsvps: number
-  status: 'draft' | 'approved' | 'rejected' | 'published' | 'cancelled' | 'completed'
-  featured: boolean
-  image?: string
-  createdAt: string
-  updatedAt: string
-  sourceUrl?: string
-  submittedVia?: string
-}
+// Using Event type from Supabase types
 
 interface EventFormData {
-  title: string
+  name: string
   description: string
-  date: string
-  time: string
-  duration: number
+  event_date: string
+  start_time: string
+  end_time: string
   locationType: 'physical' | 'virtual' | 'hybrid'
   address: string
   url: string
-  organizer: string
+  organizer_name: string
   category: string
   tags: string
   capacity: number
@@ -54,15 +32,15 @@ interface EventFormData {
 }
 
 const initialFormData: EventFormData = {
-  title: '',
+  name: '',
   description: '',
-  date: '',
-  time: '',
-  duration: 120,
+  event_date: '',
+  start_time: '',
+  end_time: '',
   locationType: 'physical',
   address: '',
   url: '',
-  organizer: '',
+  organizer_name: '',
   category: 'Community',
   tags: '',
   capacity: 50,
@@ -75,10 +53,9 @@ const eventCategories = [
   'Activism', 'Social', 'Professional Development', 'Support Group'
 ]
 
-export default function EventsAdminDashboard() {
-  const [events, setEvents] = useState<Event[]>([])
+function EventsAdminDashboardContent() {
+  const { events, loading, createEvent, updateEvent, deleteEvent } = useEvents()
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([])
-  const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [editingEvent, setEditingEvent] = useState<Event | null>(null)
   const [formData, setFormData] = useState<EventFormData>(initialFormData)
@@ -86,10 +63,7 @@ export default function EventsAdminDashboard() {
   const [statusFilter, setStatusFilter] = useState('all')
   const [categoryFilter, setCategoryFilter] = useState('all')
 
-  // Load events from backend
-  useEffect(() => {
-    loadEvents()
-  }, [])
+  // Events are loaded automatically by useEvents hook
 
   // Filter events based on search and filters
   useEffect(() => {
@@ -97,9 +71,9 @@ export default function EventsAdminDashboard() {
 
     if (searchQuery) {
       filtered = filtered.filter(event => 
-        event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        event.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         event.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        event.organizer.toLowerCase().includes(searchQuery.toLowerCase())
+        event.organizer_name?.toLowerCase().includes(searchQuery.toLowerCase())
       )
     }
 
@@ -114,64 +88,29 @@ export default function EventsAdminDashboard() {
     setFilteredEvents(filtered)
   }, [events, searchQuery, statusFilter, categoryFilter])
 
-  const loadEvents = async () => {
-    try {
-      const response = await fetch('/api/events')
-      const data = await response.json()
-      if (data.success && data.events) {
-        setEvents(data.events)
-        console.log('✅ Loaded events:', data.events.length)
-      }
-    } catch (error) {
-      console.error('Failed to load events:', error)
-      showError('Failed to load events', 'Using sample data')
-      // Use sample data for demo
-      setEvents([
-        {
-          id: '1',
-          title: 'Community Healing Circle',
-          description: 'A safe space for collective healing and support.',
-          date: '2025-02-15',
-          time: '18:00',
-          duration: 120,
-          location: { type: 'physical', address: 'Community Center, London' },
-          organizer: 'BLKOUT Healing Collective',
-          category: 'Wellness',
-          tags: ['healing', 'community', 'support'],
-          capacity: 25,
-          rsvps: 18,
-          status: 'approved',
-          featured: true,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        }
-      ])
-    } finally {
-      setLoading(false)
-    }
-  }
+  // Events are loaded automatically by useEvents hook
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
     try {
       const eventData = {
-        title: formData.title,
+        name: formData.name,
         description: formData.description,
-        date: formData.date,
-        time: formData.time,
-        duration: formData.duration,
+        event_date: formData.event_date,
+        start_time: formData.start_time,
+        end_time: formData.end_time,
         location: {
           type: formData.locationType,
           address: formData.address || undefined,
           url: formData.url || undefined
         },
-        organizer: formData.organizer,
+        organizer_name: formData.organizer_name,
         category: formData.category,
         tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
-        capacity: formData.capacity,
-        featured: formData.featured,
-        // New events start as drafts for moderation workflow
+        target_audience: ['All Welcome'],
+        price: 'Free',
+        source: 'manual',
         status: editingEvent ? editingEvent.status : 'draft'
       }
 
@@ -179,42 +118,10 @@ export default function EventsAdminDashboard() {
 
       if (editingEvent) {
         // Update existing event
-        const response = await fetch(`/api/events?id=${editingEvent.id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(eventData)
-        })
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
-        }
-
-        const result = await response.json()
-        // Event updated
-        
-        // Refresh events list
-        loadEvents()
+        await updateEvent(editingEvent.id, eventData)
       } else {
         // Create new event
-        const response = await fetch('/api/events', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(eventData)
-        })
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
-        }
-
-        const result = await response.json()
-        // Event created
-        
-        // Refresh events list
-        loadEvents()
+        await createEvent(eventData)
       }
 
       // Reset form
@@ -232,37 +139,45 @@ export default function EventsAdminDashboard() {
   const handleEdit = (event: Event) => {
     setEditingEvent(event)
     setFormData({
-      title: event.title,
+      name: event.name,
       description: event.description,
-      date: event.date,
-      time: event.time,
-      duration: event.duration,
-      locationType: event.location.type,
-      address: event.location.address || '',
-      url: event.location.url || '',
-      organizer: event.organizer,
-      category: event.category,
-      tags: event.tags.join(', '),
-      capacity: event.capacity,
-      featured: event.featured,
-      image: event.image || ''
+      event_date: event.event_date.split('T')[0], // Extract date part
+      start_time: event.start_time || '',
+      end_time: event.end_time || '',
+      locationType: (typeof event.location === 'object' ? event.location.type : 'physical') as any,
+      address: (typeof event.location === 'object' ? event.location.address : event.location) || '',
+      url: (typeof event.location === 'object' ? event.location.url : '') || '',
+      organizer_name: event.organizer_name || '',
+      category: event.category || 'Community',
+      tags: (event.tags || []).join(', '),
+      capacity: 50, // Default capacity
+      featured: false, // Default featured
+      image: ''
     })
     setShowForm(true)
   }
 
   const handleDelete = async (eventId: string) => {
     if (confirm('Are you sure you want to delete this event?')) {
-      setEvents(prev => prev.filter(event => event.id !== eventId))
+      try {
+        await deleteEvent(eventId)
+        showSuccess('Event Deleted', 'Event deleted successfully!')
+      } catch (error) {
+        showError('Delete Failed', 'Failed to delete event. Please try again.')
+      }
     }
   }
 
   const handleStatusChange = async (eventId: string, newStatus: Event['status']) => {
-    setEvents(prev => prev.map(event => 
-      event.id === eventId ? { ...event, status: newStatus, updatedAt: new Date().toISOString() } : event
-    ))
+    try {
+      await updateEvent(eventId, { status: newStatus })
+      showSuccess('Status Updated', `Event status changed to ${newStatus}`)
+    } catch (error) {
+      showError('Update Failed', 'Failed to update event status. Please try again.')
+    }
   }
 
-  const getStatusColor = (status: Event['status']) => {
+  const getStatusColor = (status: string) => {
     switch (status) {
       case 'published': return 'text-green-400 bg-green-900/20'
       case 'draft': return 'text-yellow-400 bg-yellow-900/20'
@@ -435,7 +350,7 @@ export default function EventsAdminDashboard() {
                           </div>
                         </div>
                         <div className="ml-4">
-                          <div className="text-sm font-medium text-white">{event.title}</div>
+                          <div className="text-sm font-medium text-white">{event.name}</div>
                           <div className="text-sm text-indigo-200">{event.category}</div>
                           <div className="flex items-center gap-2 mt-1">
                             {event.featured && (
@@ -453,8 +368,8 @@ export default function EventsAdminDashboard() {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm text-white">{new Date(event.date).toLocaleDateString()}</div>
-                      <div className="text-sm text-indigo-200">{event.time}</div>
+                      <div className="text-sm text-white">{new Date(event.event_date).toLocaleDateString()}</div>
+                      <div className="text-sm text-indigo-200">{event.start_time}</div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center text-sm text-indigo-200">
@@ -463,7 +378,10 @@ export default function EventsAdminDashboard() {
                          event.location.type === 'virtual' ? 'Virtual' : 'Hybrid'}
                       </div>
                       <div className="text-xs text-indigo-300">
-                        {event.location.address || event.location.url || 'Location TBD'}
+                        {typeof event.location === 'object' 
+                          ? (event.location.address || event.location.url || 'Location TBD')
+                          : (event.location || 'Location TBD')
+                        }
                       </div>
                     </td>
                     <td className="px-6 py-4">
@@ -491,11 +409,11 @@ export default function EventsAdminDashboard() {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm text-white">{event.rsvps}/{event.capacity}</div>
+                      <div className="text-sm text-white">{event.rsvps || 0}/{event.capacity || 50}</div>
                       <div className="w-full bg-indigo-800 rounded-full h-2 mt-1">
                         <div 
                           className="bg-emerald-500 h-2 rounded-full" 
-                          style={{ width: `${(event.rsvps / event.capacity) * 100}%` }}
+                          style={{ width: `${((event.rsvps || 0) / (event.capacity || 50)) * 100}%` }}
                         ></div>
                       </div>
                     </td>
@@ -570,14 +488,14 @@ export default function EventsAdminDashboard() {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-indigo-200 mb-2">Event Title</label>
+                    <label className="block text-sm font-medium text-indigo-200 mb-2">Event Name</label>
                     <input
                       type="text"
                       required
-                      value={formData.title}
-                      onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                      value={formData.name}
+                      onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                       className="w-full px-4 py-2 bg-indigo-800/50 border border-indigo-600 rounded text-white placeholder-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      placeholder="Enter event title"
+                      placeholder="Enter event name"
                     />
                   </div>
                   
@@ -613,32 +531,29 @@ export default function EventsAdminDashboard() {
                     <input
                       type="date"
                       required
-                      value={formData.date}
-                      onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
+                      value={formData.event_date}
+                      onChange={(e) => setFormData(prev => ({ ...prev, event_date: e.target.value }))}
                       className="w-full px-4 py-2 bg-indigo-800/50 border border-indigo-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-indigo-200 mb-2">Time</label>
+                    <label className="block text-sm font-medium text-indigo-200 mb-2">Start Time</label>
                     <input
                       type="time"
                       required
-                      value={formData.time}
-                      onChange={(e) => setFormData(prev => ({ ...prev, time: e.target.value }))}
+                      value={formData.start_time}
+                      onChange={(e) => setFormData(prev => ({ ...prev, start_time: e.target.value }))}
                       className="w-full px-4 py-2 bg-indigo-800/50 border border-indigo-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-indigo-200 mb-2">Duration (minutes)</label>
+                    <label className="block text-sm font-medium text-indigo-200 mb-2">End Time</label>
                     <input
-                      type="number"
-                      required
-                      min="30"
-                      max="480"
-                      value={formData.duration}
-                      onChange={(e) => setFormData(prev => ({ ...prev, duration: parseInt(e.target.value) }))}
+                      type="time"
+                      value={formData.end_time}
+                      onChange={(e) => setFormData(prev => ({ ...prev, end_time: e.target.value }))}
                       className="w-full px-4 py-2 bg-indigo-800/50 border border-indigo-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                   </div>
@@ -689,8 +604,8 @@ export default function EventsAdminDashboard() {
                     <input
                       type="text"
                       required
-                      value={formData.organizer}
-                      onChange={(e) => setFormData(prev => ({ ...prev, organizer: e.target.value }))}
+                      value={formData.organizer_name}
+                      onChange={(e) => setFormData(prev => ({ ...prev, organizer_name: e.target.value }))}
                       className="w-full px-4 py-2 bg-indigo-800/50 border border-indigo-600 rounded text-white placeholder-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       placeholder="Event organizer"
                     />
@@ -756,5 +671,13 @@ export default function EventsAdminDashboard() {
         </div>
       )}
     </div>
+  )
+}
+
+export default function EventsAdminDashboard() {
+  return (
+    <ProtectedAdminRoute requiredRole="moderator" title="Events Admin Dashboard">
+      <EventsAdminDashboardContent />
+    </ProtectedAdminRoute>
   )
 }

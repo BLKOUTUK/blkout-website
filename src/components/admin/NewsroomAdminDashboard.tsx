@@ -1,36 +1,18 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
+import ProtectedAdminRoute from '../auth/ProtectedAdminRoute'
 import { showSuccess, showError } from '../../utils/notifications'
 import { motion } from 'framer-motion'
 import { 
   Newspaper, Plus, Edit3, Trash2, Eye, Share2, Filter, Search,
   CheckCircle, XCircle, AlertCircle, Clock, TrendingUp, Users,
-  Globe, Link2, Image, FileText, Video, Mic, Tag, Calendar
+  Globe, Link2, Image, FileText, Video, Mic, Tag, Calendar, Wifi, WifiOff, Database
 } from 'lucide-react'
+import { useArticles } from '../../hooks/useSupabase'
+import type { NewsArticle } from '../../types/supabase'
 
-interface Article {
-  id: string
-  title: string
-  excerpt: string
-  content: string
-  author: string
-  publishedAt: string
-  updatedAt: string
-  status: 'draft' | 'published' | 'archived' | 'pending_review'
-  category: string
-  tags: string[]
-  featured: boolean
-  image?: string
-  source?: string
-  sourceUrl?: string
-  submittedVia?: string
-  views: number
-  shares: number
-  comments: number
-  type: 'original' | 'curated' | 'community_response'
-  priority: 'low' | 'medium' | 'high' | 'urgent'
-}
+// Using NewsArticle type from service
 
 interface ArticleFormData {
   title: string
@@ -40,11 +22,11 @@ interface ArticleFormData {
   category: string
   tags: string
   featured: boolean
-  image: string
+  imageUrl: string
   source: string
-  sourceUrl: string
-  type: 'original' | 'curated' | 'community_response'
-  priority: 'low' | 'medium' | 'high' | 'urgent'
+  externalUrl: string
+  type: string
+  priority: string
 }
 
 const initialFormData: ArticleFormData = {
@@ -52,19 +34,19 @@ const initialFormData: ArticleFormData = {
   excerpt: '',
   content: '',
   author: '',
-  category: 'Breaking News',
+  category: 'community',
   tags: '',
   featured: false,
-  image: '',
+  imageUrl: '',
   source: '',
-  sourceUrl: '',
+  externalUrl: '',
   type: 'original',
   priority: 'medium'
 }
 
 const categories = [
-  'Breaking News', 'Analysis', 'Community News', 'Policy Update', 
-  'International', 'Local Events', 'Opinion', 'Investigation'
+  'community', 'politics', 'culture', 'health', 
+  'education', 'business', 'technology'
 ]
 
 const contentTypes = [
@@ -73,33 +55,27 @@ const contentTypes = [
   { value: 'community_response', label: 'Community Response', icon: Users }
 ]
 
-export default function NewsroomAdminDashboard() {
-  const [articles, setArticles] = useState<Article[]>([])
-  const [filteredArticles, setFilteredArticles] = useState<Article[]>([])
-  const [loading, setLoading] = useState(true)
+function NewsroomAdminDashboardContent() {
+  const { articles, loading, error, refetch: refreshArticles, createArticle, updateArticle, deleteArticle } = useArticles()
+  
+  const [filteredArticles, setFilteredArticles] = useState<NewsArticle[]>([])
   const [showForm, setShowForm] = useState(false)
-  const [editingArticle, setEditingArticle] = useState<Article | null>(null)
+  const [editingArticle, setEditingArticle] = useState<NewsArticle | null>(null)
   const [formData, setFormData] = useState<ArticleFormData>(initialFormData)
   const [searchQuery, setSearchQuery] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [categoryFilter, setCategoryFilter] = useState('all')
-  const [typeFilter, setTypeFilter] = useState('all')
-
-  // Load articles from backend
-  useEffect(() => {
-    loadArticles()
-  }, [])
 
   // Filter articles based on search and filters
-  useEffect(() => {
+  React.useEffect(() => {
     let filtered = articles
 
     if (searchQuery) {
       filtered = filtered.filter(article => 
         article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         article.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        article.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        article.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+        getAuthorName(article.author).toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (article.tags || []).some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
       )
     }
 
@@ -111,51 +87,10 @@ export default function NewsroomAdminDashboard() {
       filtered = filtered.filter(article => article.category === categoryFilter)
     }
 
-    if (typeFilter !== 'all') {
-      filtered = filtered.filter(article => article.type === typeFilter)
-    }
-
     setFilteredArticles(filtered)
-  }, [articles, searchQuery, statusFilter, categoryFilter, typeFilter])
+  }, [articles, searchQuery, statusFilter, categoryFilter])
 
-  const loadArticles = async () => {
-    try {
-      const response = await fetch('/api/articles')
-      const data = await response.json()
-      if (data.success && data.articles) {
-        // Transform API data to match Article interface
-        const transformedArticles = data.articles.map((article: any) => ({
-          id: article.id,
-          title: article.title,
-          excerpt: article.description || article.excerpt || 'No excerpt available',
-          content: article.content || article.description || 'No content available',
-          author: article.author || 'Unknown Author',
-          publishedAt: article.publishedAt || article.createdAt,
-          updatedAt: article.updatedAt || article.createdAt,
-          status: article.status as Article['status'],
-          category: article.category || 'General',
-          tags: Array.isArray(article.tags) ? article.tags : [],
-          featured: article.featured || false,
-          image: article.image,
-          source: article.source,
-          sourceUrl: article.sourceUrl,
-          submittedVia: article.submittedVia,
-          views: article.views || 0,
-          shares: article.shares || 0,
-          comments: article.comments || 0,
-          type: article.type || 'original' as Article['type'],
-          priority: article.priority || 'medium' as Article['priority']
-        }))
-        setArticles(transformedArticles)
-      }
-    } catch (error) {
-      console.error('Failed to load articles:', error)
-      // Show empty state on error
-      setArticles([])
-    } finally {
-      setLoading(false)
-    }
-  }
+  // Articles are now loaded via the useNewsroom hook
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -163,15 +98,14 @@ export default function NewsroomAdminDashboard() {
     try {
       const articleData = {
         title: formData.title,
-        description: formData.excerpt,
+        excerpt: formData.excerpt,
         content: formData.content,
         author: formData.author,
         category: formData.category,
         tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
         featured: formData.featured,
-        image: formData.image,
-        source: formData.source,
-        sourceUrl: formData.sourceUrl,
+        image_url: formData.imageUrl,
+        source_url: formData.externalUrl,
         type: formData.type,
         priority: formData.priority,
         status: editingArticle?.status || 'draft'
@@ -179,30 +113,13 @@ export default function NewsroomAdminDashboard() {
 
       if (editingArticle) {
         // Update existing article
-        const response = await fetch(`/api/articles?id=${editingArticle.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(articleData)
-        })
-
-        if (!response.ok) throw new Error('Failed to update article')
-        
+        await updateArticle(editingArticle.id, articleData)
         showSuccess('Article Updated', 'Article updated successfully!')
       } else {
         // Create new article
-        const response = await fetch('/api/articles', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(articleData)
-        })
-
-        if (!response.ok) throw new Error('Failed to create article')
-        
+        await createArticle(articleData)
         showSuccess('Article Created', 'Article created successfully!')
       }
-
-      // Reload articles to reflect changes
-      await loadArticles()
       
       setFormData(initialFormData)
       setEditingArticle(null)
@@ -213,21 +130,21 @@ export default function NewsroomAdminDashboard() {
     }
   }
 
-  const handleEdit = (article: Article) => {
+  const handleEdit = (article: NewsArticle) => {
     setEditingArticle(article)
     setFormData({
       title: article.title,
       excerpt: article.excerpt,
-      content: article.content,
-      author: article.author,
+      content: article.content || '',
+      author: getAuthorName(article.author),
       category: article.category,
-      tags: article.tags.join(', '),
-      featured: article.featured,
-      image: article.image || '',
+      tags: (article.tags || []).join(', '),
+      featured: article.featured || false,
+      imageUrl: article.image_url || '',
       source: article.source || '',
-      sourceUrl: article.sourceUrl || '',
-      type: article.type,
-      priority: article.priority
+      externalUrl: article.source_url || '',
+      type: article.type || 'original',
+      priority: article.priority || 'medium'
     })
     setShowForm(true)
   }
@@ -235,14 +152,7 @@ export default function NewsroomAdminDashboard() {
   const handleDelete = async (articleId: string) => {
     if (confirm('Are you sure you want to delete this article?')) {
       try {
-        const response = await fetch(`/api/articles?id=${articleId}`, {
-          method: 'DELETE'
-        })
-
-        if (!response.ok) throw new Error('Failed to delete article')
-        
-        // Remove from local state
-        setArticles(prev => prev.filter(article => article.id !== articleId))
+        await deleteArticle(articleId)
         showSuccess('Article Deleted', 'Article deleted successfully!')
       } catch (error) {
         console.error('Failed to delete article:', error)
@@ -251,28 +161,12 @@ export default function NewsroomAdminDashboard() {
     }
   }
 
-  const handleStatusChange = async (articleId: string, newStatus: Article['status']) => {
+  const handleStatusChange = async (articleId: string, newStatus: NewsArticle['status']) => {
     try {
-      const response = await fetch(`/api/articles?id=${articleId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          status: newStatus,
-          publishedAt: newStatus === 'published' ? new Date().toISOString() : undefined
-        })
+      await updateArticle(articleId, {
+        status: newStatus,
+        published_at: newStatus === 'published' ? new Date().toISOString() : undefined
       })
-
-      if (!response.ok) throw new Error('Failed to update article status')
-      
-      // Update local state
-      setArticles(prev => prev.map(article => 
-        article.id === articleId ? { 
-          ...article, 
-          status: newStatus, 
-          updatedAt: new Date().toISOString(),
-          publishedAt: newStatus === 'published' ? new Date().toISOString() : article.publishedAt
-        } : article
-      ))
 
       showSuccess(`Article ${newStatus}`, `Article ${newStatus} successfully!`)
     } catch (error) {
@@ -281,27 +175,24 @@ export default function NewsroomAdminDashboard() {
     }
   }
 
-  const getStatusColor = (status: Article['status']) => {
+  const getStatusColor = (status: NewsArticle['status']) => {
     switch (status) {
       case 'published': return 'text-green-400 bg-green-900/20'
       case 'draft': return 'text-yellow-400 bg-yellow-900/20'
       case 'archived': return 'text-gray-400 bg-gray-900/20'
-      case 'pending_review': return 'text-orange-400 bg-orange-900/20'
       default: return 'text-gray-400 bg-gray-900/20'
     }
   }
 
-  const getPriorityColor = (priority: Article['priority']) => {
-    switch (priority) {
-      case 'urgent': return 'text-red-400 bg-red-900/20'
-      case 'high': return 'text-orange-400 bg-orange-900/20'
-      case 'medium': return 'text-yellow-400 bg-yellow-900/20'
-      case 'low': return 'text-blue-400 bg-blue-900/20'
-      default: return 'text-gray-400 bg-gray-900/20'
-    }
+  const getAuthorName = (author: NewsArticle['author']) => {
+    return typeof author === 'string' ? author : author.name
   }
 
-  const getTypeIcon = (type: Article['type']) => {
+  const getConnectionIcon = () => {
+    return <Database className="w-4 h-4 text-green-400" />
+  }
+
+  const getTypeIcon = (type: string) => {
     switch (type) {
       case 'original': return FileText
       case 'curated': return Link2
@@ -310,13 +201,27 @@ export default function NewsroomAdminDashboard() {
     }
   }
 
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case 'urgent': return 'text-red-400 bg-red-900/20'
+      case 'high': return 'text-orange-400 bg-orange-900/20'
+      case 'medium': return 'text-yellow-400 bg-yellow-900/20'
+      case 'low': return 'text-green-400 bg-green-900/20'
+      default: return 'text-gray-400 bg-gray-900/20'
+    }
+  }
+
+  // Calculate stats from articles
   const stats = {
     total: articles.length,
     published: articles.filter(a => a.status === 'published').length,
-    drafts: articles.filter(a => a.status === 'draft').length,
-    pending: articles.filter(a => a.status === 'pending_review').length,
-    totalViews: articles.reduce((sum, a) => sum + a.views, 0),
-    totalShares: articles.reduce((sum, a) => sum + a.shares, 0)
+    draft: articles.filter(a => a.status === 'draft').length,
+    todayCount: articles.filter(a => {
+      const today = new Date().toISOString().split('T')[0]
+      const articleDate = new Date(a.published_at || a.created_at).toISOString().split('T')[0]
+      return articleDate === today
+    }).length,
+    connectionStatus: 'supabase'
   }
 
   if (loading) {
@@ -340,7 +245,16 @@ export default function NewsroomAdminDashboard() {
               <h1 className="text-3xl font-black text-white heading-block uppercase">
                 Newsroom Admin Dashboard
               </h1>
-              <p className="text-indigo-200 mt-2">Manage articles, news, and community content</p>
+              <div className="flex items-center gap-3 mt-2">
+                <p className="text-indigo-200">Manage articles, news, and community content</p>
+                <div className="flex items-center gap-2 text-sm">
+                  {getConnectionIcon()}
+                  <span className="text-indigo-300">
+                    Connected to Supabase
+                    {error && <span className="text-red-400 ml-2">• {error}</span>}
+                  </span>
+                </div>
+              </div>
             </div>
             <motion.button
               whileHover={{ scale: 1.02 }}
@@ -382,39 +296,29 @@ export default function NewsroomAdminDashboard() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-yellow-200 text-sm font-medium">Drafts</p>
-                <p className="text-2xl font-black text-white">{stats.drafts}</p>
+                <p className="text-2xl font-black text-white">{stats.draft}</p>
               </div>
               <Edit3 className="w-6 h-6 text-yellow-400" />
-            </div>
-          </div>
-          
-          <div className="bg-orange-900/30 backdrop-blur-sm border border-orange-700/30 p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-orange-200 text-sm font-medium">Pending</p>
-                <p className="text-2xl font-black text-white">{stats.pending}</p>
-              </div>
-              <Clock className="w-6 h-6 text-orange-400" />
             </div>
           </div>
           
           <div className="bg-violet-900/30 backdrop-blur-sm border border-violet-700/30 p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-violet-200 text-sm font-medium">Total Views</p>
-                <p className="text-2xl font-black text-white">{stats.totalViews.toLocaleString()}</p>
+                <p className="text-violet-200 text-sm font-medium">Today's Articles</p>
+                <p className="text-2xl font-black text-white">{stats.todayCount}</p>
               </div>
-              <Eye className="w-6 h-6 text-violet-400" />
+              <Calendar className="w-6 h-6 text-violet-400" />
             </div>
           </div>
           
           <div className="bg-emerald-900/30 backdrop-blur-sm border border-emerald-700/30 p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-emerald-200 text-sm font-medium">Total Shares</p>
-                <p className="text-2xl font-black text-white">{stats.totalShares}</p>
+                <p className="text-emerald-200 text-sm font-medium">Data Source</p>
+                <p className="text-lg font-black text-white capitalize">{stats.connectionStatus}</p>
               </div>
-              <Share2 className="w-6 h-6 text-emerald-400" />
+              {getConnectionIcon()}
             </div>
           </div>
         </div>
@@ -456,16 +360,14 @@ export default function NewsroomAdminDashboard() {
               ))}
             </select>
             
-            <select
-              value={typeFilter}
-              onChange={(e) => setTypeFilter(e.target.value)}
-              className="px-4 py-2 bg-indigo-800/50 border border-indigo-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            <button 
+              onClick={refreshArticles}
+              className="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-500 transition-colors flex items-center"
+              disabled={loading}
             >
-              <option value="all">All Types</option>
-              <option value="original">Original</option>
-              <option value="curated">Curated</option>
-              <option value="community_response">Community Response</option>
-            </select>
+              <TrendingUp className="w-4 h-4 mr-2" />
+              {loading ? 'Refreshing...' : 'Refresh'}
+            </button>
             
             <button className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-500 transition-colors flex items-center justify-center">
               <Filter className="w-4 h-4 mr-2" />
@@ -527,40 +429,36 @@ export default function NewsroomAdminDashboard() {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm text-white">{article.author}</div>
+                        <div className="text-sm text-white">{getAuthorName(article.author)}</div>
                         <div className="text-sm text-indigo-200">
-                          {new Date(article.publishedAt).toLocaleDateString()}
+                          {new Date(article.published_at || article.created_at).toLocaleDateString()}
                         </div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center">
                           <TypeIcon className="w-4 h-4 text-indigo-400 mr-2" />
                           <span className="text-sm text-indigo-200 capitalize">
-                            {article.type.replace('_', ' ')}
+                            {(article.type || 'original').replace('_', ' ')}
                           </span>
                         </div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-sm text-white">
-                          {article.submittedVia === 'chrome-extension' ? (
+                          {article.source_url ? (
                             <div className="flex items-center gap-2">
-                              <span className="text-emerald-400">📤 Extension</span>
-                              {article.sourceUrl && (
-                                <a 
-                                  href={article.sourceUrl} 
-                                  target="_blank" 
-                                  rel="noopener noreferrer"
-                                  className="text-xs text-indigo-300 hover:text-indigo-200 truncate max-w-20"
-                                  title={article.sourceUrl}
-                                >
-                                  {new URL(article.sourceUrl).hostname}
-                                </a>
-                              )}
+                              <span className="text-emerald-400">🔗 External</span>
+                              <a 
+                                href={article.source_url} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-xs text-indigo-300 hover:text-indigo-200 truncate max-w-20"
+                                title={article.source_url}
+                              >
+                                {new URL(article.source_url).hostname}
+                              </a>
                             </div>
-                          ) : article.submittedVia === 'bulk-test' ? (
-                            <span className="text-yellow-400">🧪 Bulk Test</span>
                           ) : (
-                            <span className="text-indigo-300">✍️ Manual</span>
+                            <span className="text-indigo-300">✍️ Original</span>
                           )}
                         </div>
                       </td>
@@ -568,23 +466,23 @@ export default function NewsroomAdminDashboard() {
                         <div className="text-sm text-white flex items-center space-x-4">
                           <div className="flex items-center">
                             <Eye className="w-4 h-4 text-indigo-400 mr-1" />
-                            {article.views}
+                            {article.views || 0}
                           </div>
                           <div className="flex items-center">
                             <Share2 className="w-4 h-4 text-indigo-400 mr-1" />
-                            {article.shares}
+                            {article.shares || 0}
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getPriorityColor(article.priority)}`}>
-                          {article.priority.toUpperCase()}
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getPriorityColor(article.priority || 'medium')}`}>
+                          {(article.priority || 'medium').toUpperCase()}
                         </span>
                       </td>
                       <td className="px-6 py-4">
                         <select
                           value={article.status}
-                          onChange={(e) => handleStatusChange(article.id, e.target.value as Article['status'])}
+                          onChange={(e) => handleStatusChange(article.id, e.target.value as NewsArticle['status'])}
                           className={`px-3 py-1 rounded-full text-xs font-medium border-0 ${getStatusColor(article.status)}`}
                         >
                           <option value="draft">Draft</option>
@@ -760,8 +658,8 @@ export default function NewsroomAdminDashboard() {
                       <label className="block text-sm font-medium text-indigo-200 mb-2">Source URL</label>
                       <input
                         type="url"
-                        value={formData.sourceUrl}
-                        onChange={(e) => setFormData(prev => ({ ...prev, sourceUrl: e.target.value }))}
+                        value={formData.externalUrl}
+                        onChange={(e) => setFormData(prev => ({ ...prev, externalUrl: e.target.value }))}
                         className="w-full px-4 py-2 bg-indigo-800/50 border border-indigo-600 rounded text-white placeholder-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         placeholder="https://..."
                       />
@@ -784,8 +682,8 @@ export default function NewsroomAdminDashboard() {
                   <label className="block text-sm font-medium text-indigo-200 mb-2">Featured Image URL</label>
                   <input
                     type="url"
-                    value={formData.image}
-                    onChange={(e) => setFormData(prev => ({ ...prev, image: e.target.value }))}
+                    value={formData.imageUrl}
+                    onChange={(e) => setFormData(prev => ({ ...prev, imageUrl: e.target.value }))}
                     className="w-full px-4 py-2 bg-indigo-800/50 border border-indigo-600 rounded text-white placeholder-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     placeholder="https://..."
                   />
@@ -826,5 +724,13 @@ export default function NewsroomAdminDashboard() {
         </div>
       )}
     </div>
+  )
+}
+
+export default function NewsroomAdminDashboard() {
+  return (
+    <ProtectedAdminRoute requiredRole="moderator" title="Newsroom Admin Dashboard">
+      <NewsroomAdminDashboardContent />
+    </ProtectedAdminRoute>
   )
 }
