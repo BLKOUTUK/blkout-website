@@ -25,12 +25,7 @@
     "test:migration": "vitest --config vitest.migration.config.ts",
     "test:all": "npm run test && npm run test:integration && npm run test:e2e",
     "test:ci": "npm run test:coverage && npm run test:integration && npm run test:e2e -- --reporter=dot",
-    "supabase:start": "npx supabase start",
-    "supabase:stop": "npx supabase stop",
-    "supabase:reset": "npx supabase db reset",
-    "supabase:generate-types": "npx supabase gen types typescript --local > src/types/supabase.ts",
-    "db:seed": "node scripts/seed-database.js",
-    "db:migrate": "npx supabase db push"
+    "db:seed": "node scripts/seed-database.js"
   },
   "dependencies": {
     "@pinecone-database/pinecone": "^6.1.2",
@@ -58,7 +53,6 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.48.0",
-    "@supabase/cli": "^1.213.4",
     "@tailwindcss/forms": "^0.5.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.0",
