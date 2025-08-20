@@ -11,6 +11,7 @@ const navigationItems = [
   { name: 'I.V.O.R.', href: '/ivor', description: 'AI assistant and resource finder' },
   { name: 'Events', href: '/events', description: 'Community events calendar' },
   { name: 'Newsroom', href: '/newsroom', description: 'News analysis and community updates' },
+  { name: 'Governance', href: '/governance', description: 'Community governance and cooperative democracy' },
   { name: 'Our Movement', href: '/movement', description: 'Movement principles and community values' },
   { name: 'Join Discussion', href: '/discussions', description: 'Community discussions and conversations' },
   { 

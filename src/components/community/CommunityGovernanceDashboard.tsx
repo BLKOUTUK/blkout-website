@@ -14,6 +14,7 @@ import {
 import { useGovernanceProposals, useGovernanceStats, useCommunityMembers } from '../../hooks/useSupabase'
 import LoadingSpinner from '../common/LoadingSpinner'
 import ErrorBoundary from '../common/ErrorBoundary'
+import PageLoadingDebug from '../debug/PageLoadingDebug'
 import PrimaryNavigationEnhanced from '../layout/PrimaryNavigationEnhanced'
 import PlatformFooter from '../layout/PlatformFooter'
 import { COMMUNITY_VALUES, getCategoryColor } from '../../lib/constants'
@@ -146,6 +147,10 @@ const CommunityGovernanceDashboard: React.FC = () => {
 
   return (
     <ErrorBoundary>
+      <PageLoadingDebug 
+        pageName="Community Governance"
+        dependencies={['Supabase', 'Governance Hooks', 'Community Members']}
+      />
       <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-indigo-900 to-slate-900">
         <PrimaryNavigationEnhanced />
         

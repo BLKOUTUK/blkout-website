@@ -5,6 +5,7 @@ import PrimaryNavigationEnhanced from '../layout/PrimaryNavigationEnhanced'
 import PlatformFooter from '../layout/PlatformFooter'
 import LoadingSpinner from '../common/LoadingSpinner'
 import ErrorBoundary from '../common/ErrorBoundary'
+import PageLoadingDebug from '../debug/PageLoadingDebug'
 import { useErrorHandler } from '../../hooks/useErrorHandler'
 import { eventsService, Event as EventType, EventStats } from '../../services/eventsService'
 
@@ -482,6 +483,10 @@ const EventsPageIntegrated: React.FC = () => {
 
   return (
     <ErrorBoundary>
+      <PageLoadingDebug 
+        pageName="Events"
+        dependencies={['Supabase', 'Events Service']}
+      />
       <div className="min-h-screen bg-gradient-to-br from-yellow-950 via-yellow-900 to-amber-900">
         <PrimaryNavigationEnhanced />
       

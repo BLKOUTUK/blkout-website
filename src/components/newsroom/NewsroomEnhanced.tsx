@@ -12,6 +12,7 @@ import PrimaryNavigationEnhanced from '../layout/PrimaryNavigationEnhanced'
 import PlatformFooter from '../layout/PlatformFooter'
 import LoadingSpinner from '../common/LoadingSpinner'
 import ErrorBoundary from '../common/ErrorBoundary'
+import PageLoadingDebug from '../debug/PageLoadingDebug'
 import { useErrorHandler } from '../../hooks/useErrorHandler'
 import { apiClient } from '../../services/apiClient'
 import type { ApiArticle, ComputedArticle } from '../../types/api'
@@ -506,6 +507,10 @@ export default function NewsroomEnhanced() {
 
   return (
     <ErrorBoundary>
+      <PageLoadingDebug 
+        pageName="Newsroom"
+        dependencies={['Supabase', 'API Client']}
+      />
       <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-indigo-900 to-slate-900">
         {/* Enhanced Navigation */}
         <PrimaryNavigationEnhanced />
