@@ -11,6 +11,7 @@ import {
   File, Image, Video, AudioLines, X
 } from 'lucide-react'
 import LoadingSpinner from '../common/LoadingSpinner'
+import PageLoadingDebug from '../debug/PageLoadingDebug'
 import { useGovernanceDocuments, useGovernanceFileUpload, useCommunityMeetings } from '../../hooks/useSupabase'
 
 interface OfficialDocument {
@@ -199,7 +200,12 @@ const GovernanceDocumentsAdmin: React.FC<GovernanceDocumentsAdminProps> = ({
   }
 
   return (
-    <div className="p-8">
+    <>
+      <PageLoadingDebug 
+        pageName="Admin Governance Documents"
+        dependencies={['Supabase', 'Governance Hooks', 'File Upload']}
+      />
+      <div className="p-8">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
@@ -603,6 +609,7 @@ const GovernanceDocumentsAdmin: React.FC<GovernanceDocumentsAdminProps> = ({
         )}
       </AnimatePresence>
     </div>
+    </>
   )
 }
 

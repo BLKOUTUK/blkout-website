@@ -9,6 +9,7 @@ import {
   CheckCircle, XCircle, AlertCircle, Clock, TrendingUp, Users,
   Globe, Link2, Image, FileText, Video, Mic, Tag, Calendar, Wifi, WifiOff, Database
 } from 'lucide-react'
+import PageLoadingDebug from '../debug/PageLoadingDebug'
 import { useArticles } from '../../hooks/useSupabase'
 import type { NewsArticle } from '../../types/supabase'
 
@@ -236,7 +237,12 @@ function NewsroomAdminDashboardContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-indigo-900 to-slate-900">
+    <>
+      <PageLoadingDebug 
+        pageName="Admin Newsroom Dashboard"
+        dependencies={['Supabase', 'Articles Hook', 'Admin Auth']}
+      />
+      <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-indigo-900 to-slate-900">
       {/* Header */}
       <div className="bg-indigo-900/50 backdrop-blur-sm border-b border-indigo-700/30">
         <div className="max-w-7xl mx-auto px-8 py-6">
@@ -724,6 +730,7 @@ function NewsroomAdminDashboardContent() {
         </div>
       )}
     </div>
+    </>
   )
 }
 

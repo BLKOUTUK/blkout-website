@@ -236,6 +236,9 @@ export default function AdminAuth({ children }: AdminAuthProps) {
                 <a href="/admin/newsroom" className="text-indigo-200 hover:text-white transition-colors text-sm">
                   Newsroom
                 </a>
+                <a href="/admin/governance" className="text-indigo-200 hover:text-white transition-colors text-sm">
+                  Governance
+                </a>
                 <a href="/admin/moderation" className="text-indigo-200 hover:text-white transition-colors text-sm">
                   Moderation
                 </a>

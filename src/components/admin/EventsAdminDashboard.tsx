@@ -9,6 +9,7 @@ import {
   Clock, Filter, Search, CheckCircle, XCircle, AlertCircle,
   Download, Upload, Settings, BarChart3, TrendingUp
 } from 'lucide-react'
+import PageLoadingDebug from '../debug/PageLoadingDebug'
 import { useEvents } from '../../hooks/useSupabase'
 import type { Event } from '../../types/supabase'
 
@@ -206,7 +207,12 @@ function EventsAdminDashboardContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-indigo-900 to-slate-900">
+    <>
+      <PageLoadingDebug 
+        pageName="Admin Events Dashboard"
+        dependencies={['Supabase', 'Events Hook', 'Admin Auth']}
+      />
+      <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-indigo-900 to-slate-900">
       {/* Header */}
       <div className="bg-indigo-900/50 backdrop-blur-sm border-b border-indigo-700/30">
         <div className="max-w-7xl mx-auto px-8 py-6">
@@ -671,6 +677,7 @@ function EventsAdminDashboardContent() {
         </div>
       )}
     </div>
+    </>
   )
 }
 

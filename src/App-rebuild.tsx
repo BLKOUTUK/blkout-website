@@ -297,6 +297,7 @@ function App() {
         <Route path="/admin/moderation" element={<AdminAuth><ModerationDashboard /></AdminAuth>} />
         <Route path="/admin/events" element={<AdminAuth><EventsAdminDashboard /></AdminAuth>} />
         <Route path="/admin/newsroom" element={<AdminAuth><NewsroomAdminDashboard /></AdminAuth>} />
+        <Route path="/admin/governance" element={<AdminAuth><GovernanceDocumentsAdmin /></AdminAuth>} />
         <Route path="/community" element={<PlatformLayout><CommunityGatewayEnhanced /></PlatformLayout>} />
         <Route path="/photo-competition" element={<PhotoCompetition />} />
         <Route path="/partnerships" element={<PartnershipProposal />} />
