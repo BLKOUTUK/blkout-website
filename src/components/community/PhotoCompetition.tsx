@@ -45,39 +45,39 @@ interface EngagementData {
 
 const CATEGORIES = [
   {
-    id: 'community_joy',
-    title: 'Community Joy',
-    description: 'Moments of celebration, laughter, and collective happiness within Black QTIPOC+ spaces',
-    icon: '✨',
-    examples: 'Pride celebrations, family gatherings, community events, cultural festivals'
+    id: 'black',
+    title: 'BLACK',
+    description: 'Celebrating Black identity, culture, and community in all its beautiful forms',
+    icon: '🖤',
+    examples: 'Cultural heritage, family traditions, community gathering, artistic expression'
   },
   {
-    id: 'resistance_resilience', 
-    title: 'Resistance & Resilience',
-    description: 'Images that capture the strength, determination, and resistance within our communities',
+    id: 'out', 
+    title: 'OUT',
+    description: 'Living authentically, being visible, and taking up space as QTIPOC+ individuals',
+    icon: '🏳️‍🌈',
+    examples: 'Pride moments, authentic self-expression, visibility, breaking barriers'
+  },
+  {
+    id: 'next',
+    title: 'NEXT', 
+    description: 'Building the future we need - innovation, progress, and collective liberation',
+    icon: '🚀',
+    examples: 'Future-building, innovation, community organizing, generational change'
+  },
+  {
+    id: 'intersections',
+    title: 'INTERSECTIONS',
+    description: 'The beautiful complexity of being Black and queer - where identities meet and strengthen',
+    icon: '💫',
+    examples: 'Identity intersections, community solidarity, chosen family, collective power'
+  },
+  {
+    id: 'liberation',
+    title: 'LIBERATION',
+    description: 'Moments of freedom, resistance, and joy that fuel our movement forward',
     icon: '✊🏾',
-    examples: 'Protests, organizing meetings, community defense, artistic resistance'
-  },
-  {
-    id: 'everyday_liberation',
-    title: 'Everyday Liberation', 
-    description: 'Ordinary moments that become extraordinary through the lens of Black queer freedom',
-    icon: '🌱',
-    examples: 'Daily life, authentic self-expression, quiet moments of freedom, personal growth'
-  },
-  {
-    id: 'cultural_celebration',
-    title: 'Cultural Celebration',
-    description: 'Honoring our heritage, traditions, and the cultures we create and maintain',
-    icon: '🎭',
-    examples: 'Cultural events, traditional practices, artistic expression, intergenerational wisdom'
-  },
-  {
-    id: 'intergenerational_wisdom',
-    title: 'Intergenerational Wisdom',
-    description: 'Connections across generations that strengthen our community bonds',
-    icon: '👑',
-    examples: 'Elders with youth, mentorship moments, family bonds, knowledge sharing'
+    examples: 'Resistance moments, collective action, community healing, transformative joy'
   }
 ]
 
@@ -492,13 +492,13 @@ export default function PhotoCompetition() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-6xl md:text-8xl lg:text-9xl font-thin mb-8 tracking-tight"
+              className="text-6xl md:text-8xl lg:text-9xl font-black font-display uppercase mb-8 tracking-tight"
             >
               <span className="bg-gradient-to-r from-emerald-400 via-white to-violet-400 bg-clip-text text-transparent">
                 BLKOUT
               </span>
               <br />
-              <span className="bg-gradient-to-r from-violet-400 via-rose-400 to-emerald-400 bg-clip-text text-transparent font-light">
+              <span className="bg-gradient-to-r from-violet-400 via-rose-400 to-emerald-400 bg-clip-text text-transparent font-black font-display uppercase">
                 LENS
               </span>
             </motion.h1>
@@ -586,15 +586,81 @@ export default function PhotoCompetition() {
           {/* Current Stats */}
           <CompetitionStats stats={competitionStats} />
 
+          {/* Visual Content Section */}
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+            className="mb-24"
+          >
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold font-display uppercase mb-6 tracking-tight">
+                <span className="bg-gradient-to-r from-emerald-400 to-violet-400 bg-clip-text text-transparent">
+                  Community Perspectives
+                </span>
+              </h2>
+              <div className="w-32 h-px bg-gradient-to-r from-emerald-400 to-violet-400 mx-auto"></div>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+              {/* Photocollage Video */}
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.8 }}
+                className="relative group"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/20 to-violet-500/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
+                <div className="relative aspect-video overflow-hidden rounded-3xl shadow-2xl">
+                  <video
+                    src="/images/squared/photo collage Video.mp4"
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                  <div className="absolute bottom-6 left-6">
+                    <h3 className="text-white font-bold font-display uppercase tracking-wide text-sm mb-2">Community Collage</h3>
+                    <p className="text-white/80 text-xs font-light">Capturing our diverse perspectives</p>
+                  </div>
+                </div>
+              </motion.div>
+              
+              {/* Featured Image */}
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.9 }}
+                className="relative group"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-violet-500/20 to-emerald-500/20 rounded-3xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
+                <div className="relative aspect-[4/3] overflow-hidden rounded-3xl shadow-2xl">
+                  <img
+                    src="/images/blkoutuk.com v3/John Henry.png"
+                    alt="Creative expression and community celebration"
+                    className="w-full h-full object-contain bg-gradient-to-br from-green-100 to-green-50"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                  <div className="absolute bottom-6 left-6">
+                    <h3 className="text-white font-bold font-display uppercase tracking-wide text-sm mb-2">Breaking Through</h3>
+                    <p className="text-white/80 text-xs font-light">Artistic liberation in action</p>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+
           {/* Categories Preview */}
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
+            transition={{ delay: 1.0 }}
             className="mb-24"
           >
             <div className="text-center mb-16">
-              <h2 className="text-5xl md:text-6xl font-thin mb-6 tracking-tight">
+              <h2 className="text-5xl md:text-6xl font-black font-display uppercase mb-6 tracking-tight">
                 <span className="bg-gradient-to-r from-emerald-400 to-violet-400 bg-clip-text text-transparent">
                   Five Categories
                 </span>
@@ -729,7 +795,7 @@ export default function PhotoCompetition() {
                 SUBMIT YOUR
               </span>
               <br />
-              <span className="bg-gradient-to-r from-violet-400 via-rose-400 to-emerald-400 bg-clip-text text-transparent font-light">
+              <span className="bg-gradient-to-r from-violet-400 via-rose-400 to-emerald-400 bg-clip-text text-transparent font-black font-display uppercase">
                 PERSPECTIVE
               </span>
             </h1>

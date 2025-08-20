@@ -1,4 +1,10 @@
-// Events Service for connecting to the Black QTIPOC Events Calendar backend
+// Events Service with Supabase Integration
+// Unified access to events from both Supabase and legacy backend
+
+import { supabase, supabaseHelpers } from '../lib/supabase'
+import type { Event as SupabaseEvent, FilterOptions, ModerationStats, Database } from '../types/supabase'
+
+// Legacy interface for backward compatibility
 interface Event {
   id: string
   title: string
@@ -9,7 +15,7 @@ interface Event {
   location: string
   url?: string
   source: string
-  status: 'pending' | 'approved' | 'rejected'
+  status: 'pending' | 'approved' | 'rejected' | 'published' | 'draft' | 'reviewing' | 'archived'
   cost?: string
   organizer?: string
   image?: string
@@ -25,17 +31,59 @@ interface EventStats {
   total: number
 }
 
+interface EventsResponse {
+  events: Event[]
+  total: number
+  stats?: EventStats
+  source: 'supabase' | 'legacy' | 'fallback'
+}
+
 class EventsService {
   private baseUrl: string
+  private isConnected: boolean = false
+  private supabaseConnected: boolean = false
+  private useSupabase: boolean = true // Prefer Supabase over legacy backend
   
   constructor() {
     // Use proxy API to avoid CORS issues
     this.baseUrl = process.env.NODE_ENV === 'production' 
       ? '/api'                                       // Vercel proxy to real backend
       : '/api'                                       // Production proxy
+    
+    // Test Supabase connection on initialization
+    this.checkSupabaseConnection()
+  }
+
+  private async checkSupabaseConnection(): Promise<boolean> {
+    try {
+      const { connected } = await supabaseHelpers.testConnection()
+      this.supabaseConnected = connected
+      
+      if (connected) {
+        console.log('✅ Supabase events connection established')
+      } else {
+        console.warn('⚠️ Supabase events connection failed, falling back to legacy backend')
+      }
+      
+      return connected
+    } catch (error) {
+      console.error('❌ Supabase events connection test failed:', error)
+      this.supabaseConnected = false
+      return false
+    }
   }
 
   async getAllEvents(): Promise<Event[]> {
+    // Try Supabase first if enabled
+    if (this.useSupabase && this.supabaseConnected) {
+      try {
+        return await this.getEventsFromSupabase()
+      } catch (error) {
+        console.warn('Supabase events fetch failed, trying legacy backend:', error)
+      }
+    }
+
+    // Fall back to legacy backend
     try {
       // Connecting to backend
       
@@ -86,7 +134,127 @@ class EventsService {
     }
   }
 
+  private async getEventsFromSupabase(filters?: FilterOptions): Promise<Event[]> {
+    let query = supabase
+      .from('events')
+      .select(`
+        *,
+        organizer:contacts(name)
+      `)
+      .order('event_date', { ascending: true })
+    
+    // Apply filters
+    if (filters?.source && filters.source !== 'all') {
+      query = query.eq('source', filters.source)
+    }
+    
+    if (filters?.status && filters.status !== 'all') {
+      if (filters.status === 'pending') {
+        query = query.in('status', ['draft', 'reviewing'])
+      } else if (filters.status === 'approved') {
+        query = query.eq('status', 'published')
+      } else if (filters.status === 'rejected') {
+        query = query.eq('status', 'archived')
+      } else {
+        query = query.eq('status', filters.status)
+      }
+    }
+    
+    const { data, error } = await query
+    
+    if (error) {
+      throw error
+    }
+    
+    // Transform Supabase events to legacy format
+    const events: Event[] = (data || []).map(event => ({
+      id: event.id,
+      title: event.name, // Map name to title
+      description: event.description,
+      date: event.event_date,
+      startTime: this.extractTimeFromDate(event.event_date),
+      endTime: undefined, // Not in current schema
+      location: typeof event.location === 'string' ? event.location : JSON.stringify(event.location),
+      url: event.source_url || event.registration_link,
+      source: event.source,
+      status: this.mapSupabaseStatus(event.status),
+      cost: event.price || 'Free',
+      organizer: (event.organizer as any)?.name || event.organizer_name || 'Unknown Organizer',
+      image: event.image_url || undefined,
+      tags: event.tags || [],
+      createdAt: event.created_at,
+      updatedAt: event.updated_at
+    }))
+    
+    // Apply additional client-side filters
+    return this.applyClientFilters(events, filters)
+  }
+
+  private mapSupabaseStatus(status: string): Event['status'] {
+    switch (status) {
+      case 'published': return 'approved'
+      case 'draft': 
+      case 'reviewing': return 'pending'
+      case 'archived': return 'rejected'
+      default: return 'pending'
+    }
+  }
+
+  private extractTimeFromDate(dateString: string): string | undefined {
+    try {
+      const date = new Date(dateString)
+      if (date.getHours() === 0 && date.getMinutes() === 0) {
+        return undefined // All-day event
+      }
+      return date.toTimeString().substring(0, 5) // HH:MM format
+    } catch {
+      return undefined
+    }
+  }
+
+  private applyClientFilters(events: Event[], filters?: FilterOptions): Event[] {
+    if (!filters) return events
+    
+    return events.filter(event => {
+      // Date filter
+      if (filters.dateRange !== 'all') {
+        const eventDate = new Date(event.date)
+        const now = new Date()
+        const daysDiff = Math.ceil((eventDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+        
+        if (filters.dateRange === 'today' && daysDiff !== 0) return false
+        if (filters.dateRange === 'week' && daysDiff > 7) return false
+        if (filters.dateRange === 'month' && daysDiff > 30) return false
+      }
+
+      // Location filter
+      if (filters.location) {
+        if (!event.location.toLowerCase().includes(filters.location.toLowerCase())) return false
+      }
+
+      // Search term filter
+      if (filters.searchTerm) {
+        const searchLower = filters.searchTerm.toLowerCase()
+        return event.title.toLowerCase().includes(searchLower) ||
+               event.description.toLowerCase().includes(searchLower) ||
+               (event.tags && event.tags.some(tag => tag.toLowerCase().includes(searchLower)))
+      }
+
+      return true
+    })
+  }
+
   async getEventStats(): Promise<EventStats> {
+    // Try Supabase first
+    if (this.useSupabase && this.supabaseConnected) {
+      try {
+        return await this.getStatsFromSupabase()
+      } catch (error) {
+        console.warn('Supabase stats fetch failed, trying legacy backend:', error)
+      }
+    }
+
+    // Fall back to legacy backend
     try {
       const response = await fetch(`${this.baseUrl}/events/stats`, {
         method: 'GET',
@@ -113,7 +281,37 @@ class EventsService {
     }
   }
 
+  private async getStatsFromSupabase(): Promise<EventStats> {
+    const { data, error } = await supabase
+      .from('events')
+      .select('status')
+    
+    if (error || !data) {
+      return { pending: 0, approved: 0, rejected: 0, total: 0 }
+    }
+    
+    const stats = data.reduce((acc, event) => {
+      acc.total++
+      if (event.status === 'draft' || event.status === 'reviewing') acc.pending++
+      if (event.status === 'published') acc.approved++
+      if (event.status === 'archived') acc.rejected++
+      return acc
+    }, { pending: 0, approved: 0, rejected: 0, total: 0 })
+    
+    return stats
+  }
+
   async submitEvent(eventData: Partial<Event>): Promise<Event> {
+    // Try Supabase first
+    if (this.useSupabase && this.supabaseConnected) {
+      try {
+        return await this.submitEventToSupabase(eventData)
+      } catch (error) {
+        console.warn('Supabase event submission failed, trying legacy backend:', error)
+      }
+    }
+
+    // Fall back to legacy backend
     try {
       const response = await fetch(`${this.baseUrl}/events`, {
         method: 'POST',
@@ -134,8 +332,172 @@ class EventsService {
     }
   }
 
+  private async submitEventToSupabase(eventData: Partial<Event>): Promise<Event> {
+    // Create or find contact for organizer
+    let organizerId = null
+    if (eventData.organizer) {
+      const { data: existingContact } = await supabase
+        .from('contacts')
+        .select('id')
+        .eq('name', eventData.organizer)
+        .single()
+
+      if (existingContact) {
+        organizerId = existingContact.id
+      } else {
+        // Create new contact
+        const { data: newContact, error: contactError } = await supabase
+          .from('contacts')
+          .insert({
+            name: eventData.organizer,
+            email: `${eventData.organizer.toLowerCase().replace(/\s+/g, '.')}@example.com`
+          })
+          .select()
+          .single()
+
+        if (!contactError && newContact) {
+          organizerId = newContact.id
+        }
+      }
+    }
+
+    const { data, error } = await supabase
+      .from('events')
+      .insert({
+        name: eventData.title || '',
+        description: eventData.description || '',
+        event_date: eventData.date || new Date().toISOString(),
+        location: eventData.location || 'TBD',
+        source: (eventData.source as any) || 'community',
+        source_url: eventData.url,
+        organizer_id: organizerId,
+        organizer_name: eventData.organizer,
+        tags: eventData.tags || [],
+        status: 'draft', // All public submissions start as draft
+        scraped_date: new Date().toISOString(),
+        image_url: eventData.image,
+        price: eventData.cost,
+        registration_link: eventData.url
+      })
+      .select()
+      .single()
+
+    if (error) throw error
+
+    // Transform back to legacy format
+    return {
+      id: data.id,
+      title: data.name,
+      description: data.description,
+      date: data.event_date,
+      location: typeof data.location === 'string' ? data.location : JSON.stringify(data.location),
+      url: data.source_url || data.registration_link,
+      source: data.source,
+      status: this.mapSupabaseStatus(data.status),
+      cost: data.price || 'Free',
+      organizer: data.organizer_name || 'Unknown Organizer',
+      image: data.image_url || undefined,
+      tags: data.tags || [],
+      createdAt: data.created_at,
+      updatedAt: data.updated_at
+    }
+  }
+
+  // Admin methods for CRUD operations
+  async updateEventStatus(id: string, status: 'pending' | 'approved' | 'rejected'): Promise<boolean> {
+    if (!this.useSupabase || !this.supabaseConnected) {
+      throw new Error('Event status updates require Supabase connection')
+    }
+    
+    // Map legacy status to Supabase status
+    const supabaseStatus = status === 'approved' ? 'published' : 
+                          status === 'rejected' ? 'archived' : 'draft'
+    
+    const { error } = await supabase
+      .from('events')
+      .update({ 
+        status: supabaseStatus,
+        listed_date: status === 'approved' ? new Date().toISOString() : null
+      })
+      .eq('id', id)
+
+    return !error
+  }
+
+  async deleteEvent(id: string): Promise<boolean> {
+    if (!this.useSupabase || !this.supabaseConnected) {
+      throw new Error('Event deletion requires Supabase connection')
+    }
+    
+    const { error } = await supabase
+      .from('events')
+      .delete()
+      .eq('id', id)
+    
+    return !error
+  }
+
+  async updateEvent(id: string, updates: Partial<Event>): Promise<Event | null> {
+    if (!this.useSupabase || !this.supabaseConnected) {
+      throw new Error('Event updates require Supabase connection')
+    }
+    
+    const { data, error } = await supabase
+      .from('events')
+      .update({
+        name: updates.title,
+        description: updates.description,
+        event_date: updates.date,
+        location: updates.location,
+        organizer_name: updates.organizer,
+        tags: updates.tags,
+        price: updates.cost,
+        image_url: updates.image,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', id)
+      .select()
+      .single()
+    
+    if (error) throw error
+    return data ? this.transformSupabaseEvent(data) : null
+  }
+
+  private transformSupabaseEvent(event: any): Event {
+    return {
+      id: event.id,
+      title: event.name,
+      description: event.description,
+      date: event.event_date,
+      startTime: this.extractTimeFromDate(event.event_date),
+      location: typeof event.location === 'string' ? event.location : JSON.stringify(event.location),
+      url: event.source_url || event.registration_link,
+      source: event.source,
+      status: this.mapSupabaseStatus(event.status),
+      cost: event.price || 'Free',
+      organizer: event.organizer_name || 'Unknown Organizer',
+      image: event.image_url || undefined,
+      tags: event.tags || [],
+      createdAt: event.created_at,
+      updatedAt: event.updated_at
+    }
+  }
+
   // Check if events backend is available
-  async checkBackendHealth(): Promise<{ available: boolean; url: string }> {
+  async checkBackendHealth(): Promise<{ available: boolean; url: string; source: string }> {
+    // Check Supabase first
+    if (this.useSupabase) {
+      await this.checkSupabaseConnection()
+      if (this.supabaseConnected) {
+        return {
+          available: true,
+          url: 'supabase',
+          source: 'supabase'
+        }
+      }
+    }
+
+    // Check legacy backend
     try {
       const response = await fetch(`${this.baseUrl}/health`, {
         method: 'GET',
@@ -143,14 +505,40 @@ class EventsService {
       
       return {
         available: response.ok,
-        url: this.baseUrl
+        url: this.baseUrl,
+        source: 'legacy'
       }
     } catch (error) {
       return {
         available: false,
-        url: this.baseUrl
+        url: this.baseUrl,
+        source: 'fallback'
       }
     }
+  }
+
+  // Real-time subscription for event updates
+  subscribeToEventUpdates(callback: (event: SupabaseEvent) => void) {
+    if (!this.useSupabase || !this.supabaseConnected) {
+      console.warn('Real-time subscriptions require Supabase connection')
+      return null
+    }
+    
+    return supabaseHelpers.subscribeToEvents(callback)
+  }
+
+  // Connection status methods
+  getConnectionStatus(): { supabase: boolean; legacy: boolean; primary: string } {
+    return {
+      supabase: this.supabaseConnected,
+      legacy: this.isConnected,
+      primary: this.supabaseConnected ? 'supabase' : this.isConnected ? 'legacy' : 'fallback'
+    }
+  }
+
+  // Toggle data source preference
+  setPreferSupabase(prefer: boolean) {
+    this.useSupabase = prefer
   }
 
   // Mock data for when backend is unavailable
@@ -263,4 +651,4 @@ class EventsService {
 }
 
 export const eventsService = new EventsService()
-export type { Event, EventStats }
+export type { Event, EventStats, EventsResponse }

@@ -6,10 +6,15 @@ import {
   Newspaper, Search, Filter, Calendar, Clock, User, 
   ArrowRight, ExternalLink, TrendingUp, Globe, 
   AlertCircle, CheckCircle, Loader, RefreshCw,
-  BookOpen, FileText, Radio, Video
+  BookOpen, FileText, Radio, Video, WifiOff
 } from 'lucide-react'
 import PrimaryNavigationEnhanced from '../layout/PrimaryNavigationEnhanced'
 import PlatformFooter from '../layout/PlatformFooter'
+import LoadingSpinner from '../common/LoadingSpinner'
+import ErrorBoundary from '../common/ErrorBoundary'
+import { useErrorHandler } from '../../hooks/useErrorHandler'
+import { apiClient } from '../../services/apiClient'
+import type { ApiArticle, ComputedArticle } from '../../types/api'
 
 // Content categories with masculine colors
 const CONTENT_CATEGORIES = {
@@ -124,7 +129,7 @@ const NewsroomHero = ({ backendStatus }: { backendStatus: string }) => (
         >
           {backendStatus === 'checking' && (
             <div className="flex items-center space-x-3">
-              <Loader className="w-5 h-5 text-indigo-400 animate-spin" />
+              <LoadingSpinner size="sm" color="indigo" />
               <span className="text-indigo-400 font-bold heading-block text-sm uppercase">
                 CONNECTING TO NEWSROOM
               </span>
@@ -136,23 +141,76 @@ const NewsroomHero = ({ backendStatus }: { backendStatus: string }) => (
               <span className="text-emerald-400 font-bold heading-block text-sm uppercase">
                 NEWSROOM LIVE
               </span>
-              <span className="text-indigo-300 text-sm font-light">
-                • Real-time updates active
-              </span>
+              <div className="flex items-center text-indigo-300 text-sm font-light">
+                <span>• Real-time updates active</span>
+                {lastUpdated && (
+                  <span className="ml-3 text-xs">
+                    Last updated: {lastUpdated.toLocaleTimeString()}
+                  </span>
+                )}
+              </div>
             </div>
           )}
           {backendStatus === 'offline' && (
             <div className="flex items-center space-x-3">
-              <AlertCircle className="w-5 h-5 text-amber-400" />
+              <WifiOff className="w-5 h-5 text-amber-400" />
               <span className="text-amber-400 font-bold heading-block text-sm uppercase">
                 USING CACHED CONTENT
               </span>
-              <span className="text-indigo-300 text-sm font-light">
-                • Showing recent stories
-              </span>
+              <div className="flex items-center space-x-3">
+                <span className="text-indigo-300 text-sm font-light">
+                  • Showing recent stories
+                </span>
+                <button
+                  onClick={handleRetry}
+                  className="text-amber-400 hover:text-amber-300 text-sm font-medium flex items-center"
+                >
+                  <RefreshCw className="w-4 h-4 mr-1" />
+                  Retry
+                </button>
+              </div>
             </div>
           )}
         </motion.div>
+        
+        {/* Error Display */}
+        {hasError && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="max-w-4xl mx-auto mb-12"
+          >
+            <div className="bg-red-900/30 backdrop-blur-sm border border-red-700/30 rounded-2xl p-6">
+              <div className="flex items-start space-x-4">
+                <AlertCircle className="w-6 h-6 text-red-400 flex-shrink-0 mt-1" />
+                <div className="flex-1">
+                  <h3 className="text-red-300 font-bold text-lg mb-2">Connection Error</h3>
+                  <p className="text-red-200 mb-4">{error?.message}</p>
+                  <div className="flex items-center space-x-4">
+                    <button
+                      onClick={handleRetry}
+                      className="flex items-center px-4 py-2 bg-red-600 hover:bg-red-500 text-white font-medium rounded-lg transition-colors"
+                    >
+                      <RefreshCw className="w-4 h-4 mr-2" />
+                      Retry Connection
+                    </button>
+                    <button
+                      onClick={clearError}
+                      className="text-red-300 hover:text-red-200 font-medium"
+                    >
+                      Dismiss
+                    </button>
+                    {retryCount > 0 && (
+                      <span className="text-red-300 text-sm">
+                        Retry attempts: {retryCount}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
 
         {/* Quick Stats */}
         <motion.div 
@@ -224,10 +282,25 @@ const NewsCategories = ({ selectedCategory, onCategorySelect }: {
 )
 
 // News Articles Grid
-const NewsArticlesGrid = ({ articles }: { articles: any[] }) => (
+const NewsArticlesGrid = ({ articles, loading, onRefresh }: { 
+  articles: any[]
+  loading: boolean
+  onRefresh: () => void
+}) => (
   <section className="py-24">
     <div className="max-w-6xl mx-auto px-8">
-      {articles.length === 0 ? (
+      {loading ? (
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-center py-24"
+        >
+          <LoadingSpinner size="xl" color="indigo" text="Loading Articles" />
+          <p className="text-indigo-200 font-light mt-6">
+            Fetching the latest community news and updates...
+          </p>
+        </motion.div>
+      ) : articles.length === 0 ? (
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -241,6 +314,7 @@ const NewsArticlesGrid = ({ articles }: { articles: any[] }) => (
             Newsroom backend is connecting. Articles will appear here as they are aggregated.
           </p>
           <motion.button
+            onClick={onRefresh}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             className="px-8 py-3 bg-indigo-600 text-white font-bold hover:bg-indigo-500 transition-colors heading-block uppercase flex items-center mx-auto"
@@ -340,73 +414,101 @@ export default function NewsroomEnhanced() {
   const [loading, setLoading] = useState(true)
   const [backendStatus, setBackendStatus] = useState<'checking' | 'connected' | 'offline'>('checking')
   const [selectedCategory, setSelectedCategory] = useState('All')
+  const [retryCount, setRetryCount] = useState(0)
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
+  
+  const { error, hasError, handleAPIError, clearError, retry } = useErrorHandler({
+    showToast: true,
+    retryable: true
+  })
+  
+  // Transform API article to component format
+  const transformApiArticle = (apiArticle: ApiArticle): ComputedArticle => {
+    const authorName = apiArticle.profiles?.full_name || 'BLKOUT Team'
+    const authorInitials = authorName.split(' ').map(name => name[0]).join('').toUpperCase()
+    
+    return {
+      ...apiArticle,
+      readTime: Math.max(1, Math.ceil((apiArticle.content?.length || 0) / 1000)),
+      isBreaking: apiArticle.status === 'published' && apiArticle.featured_image !== null,
+      publishedAtFormatted: new Date(apiArticle.published_at || apiArticle.created_at).toLocaleDateString(),
+      authorName,
+      authorInitials,
+      
+      // Legacy compatibility fields
+      author: authorName,
+      publishedAt: apiArticle.published_at || apiArticle.created_at,
+      image: apiArticle.featured_image || '/images/squared/WELLDEF_SQUARED.png',
+      featured: !!apiArticle.featured_image,
+      priority: 'medium' as const,
+      source: 'BLKOUT Newsroom'
+    }
+  }
+
+  const fetchArticles = async () => {
+    try {
+      clearError()
+      setLoading(true)
+      setBackendStatus('checking')
+      
+      console.log('🔄 Fetching articles from Supabase API...')
+      
+      // Use the new API client
+      const response = await apiClient.getArticles({
+        status: 'published',
+        sort: 'published_at',
+        order: 'desc',
+        limit: 20
+      })
+      
+      console.log('📊 Articles API response:', response)
+      
+      if (response.success && response.data && Array.isArray(response.data)) {
+        // Transform API data to match expected format
+        const transformedArticles = response.data.map(transformApiArticle)
+        
+        console.log('✅ Articles transformed successfully:', transformedArticles.length)
+        
+        if (transformedArticles.length > 0) {
+          setArticles(transformedArticles)
+          setBackendStatus('connected')
+        } else {
+          console.log('📰 No published articles found, keeping fallback content')
+          setBackendStatus('connected')
+        }
+        
+        setLastUpdated(new Date())
+      } else {
+        throw new Error(response.error || 'Failed to fetch articles')
+      }
+    } catch (error) {
+      console.error('❌ Error fetching articles:', error)
+      handleAPIError(error, 'newsroom API')
+      setBackendStatus('offline')
+      // Keep fallback articles on error
+    } finally {
+      setLoading(false)
+    }
+  }
   
   useEffect(() => {
-    const fetchArticles = async () => {
-      try {
-        // Fetching articles
-        const response = await fetch('/api/articles')
-        
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
-        }
-        
-        const data = await response.json()
-        // Articles loaded
-        
-        if (data.success && data.articles && Array.isArray(data.articles)) {
-          // Transform API data to match expected format
-          const transformedArticles = data.articles
-            .filter(article => article.status === 'published') // Only show published articles
-            .map(article => ({
-              id: article.id,
-              title: article.title,
-              excerpt: article.excerpt || article.description || article.content?.substring(0, 200) || 'No excerpt available',
-              category: article.category || 'General',
-              author: article.author || 'BLKOUT Team',
-              publishedAt: article.publishedAt || article.createdAt,
-              image: article.image || '/images/squared/WELLDEF_SQUARED.png',
-              featured: article.featured || false,
-              tags: Array.isArray(article.tags) ? article.tags : [],
-              priority: article.priority || 'medium',
-              readTime: Math.max(1, Math.ceil((article.content?.length || 0) / 1000)),
-              isBreaking: article.priority === 'high' || article.featured,
-              source: article.submittedVia === 'chrome-extension' ? 'Community Submitted' : (article.author || 'BLKOUT Team')
-            }))
-          
-          // Articles transformed successfully
-          
-          if (transformedArticles.length > 0) {
-            setArticles(transformedArticles)
-            setBackendStatus('connected')
-          } else {
-            // Using fallback articles
-            // Keep fallback articles if no published content
-            setBackendStatus('connected')
-          }
-        } else {
-          throw new Error('Invalid API response format')
-        }
-      } catch (error) {
-        console.error('❌ Error fetching articles:', error)
-        setBackendStatus('offline')
-        // Keep fallback articles on error
-      } finally {
-        setLoading(false)
-      }
-    }
-    
     fetchArticles()
   }, [])
+  
+  const handleRetry = () => {
+    setRetryCount(prev => prev + 1)
+    retry(() => fetchArticles())
+  }
 
   const filteredArticles = articles.filter(article => 
     selectedCategory === 'All' || article.category === selectedCategory
   )
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-indigo-900 to-slate-900">
-      {/* Enhanced Navigation */}
-      <PrimaryNavigationEnhanced />
+    <ErrorBoundary>
+      <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-indigo-900 to-slate-900">
+        {/* Enhanced Navigation */}
+        <PrimaryNavigationEnhanced />
       
       {/* Newsroom Hero */}
       <NewsroomHero backendStatus={backendStatus} />
@@ -418,10 +520,22 @@ export default function NewsroomEnhanced() {
       />
       
       {/* News Articles */}
-      <NewsArticlesGrid articles={filteredArticles} />
+      <ErrorBoundary
+        onError={(error, errorInfo) => {
+          console.error('NewsArticlesGrid Error:', error, errorInfo)
+          handleAPIError(error, 'NewsArticlesGrid')
+        }}
+      >
+        <NewsArticlesGrid 
+          articles={filteredArticles} 
+          loading={loading}
+          onRefresh={handleRetry}
+        />
+      </ErrorBoundary>
       
-      {/* Platform Footer */}
-      <PlatformFooter />
-    </div>
+        {/* Platform Footer */}
+        <PlatformFooter />
+      </div>
+    </ErrorBoundary>
   )
 }

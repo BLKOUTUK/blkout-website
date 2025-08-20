@@ -20,6 +20,7 @@ import EventsAdminDashboard from './components/admin/EventsAdminDashboard'
 import NewsroomAdminDashboard from './components/admin/NewsroomAdminDashboard'
 import AdminAuth from './components/admin/AdminAuth'
 import CommunityGatewayEnhanced from './components/community/CommunityGatewayEnhanced'
+import CommunityGovernanceDashboard from './components/community/CommunityGovernanceDashboard'
 import MagazineLayout from './components/magazine/MagazineLayout'
 import PlatformHomepage from './components/platform/PlatformHomepage'
 import PrimaryNavigation from './components/layout/PrimaryNavigation'
@@ -37,6 +38,7 @@ import SkipNavigation from './components/layout/SkipNavigation'
 import ExtensionDownloadSimple from './components/extension/ExtensionDownloadSimple'
 import ArticleDetail from './components/stories/ArticleDetail'
 import PhotoCompetition from './components/community/PhotoCompetition'
+import PartnershipProposal from './components/partnerships/PartnershipProposal'
 import PhotoCompetitionTest from './components/community/PhotoCompetitionTest'
 
 // Platform Layout Component - wraps platform routes with navigation
@@ -90,15 +92,7 @@ const IVORPage = () => {
   )
 }
 
-const GovernancePage = () => (
-  <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
-    <div className="text-center">
-      <h1 className="text-4xl font-bold mb-4">Community Governance</h1>
-      <p className="text-xl text-gray-300 mb-8">Democratic decision-making tools</p>
-      <a href="/" className="text-blue-400 hover:text-blue-300">← Back to Home</a>
-    </div>
-  </div>
-)
+const GovernancePage = () => <CommunityGovernanceDashboard />
 
 // Media platform components from PRD
 const ChannelBLKOUTPage = () => {
@@ -150,6 +144,7 @@ function App() {
         <Route path="/admin/newsroom" element={<AdminAuth><NewsroomAdminDashboard /></AdminAuth>} />
         <Route path="/community" element={<PlatformLayout><CommunityGatewayEnhanced /></PlatformLayout>} />
         <Route path="/photo-competition" element={<PhotoCompetition />} />
+        <Route path="/partnerships" element={<PartnershipProposal />} />
         <Route path="/photo-test" element={<PhotoCompetitionTest />} />
         <Route path="/stories" element={<PlatformLayout><StoriesPageEnhanced /></PlatformLayout>} />
         <Route path="/stories/:slug" element={<ArticleDetail />} />

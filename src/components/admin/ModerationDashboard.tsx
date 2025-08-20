@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { showSuccess, showError } from '../../utils/notifications';
+import SocialModerationQueue from './SocialModerationQueue';
 import { 
   CheckCircle, XCircle, Clock, Flag, Edit3, Eye, 
   Filter, Search, Calendar, FileText, Users, 
@@ -33,6 +34,7 @@ interface ModerationStats {
   newsroomQueue: number;
   eventsQueue: number;
   communityQueue: number;
+  socialQueue: number;
 }
 
 const ModerationDashboard: React.FC = () => {
@@ -42,13 +44,15 @@ const ModerationDashboard: React.FC = () => {
     activeModerators: 3,
     newsroomQueue: 8,
     eventsQueue: 4,
-    communityQueue: 0
+    communityQueue: 0,
+    socialQueue: 0
   });
 
   const [moderationQueue, setModerationQueue] = useState<ModerationItem[]>([]);
   const [selectedFilter, setSelectedFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
+  const [activeTab, setActiveTab] = useState<string>('traditional');
 
   // Load real data from API endpoints
   useEffect(() => {
@@ -239,11 +243,46 @@ const ModerationDashboard: React.FC = () => {
           <div className="py-6">
             <h1 className="text-2xl font-bold text-gray-900">BLKOUT Moderation Dashboard</h1>
             <p className="text-gray-600 mt-1">Community content management and safety</p>
+            
+            {/* Moderation Tabs */}
+            <div className="flex space-x-1 mt-6">
+              <button
+                onClick={() => setActiveTab('traditional')}
+                className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                  activeTab === 'traditional'
+                    ? 'bg-purple-600 text-white'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <FileText className="w-4 h-4" />
+                  Traditional Content
+                </div>
+              </button>
+              <button
+                onClick={() => setActiveTab('social')}
+                className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                  activeTab === 'social'
+                    ? 'bg-purple-600 text-white'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <MessageCircle className="w-4 h-4" />
+                  Social Media
+                </div>
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Conditional Content Based on Active Tab */}
+        {activeTab === 'social' ? (
+          <SocialModerationQueue />
+        ) : (
+          <>
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <div className="bg-white rounded-lg shadow p-6">
@@ -436,6 +475,8 @@ const ModerationDashboard: React.FC = () => {
             )}
           </div>
         </div>
+          </>
+        )}
       </div>
     </div>
   );

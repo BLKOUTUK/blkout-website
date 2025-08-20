@@ -1,10 +1,9 @@
 'use client'
 
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Search, Filter, Calendar, User, Clock, Heart, MessageCircle, ArrowRight, BookOpen, Sparkles, ChevronDown } from 'lucide-react'
-import ArticleGrid from './ArticleGrid'
-import ArticlePage from './ArticlePage'
 import PrimaryNavigationEnhanced from '../layout/PrimaryNavigationEnhanced'
 import PlatformFooter from '../layout/PlatformFooter'
 
@@ -182,6 +181,25 @@ const FilterBar = ({ selectedCategory, onCategoryChange, searchQuery, onSearchCh
 const EnhancedArticleCard = ({ article, index }: { article: any, index: number }) => {
   const categoryData = CONTENT_CATEGORIES[article.category]
   
+  // Generate image path based on category for articles without images
+  const getImageByCategory = (category: string) => {
+    const categoryImages = {
+      'Community': '/images/story archive colours/green images/',
+      'History & Culture': '/images/story archive colours/blue images/', 
+      'Arts & Culture': '/images/story archive colours/red images/',
+      'Community Building': '/images/story archive colours/purple images/',
+      'Geography & Space': '/images/story archive colours/blue images/',
+      'Manifesto': '/images/story archive colours/gold images/',
+      'Technology': '/images/story archive colours/blue images/',
+      'Health & Wellness': '/images/story archive colours/green images/',
+      'Economics': '/images/story archive colours/purple images/',
+      'Media & Storytelling': '/images/story archive colours/red images/'
+    }
+    
+    const baseImageUrl = categoryImages[category as keyof typeof categoryImages] || '/images/story archive colours/blue images/'
+    return article.imageUrl || `${baseImageUrl}tumblr_384f4870a87f4722ccfc66e8bb2fa98d_e8839690_1280.jpg`
+  }
+  
   return (
     <motion.article
       initial={{ opacity: 0, y: 30 }}
@@ -189,92 +207,73 @@ const EnhancedArticleCard = ({ article, index }: { article: any, index: number }
       transition={{ duration: 0.6, delay: index * 0.1 }}
       className="bg-indigo-900/20 backdrop-blur-sm border border-indigo-700/20 overflow-hidden hover:bg-indigo-900/40 transition-all duration-500 group cursor-pointer"
     >
-      {article.image && (
+      <Link to={`/stories/${article.id}`} className="block">
+        {/* Article Image */}
         <div className="aspect-[16/9] overflow-hidden">
           <img
-            src={article.image}
+            src={getImageByCategory(article.category)}
             alt={article.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
           />
         </div>
-      )}
-      
-      <div className="p-8">
-        <div className="flex items-center mb-4">
-          <div className={`w-3 h-3 bg-gradient-to-r ${categoryData.gradient} mr-4`}></div>
-          <span className="text-indigo-300 font-mono uppercase tracking-wider text-sm">
-            {article.category}
-          </span>
-          <span className="mx-4 text-indigo-600">•</span>
-          <span className="text-sm text-indigo-400">{article.publishedAt}</span>
-        </div>
         
-        <h2 className="text-2xl md:text-3xl font-black heading-block mb-4 leading-tight">
-          <span className={`bg-gradient-to-r ${categoryData.gradient} bg-clip-text text-transparent`}>
-            {article.title}
-          </span>
-        </h2>
-        
-        <p className="text-indigo-100 mb-6 leading-relaxed font-light text-lg">
-          {article.excerpt}
-        </p>
-        
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-3">
-              <div className={`w-10 h-10 bg-gradient-to-br ${categoryData.gradient} flex items-center justify-center`}>
-                <span className="text-white text-sm font-bold">
-                  {article.author.avatar}
-                </span>  
-              </div>
-              <div>
-                <p className="font-bold text-white heading-block text-sm">
-                  {article.author.name}
-                </p>
-                <div className="flex items-center text-xs text-indigo-400 space-x-2">
-                  <Clock className="w-3 h-3" />
-                  <span>{article.readTime} min read</span>
+        <div className="p-8">
+          <div className="flex items-center mb-4">
+            <div className={`w-3 h-3 bg-gradient-to-r ${categoryData.gradient} mr-4`}></div>
+            <span className="text-indigo-300 font-mono uppercase tracking-wider text-sm">
+              {article.category}
+            </span>
+            <span className="mx-4 text-indigo-600">•</span>
+            <span className="text-sm text-indigo-400">{new Date(article.publishedAt).toLocaleDateString()}</span>
+          </div>
+          
+          <h2 className="text-2xl md:text-3xl font-black heading-block mb-4 leading-tight">
+            <span className={`bg-gradient-to-r ${categoryData.gradient} bg-clip-text text-transparent`}>
+              {article.title}
+            </span>
+          </h2>
+          
+          <p className="text-indigo-100 mb-6 leading-relaxed font-light text-lg">
+            {article.excerpt}
+          </p>
+          
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-3">
+                <div className={`w-10 h-10 bg-gradient-to-br ${categoryData.gradient} flex items-center justify-center rounded-lg`}>
+                  <span className="text-white text-sm font-bold">
+                    {article.author.avatar}
+                  </span>  
+                </div>
+                <div>
+                  <p className="font-bold text-white heading-block text-sm">
+                    {article.author.name}
+                  </p>
+                  <div className="flex items-center text-xs text-indigo-400 space-x-2">
+                    <Clock className="w-3 h-3" />
+                    <span>{article.readTime} min read</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          
-          <div className="flex items-center space-x-6">
-            <div className="flex items-center space-x-4 text-sm text-indigo-300">
-              <div className="flex items-center">
-                <Clock className="w-4 h-4 mr-1" />
-                <span>{article.readTime} min read</span>
-              </div>
-            </div>
-            <motion.button
+            
+            <motion.div
               whileHover={{ x: 5 }}
               className="flex items-center text-indigo-400 hover:text-white transition-colors font-bold heading-block uppercase text-sm"
             >
               READ
               <ArrowRight className="w-4 h-4 ml-2" />
-            </motion.button>
+            </motion.div>
           </div>
         </div>
-      </div>
+      </Link>
     </motion.article>
   )
 }
 
 export default function StoriesPageEnhanced() {
-  const [currentView, setCurrentView] = useState<'grid' | 'article'>('grid')
-  const [selectedArticleId, setSelectedArticleId] = useState<string | null>(null)
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [searchQuery, setSearchQuery] = useState('')
-
-  const handleBackToGrid = () => {
-    setCurrentView('grid')
-    setSelectedArticleId(null)
-  }
-
-  const handleArticleClick = (articleId: string) => {
-    setSelectedArticleId(articleId)
-    setCurrentView('article')
-  }
 
   const filteredArticles = stories.filter(article => {
     const matchesCategory = selectedCategory === 'All' || article.category === selectedCategory
@@ -283,10 +282,6 @@ export default function StoriesPageEnhanced() {
       article.excerpt.toLowerCase().includes(searchQuery.toLowerCase())
     return matchesCategory && matchesSearch
   })
-
-  if (currentView === 'article') {
-    return <ArticlePage onBack={handleBackToGrid} />
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-indigo-900 to-slate-900">
@@ -330,30 +325,38 @@ export default function StoriesPageEnhanced() {
               <EnhancedArticleCard 
                 key={article.id} 
                 article={article} 
-                index={index}
+                index={index} 
               />
             ))}
           </div>
           
           {filteredArticles.length === 0 && (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               className="text-center py-24"
             >
-              <BookOpen className="w-16 h-16 text-indigo-400 mx-auto mb-6" />
-              <h3 className="text-2xl font-black text-white heading-block mb-4 uppercase">
-                NO STORIES FOUND
+              <div className="text-6xl mb-6">📚</div>
+              <h3 className="text-2xl font-black heading-block text-white mb-4">
+                No Stories Found
               </h3>
-              <p className="text-indigo-200 font-light">
-                Try adjusting your search or category filter.
+              <p className="text-indigo-200 mb-8">
+                Try adjusting your search or category filter
               </p>
+              <button
+                onClick={() => {
+                  setSelectedCategory('All')
+                  setSearchQuery('')
+                }}
+                className="px-8 py-4 bg-gradient-to-r from-emerald-600 to-violet-600 text-white font-bold font-display uppercase tracking-wide hover:from-emerald-500 hover:to-violet-500 transition-all duration-300 rounded-lg"
+              >
+                Show All Stories
+              </button>
             </motion.div>
           )}
         </div>
       </section>
       
-      {/* Platform Footer */}
       <PlatformFooter />
     </div>
   )

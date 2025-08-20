@@ -386,7 +386,7 @@ const ResourcesSection = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              to="/community"
+              to="/governance"
               className="px-8 py-4 bg-gradient-to-r from-emerald-600 to-indigo-600 text-white font-black hover:from-emerald-500 hover:to-indigo-500 transition-all heading-block uppercase flex items-center justify-center"
             >
               <Users className="w-5 h-5 mr-3" />
@@ -447,7 +447,7 @@ const BlkoutHubCTA = () => (
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Link
-              to="/community"
+              to="/governance"
               className="px-12 py-4 bg-white text-indigo-900 font-black text-lg hover:bg-gray-100 transition-colors heading-block uppercase flex items-center justify-center"
             >
               <Users className="w-6 h-6 mr-3" />

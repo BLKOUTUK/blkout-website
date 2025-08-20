@@ -325,7 +325,7 @@ export const supabaseHelpers = {
   },
 
   // File upload for community media
-  async uploadFile(file: File, bucket: 'articles' | 'events' | 'profiles' = 'articles') {
+  async uploadFile(file: File, bucket: 'articles' | 'events' | 'profiles' | 'governance' = 'articles') {
     const fileExt = file.name.split('.').pop()
     const fileName = `${Math.random()}.${fileExt}`
     const filePath = `${bucket}/${fileName}`
@@ -343,6 +343,428 @@ export const supabaseHelpers = {
       .getPublicUrl(filePath)
 
     return { data: { path: filePath, url: publicUrl }, error: null }
+  },
+
+  // Governance Proposals API
+  async getGovernanceProposals(filters: {
+    status?: string
+    category?: string
+    limit?: number
+    offset?: number
+  } = {}) {
+    let query = supabase
+      .from('governance_proposals_with_votes')
+      .select('*')
+      .order('created_at', { ascending: false })
+
+    if (filters.status) {
+      query = query.eq('status', filters.status)
+    }
+    
+    if (filters.category) {
+      query = query.eq('category', filters.category)
+    }
+
+    if (filters.limit) {
+      query = query.limit(filters.limit)
+    }
+
+    if (filters.offset) {
+      query = query.range(filters.offset, filters.offset + (filters.limit || 20) - 1)
+    }
+
+    return this.safeQuery(() => query)
+  },
+
+  async createGovernanceProposal(proposalData: any) {
+    // Get current user
+    const { user } = await this.getCurrentUser()
+    if (!user) {
+      return { data: null, error: { message: 'User must be authenticated to create proposals' } }
+    }
+
+    const proposalWithUser = {
+      ...proposalData,
+      proposer_id: user.id
+    }
+
+    return this.safeQuery(() => 
+      supabase
+        .from('governance_proposals')
+        .insert(proposalWithUser)
+        .select()
+        .single()
+    )
+  },
+
+  async updateGovernanceProposal(id: string, updates: any) {
+    return this.safeQuery(() =>
+      supabase
+        .from('governance_proposals')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single()
+    )
+  },
+
+  async voteOnProposal(proposalId: string, vote: 'for' | 'against' | 'abstain', comment?: string) {
+    // Get current user
+    const { user } = await this.getCurrentUser()
+    if (!user) {
+      return { data: null, error: { message: 'User must be authenticated to vote' } }
+    }
+
+    const voteData = {
+      proposal_id: proposalId,
+      voter_id: user.id,
+      vote,
+      comment
+    }
+
+    return this.safeQuery(() =>
+      supabase
+        .from('proposal_votes')
+        .upsert(voteData, { onConflict: 'proposal_id,voter_id' })
+        .select()
+        .single()
+    )
+  },
+
+  // Community Meetings API
+  async getCommunityMeetings(filters: {
+    type?: string
+    status?: string
+    limit?: number
+    offset?: number
+  } = {}) {
+    let query = supabase
+      .from('community_meetings')
+      .select('*')
+      .order('date', { ascending: false })
+
+    if (filters.type) {
+      query = query.eq('type', filters.type)
+    }
+    
+    if (filters.status) {
+      query = query.eq('status', filters.status)
+    }
+
+    if (filters.limit) {
+      query = query.limit(filters.limit)
+    }
+
+    if (filters.offset) {
+      query = query.range(filters.offset, filters.offset + (filters.limit || 20) - 1)
+    }
+
+    return this.safeQuery(() => query)
+  },
+
+  async createCommunityMeeting(meetingData: any) {
+    const { user } = await this.getCurrentUser()
+    
+    const meetingWithUser = {
+      ...meetingData,
+      created_by: user?.id
+    }
+
+    return this.safeQuery(() =>
+      supabase
+        .from('community_meetings')
+        .insert(meetingWithUser)
+        .select()
+        .single()
+    )
+  },
+
+  async updateCommunityMeeting(id: string, updates: any) {
+    return this.safeQuery(() =>
+      supabase
+        .from('community_meetings')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single()
+    )
+  },
+
+  // Governance Documents API
+  async getGovernanceDocuments(filters: {
+    type?: string
+    status?: string
+    meetingId?: string
+    proposalId?: string
+    limit?: number
+    offset?: number
+  } = {}) {
+    let query = supabase
+      .from('governance_documents')
+      .select('*')
+      .order('uploaded_date', { ascending: false })
+
+    if (filters.type) {
+      query = query.eq('type', filters.type)
+    }
+    
+    if (filters.status) {
+      query = query.eq('status', filters.status)
+    }
+
+    if (filters.meetingId) {
+      query = query.eq('meeting_id', filters.meetingId)
+    }
+
+    if (filters.proposalId) {
+      query = query.eq('proposal_id', filters.proposalId)
+    }
+
+    if (filters.limit) {
+      query = query.limit(filters.limit)
+    }
+
+    if (filters.offset) {
+      query = query.range(filters.offset, filters.offset + (filters.limit || 20) - 1)
+    }
+
+    return this.safeQuery(() => query)
+  },
+
+  async uploadGovernanceDocument(documentData: any) {
+    const { user } = await this.getCurrentUser()
+    
+    const documentWithUser = {
+      ...documentData,
+      uploaded_by: user?.id,
+      uploaded_by_name: user?.user_metadata?.full_name || user?.email || 'Unknown User'
+    }
+
+    return this.safeQuery(() =>
+      supabase
+        .from('governance_documents')
+        .insert(documentWithUser)
+        .select()
+        .single()
+    )
+  },
+
+  async updateGovernanceDocument(id: string, updates: any) {
+    return this.safeQuery(() =>
+      supabase
+        .from('governance_documents')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single()
+    )
+  },
+
+  async deleteGovernanceDocument(id: string) {
+    return this.safeQuery(() =>
+      supabase
+        .from('governance_documents')
+        .delete()
+        .eq('id', id)
+    )
+  },
+
+  // Community Members API
+  async getCommunityMembers(filters: {
+    role?: string
+    verified?: boolean
+    limit?: number
+    offset?: number
+  } = {}) {
+    let query = supabase
+      .from('community_members')
+      .select('*')
+      .order('contribution_score', { ascending: false })
+
+    if (filters.role) {
+      query = query.eq('role', filters.role)
+    }
+    
+    if (filters.verified !== undefined) {
+      query = query.eq('verified', filters.verified)
+    }
+
+    if (filters.limit) {
+      query = query.limit(filters.limit)
+    }
+
+    if (filters.offset) {
+      query = query.range(filters.offset, filters.offset + (filters.limit || 20) - 1)
+    }
+
+    return this.safeQuery(() => query)
+  },
+
+  async updateCommunityMember(id: string, updates: any) {
+    return this.safeQuery(() =>
+      supabase
+        .from('community_members')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single()
+    )
+  },
+
+  // Proposal Discussions API
+  async getProposalDiscussions(proposalId: string) {
+    return this.safeQuery(() =>
+      supabase
+        .from('proposal_discussions')
+        .select('*')
+        .eq('proposal_id', proposalId)
+        .order('created_at', { ascending: true })
+    )
+  },
+
+  async createProposalDiscussion(discussionData: any) {
+    const { user } = await this.getCurrentUser()
+    
+    const discussionWithUser = {
+      ...discussionData,
+      user_id: user?.id,
+      user_name: user?.user_metadata?.full_name || user?.email || 'Anonymous'
+    }
+
+    return this.safeQuery(() =>
+      supabase
+        .from('proposal_discussions')
+        .insert(discussionWithUser)
+        .select()
+        .single()
+    )
+  },
+
+  // Real-time subscription helpers for governance
+  subscribeToProposals(callback: (payload: any) => void) {
+    return supabase
+      .channel('governance-proposals-changes')
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'governance_proposals'
+      }, (payload) => {
+        console.log('🏛️ Governance proposal change detected:', payload)
+        callback(payload)
+      })
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'proposal_votes'
+      }, (payload) => {
+        console.log('🗳️ Proposal vote change detected:', payload)
+        callback(payload)
+      })
+      .subscribe()
+  },
+
+  subscribeToMeetings(callback: (payload: any) => void) {
+    return supabase
+      .channel('community-meetings-changes')
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'community_meetings'
+      }, (payload) => {
+        console.log('📅 Community meeting change detected:', payload)
+        callback(payload)
+      })
+      .subscribe()
+  },
+
+  subscribeToDocuments(callback: (payload: any) => void) {
+    return supabase
+      .channel('governance-documents-changes')
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'governance_documents'
+      }, (payload) => {
+        console.log('📄 Governance document change detected:', payload)
+        callback(payload)
+      })
+      .subscribe()
+  },
+
+  subscribeToDiscussions(proposalId: string, callback: (payload: any) => void) {
+    return supabase
+      .channel(`proposal-discussions-${proposalId}`)
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'proposal_discussions',
+        filter: `proposal_id=eq.${proposalId}`
+      }, (payload) => {
+        console.log('💬 Proposal discussion change detected:', payload)
+        callback(payload)
+      })
+      .subscribe()
+  },
+
+  // Governance statistics for transparency dashboard
+  async getGovernanceStats() {
+    const [proposalStats, memberStats, meetingStats, documentStats] = await Promise.all([
+      this.safeQuery(() => supabase.rpc('calculate_proposal_stats')),
+      this.safeQuery(() => 
+        supabase
+          .from('community_members')
+          .select('role, verified, contribution_score')
+      ),
+      this.safeQuery(() =>
+        supabase
+          .from('community_meetings')
+          .select('status, type, date')
+      ),
+      this.safeQuery(() =>
+        supabase
+          .from('governance_documents')
+          .select('type, status, is_public')
+      )
+    ])
+
+    const today = new Date().toISOString().split('T')[0]
+    
+    return {
+      proposals: proposalStats.data?.[0] || {
+        total_proposals: 0,
+        active_proposals: 0,
+        approved_proposals: 0,
+        average_participation: 0,
+        total_eligible_voters: 0
+      },
+      members: {
+        total: memberStats.data?.length || 0,
+        verified: memberStats.data?.filter(m => m.verified).length || 0,
+        byRole: memberStats.data?.reduce((acc, member) => {
+          acc[member.role] = (acc[member.role] || 0) + 1
+          return acc
+        }, {} as Record<string, number>) || {},
+        averageContribution: memberStats.data?.reduce((sum, m) => sum + (m.contribution_score || 0), 0) / (memberStats.data?.length || 1) || 0
+      },
+      meetings: {
+        total: meetingStats.data?.length || 0,
+        completed: meetingStats.data?.filter(m => m.status === 'completed').length || 0,
+        upcoming: meetingStats.data?.filter(m => m.status === 'scheduled' && m.date >= today).length || 0,
+        byType: meetingStats.data?.reduce((acc, meeting) => {
+          acc[meeting.type] = (acc[meeting.type] || 0) + 1
+          return acc
+        }, {} as Record<string, number>) || {}
+      },
+      documents: {
+        total: documentStats.data?.length || 0,
+        published: documentStats.data?.filter(d => d.status === 'published').length || 0,
+        public: documentStats.data?.filter(d => d.is_public).length || 0,
+        byType: documentStats.data?.reduce((acc, doc) => {
+          acc[doc.type] = (acc[doc.type] || 0) + 1
+          return acc
+        }, {} as Record<string, number>) || {}
+      }
+    }
   }
 }
 

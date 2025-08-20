@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Plus, Settings, Heart, Shield, Mail, LogIn, LogOut, User, Zap, Users, Globe, Rss, BarChart3, Calendar, ArrowRight } from 'lucide-react'
+import { Plus, Settings, Heart, Shield, Mail, LogIn, LogOut, User, Zap, Users, Globe, Rss, BarChart3, Calendar, ArrowRight, AlertCircle, RefreshCw, WifiOff } from 'lucide-react'
 import PrimaryNavigationEnhanced from '../layout/PrimaryNavigationEnhanced'
 import PlatformFooter from '../layout/PlatformFooter'
+import LoadingSpinner from '../common/LoadingSpinner'
+import ErrorBoundary from '../common/ErrorBoundary'
+import { useErrorHandler } from '../../hooks/useErrorHandler'
 import { eventsService, Event as EventType, EventStats } from '../../services/eventsService'
 
 // Use Event type from service
@@ -357,6 +360,13 @@ const EventsPageIntegrated: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [backendStatus, setBackendStatus] = useState<'checking' | 'connected' | 'offline'>('checking')
   const [stats, setStats] = useState({ pending: 0, approved: 0, rejected: 0, total: 0 })
+  const [retryCount, setRetryCount] = useState(0)
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
+  
+  const { error, hasError, handleAPIError, clearError, retry } = useErrorHandler({
+    showToast: true,
+    retryable: true
+  })
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [filters, setFilters] = useState<FilterOptions>({
@@ -376,33 +386,47 @@ const EventsPageIntegrated: React.FC = () => {
     setSelectedEvent(null)
   }
 
+  const loadEvents = async () => {
+    try {
+      clearError()
+      setLoading(true)
+      setBackendStatus('checking')
+      
+      console.log('🔄 Loading events from service...')
+      
+      // Check backend health first
+      const healthCheck = await eventsService.checkBackendHealth()
+      console.log('📋 Health check result:', healthCheck)
+      setBackendStatus(healthCheck.available ? 'connected' : 'offline')
+      
+      // Load events and stats
+      const [eventsData, statsData] = await Promise.all([
+        eventsService.getAllEvents(),
+        eventsService.getEventStats()
+      ])
+      
+      console.log('✅ Events loaded successfully:', eventsData.length)
+      setEvents(eventsData)
+      setStats(statsData)
+      setLastUpdated(new Date())
+    } catch (error) {
+      console.error('❌ Error loading events:', error)
+      handleAPIError(error, 'events loading')
+      setBackendStatus('offline')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   // Load events on component mount
   useEffect(() => {
-    const loadEvents = async () => {
-      try {
-        setLoading(true)
-        
-        // Check backend health first
-        const healthCheck = await eventsService.checkBackendHealth()
-        setBackendStatus(healthCheck.available ? 'connected' : 'offline')
-        
-        // Load events and stats
-        const [eventsData, statsData] = await Promise.all([
-          eventsService.getAllEvents(),
-          eventsService.getEventStats()
-        ])
-        setEvents(eventsData)
-        setStats(statsData)
-      } catch (error) {
-        console.error('Error loading events:', error)
-        setBackendStatus('offline')
-      } finally {
-        setLoading(false)
-      }
-    }
-
     loadEvents()
   }, [])
+  
+  const handleRetry = () => {
+    setRetryCount(prev => prev + 1)
+    retry(() => loadEvents())
+  }
 
   // Filter events when filters change
   useEffect(() => {
@@ -457,8 +481,9 @@ const EventsPageIntegrated: React.FC = () => {
   }, [events, filters])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-950 via-yellow-900 to-amber-900">
-      <PrimaryNavigationEnhanced />
+    <ErrorBoundary>
+      <div className="min-h-screen bg-gradient-to-br from-yellow-950 via-yellow-900 to-amber-900">
+        <PrimaryNavigationEnhanced />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
@@ -494,16 +519,23 @@ const EventsPageIntegrated: React.FC = () => {
               {/* Backend Status Indicator */}
               <div className="bg-yellow-800/30 backdrop-blur-sm border border-yellow-600/30 rounded-lg px-4 py-2">
                 <div className="flex items-center space-x-2">
-                  <div className={`w-2 h-2 rounded-full ${
-                    backendStatus === 'connected' ? 'bg-emerald-400' :
-                    backendStatus === 'offline' ? 'bg-red-400' :
-                    'bg-yellow-400 animate-pulse'
-                  }`}></div>
+                  {backendStatus === 'checking' ? (
+                    <LoadingSpinner size="sm" color="yellow" />
+                  ) : (
+                    <div className={`w-2 h-2 rounded-full ${
+                      backendStatus === 'connected' ? 'bg-emerald-400' : 'bg-red-400'
+                    }`}></div>
+                  )}
                   <span className="text-xs text-yellow-200">
                     {backendStatus === 'connected' ? 'Live Data' :
                      backendStatus === 'offline' ? 'Mock Data' :
                      'Connecting...'}
                   </span>
+                  {lastUpdated && backendStatus === 'connected' && (
+                    <span className="text-xs text-yellow-300 ml-2">
+                      • {lastUpdated.toLocaleTimeString()}
+                    </span>
+                  )}
                 </div>
               </div>
               
@@ -519,19 +551,67 @@ const EventsPageIntegrated: React.FC = () => {
           </div>
         </div>
 
+        {/* Error Display */}
+        {hasError && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8"
+          >
+            <div className="bg-red-900/30 backdrop-blur-sm border border-red-700/30 rounded-2xl p-6">
+              <div className="flex items-start space-x-4">
+                <AlertCircle className="w-6 h-6 text-red-400 flex-shrink-0 mt-1" />
+                <div className="flex-1">
+                  <h3 className="text-red-300 font-bold text-lg mb-2">Connection Error</h3>
+                  <p className="text-red-200 mb-4">{error?.message}</p>
+                  <div className="flex items-center space-x-4">
+                    <button
+                      onClick={handleRetry}
+                      className="flex items-center px-4 py-2 bg-red-600 hover:bg-red-500 text-white font-medium rounded-lg transition-colors"
+                    >
+                      <RefreshCw className="w-4 h-4 mr-2" />
+                      Retry Connection
+                    </button>
+                    <button
+                      onClick={clearError}
+                      className="text-red-300 hover:text-red-200 font-medium"
+                    >
+                      Dismiss
+                    </button>
+                    {retryCount > 0 && (
+                      <span className="text-red-300 text-sm">
+                        Retry attempts: {retryCount}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+        
         {/* Mock Data Notice */}
-        {backendStatus === 'offline' && (
+        {backendStatus === 'offline' && !hasError && (
           <motion.div 
             className="bg-amber-900/40 backdrop-blur-sm border border-amber-600/40 rounded-2xl p-6 mb-8"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.7 }}
           >
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="w-4 h-4 bg-amber-400 rounded-full"></div>
-              <span className="text-amber-300 font-bold heading-block text-sm uppercase">
-                SHOWING EXAMPLE COMMUNITY EVENTS
-              </span>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-3">
+                <WifiOff className="w-5 h-5 text-amber-400" />
+                <span className="text-amber-300 font-bold heading-block text-sm uppercase">
+                  SHOWING EXAMPLE COMMUNITY EVENTS
+                </span>
+              </div>
+              <button
+                onClick={handleRetry}
+                className="flex items-center text-amber-400 hover:text-amber-300 text-sm font-medium"
+              >
+                <RefreshCw className="w-4 h-4 mr-1" />
+                Retry Connection
+              </button>
             </div>
             <p className="text-amber-100 leading-relaxed">
               These are example events to demonstrate functionality. The community events backend is not currently connected. 
@@ -545,18 +625,16 @@ const EventsPageIntegrated: React.FC = () => {
 
         {/* Events Grid */}
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(6)].map((_, index) => (
-              <div key={index} className="bg-yellow-800/20 backdrop-blur-sm border border-yellow-600/30 rounded-2xl overflow-hidden animate-pulse">
-                <div className="h-48 bg-yellow-700/30"></div>
-                <div className="p-6">
-                  <div className="h-6 bg-yellow-700/30 rounded mb-3"></div>
-                  <div className="h-4 bg-yellow-700/30 rounded mb-2"></div>
-                  <div className="h-4 bg-yellow-700/30 rounded w-3/4"></div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center py-24"
+          >
+            <LoadingSpinner size="xl" color="yellow" text="Loading Events" />
+            <p className="text-yellow-200 font-light mt-6">
+              Fetching the latest community events and gatherings...
+            </p>
+          </motion.div>
         ) : filteredEvents.length > 0 ? (
           <motion.div 
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
@@ -646,19 +724,20 @@ const EventsPageIntegrated: React.FC = () => {
         </motion.div>
       </div>
       
-      <PlatformFooter />
+        <PlatformFooter />
 
-      {/* Event Detail Modal */}
-      <AnimatePresence>
-        {isModalOpen && (
-          <EventDetailModal
-            event={selectedEvent}
-            isOpen={isModalOpen}
-            onClose={handleCloseModal}
-          />
-        )}
-      </AnimatePresence>
-    </div>
+        {/* Event Detail Modal */}
+        <AnimatePresence>
+          {isModalOpen && (
+            <EventDetailModal
+              event={selectedEvent}
+              isOpen={isModalOpen}
+              onClose={handleCloseModal}
+            />
+          )}
+        </AnimatePresence>
+      </div>
+    </ErrorBoundary>
   )
 }
 

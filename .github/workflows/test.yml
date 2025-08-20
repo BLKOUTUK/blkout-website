@@ -1,0 +1,287 @@
+name: Comprehensive Test Suite
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  VITE_SUPABASE_URL: http://localhost:54321
+  VITE_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY_TEST }}
+  NODE_VERSION: '20'
+
+jobs:
+  # Unit and Integration Tests
+  test-unit-integration:
+    runs-on: ubuntu-latest
+    
+    services:
+      supabase:
+        image: supabase/supabase:latest
+        ports:
+          - 54321:54321
+        options: >-
+          --health-cmd "curl -f http://localhost:54321/rest/v1/ || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup Supabase CLI
+        run: |
+          npm install -g @supabase/cli
+          supabase --version
+
+      - name: Start Supabase local development
+        run: |
+          supabase start
+          supabase status
+
+      - name: Run database migrations
+        run: |
+          supabase db push
+          npm run db:seed
+
+      - name: Run unit tests
+        run: npm run test:coverage
+
+      - name: Run integration tests
+        run: npm run test:integration
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage/lcov.info
+          flags: unittests
+          name: unit-test-coverage
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: test-results-unit
+          path: |
+            coverage/
+            test-results/
+
+  # Security Tests
+  test-security:
+    runs-on: ubuntu-latest
+    needs: test-unit-integration
+    
+    services:
+      supabase:
+        image: supabase/supabase:latest
+        ports:
+          - 54321:54321
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup Supabase
+        run: |
+          npm install -g @supabase/cli
+          supabase start
+
+      - name: Run security tests
+        run: npm run test:security
+
+      - name: Upload security test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: security-test-results
+          path: test-results/
+
+  # Migration Tests
+  test-migration:
+    runs-on: ubuntu-latest
+    needs: test-unit-integration
+    
+    services:
+      supabase:
+        image: supabase/supabase:latest
+        ports:
+          - 54321:54321
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup Supabase
+        run: |
+          npm install -g @supabase/cli
+          supabase start
+
+      - name: Run migration tests
+        run: npm run test:migration
+
+      - name: Upload migration test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: migration-test-results
+          path: test-results/
+
+  # E2E Tests
+  test-e2e:
+    runs-on: ubuntu-latest
+    needs: test-unit-integration
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Setup Supabase
+        run: |
+          npm install -g @supabase/cli
+          supabase start
+
+      - name: Build application
+        run: npm run build
+
+      - name: Run E2E tests
+        run: npm run test:e2e
+
+      - name: Upload E2E test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: e2e-test-results
+          path: |
+            test-results/
+            playwright-report/
+
+  # Performance and Load Tests
+  test-performance:
+    runs-on: ubuntu-latest
+    needs: test-unit-integration
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup k6
+        run: |
+          sudo gpg -k
+          sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install k6
+
+      - name: Setup Supabase
+        run: |
+          npm install -g @supabase/cli
+          supabase start
+
+      - name: Build and start application
+        run: |
+          npm run build
+          npm run preview &
+          sleep 10
+
+      - name: Run load tests
+        run: npm run test:load
+
+      - name: Upload performance test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: performance-test-results
+          path: test-results/
+
+  # Aggregate Results
+  test-summary:
+    runs-on: ubuntu-latest
+    needs: [test-unit-integration, test-security, test-migration, test-e2e, test-performance]
+    if: always()
+
+    steps:
+      - name: Download all test artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Generate test summary
+        run: |
+          echo "# Test Suite Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "- Unit & Integration Tests: ${{ needs.test-unit-integration.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Security Tests: ${{ needs.test-security.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Migration Tests: ${{ needs.test-migration.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- E2E Tests: ${{ needs.test-e2e.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Performance Tests: ${{ needs.test-performance.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Overall status
+          if [[ "${{ needs.test-unit-integration.result }}" == "success" && 
+                "${{ needs.test-security.result }}" == "success" && 
+                "${{ needs.test-migration.result }}" == "success" && 
+                "${{ needs.test-e2e.result }}" == "success" && 
+                "${{ needs.test-performance.result }}" == "success" ]]; then
+            echo "## ✅ All Tests Passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "## ❌ Some Tests Failed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Set job status
+        run: |
+          if [[ "${{ needs.test-unit-integration.result }}" != "success" || 
+                "${{ needs.test-security.result }}" != "success" || 
+                "${{ needs.test-migration.result }}" != "success" || 
+                "${{ needs.test-e2e.result }}" != "success" || 
+                "${{ needs.test-performance.result }}" != "success" ]]; then
+            exit 1
+          fi
