@@ -1,17 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
 
-// Scroll to top on route change
-function ScrollToTop() {
-  const { pathname } = useLocation()
-  
-  React.useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [pathname])
-  
-  return null
-}
-import { Calendar } from 'lucide-react'
+// Import ALL original components systematically
 import FullPageScrollytellingOptimized from './components/blkout/FullPageScrollytellingOptimized'
 import ProjectHub from './components/blkout/ProjectHub'
 import IntegrationDashboard from './components/blkout/IntegrationDashboard'
@@ -20,7 +10,7 @@ import EventsAdminDashboard from './components/admin/EventsAdminDashboard'
 import NewsroomAdminDashboard from './components/admin/NewsroomAdminDashboard'
 import AdminAuth from './components/admin/AdminAuth'
 import CommunityGatewayEnhanced from './components/community/CommunityGatewayEnhanced'
-import CommunityGovernanceDashboard from './components/community/CommunityGovernanceDashboard-safe'
+import CommunityGovernanceDashboard from './components/community/CommunityGovernanceDashboard'
 import MagazineLayout from './components/magazine/MagazineLayout'
 import PlatformHomepage from './components/platform/PlatformHomepage'
 import PrimaryNavigation from './components/layout/PrimaryNavigation'
@@ -41,6 +31,17 @@ import PhotoCompetition from './components/community/PhotoCompetition'
 import PartnershipProposal from './components/partnerships/PartnershipProposal'
 import PhotoCompetitionTest from './components/community/PhotoCompetitionTest'
 
+// Scroll to top on route change
+function ScrollToTop() {
+  const { pathname } = useLocation()
+  
+  React.useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+  
+  return null
+}
+
 // Platform Layout Component - wraps platform routes with navigation
 const PlatformLayout = ({ children }: { children: React.ReactNode }) => (
   <>
@@ -49,8 +50,7 @@ const PlatformLayout = ({ children }: { children: React.ReactNode }) => (
   </>
 )
 
-// Old EventsPage removed - using EventsPageIntegrated directly in routing
-
+// IVOR Page with backend check
 const IVORPage = () => {
   const [backendStatus, setBackendStatus] = React.useState('checking')
   
@@ -127,8 +127,161 @@ const StorylabPage = () => {
   )
 }
 
+// Movement page
+const MovementPage = () => {
+  return (
+    <div style={{
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      backgroundColor: '#0f0f23',
+      color: '#ffffff',
+      minHeight: '100vh',
+      padding: '40px 20px'
+    }}>
+      <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+        <header style={{ textAlign: 'center', marginBottom: '60px' }}>
+          <h1 style={{
+            fontSize: '3.5rem',
+            margin: '0 0 20px 0',
+            background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+            backgroundClip: 'text',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            fontWeight: 'bold'
+          }}>
+            🤝 Our Movement
+          </h1>
+          <p style={{ fontSize: '1.3rem', color: '#cbd5e1', margin: 0 }}>
+            Building community power through cooperative democracy
+          </p>
+        </header>
+
+        <section style={{
+          backgroundColor: '#1a1a2e',
+          padding: '40px',
+          borderRadius: '15px',
+          marginBottom: '40px',
+          border: '1px solid #16213e'
+        }}>
+          <h2 style={{ color: '#10b981', margin: '0 0 20px 0' }}>Movement Principles</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '30px' }}>
+            <div>
+              <h3 style={{ color: 'white', margin: '0 0 10px 0' }}>🏳️‍🌈 Liberation First</h3>
+              <p style={{ color: '#cbd5e1', lineHeight: '1.6', margin: 0 }}>
+                We center Black queer liberation in all our work and decisions.
+              </p>
+            </div>
+            <div>
+              <h3 style={{ color: 'white', margin: '0 0 10px 0' }}>🤝 Community Ownership</h3>
+              <p style={{ color: '#cbd5e1', lineHeight: '1.6', margin: 0 }}>
+                Our platform belongs to the community, not to corporations.
+              </p>
+            </div>
+            <div>
+              <h3 style={{ color: 'white', margin: '0 0 10px 0' }}>🗳️ Democratic Power</h3>
+              <p style={{ color: '#cbd5e1', lineHeight: '1.6', margin: 0 }}>
+                Every community member has a voice in our governance.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <div style={{ textAlign: 'center' }}>
+          <a
+            href="/governance"
+            style={{
+              backgroundColor: '#6366f1',
+              color: 'white',
+              padding: '15px 30px',
+              borderRadius: '50px',
+              textDecoration: 'none',
+              fontSize: '1.1rem',
+              fontWeight: 'bold',
+              display: 'inline-block',
+              marginRight: '15px',
+              boxShadow: '0 5px 15px rgba(99, 102, 241, 0.4)'
+            }}
+          >
+            🏛️ JOIN GOVERNANCE
+          </a>
+          <a
+            href="/"
+            style={{
+              color: '#6366f1',
+              textDecoration: 'none',
+              fontSize: '1.1rem',
+              fontWeight: 'bold'
+            }}
+          >
+            ← Back to Home
+          </a>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function App() {
-  console.log('App component rendering...')
+  const [error, setError] = React.useState<string | null>(null)
+  
+  // Global error handler
+  React.useEffect(() => {
+    const handleError = (event: ErrorEvent) => {
+      console.error('Global Error:', event.error)
+      setError(`JavaScript Error: ${event.error?.message || 'Unknown error'}`)
+    }
+    
+    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      console.error('Unhandled Promise Rejection:', event.reason)
+      setError(`Promise Rejection: ${event.reason}`)
+    }
+    
+    window.addEventListener('error', handleError)
+    window.addEventListener('unhandledrejection', handleUnhandledRejection)
+    
+    return () => {
+      window.removeEventListener('error', handleError)
+      window.removeEventListener('unhandledrejection', handleUnhandledRejection)
+    }
+  }, [])
+  
+  if (error) {
+    return (
+      <div style={{
+        padding: '40px',
+        textAlign: 'center',
+        fontFamily: 'system-ui, sans-serif',
+        backgroundColor: '#1a1a1a',
+        color: 'white',
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        <div>
+          <h1 style={{ color: '#ef4444', marginBottom: '20px' }}>⚠️ Application Error</h1>
+          <p style={{ color: '#cbd5e1', marginBottom: '20px', maxWidth: '600px' }}>{error}</p>
+          <button
+            onClick={() => {
+              setError(null)
+              window.location.reload()
+            }}
+            style={{
+              backgroundColor: '#6366f1',
+              color: 'white',
+              border: 'none',
+              padding: '12px 24px',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: '1rem',
+              fontWeight: 'bold'
+            }}
+          >
+            Reload Application
+          </button>
+        </div>
+      </div>
+    )
+  }
   
   return (
     <Router>
