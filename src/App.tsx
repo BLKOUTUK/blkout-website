@@ -128,6 +128,8 @@ const StorylabPage = () => {
 }
 
 function App() {
+  console.log('App component rendering...')
+  
   return (
     <Router>
       <SkipNavigation />
