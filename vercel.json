@@ -4,7 +4,7 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "framework": null,
-  "installCommand": "npm install --prefer-offline --no-audit",
+  "installCommand": "npm ci --prefer-offline --no-audit",
   "functions": {
     "api/events.js": {
       "memory": 1024
