@@ -1,0 +1,48 @@
+{
+  "deployment": {
+    "timestamp": "2025-08-20T02:05:00.000Z",
+    "strategy": "blue-green",
+    "target_env": "production",
+    "rollback_plan": "immediate_revert_to_previous_stable",
+    "health_checks": {
+      "pre_deployment": [
+        "build_artifacts_verification",
+        "asset_integrity_check",
+        "environment_validation"
+      ],
+      "post_deployment": [
+        "route_accessibility_test",
+        "governance_dashboard_functionality",
+        "api_endpoint_health",
+        "frontend_javascript_execution"
+      ]
+    },
+    "monitoring": {
+      "metrics": ["response_time", "error_rate", "user_journey_completion"],
+      "alerts": ["blank_page_detection", "javascript_errors", "routing_failures"]
+    },
+    "rollback_triggers": [
+      "blank_page_reported",
+      "javascript_execution_failure",
+      "governance_dashboard_inaccessible",
+      "critical_error_rate_>5%"
+    ]
+  },
+  "application_info": {
+    "name": "blkout-governance-platform",
+    "version": "0.1.1",
+    "components": [
+      "community_governance_dashboard",
+      "proposal_voting_interface", 
+      "meeting_minutes_widget",
+      "document_management_system",
+      "supabase_integration",
+      "movement_page_integration"
+    ],
+    "bundle_analysis": {
+      "main_bundle": "454.43 kB (97.13 kB gzipped)",
+      "assets_total": "~1.2MB total",
+      "critical_paths": ["/", "/governance", "/movement"]
+    }
+  }
+}

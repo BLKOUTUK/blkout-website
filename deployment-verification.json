@@ -1,0 +1,54 @@
+{
+  "deployment_verification": {
+    "timestamp": "2025-08-20T11:50:30.000Z",
+    "green_environment": "https://blkout-website-aokhrx7we-robs-projects-54d653d3.vercel.app",
+    "blue_environment": "https://blkout-website-jyvehvjon-robs-projects-54d653d3.vercel.app",
+    "deployment_status": "COMPLETED",
+    "build_metrics": {
+      "build_time": "6.98s",
+      "bundle_size": {
+        "main_js": "454.43 kB (97.13 kB gzipped)",
+        "css": "134.45 kB (18.04 kB gzipped)",
+        "governance": "53.86 kB (11.88 kB gzipped)",
+        "animations": "185.89 kB (66.06 kB gzipped)",
+        "supabase": "123.28 kB (34.25 kB gzipped)"
+      },
+      "total_modules": 2029,
+      "chunk_optimization": "optimal"
+    },
+    "critical_tests": {
+      "html_structure": "pending_verification",
+      "javascript_execution": "pending_verification", 
+      "routing_functionality": "pending_verification",
+      "governance_dashboard": "pending_verification",
+      "api_connectivity": "pending_verification"
+    },
+    "user_journeys": [
+      {
+        "name": "homepage_access",
+        "url": "/",
+        "status": "pending"
+      },
+      {
+        "name": "governance_dashboard",
+        "url": "/governance", 
+        "status": "pending"
+      },
+      {
+        "name": "movement_page",
+        "url": "/movement",
+        "status": "pending"
+      }
+    ],
+    "rollback_plan": {
+      "trigger_conditions": [
+        "blank_page_detected",
+        "javascript_errors_>5",
+        "governance_inaccessible",
+        "user_report_failure"
+      ],
+      "rollback_target": "https://blkout-website-jyvehvjon-robs-projects-54d653d3.vercel.app",
+      "estimated_rollback_time": "2_minutes"
+    }
+  }
+}
