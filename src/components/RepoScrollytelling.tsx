@@ -317,21 +317,25 @@ const slides = [
   // Newsletter CTA
   {
     id: 'newsletter-cta',
-    type: 'text',
+    type: 'cta',
     title: 'STAY CONNECTED',
     subtitle: 'JOIN OUR NEWSLETTER',
     content: 'Stay connected with our latest projects, events, and community stories.',
-    bgColor: '#1e3a8a'
+    bgColor: '#1e3a8a',
+    ctaText: 'JOIN NEWSLETTER',
+    ctaUrl: 'https://blkoutuk.com/newsletter'
   },
   
   // Explore Platform CTA
   {
     id: 'explore-platform-cta',
-    type: 'text',
+    type: 'cta',
     title: 'EXPLORE THE PLATFORM',
     subtitle: 'DISCOVER MORE',
     content: 'Browse our full range of projects, resources, and ways to get involved in the movement.',
-    bgColor: '#4c1d95'
+    bgColor: '#4c1d95',
+    ctaText: 'EXPLORE PLATFORM',
+    ctaUrl: 'https://blkoutuk.com'
   }
 ]
 
@@ -958,7 +962,7 @@ const RepoScrollytelling: React.FC = () => {
           )}
         </div>
 
-        {/* CTA for Join Slide */}
+        {/* CTA Slides */}
         {slide.type === 'cta' && (
           <div style={{
             marginTop: '48px',
@@ -970,7 +974,7 @@ const RepoScrollytelling: React.FC = () => {
             backdropFilter: 'blur(10px)'
           }}>
             <a
-              href="https://blkouthub.com/invitation?code=BE862C"
+              href={slide.ctaUrl || "https://blkouthub.com/invitation?code=BE862C"}
               target="_blank"
               rel="noopener noreferrer"
               style={{
@@ -987,7 +991,7 @@ const RepoScrollytelling: React.FC = () => {
               onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
               onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
             >
-              Join BLKOUTHUB
+              {slide.ctaText || "Join BLKOUTHUB"}
             </a>
           </div>
         )}
