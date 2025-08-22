@@ -1,0 +1,127 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Reset default Vite styles that interfere with scrollytelling */
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #000000;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Fix body layout for scrollytelling */
+body {
+  margin: 0;
+  padding: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: #000000;
+  overflow-x: hidden;
+  /* Remove conflicting flex layout */
+  display: block;
+}
+
+/* Root app container */
+#root {
+  width: 100%;
+  min-height: 100vh;
+  background: #000000;
+}
+
+/* Scrollbar hiding utility */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Heading block utility for consistent text styling */
+.heading-block {
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Fixed positioning utilities */
+.fixed {
+  position: fixed;
+}
+
+/* Video styling for full coverage */
+video {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+/* Button reset for better styling */
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+/* Link styling */
+a {
+  font-weight: 500;
+  text-decoration: inherit;
+  transition: color 0.25s ease;
+}
+
+/* Ensure proper z-index stacking */
+.z-10 { z-index: 10; }
+.z-20 { z-index: 20; }
+.z-30 { z-index: 30; }
+.z-40 { z-index: 40; }
+.z-50 { z-index: 50; }
+
+/* Custom gradient animations */
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+/* Ensure slides stack properly */
+.slide {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+/* Progress bar styling */
+.progress-bar {
+  height: 4px;
+  background: linear-gradient(90deg, #dc2626, #eab308);
+  transition: width 0.5s ease;
+}
