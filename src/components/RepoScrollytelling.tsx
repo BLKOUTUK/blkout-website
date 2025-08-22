@@ -913,13 +913,13 @@ const RepoScrollytelling: React.FC = () => {
           )}
 
           {/* Pure image slides - no text overlays for slides 3-9 (identity questions) */}
-          {slide.type === 'image' && ['well-defined', 'black', 'queer', 'male', 'out', 'liberation-image'].includes(slide.id) && (
+          {slide.type === 'image' && ['well-defined', 'black', 'queer', 'male', 'out', 'liberation-image', 'project-intro'].includes(slide.id) && (
             // No text overlay for identity question slides - let the images speak for themselves
             null
           )}
           
           {/* Image slides with text overlays for other slides */}
-          {slide.type === 'image' && !['well-defined', 'black', 'queer', 'male', 'out', 'liberation-image'].includes(slide.id) && (
+          {slide.type === 'image' && !['well-defined', 'black', 'queer', 'male', 'out', 'liberation-image', 'project-intro'].includes(slide.id) && (
             <div style={{
               position: 'absolute',
               top: '50%',
