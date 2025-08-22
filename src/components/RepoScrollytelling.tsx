@@ -1,7 +1,17 @@
 import React, { useState } from 'react'
 
 const slides = [
-  // Welcome video - first slide
+  // Introducing slide - very first slide
+  {
+    id: 'introducing',
+    type: 'image',
+    title: '',
+    subtitle: '',
+    bgImage: '/images/squared/INTRODUCING.png',
+    bgColor: '#000000'
+  },
+
+  // Welcome video - second slide
   {
     id: 'welcome',
     type: 'video',
@@ -300,6 +310,16 @@ const slides = [
     subtitle: '',
     content: '',
     videoUrl: '/images/squared/photo collage Video.mp4',
+    bgColor: '#000000'
+  },
+  
+  // Realness Unleashed Infographic
+  {
+    id: 'realness-unleashed-infographic',
+    type: 'image',
+    title: '',
+    subtitle: '',
+    bgImage: '/images/squared/REALNESS UNLEASHED Infographic Graph .png',
     bgColor: '#000000'
   },
   
@@ -917,13 +937,13 @@ const RepoScrollytelling: React.FC = () => {
           )}
 
           {/* Pure image slides - no text overlays for slides 3-9 (identity questions) */}
-          {slide.type === 'image' && ['well-defined', 'black', 'queer', 'male', 'out', 'liberation-image', 'project-intro'].includes(slide.id) && (
+          {slide.type === 'image' && ['introducing', 'well-defined', 'black', 'queer', 'male', 'out', 'liberation-image', 'project-intro', 'realness-unleashed-infographic'].includes(slide.id) && (
             // No text overlay for identity question slides - let the images speak for themselves
             null
           )}
           
           {/* Image slides with text overlays for other slides */}
-          {slide.type === 'image' && !['well-defined', 'black', 'queer', 'male', 'out', 'liberation-image', 'project-intro'].includes(slide.id) && (
+          {slide.type === 'image' && !['introducing', 'well-defined', 'black', 'queer', 'male', 'out', 'liberation-image', 'project-intro', 'realness-unleashed-infographic'].includes(slide.id) && (
             <div style={{
               position: 'absolute',
               top: '50%',
