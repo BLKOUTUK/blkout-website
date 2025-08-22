@@ -912,10 +912,49 @@ const RepoScrollytelling: React.FC = () => {
             </div>
           )}
 
-          {/* Pure image slides - no text overlays for slides 3-9 */}
-          {slide.type === 'image' && (
-            // No text overlay - let the images speak for themselves
+          {/* Pure image slides - no text overlays for slides 3-9 (identity questions) */}
+          {slide.type === 'image' && ['well-defined', 'black', 'queer', 'male', 'out', 'liberation-image'].includes(slide.id) && (
+            // No text overlay for identity question slides - let the images speak for themselves
             null
+          )}
+          
+          {/* Image slides with text overlays for other slides */}
+          {slide.type === 'image' && !['well-defined', 'black', 'queer', 'male', 'out', 'liberation-image'].includes(slide.id) && (
+            <div style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              textAlign: 'center',
+              background: 'rgba(0,0,0,0.7)',
+              padding: '40px',
+              borderRadius: '20px',
+              backdropFilter: 'blur(10px)',
+              maxWidth: '90%',
+              width: 'auto'
+            }}>
+              <h1 style={{
+                fontSize: '48px',
+                fontWeight: 'bold',
+                color: 'white',
+                marginBottom: '16px',
+                lineHeight: '1.1'
+              }}>
+                {slide.title}
+              </h1>
+              {slide.subtitle && (
+                <p style={{
+                  fontSize: '24px',
+                  color: '#e5e7eb',
+                  textTransform: 'uppercase',
+                  letterSpacing: '2px',
+                  fontFamily: 'monospace',
+                  marginBottom: '20px'
+                }}>
+                  {slide.subtitle}
+                </p>
+              )}
+            </div>
           )}
         </div>
 
