@@ -1,7 +1,27 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
+import { motion } from 'framer-motion'
 
-// Scroll to top on route change
+// Import ONLY the components we know work from progressive testing
+import CommunityGovernanceDashboard from './components/community/CommunityGovernanceDashboard'
+import PrimaryNavigationEnhanced from './components/layout/PrimaryNavigationEnhanced'
+import MovementIntroEnhanced from './components/movement/MovementIntroEnhanced'
+import AdminAuth from './components/admin/AdminAuth'
+import IntegrationDashboard from './components/blkout/IntegrationDashboard'
+import EventsAdminDashboard from './components/admin/EventsAdminDashboard'
+import NewsroomAdminDashboard from './components/admin/NewsroomAdminDashboard'
+import GovernanceDocumentsAdmin from './components/admin/GovernanceDocumentsAdmin'
+import ModerationDashboard from './components/admin/ModerationDashboard'
+import NewsroomEnhanced from './components/newsroom/NewsroomEnhanced'
+import EventsPageIntegrated from './components/events/EventsPageIntegrated'
+import IvorChatbot from './components/blkout/IvorChatbot'
+
+// EXCLUDE potentially problematic heavy components:
+// - FullPageScrollytellingOptimized (most likely culprit - heavy animations)
+// - Complex animation components
+// - Memory-intensive components
+
+// Scroll to top component
 function ScrollToTop() {
   const { pathname } = useLocation()
   
@@ -11,162 +31,228 @@ function ScrollToTop() {
   
   return null
 }
-import { Calendar } from 'lucide-react'
-import FullPageScrollytellingOptimized from './components/blkout/FullPageScrollytellingOptimized'
-import ProjectHub from './components/blkout/ProjectHub'
-import IntegrationDashboard from './components/blkout/IntegrationDashboard'
-import ModerationDashboard from './components/admin/ModerationDashboard'
-import EventsAdminDashboard from './components/admin/EventsAdminDashboard'
-import NewsroomAdminDashboard from './components/admin/NewsroomAdminDashboard'
-import AdminAuth from './components/admin/AdminAuth'
-import CommunityGatewayEnhanced from './components/community/CommunityGatewayEnhanced'
-import CommunityGovernanceDashboard from './components/community/CommunityGovernanceDashboard-safe'
-import MagazineLayout from './components/magazine/MagazineLayout'
-import PlatformHomepage from './components/platform/PlatformHomepage'
-import PrimaryNavigation from './components/layout/PrimaryNavigation'
-import MagazineHomepageEnhanced from './components/magazine/MagazineHomepageEnhanced'
-import StoriesPageEnhanced from './components/magazine/StoriesPageEnhanced'
-import MovementIntroEnhanced from './components/movement/MovementIntroEnhanced'
-import BLKOUTHUBPromoPage from './components/community/BLKOUTHUBPromoPage'
-import HubReports from './components/community/HubReports'
-import IVORInterfaceEnhanced from './components/ivor/IVORInterfaceEnhanced'
-import NewsroomEnhanced from './components/newsroom/NewsroomEnhanced'
-import EventsPageIntegrated from './components/events/EventsPageIntegrated'
-import PrimaryNavigationEnhanced from './components/layout/PrimaryNavigationEnhanced'
-import PlatformFooter from './components/layout/PlatformFooter'
-import SkipNavigation from './components/layout/SkipNavigation'
-import ExtensionDownloadSimple from './components/extension/ExtensionDownloadSimple'
-import ArticleDetail from './components/stories/ArticleDetail'
-import PhotoCompetition from './components/community/PhotoCompetition'
-import PartnershipProposal from './components/partnerships/PartnershipProposal'
-import PhotoCompetitionTest from './components/community/PhotoCompetitionTest'
 
-// Platform Layout Component - wraps platform routes with navigation
+// Simple navigation component
+const SkipNavigation = () => (
+  <a
+    href="#main-content"
+    className="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 z-50 bg-blue-600 text-white px-4 py-2"
+  >
+    Skip to main content
+  </a>
+)
+
+// Platform Layout Component
 const PlatformLayout = ({ children }: { children: React.ReactNode }) => (
   <>
-    <PrimaryNavigation />
+    <PrimaryNavigationEnhanced />
     {children}
   </>
 )
 
-// Old EventsPage removed - using EventsPageIntegrated directly in routing
-
-const IVORPage = () => {
-  const [backendStatus, setBackendStatus] = React.useState('checking')
-  
-  React.useEffect(() => {
-    // Check if IVOR backend is running
-    fetch('https://blkout-ivor-fresh-jklmotmfs-robs-projects-54d653d3.vercel.app/health')
-      .then(res => res.json())
-      .then(() => {
-        setBackendStatus('running')
-        // Redirect to IVOR interface
-        window.location.href = 'https://blkout-ivor-fresh-jklmotmfs-robs-projects-54d653d3.vercel.app'
-      })
-      .catch(() => {
-        setBackendStatus('offline')
-      })
-  }, [])
-  
+// Scrollytelling Link Component
+const ScrollytellingLink = () => {
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
-      <div className="text-center max-w-2xl mx-auto px-4">
-        <h1 className="text-4xl font-bold mb-4">IVOR AI Assistant</h1>
-        {backendStatus === 'checking' && (
-          <p className="text-xl text-gray-300 mb-8">Connecting to IVOR backend...</p>
-        )}
-        {backendStatus === 'running' && (
-          <p className="text-xl text-gray-300 mb-8">Redirecting to IVOR interface...</p>
-        )}
-        {backendStatus === 'offline' && (
-          <div>
-            <p className="text-xl text-gray-300 mb-4">IVOR backend is currently offline</p>
-            <p className="text-sm text-gray-400 mb-8">
-              To start IVOR: cd ivor/ivor/backend && ./start.sh
-            </p>
-          </div>
-        )}
-        <a href="/" className="text-blue-400 hover:text-blue-300">← Back to Home</a>
+    <div className="min-h-screen bg-black text-white flex items-center justify-center">
+      <div className="text-center space-y-8">
+        <div className="mb-8">
+          <img 
+            src="/images/blkout_logo_roundel_colour.png" 
+            alt="BLKOUT Logo" 
+            className="w-32 mx-auto mb-6"
+          />
+          <h1 className="text-4xl font-bold mb-4">Liberation Journey</h1>
+          <p className="text-gray-300 text-lg">Experience our immersive storytelling journey</p>
+        </div>
+        
+        <a 
+          href="https://blkout-scrollytelling-l02xntf1j-robs-projects-54d653d3.vercel.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block bg-gradient-to-r from-red-600 to-yellow-600 hover:from-red-700 hover:to-yellow-700 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+        >
+          Start Your Journey
+        </a>
+        
+        <div className="text-sm text-gray-400">
+          <p>This experience opens in a new window</p>
+        </div>
       </div>
     </div>
   )
 }
+
+// Simple Homepage (instead of heavy FullPageScrollytellingOptimized)
+const SimpleHomepage = () => (
+  <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-indigo-900 to-slate-900">
+    <PrimaryNavigationEnhanced />
+    
+    {/* Hero Section */}
+    <section className="relative py-20 bg-gradient-to-br from-purple-950 via-indigo-950 to-emerald-950 overflow-hidden">
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-purple-500 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-emerald-500 rounded-full blur-3xl animate-pulse"></div>
+      </div>
+      
+      <div className="relative z-10 max-w-6xl mx-auto px-8 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <h1 className="text-6xl font-black text-white mb-8 leading-tight">
+            <span className="bg-gradient-to-r from-purple-400 to-emerald-400 bg-clip-text text-transparent">
+              BLKOUT
+            </span>
+            <br />
+            Community Platform
+          </h1>
+          
+          <p className="text-xl text-indigo-200 mb-12 max-w-3xl mx-auto leading-relaxed">
+            Liberation through collective action and cooperative ownership. 
+            Building power, sharing resources, and centering Black queer joy.
+          </p>
+          
+          <div className="flex flex-wrap justify-center gap-6 mb-16">
+            <motion.a
+              href="/governance"
+              className="px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold rounded-full hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Community Governance
+            </motion.a>
+            
+            <motion.a
+              href="/movement"
+              className="px-8 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold rounded-full hover:from-emerald-700 hover:to-teal-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Our Movement
+            </motion.a>
+            
+            <motion.a
+              href="/newsroom"
+              className="px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-bold rounded-full hover:from-blue-700 hover:to-cyan-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Newsroom
+            </motion.a>
+            
+            <motion.a
+              href="/events"
+              className="px-8 py-4 bg-gradient-to-r from-orange-600 to-red-600 text-white font-bold rounded-full hover:from-orange-700 hover:to-red-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Events
+            </motion.a>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+
+    {/* Values Section */}
+    <section className="py-16 bg-slate-900/50">
+      <div className="max-w-6xl mx-auto px-8">
+        <h2 className="text-4xl font-bold text-white text-center mb-12">Our Values</h2>
+        <div className="grid md:grid-cols-3 gap-8">
+          <motion.div 
+            className="text-center p-6 bg-white/5 rounded-lg"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <div className="text-4xl mb-4">🏳️‍⚧️</div>
+            <h3 className="text-xl font-bold text-white mb-2">Trans Liberation</h3>
+            <p className="text-gray-300">Centering trans joy and safety in all we do</p>
+          </motion.div>
+          
+          <motion.div 
+            className="text-center p-6 bg-white/5 rounded-lg"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <div className="text-4xl mb-4">🤝</div>
+            <h3 className="text-xl font-bold text-white mb-2">Cooperative Ownership</h3>
+            <p className="text-gray-300">Community-owned, democratically governed</p>
+          </motion.div>
+          
+          <motion.div 
+            className="text-center p-6 bg-white/5 rounded-lg"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+          >
+            <div className="text-4xl mb-4">✊🏿</div>
+            <h3 className="text-xl font-bold text-white mb-2">Black Power</h3>
+            <p className="text-gray-300">Liberation through collective action</p>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+
+    {/* Footer */}
+    <footer className="bg-slate-950 py-12">
+      <div className="max-w-6xl mx-auto px-8 text-center">
+        <p className="text-gray-400">&copy; 2024 BLKOUT - Community Platform | Liberation through Cooperation</p>
+      </div>
+    </footer>
+  </div>
+)
 
 const GovernancePage = () => <CommunityGovernanceDashboard />
 
-// Media platform components from PRD
-const ChannelBLKOUTPage = () => {
-  React.useEffect(() => {
-    window.location.href = 'https://blkoutnxtchannel.carrd.co'
-  }, [])
-  
-  return (
-    <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Redirecting to Channel BLKOUT...</h1>
-        <p className="text-xl text-gray-300 mb-8">Taking you to our video platform</p>
-        <a href="https://blkoutnxtchannel.carrd.co" className="text-blue-400 hover:text-blue-300">Click here if not redirected</a>
-      </div>
+// Simple 404 page
+const NotFoundPage = () => (
+  <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
+    <div className="text-center">
+      <h1 className="text-6xl font-bold mb-4">404</h1>
+      <p className="text-xl mb-8">Page not found</p>
+      <a href="/" className="text-blue-400 hover:text-blue-300">← Back to Home</a>
     </div>
-  )
-}
-
-const StorylabPage = () => {
-  React.useEffect(() => {
-    window.location.href = 'https://blkoutnxtstory.carrd.co'
-  }, [])
-  
-  return (
-    <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Redirecting to Storylab...</h1>
-        <p className="text-xl text-gray-300 mb-8">Taking you to our storytelling platform</p>
-        <a href="https://blkoutnxtstory.carrd.co" className="text-blue-400 hover:text-blue-300">Click here if not redirected</a>
-      </div>
-    </div>
-  )
-}
+  </div>
+)
 
 function App() {
-  console.log('App component rendering...')
-  
   return (
     <Router>
       <SkipNavigation />
       <ScrollToTop />
+      
+      {/* Debug indicator */}
+      <div className="fixed top-0 right-0 bg-green-600 text-white px-3 py-1 text-sm z-50">
+        SELECTIVE MODE: Heavy components excluded
+      </div>
+      
       <Routes>
-        <Route path="/" element={<FullPageScrollytellingOptimized />} />
-        <Route path="/platform" element={<PlatformLayout><PlatformHomepage /></PlatformLayout>} />
-        <Route path="/magazine" element={<MagazineHomepageEnhanced />} />
-        <Route path="/home" element={<MagazineHomepageEnhanced />} />
-        <Route path="/dashboard" element={<ProjectHub />} />
+        {/* Main routes - using simple homepage instead of FullPageScrollytellingOptimized */}
+        <Route path="/" element={<SimpleHomepage />} />
+        
+        {/* Community and governance */}
+        <Route path="/governance" element={<GovernancePage />} />
+        <Route path="/movement" element={<PlatformLayout><MovementIntroEnhanced /></PlatformLayout>} />
+        
+        {/* Content pages */}
+        <Route path="/newsroom" element={<PlatformLayout><NewsroomEnhanced /></PlatformLayout>} />
+        <Route path="/events" element={<PlatformLayout><EventsPageIntegrated /></PlatformLayout>} />
+        
+        {/* Admin routes */}
         <Route path="/admin" element={<AdminAuth><IntegrationDashboard /></AdminAuth>} />
         <Route path="/admin/moderation" element={<AdminAuth><ModerationDashboard /></AdminAuth>} />
         <Route path="/admin/events" element={<AdminAuth><EventsAdminDashboard /></AdminAuth>} />
         <Route path="/admin/newsroom" element={<AdminAuth><NewsroomAdminDashboard /></AdminAuth>} />
-        <Route path="/community" element={<PlatformLayout><CommunityGatewayEnhanced /></PlatformLayout>} />
-        <Route path="/photo-competition" element={<PhotoCompetition />} />
-        <Route path="/partnerships" element={<PartnershipProposal />} />
-        <Route path="/photo-test" element={<PhotoCompetitionTest />} />
-        <Route path="/stories" element={<PlatformLayout><StoriesPageEnhanced /></PlatformLayout>} />
-        <Route path="/stories/:slug" element={<ArticleDetail />} />
-        <Route path="/movement" element={<PlatformLayout><MovementIntroEnhanced /></PlatformLayout>} />
-        <Route path="/discussions" element={<BLKOUTHUBPromoPage />} />
-        <Route path="/reports" element={<HubReports />} />
-        <Route path="/newsroom" element={<PlatformLayout><NewsroomEnhanced /></PlatformLayout>} />
-        <Route path="/media" element={<ChannelBLKOUTPage />} />
-        <Route path="/events" element={<PlatformLayout><EventsPageIntegrated /></PlatformLayout>} />
-        <Route path="/ivor" element={<PlatformLayout><IVORInterfaceEnhanced /></PlatformLayout>} />
-        <Route path="/governance" element={<GovernancePage />} />
-        <Route path="/media/newsroom" element={<NewsroomEnhanced />} />
-        <Route path="/media/channel" element={<ChannelBLKOUTPage />} />
-        <Route path="/media/storylab" element={<StorylabPage />} />
+        <Route path="/admin/governance" element={<AdminAuth><GovernanceDocumentsAdmin /></AdminAuth>} />
         
-        {/* Extension Downloads */}
-        <Route path="/extension" element={<ExtensionDownloadSimple />} />
-        <Route path="/downloads" element={<ExtensionDownloadSimple />} />
-        <Route path="/chrome-extension" element={<ExtensionDownloadSimple />} />
+        {/* 404 */}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      
+      {/* IVOR Chatbot - Available on all pages */}
+      <IvorChatbot />
     </Router>
   )
 }

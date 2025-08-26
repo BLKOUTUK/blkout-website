@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MessageCircle, X, Send } from 'lucide-react'
+import { MessageCircle, X, Send, Wifi, WifiOff } from 'lucide-react'
+import { ivorService } from '../../services/ivorService'
 
 /**
  * IvorChatbot - IVOR beta integration for community interaction
@@ -31,8 +32,19 @@ export default function IvorChatbot() {
     }
   ])
   const [inputText, setInputText] = useState('')
+  const [isConnected, setIsConnected] = useState<boolean | null>(null)
+  const [isTyping, setIsTyping] = useState(false)
 
-  const sendMessage = () => {
+  // Check IVOR connection status on mount
+  useEffect(() => {
+    const checkConnection = async () => {
+      const connected = await ivorService.checkConnection()
+      setIsConnected(connected)
+    }
+    checkConnection()
+  }, [])
+
+  const sendMessage = async () => {
     if (!inputText.trim()) return
 
     const userMessage: Message = {
@@ -43,18 +55,51 @@ export default function IvorChatbot() {
     }
 
     setMessages(prev => [...prev, userMessage])
+    const messageText = inputText
     setInputText('')
+    setIsTyping(true)
 
-    // Simulate IVOR response (in real implementation, this would call IVOR API)
-    setTimeout(() => {
+    try {
+      // Get pathway context from localStorage for personalized responses
+      const pathwayContext = localStorage.getItem('pathwayContext')
+      let context = null
+      try {
+        context = pathwayContext ? JSON.parse(pathwayContext) : null
+      } catch (e) {
+        // Ignore parsing errors
+      }
+
+      // Call real IVOR service
+      const response = await ivorService.sendMessage(messageText, context)
+      
       const ivorResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: "That's a great question! Our community believes in cooperative ownership and Black queer liberation. Let me connect you with someone who can share more about our movement. Would you like to join our next community gathering?",
+        text: response.message || "I'm here to help with your community needs!",
         sender: 'ivor',
         timestamp: new Date()
       }
+      
       setMessages(prev => [...prev, ivorResponse])
-    }, 1000)
+      
+      // Update connection status based on response
+      setIsConnected(ivorService.getConnectionStatus())
+      
+    } catch (error) {
+      console.error('Failed to send message to IVOR:', error)
+      
+      // Fallback response when API fails
+      const fallbackResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        text: "I'm having trouble connecting right now, but I'm still here to help! BLKOUT supports Black queer liberation through community organizing, cooperative ownership, and mutual aid. How can I point you toward the resources you need?",
+        sender: 'ivor',
+        timestamp: new Date()
+      }
+      
+      setMessages(prev => [...prev, fallbackResponse])
+      setIsConnected(false)
+    } finally {
+      setIsTyping(false)
+    }
   }
 
   return (
@@ -87,8 +132,20 @@ export default function IvorChatbot() {
             {/* Header */}
             <div className="bg-blkout-primary text-white p-4 flex items-center justify-between">
               <div>
-                <h3 className="font-semibold">IVOR</h3>
-                <p className="text-xs opacity-90">Community AI Assistant</p>
+                <div className="flex items-center space-x-2">
+                  <h3 className="font-semibold">IVOR</h3>
+                  {isConnected === null ? (
+                    <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" title="Connecting..." />
+                  ) : isConnected ? (
+                    <Wifi size={16} className="text-green-400" title="Connected" />
+                  ) : (
+                    <WifiOff size={16} className="text-red-400" title="Offline" />
+                  )}
+                </div>
+                <p className="text-xs opacity-90">
+                  {isConnected === null ? 'Connecting...' : 
+                   isConnected ? 'Community AI Assistant' : 'Offline Mode'}
+                </p>
               </div>
               <button
                 onClick={() => setIsOpen(false)}
@@ -128,6 +185,23 @@ export default function IvorChatbot() {
                   </div>
                 </motion.div>
               ))}
+              
+              {/* Typing indicator */}
+              {isTyping && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex justify-start"
+                >
+                  <div className="bg-gray-100 p-3 rounded-lg">
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
             </div>
 
             {/* Input */}
@@ -140,15 +214,20 @@ export default function IvorChatbot() {
                   type="text"
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
-                  placeholder="Ask IVOR about our community..."
+                  placeholder={
+                    isConnected === null ? "Connecting to IVOR..." :
+                    isConnected === false ? "IVOR is offline, but still helpful..." :
+                    "Ask IVOR about our community..."
+                  }
+                  disabled={isTyping}
                   className="flex-1 p-2 border border-gray-300 rounded-md 
                     focus:outline-none focus:ring-2 focus:ring-blkout-primary 
-                    focus:border-transparent text-sm"
+                    focus:border-transparent text-sm disabled:bg-gray-100"
                   aria-label="Message input"
                 />
                 <button
                   type="submit"
-                  disabled={!inputText.trim()}
+                  disabled={!inputText.trim() || isTyping}
                   className="px-3 py-2 bg-blkout-primary text-white rounded-md 
                     hover:bg-blkout-warm transition-colors disabled:opacity-50 
                     disabled:cursor-not-allowed focus:outline-none focus:ring-2 
@@ -158,6 +237,13 @@ export default function IvorChatbot() {
                   <Send size={16} />
                 </button>
               </form>
+              
+              {/* Connection status */}
+              {isConnected === false && (
+                <div className="mt-2 text-xs text-gray-500 text-center">
+                  Running in offline mode with community resources
+                </div>
+              )}
             </div>
 
             {/* Community Values Footer */}

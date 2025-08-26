@@ -49,6 +49,78 @@ const PlatformLayout = ({ children }: { children: React.ReactNode }) => (
   </>
 )
 
+// Scrollytelling Link Component
+const ScrollytellingLink = () => {
+  return (
+    <div className="min-h-screen bg-black text-white flex items-center justify-center">
+      <div className="text-center space-y-8">
+        <div className="mb-8">
+          <img 
+            src="/images/blkout_logo_roundel_colour.png" 
+            alt="BLKOUT Logo" 
+            className="w-32 mx-auto mb-6"
+          />
+          <h1 className="text-4xl font-bold mb-4">Liberation Journey</h1>
+          <p className="text-gray-300 text-lg">Experience our immersive storytelling journey</p>
+        </div>
+        
+        <a 
+          href="https://blkout-scrollytelling-l02xntf1j-robs-projects-54d653d3.vercel.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block bg-gradient-to-r from-red-600 to-yellow-600 hover:from-red-700 hover:to-yellow-700 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+        >
+          Start Your Journey
+        </a>
+        
+        <div className="text-sm text-gray-400">
+          <p>This experience opens in a new window</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// IVOR Link Component
+const IVORLink = () => {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-orange-950 via-orange-900 to-amber-900 text-white flex items-center justify-center">
+      <div className="text-center space-y-8 max-w-2xl mx-auto px-8">
+        <div className="mb-8">
+          <div className="w-24 h-24 bg-gradient-to-br from-emerald-600 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <div className="text-4xl">🤖</div>
+          </div>
+          <h1 className="text-4xl font-bold mb-4">I.V.O.R.</h1>
+          <p className="text-emerald-300 text-sm font-mono uppercase tracking-wider mb-4">
+            Intelligent Virtual Organizing Resource
+          </p>
+          <p className="text-gray-300 text-lg">Your AI-powered community assistant for liberation and support</p>
+        </div>
+        
+        <div className="bg-black/20 backdrop-blur-sm rounded-xl p-6 mb-8">
+          <p className="text-gray-200 text-sm leading-relaxed">
+            Connect with mental health resources, community support, housing assistance, and liberation education. 
+            IVOR understands the unique experiences of Black queer men and provides personalized guidance for your journey.
+          </p>
+        </div>
+        
+        <a 
+          href="https://frontend-fn1pbg49q-robs-projects-54d653d3.vercel.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block bg-gradient-to-r from-emerald-600 to-indigo-600 hover:from-emerald-700 hover:to-indigo-700 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+        >
+          Chat with I.V.O.R.
+        </a>
+        
+        <div className="text-sm text-orange-300/60">
+          <p>This experience opens in a new window</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // Simple Homepage (instead of heavy FullPageScrollytellingOptimized)
 const SimpleHomepage = () => (
   <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-indigo-900 to-slate-900">
