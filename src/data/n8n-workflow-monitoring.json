@@ -1,0 +1,300 @@
+{
+  "workflow_monitoring_snippet": {
+    "description": "Add this JSON snippet to your N8N workflows to enable monitoring in the BLKOUT Integration Hub",
+    "implementation": "Place this as the final node in each workflow to track execution status",
+    "webhook_endpoint": "https://blkout-website.vercel.app/api/workflows/status",
+    "required_fields": ["workflow_id", "workflow_name", "status", "execution_time", "trigger_count"],
+    "example_node_config": {
+      "name": "BLKOUT Monitor",
+      "type": "n8n-nodes-base.webhook",
+      "method": "POST",
+      "webhook_id": "blkout_monitor"
+    }
+  },
+  "workflows": [
+    {
+      "id": "blkout_main_workflow",
+      "name": "Content Calendar Automation",
+      "status": "active",
+      "last_run": "2025-08-28T11:00:00.000Z",
+      "execution_time": "2.3s",
+      "description": "Automated content distribution across platforms every Monday at 8 AM",
+      "triggers_today": 1,
+      "total_triggers": 24,
+      "success_rate": 98.5,
+      "next_run": "2025-09-02T08:00:00.000Z",
+      "nodes": [
+        {
+          "name": "Schedule Trigger",
+          "type": "n8n-nodes-base.cron",
+          "status": "success"
+        },
+        {
+          "name": "Fetch Content Calendar",
+          "type": "n8n-nodes-base.googleSheets",
+          "status": "success"
+        },
+        {
+          "name": "Process Content",
+          "type": "n8n-nodes-base.code",
+          "status": "success"
+        },
+        {
+          "name": "Post to Social Media",
+          "type": "n8n-nodes-base.httpRequest",
+          "status": "success"
+        },
+        {
+          "name": "Send to Telegram",
+          "type": "n8n-nodes-base.telegram",
+          "status": "success"
+        },
+        {
+          "name": "Update Analytics",
+          "type": "n8n-nodes-base.googleSheets",
+          "status": "success"
+        },
+        {
+          "name": "BLKOUT Monitor",
+          "type": "n8n-nodes-base.httpRequest",
+          "status": "success",
+          "config": {
+            "method": "POST",
+            "url": "https://blkout-website.vercel.app/api/workflows/status",
+            "body": {
+              "workflow_id": "blkout_main_workflow",
+              "workflow_name": "Content Calendar Automation",
+              "status": "completed",
+              "execution_time": "{{ $json.execution_time }}",
+              "trigger_count": "{{ $json.trigger_count }}",
+              "timestamp": "{{ new Date().toISOString() }}",
+              "nodes_executed": "{{ $json.nodes.length }}",
+              "success_rate": "{{ $json.success_rate }}"
+            }
+          }
+        }
+      ],
+      "error_handling": {
+        "retry_count": 3,
+        "error_workflow": "blkout_error_handler",
+        "notification_webhook": "https://hooks.slack.com/services/blkout/errors"
+      }
+    },
+    {
+      "id": "blkout_community_monitoring_workflow",
+      "name": "Community Health Monitoring",
+      "status": "active",
+      "last_run": "2025-08-28T10:30:00.000Z",
+      "execution_time": "1.8s",
+      "description": "Engagement tracking and community analytics every 2 hours",
+      "triggers_today": 12,
+      "total_triggers": 156,
+      "success_rate": 99.2,
+      "next_run": "2025-08-28T12:30:00.000Z",
+      "nodes": [
+        {
+          "name": "Interval Trigger",
+          "type": "n8n-nodes-base.interval",
+          "status": "success",
+          "config": {
+            "interval": 7200000
+          }
+        },
+        {
+          "name": "Fetch BLKOUTHUB Data",
+          "type": "n8n-nodes-base.httpRequest",
+          "status": "success"
+        },
+        {
+          "name": "Analyze Engagement",
+          "type": "n8n-nodes-base.code",
+          "status": "success"
+        },
+        {
+          "name": "Check Health Metrics",
+          "type": "n8n-nodes-base.code",
+          "status": "success"
+        },
+        {
+          "name": "Update Dashboard",
+          "type": "n8n-nodes-base.httpRequest",
+          "status": "success"
+        },
+        {
+          "name": "Store Metrics",
+          "type": "n8n-nodes-base.googleSheets",
+          "status": "success"
+        },
+        {
+          "name": "Alert if Issues",
+          "type": "n8n-nodes-base.if",
+          "status": "success"
+        },
+        {
+          "name": "BLKOUT Monitor",
+          "type": "n8n-nodes-base.httpRequest",
+          "status": "success",
+          "config": {
+            "method": "POST",
+            "url": "https://blkout-website.vercel.app/api/workflows/status",
+            "body": {
+              "workflow_id": "blkout_community_monitoring_workflow",
+              "workflow_name": "Community Health Monitoring",
+              "status": "completed",
+              "execution_time": "{{ $json.execution_time }}",
+              "trigger_count": "{{ $json.trigger_count }}",
+              "timestamp": "{{ new Date().toISOString() }}",
+              "community_health_score": "{{ $json.health_score }}",
+              "engagement_rate": "{{ $json.engagement_rate }}"
+            }
+          }
+        }
+      ],
+      "alerts": {
+        "low_engagement": {
+          "threshold": 0.7,
+          "action": "telegram_notification"
+        },
+        "member_concerns": {
+          "threshold": 5,
+          "action": "admin_alert"
+        }
+      }
+    },
+    {
+      "id": "blkout_emergent_response_workflow",
+      "name": "Real-time Community Response",
+      "status": "active",
+      "last_run": "2025-08-28T11:15:00.000Z",
+      "execution_time": "0.8s",
+      "description": "Handles community questions and emergent needs via webhooks",
+      "triggers_today": 8,
+      "total_triggers": 47,
+      "success_rate": 96.8,
+      "next_run": "webhook_triggered",
+      "nodes": [
+        {
+          "name": "Webhook Trigger",
+          "type": "n8n-nodes-base.webhook",
+          "status": "success",
+          "config": {
+            "path": "/community-response",
+            "method": "POST"
+          }
+        },
+        {
+          "name": "Parse Request",
+          "type": "n8n-nodes-base.code",
+          "status": "success"
+        },
+        {
+          "name": "Check Priority",
+          "type": "n8n-nodes-base.if",
+          "status": "success"
+        },
+        {
+          "name": "Query IVOR AI",
+          "type": "n8n-nodes-base.httpRequest",
+          "status": "success",
+          "config": {
+            "url": "https://ivor-core.vercel.app/api/chat"
+          }
+        },
+        {
+          "name": "Format Response",
+          "type": "n8n-nodes-base.code",
+          "status": "success"
+        },
+        {
+          "name": "Send Response",
+          "type": "n8n-nodes-base.httpRequest",
+          "status": "success"
+        },
+        {
+          "name": "Log Interaction",
+          "type": "n8n-nodes-base.googleSheets",
+          "status": "success"
+        },
+        {
+          "name": "BLKOUT Monitor",
+          "type": "n8n-nodes-base.httpRequest",
+          "status": "success",
+          "config": {
+            "method": "POST",
+            "url": "https://blkout-website.vercel.app/api/workflows/status",
+            "body": {
+              "workflow_id": "blkout_emergent_response_workflow",
+              "workflow_name": "Real-time Community Response",
+              "status": "completed",
+              "execution_time": "{{ $json.execution_time }}",
+              "trigger_count": "{{ $json.trigger_count }}",
+              "timestamp": "{{ new Date().toISOString() }}",
+              "response_type": "{{ $json.response_type }}",
+              "priority_level": "{{ $json.priority }}"
+            }
+          }
+        }
+      ],
+      "integrations": {
+        "ivor_ai": "https://ivor-core.vercel.app",
+        "community_platform": "https://blkouthub.com",
+        "emergency_contacts": ["admin@blkout.uk", "support@blkout.uk"]
+      }
+    }
+  ],
+  "monitoring_api": {
+    "endpoint": "/api/workflows/status",
+    "method": "POST",
+    "authentication": {
+      "type": "api_key",
+      "header": "X-BLKOUT-API-KEY",
+      "value": "{{ process.env.BLKOUT_MONITORING_KEY }}"
+    },
+    "payload_schema": {
+      "workflow_id": "string (required)",
+      "workflow_name": "string (required)", 
+      "status": "enum: [started, completed, error, timeout]",
+      "execution_time": "string (duration)",
+      "trigger_count": "number",
+      "timestamp": "ISO 8601 datetime",
+      "error_details": "object (optional)",
+      "custom_metrics": "object (optional)"
+    },
+    "response_format": {
+      "success": true,
+      "message": "Workflow status updated",
+      "workflow_id": "string",
+      "recorded_at": "ISO 8601 datetime"
+    }
+  },
+  "dashboard_integration": {
+    "data_source": "Real-time from N8N workflow executions",
+    "update_frequency": "On workflow completion",
+    "metrics_tracked": [
+      "execution_count",
+      "success_rate", 
+      "average_execution_time",
+      "last_run_timestamp",
+      "error_frequency",
+      "trigger_patterns"
+    ],
+    "alerts": {
+      "failed_executions": "Immediate Telegram notification",
+      "performance_degradation": "Admin email alert",
+      "high_error_rate": "Slack channel notification"
+    }
+  },
+  "implementation_guide": {
+    "step_1": "Add the BLKOUT Monitor node as the final step in each workflow",
+    "step_2": "Configure the HTTP Request node with the monitoring endpoint",
+    "step_3": "Set up environment variables for API authentication",
+    "step_4": "Test the monitoring by running workflows manually",
+    "step_5": "Verify data appears in the Integration Hub dashboard",
+    "webhook_setup": {
+      "create_endpoint": "POST /api/workflows/status",
+      "add_cors_headers": "Allow blkout-website.vercel.app",
+      "implement_authentication": "API key validation",
+      "store_data": "Supabase workflows table"
+    }
+  }
+}

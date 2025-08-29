@@ -176,6 +176,17 @@ export class ArticleImageGenerator {
       default: return 'bg-gray-500/20 text-gray-300 border-gray-500/30'
     }
   }
+
+  // Generate themed placeholder image (missing function that articles.ts was calling)
+  static generateThemedPlaceholder(category: Article['category'], id: string): string {
+    // Try to use a culture image first, fallback to gradient
+    try {
+      return this.selectCultureImage(category, id)
+    } catch (error) {
+      console.warn(`Could not load culture image for ${category}:${id}, using gradient fallback`)
+      return this.generateGradientImage(category, id)
+    }
+  }
 }
 
 // Enhanced article image component props

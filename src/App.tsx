@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 
-// Import ONLY the components we know work from progressive testing
+// Core application components
 import CommunityGovernanceDashboard from './components/community/CommunityGovernanceDashboard'
 import PrimaryNavigationEnhanced from './components/layout/PrimaryNavigationEnhanced'
 import MovementIntroEnhanced from './components/movement/MovementIntroEnhanced'
@@ -16,10 +16,11 @@ import NewsroomEnhanced from './components/newsroom/NewsroomEnhanced'
 import EventsPageIntegrated from './components/events/EventsPageIntegrated'
 import IvorChatbot from './components/blkout/IvorChatbot'
 
-// EXCLUDE potentially problematic heavy components:
-// - FullPageScrollytellingOptimized (most likely culprit - heavy animations)
-// - Complex animation components
-// - Memory-intensive components
+// Import Extension API to make it available globally
+import './services/extensionApi'
+
+// Note: FullPageScrollytellingOptimized is implemented as separate module at:
+// https://blkout-scrollytelling.vercel.app
 
 // Scroll to top component
 function ScrollToTop() {
@@ -82,8 +83,8 @@ const ScrollytellingLink = () => {
   )
 }
 
-// Simple Homepage (instead of heavy FullPageScrollytellingOptimized)
-const SimpleHomepage = () => (
+// Main Homepage Component
+const Homepage = () => (
   <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-indigo-900 to-slate-900">
     <PrimaryNavigationEnhanced />
     
@@ -223,14 +224,10 @@ function App() {
       <SkipNavigation />
       <ScrollToTop />
       
-      {/* Debug indicator */}
-      <div className="fixed top-0 right-0 bg-green-600 text-white px-3 py-1 text-sm z-50">
-        SELECTIVE MODE: Heavy components excluded
-      </div>
       
       <Routes>
-        {/* Main routes - using simple homepage instead of FullPageScrollytellingOptimized */}
-        <Route path="/" element={<SimpleHomepage />} />
+        {/* Main routes */}
+        <Route path="/" element={<Homepage />} />
         
         {/* Community and governance */}
         <Route path="/governance" element={<GovernancePage />} />

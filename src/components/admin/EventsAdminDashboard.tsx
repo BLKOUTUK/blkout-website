@@ -7,7 +7,7 @@ import { motion } from 'framer-motion'
 import { 
   Calendar, Plus, Edit3, Trash2, Eye, Users, MapPin, 
   Clock, Filter, Search, CheckCircle, XCircle, AlertCircle,
-  Download, Upload, Settings, BarChart3, TrendingUp
+  Download, Upload, Settings, BarChart3, TrendingUp, ArrowLeft, Home
 } from 'lucide-react'
 import PageLoadingDebug from '../debug/PageLoadingDebug'
 import { useEvents } from '../../hooks/useSupabase'
@@ -54,8 +54,11 @@ const eventCategories = [
   'Activism', 'Social', 'Professional Development', 'Support Group'
 ]
 
+// Stable empty filters object to prevent infinite re-renders
+const EMPTY_FILTERS = {}
+
 function EventsAdminDashboardContent() {
-  const { events, loading, createEvent, updateEvent, deleteEvent } = useEvents()
+  const { events, loading, createEvent, updateEvent, deleteEvent } = useEvents(EMPTY_FILTERS)
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([])
   const [showForm, setShowForm] = useState(false)
   const [editingEvent, setEditingEvent] = useState<Event | null>(null)
@@ -216,6 +219,22 @@ function EventsAdminDashboardContent() {
       {/* Header */}
       <div className="bg-indigo-900/50 backdrop-blur-sm border-b border-indigo-700/30">
         <div className="max-w-7xl mx-auto px-8 py-6">
+          <div className="flex items-center gap-4 mb-4">
+            <button
+              onClick={() => window.location.href = '/admin'}
+              className="flex items-center gap-2 px-4 py-2 bg-indigo-800 hover:bg-indigo-700 rounded-lg transition-colors text-sm"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Hub
+            </button>
+            <button
+              onClick={() => window.location.href = '/admin'}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors text-sm"
+            >
+              <Home className="w-4 h-4" />
+              Integration Hub
+            </button>
+          </div>
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-black text-white heading-block uppercase">
@@ -287,6 +306,8 @@ function EventsAdminDashboardContent() {
               <Search className="absolute left-3 top-3 w-5 h-5 text-indigo-400" />
               <input
                 type="text"
+                id="search-events"
+                name="searchQuery"
                 placeholder="Search events..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -295,6 +316,8 @@ function EventsAdminDashboardContent() {
             </div>
             
             <select
+              id="status-filter"
+              name="statusFilter"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
               className="px-4 py-2 bg-indigo-800/50 border border-indigo-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -307,6 +330,8 @@ function EventsAdminDashboardContent() {
             </select>
             
             <select
+              id="category-filter"
+              name="categoryFilter"
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
               className="px-4 py-2 bg-indigo-800/50 border border-indigo-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -425,6 +450,8 @@ function EventsAdminDashboardContent() {
                     </td>
                     <td className="px-6 py-4">
                       <select
+                        id={`status-${event.id}`}
+                        name={`eventStatus-${event.id}`}
                         value={event.status}
                         onChange={(e) => handleStatusChange(event.id, e.target.value as Event['status'])}
                         className={`px-3 py-1 rounded-full text-xs font-medium border-0 ${getStatusColor(event.status)}`}
@@ -497,6 +524,8 @@ function EventsAdminDashboardContent() {
                     <label className="block text-sm font-medium text-indigo-200 mb-2">Event Name</label>
                     <input
                       type="text"
+                      id="event-name"
+                      name="eventName"
                       required
                       value={formData.name}
                       onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
@@ -508,6 +537,8 @@ function EventsAdminDashboardContent() {
                   <div>
                     <label className="block text-sm font-medium text-indigo-200 mb-2">Category</label>
                     <select
+                      id="event-category"
+                      name="eventCategory"
                       value={formData.category}
                       onChange={(e) => setFormData(prev => ({ ...prev, category: e.target.value }))}
                       className="w-full px-4 py-2 bg-indigo-800/50 border border-indigo-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -522,6 +553,8 @@ function EventsAdminDashboardContent() {
                 <div>
                   <label className="block text-sm font-medium text-indigo-200 mb-2">Description</label>
                   <textarea
+                    id="event-description"
+                    name="eventDescription"
                     required
                     value={formData.description}
                     onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
@@ -536,6 +569,8 @@ function EventsAdminDashboardContent() {
                     <label className="block text-sm font-medium text-indigo-200 mb-2">Date</label>
                     <input
                       type="date"
+                      id="event-date"
+                      name="eventDate"
                       required
                       value={formData.event_date}
                       onChange={(e) => setFormData(prev => ({ ...prev, event_date: e.target.value }))}
@@ -547,6 +582,8 @@ function EventsAdminDashboardContent() {
                     <label className="block text-sm font-medium text-indigo-200 mb-2">Start Time</label>
                     <input
                       type="time"
+                      id="start-time"
+                      name="startTime"
                       required
                       value={formData.start_time}
                       onChange={(e) => setFormData(prev => ({ ...prev, start_time: e.target.value }))}
@@ -558,6 +595,8 @@ function EventsAdminDashboardContent() {
                     <label className="block text-sm font-medium text-indigo-200 mb-2">End Time</label>
                     <input
                       type="time"
+                      id="end-time"
+                      name="endTime"
                       value={formData.end_time}
                       onChange={(e) => setFormData(prev => ({ ...prev, end_time: e.target.value }))}
                       className="w-full px-4 py-2 bg-indigo-800/50 border border-indigo-600 rounded text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -572,6 +611,7 @@ function EventsAdminDashboardContent() {
                       <label key={type} className="flex items-center">
                         <input
                           type="radio"
+                          id={`location-${type}`}
                           name="locationType"
                           value={type}
                           checked={formData.locationType === type}
@@ -586,6 +626,8 @@ function EventsAdminDashboardContent() {
                   {(formData.locationType === 'physical' || formData.locationType === 'hybrid') && (
                     <input
                       type="text"
+                      id="event-address"
+                      name="eventAddress"
                       value={formData.address}
                       onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
                       className="w-full px-4 py-2 bg-indigo-800/50 border border-indigo-600 rounded text-white placeholder-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4"
@@ -596,6 +638,8 @@ function EventsAdminDashboardContent() {
                   {(formData.locationType === 'virtual' || formData.locationType === 'hybrid') && (
                     <input
                       type="url"
+                      id="event-url"
+                      name="eventUrl"
                       value={formData.url}
                       onChange={(e) => setFormData(prev => ({ ...prev, url: e.target.value }))}
                       className="w-full px-4 py-2 bg-indigo-800/50 border border-indigo-600 rounded text-white placeholder-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -609,6 +653,8 @@ function EventsAdminDashboardContent() {
                     <label className="block text-sm font-medium text-indigo-200 mb-2">Organizer</label>
                     <input
                       type="text"
+                      id="event-organizer"
+                      name="eventOrganizer"
                       required
                       value={formData.organizer_name}
                       onChange={(e) => setFormData(prev => ({ ...prev, organizer_name: e.target.value }))}
@@ -621,6 +667,8 @@ function EventsAdminDashboardContent() {
                     <label className="block text-sm font-medium text-indigo-200 mb-2">Capacity</label>
                     <input
                       type="number"
+                      id="event-capacity"
+                      name="eventCapacity"
                       required
                       min="1"
                       max="1000"
@@ -635,6 +683,8 @@ function EventsAdminDashboardContent() {
                   <label className="block text-sm font-medium text-indigo-200 mb-2">Tags (comma-separated)</label>
                   <input
                     type="text"
+                    id="event-tags"
+                    name="eventTags"
                     value={formData.tags}
                     onChange={(e) => setFormData(prev => ({ ...prev, tags: e.target.value }))}
                     className="w-full px-4 py-2 bg-indigo-800/50 border border-indigo-600 rounded text-white placeholder-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -645,6 +695,8 @@ function EventsAdminDashboardContent() {
                 <div className="flex items-center">
                   <input
                     type="checkbox"
+                    id="event-featured"
+                    name="eventFeatured"
                     checked={formData.featured}
                     onChange={(e) => setFormData(prev => ({ ...prev, featured: e.target.checked }))}
                     className="mr-2"

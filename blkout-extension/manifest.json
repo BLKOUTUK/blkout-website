@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "BLKOUT Community Submission Tool",
-  "version": "1.0.1",
+  "version": "1.1.1",
   "description": "Submit events and stories to BLKOUT platform with one click",
   
   "permissions": [
@@ -44,8 +44,19 @@
   
   "icons": {
     "16": "assets/icon16.png",
-    "32": "assets/icon32.png",
+    "32": "assets/icon32.png", 
     "48": "assets/icon48.png",
     "128": "assets/icon128.png"
-  }
+  },
+  
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": [
+        "content-scripts/detector.js",
+        "content-scripts/form-injector.js"
+      ],
+      "run_at": "document_end"
+    }
+  ]
 }

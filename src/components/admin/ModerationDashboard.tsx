@@ -6,6 +6,9 @@
 import React, { useState, useEffect } from 'react';
 import { showSuccess, showError } from '../../utils/notifications';
 import SocialModerationQueue from './SocialModerationQueue';
+import { supabase } from '../../lib/supabase';
+import { articles, getDraftArticles } from '../../data/articles';
+import { events, getDraftEvents } from '../../data/events';
 import { 
   CheckCircle, XCircle, Clock, Flag, Edit3, Eye, 
   Filter, Search, Calendar, FileText, Users, 
@@ -39,11 +42,11 @@ interface ModerationStats {
 
 const ModerationDashboard: React.FC = () => {
   const [stats, setStats] = useState<ModerationStats>({
-    pendingCount: 12,
-    todayActions: 47,
-    activeModerators: 3,
-    newsroomQueue: 8,
-    eventsQueue: 4,
+    pendingCount: 0,
+    todayActions: 0,
+    activeModerators: 1,
+    newsroomQueue: 0,
+    eventsQueue: 0,
     communityQueue: 0,
     socialQueue: 0
   });
@@ -62,20 +65,24 @@ const ModerationDashboard: React.FC = () => {
   const loadModerationQueue = async () => {
     try {
       setLoading(true);
-      
-      // Fetch events and articles from real API endpoints
-      const [eventsResponse, articlesResponse] = await Promise.all([
-        fetch('/api/events').then(res => res.json()),
-        fetch('/api/articles').then(res => res.json())
-      ]);
+      let combinedQueue: ModerationItem[] = [];
 
-      const combinedQueue: ModerationItem[] = [];
+      try {
+        // Fetch events and articles directly from Supabase
+        console.log('Fetching data from Supabase...');
+        const [eventsResult, articlesResult] = await Promise.all([
+          supabase.from('events').select('*').in('status', ['draft', 'pending']),
+          supabase.from('newsroom_articles').select('*').in('status', ['draft', 'pending'])
+        ]);
+        
+        console.log('Events result:', eventsResult);
+        console.log('Articles result:', articlesResult);
 
-      // Add events with status 'draft' to moderation queue
-      if (eventsResponse.success && eventsResponse.events) {
-        eventsResponse.events
-          .filter((event: any) => event.status === 'draft')
-          .forEach((event: any) => {
+        // Add events to moderation queue
+        if (eventsResult.data) {
+          console.log('Processing events:', eventsResult.data);
+          eventsResult.data.forEach((event: any) => {
+            console.log('Adding event to queue:', event.title);
             combinedQueue.push({
               id: event.id,
               type: 'event',
@@ -83,45 +90,62 @@ const ModerationDashboard: React.FC = () => {
               content: {
                 description: event.description,
                 date: event.date,
-                time: event.time,
-                location: event.location?.address || 'TBD'
+                time: event.start_time,
+                location: event.location || 'TBD'
               },
-              submittedBy: event.submittedVia === 'chrome-extension' ? 'Chrome Extension' : event.organizer,
-              submittedAt: new Date(event.createdAt),
+              submittedBy: event.source === 'manual' ? 'Chrome Extension' : event.organizer || 'Unknown',
+              submittedAt: new Date(event.created_at),
               status: 'pending',
               flags: event.tags?.includes('community-submitted') ? ['community-submitted'] : [],
               priority: 'medium'
             });
           });
-      }
+        } else {
+          console.log('No events data found');
+        }
 
-      // Add articles with status 'draft' to moderation queue  
-      if (articlesResponse.success && articlesResponse.articles) {
-        articlesResponse.articles
-          .filter((article: any) => article.status === 'draft')
-          .forEach((article: any) => {
+        // Add articles to moderation queue
+        if (articlesResult.data) {
+          console.log('Processing articles:', articlesResult.data);
+          articlesResult.data.forEach((article: any) => {
+            console.log('Adding article to queue:', article.title);
             combinedQueue.push({
               id: article.id,
               type: 'newsroom_article',
               title: article.title,
-              content: { excerpt: article.description || article.excerpt },
-              submittedBy: article.submittedVia === 'chrome-extension' ? 'Chrome Extension' : article.author,
-              submittedAt: new Date(article.createdAt),
-              status: 'pending',
-              flags: article.tags?.includes('community-submitted') ? ['community-submitted'] : [],
+              content: { excerpt: article.excerpt || article.content },
+              submittedBy: article.source_url ? 'Chrome Extension' : 'Unknown',
+              submittedAt: new Date(article.created_at),
+              status: 'pending', // All items in moderation should show as pending
+              flags: ['community-submitted'],
               priority: 'medium'
             });
           });
+        } else {
+          console.log('No articles data found');
+        }
+      } catch (apiError) {
+        console.error('Supabase error:', apiError);
+        console.log('ERROR - Skipping fallback to focus on Supabase data only');
+        // Temporarily disabled fallback to debug Supabase issue
       }
 
       // Sort by submission date (newest first)
       combinedQueue.sort((a, b) => b.submittedAt.getTime() - a.submittedAt.getTime());
 
+      console.log('🎯 SETTING MODERATION QUEUE:', combinedQueue);
+      console.log('🎯 QUEUE LENGTH:', combinedQueue.length);
       setModerationQueue(combinedQueue);
       
       // Update stats
       const eventsCount = combinedQueue.filter(item => item.type === 'event').length;
       const articlesCount = combinedQueue.filter(item => item.type === 'newsroom_article').length;
+      
+      console.log('📊 STATS UPDATE:', {
+        total: combinedQueue.length,
+        events: eventsCount,
+        articles: articlesCount
+      });
       
       setStats({
         pendingCount: combinedQueue.length,
@@ -129,7 +153,8 @@ const ModerationDashboard: React.FC = () => {
         activeModerators: 1,
         newsroomQueue: articlesCount,
         eventsQueue: eventsCount,
-        communityQueue: 0
+        communityQueue: 0,
+        socialQueue: 0
       });
 
     } catch (error) {
@@ -147,37 +172,48 @@ const ModerationDashboard: React.FC = () => {
       const item = moderationQueue.find(i => i.id === itemId);
       if (!item) return;
 
-      // Update the item in the appropriate API endpoint
+      console.log(`🔨 Moderating ${item.type} "${item.title}" - Action: ${action}`);
+
+      // Update directly in Supabase
       if (item.type === 'event') {
-        const response = await fetch(`/api/events?id=${itemId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            status: action === 'approved' ? 'approved' : 'rejected',
-            moderatorNotes: notes,
-            moderatedAt: new Date().toISOString(),
-            moderatedBy: 'admin'
+        const { error } = await supabase
+          .from('events')
+          .update({
+            status: action === 'approved' ? 'published' : 'rejected', // approved events become published
+            moderated_at: new Date().toISOString(),
+            moderated_by: 'admin',
+            moderation_reason: notes || null
           })
-        });
+          .eq('id', itemId);
         
-        if (!response.ok) throw new Error('Failed to update event');
+        if (error) {
+          console.error('Supabase event update error:', error);
+          throw new Error('Failed to update event: ' + error.message);
+        }
       } else if (item.type === 'newsroom_article') {
-        const response = await fetch(`/api/articles?id=${itemId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            status: action === 'approved' ? 'approved' : 'rejected',
-            moderatorNotes: notes,
-            moderatedAt: new Date().toISOString(),
-            moderatedBy: 'admin'
+        const { error } = await supabase
+          .from('newsroom_articles')
+          .update({
+            status: action === 'approved' ? 'published' : 'rejected', // approved articles become published
+            moderated_at: new Date().toISOString(),
+            moderated_by: 'admin',
+            moderation_reason: notes || null,
+            published_at: action === 'approved' ? new Date().toISOString() : null
           })
-        });
+          .eq('id', itemId);
         
-        if (!response.ok) throw new Error('Failed to update article');
+        if (error) {
+          console.error('Supabase article update error:', error);
+          throw new Error('Failed to update article: ' + error.message);
+        }
       }
 
       // Remove from moderation queue (since it's no longer pending)
       setModerationQueue(prev => prev.filter(i => i.id !== itemId));
+
+      // Show success message
+      console.log(`✅ Successfully ${action} ${item.type}: "${item.title}"`);
+      showSuccess(`Successfully ${action} ${item.type}: "${item.title}"`);
 
       // Update stats
       setStats(prev => ({
@@ -216,12 +252,21 @@ const ModerationDashboard: React.FC = () => {
     }
   };
 
+  console.log('🔍 FILTERING QUEUE:', {
+    moderationQueueLength: moderationQueue.length,
+    selectedFilter,
+    searchQuery,
+    moderationQueue
+  });
+
   const filteredQueue = moderationQueue.filter(item => {
     const matchesFilter = selectedFilter === 'all' || item.type === selectedFilter;
     const matchesSearch = searchQuery === '' || 
       item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.submittedBy.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesFilter && matchesSearch && item.status === 'pending';
+    const shouldShow = matchesFilter && matchesSearch;
+    console.log('🔍 FILTERING ITEM:', item.title, 'Status:', item.status, 'Filter:', selectedFilter, 'Matches Filter:', matchesFilter, 'Matches Search:', matchesSearch, 'WILL SHOW:', shouldShow);
+    return shouldShow;
   });
 
   if (loading) {

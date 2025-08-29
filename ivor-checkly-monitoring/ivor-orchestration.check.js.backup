@@ -1,0 +1,159 @@
+/**
+ * IVOR Service Orchestration Quality Check
+ * 
+ * Monitors IVOR service coordination and prevents cascade failures
+ * that cause weak responses or premature fallbacks
+ */
+
+import { ApiCheck, AssertionBuilder } from 'checkly/constructs';
+
+const IVOR_API_GATEWAY = process.env.IVOR_API_GATEWAY || 'https://ivor-api-gateway-1yhe12lks-robs-projects-54d653d3.vercel.app';
+const TELEGRAM_WEBHOOK = process.env.CHECKLY_TELEGRAM_WEBHOOK;
+
+// Check 1: System Disruptor Pathway Orchestration
+new ApiCheck('ivor-system-disruptor-pathway', {
+  name: 'IVOR System Disruptor Pathway Response',
+  tags: ['ivor', 'orchestration', 'pathways'],
+  maxResponseTime: 8000,
+  degradedResponseTime: 3000,
+  
+  request: {
+    method: 'POST',
+    url: `${IVOR_API_GATEWAY}/api/chat`,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      message: 'I need help organizing community action around housing justice for Black queer folks',
+      context: { 
+        pathway: 'System Disruptor', 
+        focus: 'housing justice',
+        urgency: 'high'
+      }
+    })
+  },
+
+  assertions: [
+    AssertionBuilder.statusCode().equals(200),
+    AssertionBuilder.responseTime().lessThan(8000),
+    
+    // Verify high-quality orchestrated response
+    AssertionBuilder.jsonBody('$.communityFocused').equals(true),
+    AssertionBuilder.jsonBody('$.culturallyAffirming').equals(true),
+    AssertionBuilder.jsonBody('$.routedVia').equals('ivor-api-gateway'),
+    
+    // Response should be substantial (not fallback)
+    AssertionBuilder.jsonBody('$.response').isNotEmpty(),
+    
+    // Should NOT contain fallback indicators
+    AssertionBuilder.jsonBody('$.response').doesNotContain('offline mode'),
+    AssertionBuilder.jsonBody('$.response').doesNotContain('temporarily unavailable'),
+    AssertionBuilder.jsonBody('$.response').doesNotContain('fallback response')
+  ]
+});
+
+// Check 2: Community Healer Pathway Orchestration
+new ApiCheck('ivor-community-healer-pathway', {
+  name: 'IVOR Community Healer Pathway Response',
+  tags: ['ivor', 'orchestration', 'pathways'],
+  maxResponseTime: 8000,
+  degradedResponseTime: 3000,
+  
+  request: {
+    method: 'POST',
+    url: `${IVOR_API_GATEWAY}/api/chat`,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      message: 'Looking for trauma-informed support resources and healing circles in my area',
+      context: { 
+        pathway: 'Community Healer',
+        focus: 'trauma support'
+      }
+    })
+  },
+
+  assertions: [
+    AssertionBuilder.statusCode().equals(200),
+    AssertionBuilder.responseTime().lessThan(8000),
+    AssertionBuilder.jsonBody('$.communityFocused').equals(true),
+    AssertionBuilder.jsonBody('$.response').contains('heal'),
+    AssertionBuilder.jsonBody('$.response').isNotEmpty()
+  ]
+});
+
+// Check 3: Multi-Service Knowledge Orchestration
+new ApiCheck('ivor-multi-service-orchestration', {
+  name: 'IVOR Multi-Service Knowledge Query',
+  tags: ['ivor', 'orchestration', 'knowledge'],
+  maxResponseTime: 10000,
+  degradedResponseTime: 4000,
+  
+  request: {
+    method: 'POST',
+    url: `${IVOR_API_GATEWAY}/api/chat`,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      message: 'What organizing strategies work best for Black queer communities facing displacement?',
+      context: null // Test orchestration without explicit pathway
+    })
+  },
+
+  assertions: [
+    AssertionBuilder.statusCode().equals(200),
+    AssertionBuilder.responseTime().lessThan(10000),
+    AssertionBuilder.jsonBody('$.response').isNotEmpty(),
+    AssertionBuilder.jsonBody('$.targetService').exists()
+  ]
+});
+
+// Check 4: IVOR Health Status
+new ApiCheck('ivor-health-status', {
+  name: 'IVOR API Gateway Health Check',
+  tags: ['ivor', 'health', 'infrastructure'],
+  maxResponseTime: 5000,
+  degradedResponseTime: 2000,
+  
+  request: {
+    method: 'GET',
+    url: `${IVOR_API_GATEWAY}/api/health`,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  },
+
+  assertions: [
+    AssertionBuilder.statusCode().equals(200),
+    AssertionBuilder.responseTime().lessThan(5000),
+    AssertionBuilder.jsonBody('$.status').equals('healthy'),
+    AssertionBuilder.jsonBody('$.services').contains('ivor-core'),
+    AssertionBuilder.jsonBody('$.services').contains('ivor-community')
+  ]
+});
+
+// Check 5: IVOR Monitoring Dashboard
+new ApiCheck('ivor-monitoring-dashboard', {
+  name: 'IVOR Monitoring Dashboard Accessibility',
+  tags: ['ivor', 'monitoring', 'dashboard'],
+  maxResponseTime: 6000,
+  degradedResponseTime: 3000,
+  
+  request: {
+    method: 'GET',
+    url: 'https://ivor-monitoring-service.vercel.app',
+    headers: {
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+    }
+  },
+
+  assertions: [
+    AssertionBuilder.statusCode().equals(200),
+    AssertionBuilder.responseTime().lessThan(6000),
+    AssertionBuilder.textBody().contains('ivor-frontend'),
+    AssertionBuilder.textBody().contains('ivor-api-gateway'),
+    AssertionBuilder.textBody().contains('ivor-core')
+  ]
+});

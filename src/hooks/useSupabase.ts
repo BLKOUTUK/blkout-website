@@ -31,13 +31,14 @@ export const useEvents = (filters: {
     } finally {
       setLoading(false)
     }
-  }, [filters])
+  }, [JSON.stringify(filters)]) // Serialize filters to avoid object reference issues
 
   useEffect(() => {
     fetchEvents()
 
-    // Set up real-time subscription
+    // Set up real-time subscription with stable callback
     const subscription = supabaseHelpers.subscribeToEvents(() => {
+      // Use the current fetchEvents function directly
       fetchEvents()
     })
 
@@ -122,7 +123,7 @@ export const useArticles = (filters: {
     } finally {
       setLoading(false)
     }
-  }, [filters])
+  }, [JSON.stringify(filters)])
 
   useEffect(() => {
     fetchArticles()

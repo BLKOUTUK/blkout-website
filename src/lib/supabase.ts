@@ -88,14 +88,7 @@ export const supabaseHelpers = {
   } = {}) {
     let query = supabase
       .from('events')
-      .select(`
-        *,
-        profiles (
-          id,
-          full_name,
-          avatar_url
-        )
-      `)
+      .select('*')
       .order('event_date', { ascending: true })
 
     if (filters.status) {
@@ -161,14 +154,7 @@ export const supabaseHelpers = {
   } = {}) {
     let query = supabase
       .from('newsroom_articles')
-      .select(`
-        *,
-        profiles (
-          id,
-          full_name,
-          avatar_url
-        )
-      `)
+      .select('*')
       .order('published_at', { ascending: false })
 
     if (filters.status) {

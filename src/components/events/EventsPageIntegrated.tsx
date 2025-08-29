@@ -7,10 +7,8 @@ import LoadingSpinner from '../common/LoadingSpinner'
 import ErrorBoundary from '../common/ErrorBoundary'
 import PageLoadingDebug from '../debug/PageLoadingDebug'
 import { useErrorHandler } from '../../hooks/useErrorHandler'
-import { eventsService, Event as EventType, EventStats } from '../../services/eventsService'
-
-// Use Event type from service
-type Event = EventType
+import { useEvents } from '../../hooks/useSupabase'
+import type { Event } from '../../types/supabase'
 
 interface FilterOptions {
   dateRange: 'all' | 'today' | 'week' | 'month'
@@ -356,15 +354,14 @@ const FilterBar: React.FC<{
 
 // Main Events Page Component
 const EventsPageIntegrated: React.FC = () => {
-  const [events, setEvents] = useState<Event[]>([])
+  // Use Supabase hook instead of eventsService
+  const { events, loading, error } = useEvents({ status: 'published' }) // Only show published events
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([])
-  const [loading, setLoading] = useState(true)
-  const [backendStatus, setBackendStatus] = useState<'checking' | 'connected' | 'offline'>('checking')
   const [stats, setStats] = useState({ pending: 0, approved: 0, rejected: 0, total: 0 })
   const [retryCount, setRetryCount] = useState(0)
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
   
-  const { error, hasError, handleAPIError, clearError, retry } = useErrorHandler({
+  const { error: handlerError, hasError, handleAPIError, clearError, retry } = useErrorHandler({
     showToast: true,
     retryable: true
   })
@@ -387,51 +384,27 @@ const EventsPageIntegrated: React.FC = () => {
     setSelectedEvent(null)
   }
 
-  const loadEvents = async () => {
-    try {
-      clearError()
-      setLoading(true)
-      setBackendStatus('checking')
-      
-      console.log('🔄 Loading events from service...')
-      
-      // Check backend health first
-      const healthCheck = await eventsService.checkBackendHealth()
-      console.log('📋 Health check result:', healthCheck)
-      setBackendStatus(healthCheck.available ? 'connected' : 'offline')
-      
-      // Load events and stats
-      const [eventsData, statsData] = await Promise.all([
-        eventsService.getAllEvents(),
-        eventsService.getEventStats()
-      ])
-      
-      console.log('✅ Events loaded successfully:', eventsData.length)
-      setEvents(eventsData)
-      setStats(statsData)
-      setLastUpdated(new Date())
-    } catch (error) {
-      console.error('❌ Error loading events:', error)
-      handleAPIError(error, 'events loading')
-      setBackendStatus('offline')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  // Load events on component mount
+  // Calculate stats from loaded events (published events only)
   useEffect(() => {
-    loadEvents()
-  }, [])
+    if (events) {
+      setStats({
+        pending: 0, // Not relevant for frontend
+        approved: events.length, // All loaded events are published/approved
+        rejected: 0, // Not relevant for frontend  
+        total: events.length
+      })
+    }
+  }, [events])
+
   
   const handleRetry = () => {
-    setRetryCount(prev => prev + 1)
-    retry(() => loadEvents())
+    // Hook will automatically retry on re-render
+    clearError()
   }
 
   // Filter events when filters change
   useEffect(() => {
-    let filtered = events.filter(event => event.status === 'approved' || event.status === 'published')
+    let filtered = events // All events are already published
 
     // Apply search filter
     if (filters.searchTerm) {

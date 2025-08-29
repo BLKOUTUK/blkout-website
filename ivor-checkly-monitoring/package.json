@@ -1,0 +1,18 @@
+{
+  "name": "ivor-checkly-monitoring",
+  "version": "1.0.0",
+  "description": "Checkly E2E monitoring for IVOR service orchestration",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "checkly:test": "checkly test",
+    "checkly:deploy": "checkly deploy",
+    "checkly:login": "checkly login"
+  },
+  "dependencies": {
+    "@playwright/test": "^1.40.0"
+  },
+  "devDependencies": {
+    "checkly": "^6.4.0"
+  }
+}

@@ -18,6 +18,9 @@ export interface Article {
   bookmarks: number
   slug: string
   originalUrl?: string
+  status?: 'published' | 'draft' | 'pending' | 'approved' | 'rejected'
+  created_at?: string
+  submitted_via?: string
 }
 
 import { ArticleImageGenerator } from '../utils/imageGenerator'
@@ -810,6 +813,47 @@ Communities where wisdom flows between generations, where young people are suppo
     bookmarks: 189,
     slug: 'intergenerational-healing-bridging-past-future',
     originalUrl: 'https://blkoutuk.com'
+  },
+  // Draft articles for moderation testing
+  {
+    id: 'draft_001',
+    title: 'Test Draft Article for Moderation Queue',
+    excerpt: 'This is a test draft article submitted through Chrome extension to test the moderation queue functionality',
+    content: 'This is the full content of the test draft article. It was submitted through the Chrome extension and should appear in the moderation dashboard for review.',
+    author: 'Chrome Extension',
+    publishedAt: '2024-08-29T11:45:00Z',
+    category: 'community-response',
+    tags: ['test', 'moderation', 'chrome-extension'],
+    featured: false,
+    image: generateArticleImage('community-response', 'draft_001'),
+    readTime: 2,
+    views: 0,
+    shares: 0,
+    bookmarks: 0,
+    slug: 'test-draft-article-moderation',
+    status: 'draft',
+    created_at: '2024-08-29T11:45:00Z',
+    submitted_via: 'chrome-extension'
+  },
+  {
+    id: 'draft_002',
+    title: 'Community Story Awaiting Review',
+    excerpt: 'A powerful story from the community about resilience and joy that needs moderator approval before publication',
+    content: 'This community-submitted story showcases the power of Black queer resilience and the importance of creating safe spaces for our voices to be heard.',
+    author: 'Community Member',
+    publishedAt: '2024-08-29T11:30:00Z',
+    category: 'original',
+    tags: ['community-submitted', 'resilience', 'safe-spaces'],
+    featured: false,
+    image: generateArticleImage('original', 'draft_002'),
+    readTime: 4,
+    views: 0,
+    shares: 0,
+    bookmarks: 0,
+    slug: 'community-story-awaiting-review',
+    status: 'pending',
+    created_at: '2024-08-29T11:30:00Z',
+    submitted_via: 'community-form'
   }
 ]
 
@@ -818,3 +862,5 @@ export const getFeaturedArticles = () => articles.filter(article => article.feat
 export const getRecentArticles = (limit = 6) => articles.filter(article => !article.featured).slice(0, limit)
 export const getArticlesByCategory = (category: Article['category']) => articles.filter(article => article.category === category)
 export const getArticleBySlug = (slug: string) => articles.find(article => article.slug === slug)
+export const getDraftArticles = () => articles.filter(article => article.status === 'draft' || article.status === 'pending')
+export const getPublishedArticles = () => articles.filter(article => !article.status || article.status === 'published')

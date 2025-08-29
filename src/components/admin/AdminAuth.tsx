@@ -8,9 +8,10 @@ interface AdminAuthProps {
   children: React.ReactNode
 }
 
-// 90-day temporary authentication system
-const ADMIN_PASSWORD = 'BLKOUT2025!Admin'
-const MODERATOR_PASSWORD = 'BLKOUT2025!Mod'
+// 90-day temporary authentication system - Unified Password with Role Differentiation
+const UNIFIED_PASSWORD = 'BLKOUT2025!'
+const ADMIN_SUFFIX = 'admin'
+const MODERATOR_SUFFIX = 'mod' 
 const EXPIRY_DATE = new Date('2025-11-17') // 90 days from August 19, 2025
 
 export default function AdminAuth({ children }: AdminAuthProps) {
@@ -54,14 +55,18 @@ export default function AdminAuth({ children }: AdminAuthProps) {
       return
     }
     
+    // Unified password system with role differentiation
     let role: 'admin' | 'moderator' | null = null
     
-    if (password === ADMIN_PASSWORD) {
+    if (password === `${UNIFIED_PASSWORD}${ADMIN_SUFFIX}`) {
       role = 'admin'
-    } else if (password === MODERATOR_PASSWORD) {
-      role = 'moderator'  
+    } else if (password === `${UNIFIED_PASSWORD}${MODERATOR_SUFFIX}`) {
+      role = 'moderator'
+    } else if (password === UNIFIED_PASSWORD) {
+      // Default to admin for base password
+      role = 'admin'
     } else {
-      setError('Invalid password. Contact administrators if you need access.')
+      setError('Invalid password. Use BLKOUT2025! (admin) or BLKOUT2025!mod (moderator)')
       setPassword('')
       return
     }
@@ -116,7 +121,7 @@ export default function AdminAuth({ children }: AdminAuthProps) {
               Admin Access Required
             </h1>
             <p className="text-indigo-200">
-              Enter admin or moderator password to access the dashboard
+              Enter BLKOUT2025! for admin access, or BLKOUT2025!mod for moderator access
             </p>
             
             {/* 90-Day Notice */}
@@ -136,7 +141,7 @@ export default function AdminAuth({ children }: AdminAuthProps) {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-indigo-200 mb-2">
-                Admin Password
+                BLKOUT Password
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-3 w-5 h-5 text-indigo-400" />
@@ -145,13 +150,13 @@ export default function AdminAuth({ children }: AdminAuthProps) {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-12 py-3 bg-indigo-800/50 border border-indigo-600 rounded text-white placeholder-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  placeholder="Enter admin password"
+                  className="w-full pl-10 pr-10 py-3 bg-indigo-950/50 border border-indigo-700/50 rounded-lg text-white placeholder-indigo-400 focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
+                  placeholder="BLKOUT2025! or BLKOUT2025!mod"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-3 text-indigo-400 hover:text-indigo-300 transition-colors"
+                  className="absolute right-3 top-3 text-indigo-400 hover:text-indigo-300"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -159,33 +164,18 @@ export default function AdminAuth({ children }: AdminAuthProps) {
             </div>
 
             {error && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="bg-red-900/30 border border-red-700/50 rounded p-3 text-red-200 text-sm"
-              >
-                {error}
-              </motion.div>
+              <div className="bg-red-900/30 border border-red-700/50 rounded-lg p-3">
+                <p className="text-red-200 text-sm">{error}</p>
+              </div>
             )}
 
-            <motion.button
+            <button
               type="submit"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full px-6 py-3 bg-gradient-to-r from-emerald-600 to-indigo-600 text-white font-bold rounded hover:from-emerald-500 hover:to-indigo-500 transition-all uppercase"
+              className="w-full bg-gradient-to-br from-emerald-500 to-indigo-600 text-white py-3 px-4 rounded-lg font-medium hover:from-emerald-600 hover:to-indigo-700 transition-all duration-200 transform hover:scale-105"
             >
-              Access Admin Panel
-            </motion.button>
+              Access Dashboard
+            </button>
           </form>
-
-          <div className="mt-6 text-center">
-            <a 
-              href="/" 
-              className="text-indigo-400 hover:text-indigo-300 transition-colors text-sm"
-            >
-              ← Back to Home
-            </a>
-          </div>
         </motion.div>
       </div>
     )
@@ -193,67 +183,22 @@ export default function AdminAuth({ children }: AdminAuthProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-indigo-900 to-slate-900">
-      {/* Admin Header with Logout */}
-      <div className="bg-indigo-900/50 backdrop-blur-sm border-b border-indigo-700/30 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-8 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-indigo-600 rounded-full flex items-center justify-center">
-                <Shield className="w-4 h-4 text-white" />
-              </div>
-              <div>
-                <h1 className="text-lg font-bold text-white">BLKOUT Admin Panel</h1>
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-1 px-2 py-1 bg-indigo-800/50 rounded">
-                    {userRole === 'admin' ? (
-                      <Crown className="w-3 h-3 text-yellow-400" />
-                    ) : (
-                      <Users className="w-3 h-3 text-blue-400" />
-                    )}
-                    <span className="text-xs text-indigo-200 capitalize font-medium">
-                      {userRole}
-                    </span>
-                  </div>
-                  {daysRemaining <= 30 && (
-                    <div className="flex items-center gap-1 px-2 py-1 bg-yellow-900/30 border border-yellow-700/50 rounded">
-                      <Calendar className="w-3 h-3 text-yellow-400" />
-                      <span className="text-xs text-yellow-200">
-                        {daysRemaining} days left
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              <nav className="flex space-x-4">
-                <a href="/admin" className="text-indigo-200 hover:text-white transition-colors text-sm">
-                  Dashboard
-                </a>
-                <a href="/admin/events" className="text-indigo-200 hover:text-white transition-colors text-sm">
-                  Events
-                </a>
-                <a href="/admin/newsroom" className="text-indigo-200 hover:text-white transition-colors text-sm">
-                  Newsroom
-                </a>
-                <a href="/admin/governance" className="text-indigo-200 hover:text-white transition-colors text-sm">
-                  Governance
-                </a>
-                <a href="/admin/moderation" className="text-indigo-200 hover:text-white transition-colors text-sm">
-                  Moderation
-                </a>
-              </nav>
-              <motion.button
-                onClick={handleLogout}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-2 px-3 py-1 bg-red-600/20 border border-red-600/30 text-red-200 rounded hover:bg-red-600/30 transition-colors text-sm"
-              >
-                <LogOut className="w-4 h-4" />
-                Sign Out
-              </motion.button>
-            </div>
+      {/* User info bar */}
+      <div className="bg-indigo-900/30 backdrop-blur-sm border-b border-indigo-700/30 px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            {userRole === 'admin' ? <Crown className="w-5 h-5 text-yellow-400" /> : <Users className="w-5 h-5 text-indigo-400" />}
+            <span className="text-white font-medium">
+              {userRole === 'admin' ? 'Administrator' : 'Moderator'} Access
+            </span>
           </div>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 text-indigo-200 hover:text-white transition-colors"
+          >
+            <LogOut className="w-4 h-4" />
+            <span className="text-sm">Logout</span>
+          </button>
         </div>
       </div>
       

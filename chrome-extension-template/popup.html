@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            width: 400px;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 80px;
+            resize: vertical;
+        }
+        button {
+            background: #6f2da8;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #5a2487;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .success {
+            color: green;
+            margin-top: 10px;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .tab {
+            flex: 1;
+            padding: 10px;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            text-align: center;
+        }
+        .tab.active {
+            background: #6f2da8;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="tabs">
+        <div class="tab active" data-tab="event">Submit Event</div>
+        <div class="tab" data-tab="article">Submit Article</div>
+    </div>
+
+    <div id="event-tab" class="tab-content active">
+        <form id="eventForm">
+            <div class="form-group">
+                <label>Event Title:</label>
+                <input type="text" id="eventTitle" required>
+            </div>
+            <div class="form-group">
+                <label>Description:</label>
+                <textarea id="eventDescription"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Date:</label>
+                <input type="date" id="eventDate" required>
+            </div>
+            <div class="form-group">
+                <label>Time:</label>
+                <input type="time" id="eventTime" value="18:00">
+            </div>
+            <div class="form-group">
+                <label>Location:</label>
+                <input type="text" id="eventLocation">
+            </div>
+            <button type="submit" id="submitEvent">Submit Event</button>
+        </form>
+    </div>
+
+    <div id="article-tab" class="tab-content">
+        <form id="articleForm">
+            <div class="form-group">
+                <label>Article Title:</label>
+                <input type="text" id="articleTitle" required>
+            </div>
+            <div class="form-group">
+                <label>Excerpt:</label>
+                <input type="text" id="articleExcerpt">
+            </div>
+            <div class="form-group">
+                <label>Content:</label>
+                <textarea id="articleContent"></textarea>
+            </div>
+            <button type="submit" id="submitArticle">Submit Article</button>
+        </form>
+    </div>
+
+    <div id="message"></div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

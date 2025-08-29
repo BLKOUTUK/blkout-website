@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "BLKOUT Community Assistant",
+  "description": "Submit events and articles to BLKOUT community platform with auto-detection",
+  "version": "1.1.6",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://eventbrite.com/*",
+    "https://www.eventbrite.com/*",
+    "https://facebook.com/*",
+    "https://www.facebook.com/*",
+    "https://meetup.com/*",
+    "https://www.meetup.com/*",
+    "https://blkout-beta.vercel.app/*",
+    "http://localhost:5173/*"
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "BLKOUT Community Assistant"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content-scripts/detector.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "icons": {
+    "128": "icons/icon128.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["content-scripts/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

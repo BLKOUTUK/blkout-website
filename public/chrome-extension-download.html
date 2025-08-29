@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BLKOUT Chrome Extension Download</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+        h1 { color: white; margin-bottom: 20px; }
+        .download-section {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .file-list {
+            display: grid;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 6px;
+        }
+        .download-btn {
+            background: white;
+            color: #6f2da8;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+        .download-btn:hover {
+            background: #f0f0f0;
+        }
+        .instructions {
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .step {
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+        }
+        .feature {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+        }
+        .feature:before {
+            content: "✅";
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔌 BLKOUT Chrome Extension v1.1</h1>
+        <p>Download the working Chrome extension with direct Supabase integration</p>
+
+        <div class="download-section">
+            <h2>📦 Extension Files</h2>
+            <p>Download all files below and extract them to a folder:</p>
+            
+            <div class="file-list">
+                <div class="file-item">
+                    <div>
+                        <strong>manifest.json</strong><br>
+                        <small>Extension manifest with permissions</small>
+                    </div>
+                    <a href="/chrome-extension/manifest.json" download class="download-btn">Download</a>
+                </div>
+                
+                <div class="file-item">
+                    <div>
+                        <strong>popup.html</strong><br>
+                        <small>Extension popup interface</small>
+                    </div>
+                    <a href="/chrome-extension/popup.html" download class="download-btn">Download</a>
+                </div>
+                
+                <div class="file-item">
+                    <div>
+                        <strong>popup.js</strong><br>
+                        <small>Main extension logic with Supabase integration</small>
+                    </div>
+                    <a href="/chrome-extension/popup.js" download class="download-btn">Download</a>
+                </div>
+                
+                <div class="file-item">
+                    <div>
+                        <strong>content.js</strong><br>
+                        <small>Content extraction script</small>
+                    </div>
+                    <a href="/chrome-extension/content.js" download class="download-btn">Download</a>
+                </div>
+                
+                <div class="file-item">
+                    <div>
+                        <strong>README.md</strong><br>
+                        <small>Installation instructions and documentation</small>
+                    </div>
+                    <a href="/chrome-extension/README.md" download class="download-btn">Download</a>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin: 20px 0;">
+                <button onclick="downloadAll()" class="download-btn" style="padding: 12px 24px; font-size: 16px;">
+                    📥 Download All Files
+                </button>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h2>🚀 Installation Instructions</h2>
+            
+            <div class="step">
+                <strong>Step 1:</strong> Download all files above to a folder (e.g., "blkout-extension")
+            </div>
+            
+            <div class="step">
+                <strong>Step 2:</strong> Open Chrome and go to <code>chrome://extensions/</code>
+            </div>
+            
+            <div class="step">
+                <strong>Step 3:</strong> Enable "Developer mode" (toggle in top-right corner)
+            </div>
+            
+            <div class="step">
+                <strong>Step 4:</strong> Click "Load unpacked" and select your extension folder
+            </div>
+            
+            <div class="step">
+                <strong>Step 5:</strong> Extension is installed! Visit any webpage and click the extension icon
+            </div>
+        </div>
+
+        <div class="download-section">
+            <h2>✨ Features</h2>
+            <div class="feature">Direct Supabase database integration</div>
+            <div class="feature">Fixed status values (events=pending, articles=draft)</div>
+            <div class="feature">Real moderation queue submissions</div>
+            <div class="feature">Auto-fill current page title and URL</div>
+            <div class="feature">Proper error handling and success messages</div>
+            <div class="feature">Works in Chrome, Edge, and Brave browsers</div>
+        </div>
+
+        <div class="instructions">
+            <h2>🔍 How to Test</h2>
+            <p>After installation:</p>
+            <ol>
+                <li>Visit any news website</li>
+                <li>Click the BLKOUT extension icon</li>
+                <li>Submit an event or article</li>
+                <li>Check the moderation dashboard at <code>localhost:5173/admin/moderation</code></li>
+                <li>Your submissions should appear immediately!</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function downloadAll() {
+            const files = [
+                '/chrome-extension/manifest.json',
+                '/chrome-extension/popup.html', 
+                '/chrome-extension/popup.js',
+                '/chrome-extension/content.js',
+                '/chrome-extension/README.md'
+            ];
+            
+            files.forEach((file, index) => {
+                setTimeout(() => {
+                    const link = document.createElement('a');
+                    link.href = file;
+                    link.download = file.split('/').pop();
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }, index * 500); // Stagger downloads by 500ms
+            });
+        }
+    </script>
+</body>
+</html>

@@ -8,7 +8,7 @@ import {
   Calendar, User, Tag, AlertCircle, CheckCircle,
   Plus, Search, Filter, Archive, Clock,
   Gavel, Scale, BarChart3, Users, Heart,
-  File, Image, Video, AudioLines, X
+  File, Image, Video, AudioLines, X, ArrowLeft, Home
 } from 'lucide-react'
 import LoadingSpinner from '../common/LoadingSpinner'
 import PageLoadingDebug from '../debug/PageLoadingDebug'
@@ -206,6 +206,24 @@ const GovernanceDocumentsAdmin: React.FC<GovernanceDocumentsAdminProps> = ({
         dependencies={['Supabase', 'Governance Hooks', 'File Upload']}
       />
       <div className="p-8">
+      {/* Navigation */}
+      <div className="flex items-center gap-4 mb-6">
+        <button
+          onClick={() => window.location.href = '/admin'}
+          className="flex items-center gap-2 px-4 py-2 bg-purple-800 hover:bg-purple-700 rounded-lg transition-colors text-sm text-white"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Hub
+        </button>
+        <button
+          onClick={() => window.location.href = '/admin'}
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors text-sm text-white"
+        >
+          <Home className="w-4 h-4" />
+          Integration Hub
+        </button>
+      </div>
+      
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>

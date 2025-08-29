@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "BLKOUT Community Submissions",
+  "version": "1.1",
+  "description": "Submit content to BLKOUT Community Platform",
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://bgjengudzfickgomjqmz.supabase.co/*",
+    "<all_urls>"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

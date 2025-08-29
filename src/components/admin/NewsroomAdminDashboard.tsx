@@ -7,7 +7,8 @@ import { motion } from 'framer-motion'
 import { 
   Newspaper, Plus, Edit3, Trash2, Eye, Share2, Filter, Search,
   CheckCircle, XCircle, AlertCircle, Clock, TrendingUp, Users,
-  Globe, Link2, Image, FileText, Video, Mic, Tag, Calendar, Wifi, WifiOff, Database
+  Globe, Link2, Image, FileText, Video, Mic, Tag, Calendar, Wifi, WifiOff, Database,
+  ArrowLeft, Home
 } from 'lucide-react'
 import PageLoadingDebug from '../debug/PageLoadingDebug'
 import { useArticles } from '../../hooks/useSupabase'
@@ -246,6 +247,22 @@ function NewsroomAdminDashboardContent() {
       {/* Header */}
       <div className="bg-indigo-900/50 backdrop-blur-sm border-b border-indigo-700/30">
         <div className="max-w-7xl mx-auto px-8 py-6">
+          <div className="flex items-center gap-4 mb-4">
+            <button
+              onClick={() => window.location.href = '/admin'}
+              className="flex items-center gap-2 px-4 py-2 bg-indigo-800 hover:bg-indigo-700 rounded-lg transition-colors text-sm"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Hub
+            </button>
+            <button
+              onClick={() => window.location.href = '/admin'}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors text-sm"
+            >
+              <Home className="w-4 h-4" />
+              Integration Hub
+            </button>
+          </div>
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-black text-white heading-block uppercase">

@@ -105,7 +105,7 @@ function showSubmissionOverlay(info) {
     
     try {
       const endpoint = type === 'event' ? '/events' : '/articles';
-      const response = await fetch('https://blkout-website.vercel.app/api' + endpoint, {
+      const response = await fetch('http://localhost:5175/api' + endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

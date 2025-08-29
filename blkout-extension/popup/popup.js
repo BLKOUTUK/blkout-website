@@ -1,5 +1,6 @@
 // BLKOUT Extension Popup Logic
-const API_BASE = 'https://blkout-beta.vercel.app/api';
+// For development - connect directly to the web app's window API
+const API_BASE = 'http://localhost:5173';
 
 class BlkoutPopup {
   constructor() {
@@ -260,6 +261,9 @@ class BlkoutPopup {
       if (this.detectedContent.type === 'event' && this.detectedContent.location) {
         document.getElementById('event-location').value = this.detectedContent.location;
       }
+      
+      // Show scraped info preview if available
+      this.showScrapedInfoPreview();
     } else {
       document.getElementById('type').value = type;
       document.getElementById('title').value = this.currentTab.title || '';
@@ -305,31 +309,47 @@ class BlkoutPopup {
     };
     
     if (type === 'event') {
-      // Event-specific fields
+      // Event-specific fields - match database schema
       submitData.date = formData.get('date') || new Date().toISOString().split('T')[0];
       submitData.time = formData.get('time') || '18:00';
-      submitData.duration = 120; // Default 2 hours
-      submitData.organizer = 'Community Submitted';
-      submitData.category = 'Community';
-      submitData.location = {
-        type: 'physical',
-        address: formData.get('location') || 'TBD'
-      };
-      submitData.capacity = 50;
-      submitData.featured = false;
-      submitData.status = 'draft';
+      submitData.location = formData.get('location') || 'TBD';
+      submitData.status = 'pending'; // Events need approval
       submitData.tags = ['community-submitted'];
+      
+      // Add scraped metadata
+      if (this.detectedContent?.moreInfoUrl) {
+        submitData.moreInfoUrl = this.detectedContent.moreInfoUrl;
+      }
+      if (this.detectedContent?.organizer) {
+        submitData.organizer = this.detectedContent.organizer;
+      }
+      if (this.detectedContent?.ticketInfo) {
+        submitData.ticketInfo = this.detectedContent.ticketInfo;
+      }
+      if (this.detectedContent?.attendeeCount) {
+        submitData.attendeeCount = this.detectedContent.attendeeCount;
+      }
+      if (this.detectedContent?.registrationLink) {
+        submitData.registrationLink = this.detectedContent.registrationLink;
+      }
     } else {
-      // Article-specific fields - match API structure
+      // Article-specific fields - match database schema
       submitData.excerpt = submitData.description; // API expects 'excerpt' not 'description'
       submitData.content = submitData.description; // Full content same as description for now
-      submitData.category = formData.get('category') || 'Community Response';
-      submitData.priority = 'medium';
-      submitData.type = 'community_response'; // Fixed type
-      submitData.author = 'Community Submitted';
+      submitData.category = 'community'; // Simplified category
       submitData.status = 'draft';
       submitData.tags = ['community-submitted'];
-      submitData.featured = false;
+      
+      // Add scraped metadata for articles
+      if (this.detectedContent?.moreInfoUrl) {
+        submitData.moreInfoUrl = this.detectedContent.moreInfoUrl;
+      }
+      if (this.detectedContent?.publishDate) {
+        submitData.publishDate = this.detectedContent.publishDate;
+      }
+      if (this.detectedContent?.section) {
+        submitData.section = this.detectedContent.section;
+      }
       
       // Remove description since API uses excerpt/content
       delete submitData.description;
@@ -338,29 +358,27 @@ class BlkoutPopup {
     this.showStatus('Submitting...', 'info');
     
     try {
-      const endpoint = type === 'event' ? '/events' : '/articles';
-      console.log('Submitting to:', API_BASE + endpoint);
-      console.log('Submit data:', submitData);
+      console.log('Submitting to BLKOUT:', submitData);
       
-      const response = await fetch(API_BASE + endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(submitData)
+      // Use content script to access the web app's API
+      const results = await chrome.scripting.executeScript({
+        target: { tabId: this.currentTab.id },
+        func: this.submitToBlkout,
+        args: [submitData, type]
       });
       
-      console.log('Response status:', response.status);
-      const responseData = await response.json();
-      console.log('Response data:', responseData);
-      
-      if (response.ok && responseData.success) {
-        this.showStatus('✅ Successfully submitted to BLKOUT! Moderators will review it shortly.', 'success');
-        setTimeout(() => {
-          window.close();
-        }, 2000);
+      if (results && results[0] && results[0].result) {
+        const result = results[0].result;
+        if (result.success) {
+          this.showStatus('✅ Successfully submitted to BLKOUT! Moderators will review it shortly.', 'success');
+          setTimeout(() => {
+            window.close();
+          }, 2000);
+        } else {
+          throw new Error(result.error || 'Submission failed');
+        }
       } else {
-        throw new Error(`Submission failed: ${responseData.message || responseData.error || 'Unknown error'}`);
+        throw new Error('Failed to connect to BLKOUT platform');
       }
     } catch (error) {
       console.error('Submission error:', error);
@@ -368,6 +386,101 @@ class BlkoutPopup {
     }
   }
   
+  showScrapedInfoPreview() {
+    if (!this.detectedContent) return;
+    
+    const formEl = document.getElementById('submission-form');
+    let previewEl = document.getElementById('scraped-info-preview');
+    
+    // Create preview element if it doesn't exist
+    if (!previewEl) {
+      previewEl = document.createElement('div');
+      previewEl.id = 'scraped-info-preview';
+      previewEl.style.cssText = `
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+        padding: 12px;
+        margin: 15px 0;
+        font-size: 12px;
+        line-height: 1.4;
+      `;
+      formEl.insertBefore(previewEl, document.getElementById('status-message'));
+    }
+    
+    let previewContent = '<strong>📋 Scraped Information:</strong><br>';
+    
+    if (this.detectedContent.moreInfoUrl && this.detectedContent.moreInfoUrl !== this.detectedContent.url) {
+      previewContent += `🔗 <strong>More Info:</strong> <a href="${this.detectedContent.moreInfoUrl}" target="_blank">View Details</a><br>`;
+    }
+    
+    if (this.detectedContent.organizer) {
+      previewContent += `👤 <strong>Organizer:</strong> ${this.detectedContent.organizer}<br>`;
+    }
+    
+    if (this.detectedContent.ticketInfo) {
+      previewContent += `🎫 <strong>Tickets:</strong> ${this.detectedContent.ticketInfo}<br>`;
+    }
+    
+    if (this.detectedContent.attendeeCount) {
+      previewContent += `👥 <strong>Attendees:</strong> ${this.detectedContent.attendeeCount}<br>`;
+    }
+    
+    if (this.detectedContent.publishDate) {
+      previewContent += `📅 <strong>Published:</strong> ${this.detectedContent.publishDate}<br>`;
+    }
+    
+    if (this.detectedContent.section) {
+      previewContent += `📰 <strong>Section:</strong> ${this.detectedContent.section}<br>`;
+    }
+    
+    if (this.detectedContent.registrationLink) {
+      previewContent += `📝 <strong>Registration:</strong> <a href="${this.detectedContent.registrationLink}" target="_blank">Sign Up</a><br>`;
+    }
+    
+    previewEl.innerHTML = previewContent;
+  }
+
+  // Content script function to submit data via the web app
+  async submitToBlkout(submitData, type) {
+    try {
+      // Check if we're on the BLKOUT website and can access the API
+      if (window.location.hostname === 'localhost' && window.BlkoutExtensionApi) {
+        if (type === 'event') {
+          const result = await window.BlkoutExtensionApi.submitEvent(submitData);
+          return { success: true, data: result };
+        } else {
+          // Ensure we have excerpt for articles
+          if (!submitData.excerpt && submitData.description) {
+            submitData.excerpt = submitData.description;
+            delete submitData.description;
+          }
+          const result = await window.BlkoutExtensionApi.submitArticle(submitData);
+          return { success: true, data: result };
+        }
+      } else {
+        // Fallback to direct API call for production
+        const endpoint = type === 'event' ? '/events' : '/articles';
+        const response = await fetch(`https://blkout-beta.vercel.app/api${endpoint}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(submitData)
+        });
+        
+        const responseData = await response.json();
+        if (response.ok && responseData.success) {
+          return { success: true, data: responseData };
+        } else {
+          return { success: false, error: responseData.message || responseData.error || 'Unknown error' };
+        }
+      }
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  }
+
   showStatus(message, type) {
     const statusEl = document.getElementById('status-message');
     statusEl.innerHTML = message;

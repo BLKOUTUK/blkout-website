@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chrome Extension Test Form</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <h1>Chrome Extension Submission Test</h1>
+    
+    <h2>Test Event Submission</h2>
+    <form id="eventForm">
+        <input type="text" id="eventTitle" placeholder="Event Title" value="Real Extension Test Event" required>
+        <input type="text" id="eventDescription" placeholder="Description" value="Testing real extension submission">
+        <input type="date" id="eventDate" value="2025-04-15" required>
+        <input type="time" id="eventTime" value="19:00" required>
+        <input type="text" id="eventLocation" placeholder="Location" value="Community Center">
+        <button type="submit">Submit Event</button>
+    </form>
+
+    <h2>Test Article Submission</h2>
+    <form id="articleForm">
+        <input type="text" id="articleTitle" placeholder="Article Title" value="Real Extension Test Article" required>
+        <input type="text" id="articleExcerpt" placeholder="Excerpt" value="Testing real extension submission">
+        <textarea id="articleContent" placeholder="Content">This is a real test article submitted through the Chrome extension API simulation. This should appear in the moderation queue.</textarea>
+        <button type="submit">Submit Article</button>
+    </form>
+
+    <div id="results"></div>
+
+    <script>
+        // Initialize Supabase
+        const { createClient } = supabase;
+        const supabaseClient = createClient(
+            'https://bgjengudzfickgomjqmz.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJnamVuZ3VkemZpY2tnb21qcW16Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU2MTI3NjcsImV4cCI6MjA3MTE4ODc2N30.kYQ2oFuQBGmu4V_dnj_1zDMDVsd-qpDZJwNvswzO6M0'
+        );
+
+        function showResult(message, success = true) {
+            const results = document.getElementById('results');
+            results.innerHTML += `<div style="color: ${success ? 'green' : 'red'}; margin: 10px 0;">${message}</div>`;
+        }
+
+        // Event form submission
+        document.getElementById('eventForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            try {
+                const { data, error } = await supabaseClient
+                    .from('events')
+                    .insert([{
+                        title: document.getElementById('eventTitle').value,
+                        description: document.getElementById('eventDescription').value,
+                        date: document.getElementById('eventDate').value,
+                        start_time: document.getElementById('eventTime').value + ':00',
+                        location: document.getElementById('eventLocation').value,
+                        cost: 'Free',
+                        registration_required: false,
+                        status: 'pending', // Events must be 'pending'
+                        source: 'chrome-extension-test',
+                        tags: ['extension-test', 'real-submission'],
+                        created_at: new Date().toISOString()
+                    }])
+                    .select();
+
+                if (error) {
+                    showResult(`❌ Event submission failed: ${error.message}`, false);
+                } else {
+                    showResult(`✅ Event submitted successfully! ID: ${data[0].id}`);
+                }
+            } catch (error) {
+                showResult(`💥 Error: ${error.message}`, false);
+            }
+        });
+
+        // Article form submission
+        document.getElementById('articleForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            try {
+                const { data, error } = await supabaseClient
+                    .from('newsroom_articles')
+                    .insert([{
+                        title: document.getElementById('articleTitle').value,
+                        excerpt: document.getElementById('articleExcerpt').value,
+                        content: document.getElementById('articleContent').value,
+                        status: 'draft',
+                        source_url: 'chrome-extension-test',
+                        community_funded: false,
+                        created_at: new Date().toISOString()
+                    }])
+                    .select();
+
+                if (error) {
+                    showResult(`❌ Article submission failed: ${error.message}`, false);
+                } else {
+                    showResult(`✅ Article submitted successfully! ID: ${data[0].id}`);
+                }
+            } catch (error) {
+                showResult(`💥 Error: ${error.message}`, false);
+            }
+        });
+    </script>
+</body>
+</html>
