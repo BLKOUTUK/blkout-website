@@ -13,40 +13,69 @@ function App() {
         </h1>
         
         <p className="text-xl text-indigo-200 mb-12 max-w-3xl mx-auto leading-relaxed">
-          🚨 DEMONSTRATION SITE: Speculative platform capabilities showcase.
-          NOT a real community platform - built to show potential technical architecture.
+          A community-owned platform for Black queer liberation, cooperative ownership, and democratic governance.
         </p>
         
         <div className="flex flex-wrap justify-center gap-6 mb-16">
           <a
             href="/newsroom"
-            className="px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold rounded-full hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+            className="px-8 py-4 bg-gradient-to-r from-slate-600 to-blue-600 text-white font-bold rounded-full hover:from-slate-700 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl"
           >
-            Newsroom
+            📰 Newsroom
           </a>
           
           <a
             href="/events"
-            className="px-8 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold rounded-full hover:from-emerald-700 hover:to-teal-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+            className="px-8 py-4 bg-gradient-to-r from-amber-600 to-orange-600 text-white font-bold rounded-full hover:from-amber-700 hover:to-orange-700 transition-all duration-300 shadow-lg hover:shadow-xl"
           >
-            Events
+            📅 Events
+          </a>
+          
+          <a
+            href="/governance"
+            className="px-8 py-4 bg-gradient-to-r from-purple-600 to-violet-600 text-white font-bold rounded-full hover:from-purple-700 hover:to-violet-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+          >
+            🏛️ Governance
+          </a>
+          
+          <a
+            href="/movement"
+            className="px-8 py-4 bg-gradient-to-r from-red-600 to-yellow-600 text-white font-bold rounded-full hover:from-red-700 hover:to-yellow-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+          >
+            ✊🏿 Our Movement
           </a>
           
           <a
             href="https://blkoutnxt-ivor-frontend.vercel.app/"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-bold rounded-full hover:from-blue-700 hover:to-cyan-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+            className="px-8 py-4 bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-bold rounded-full hover:from-teal-700 hover:to-cyan-700 transition-all duration-300 shadow-lg hover:shadow-xl"
           >
-            Chat with IVOR
+            🤖 Chat with IVOR
           </a>
         </div>
 
         <div className="text-center text-white">
-          <h2 className="text-2xl font-bold mb-4">Phase 1 Complete</h2>
-          <p className="text-gray-300">
-            Functional color delineation system implemented with liberation-focused design
-          </p>
+          <h2 className="text-2xl font-bold mb-4">Our Values</h2>
+          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            <div className="text-center p-6 bg-white/5 rounded-lg">
+              <div className="text-4xl mb-4">🏳️‍⚧️</div>
+              <h3 className="text-xl font-bold text-white mb-2">Trans Liberation</h3>
+              <p className="text-gray-300">Centering trans joy and safety in all we do</p>
+            </div>
+            
+            <div className="text-center p-6 bg-white/5 rounded-lg">
+              <div className="text-4xl mb-4">🤝</div>
+              <h3 className="text-xl font-bold text-white mb-2">Cooperative Ownership</h3>
+              <p className="text-gray-300">Community-owned, democratically governed</p>
+            </div>
+            
+            <div className="text-center p-6 bg-white/5 rounded-lg">
+              <div className="text-4xl mb-4">✊🏿</div>
+              <h3 className="text-xl font-bold text-white mb-2">Black Power</h3>
+              <p className="text-gray-300">Liberation through collective action</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
