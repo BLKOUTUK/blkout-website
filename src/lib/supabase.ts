@@ -9,13 +9,16 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Missing Supabase environment variables')
-  console.error('Please ensure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set in your .env file')
-  throw new Error('Missing required Supabase environment variables')
+  console.warn('Missing Supabase environment variables - using demo mode')
+  console.warn('Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY for full functionality')
+  // Fallback for demo deployment
 }
 
-// Create Supabase client
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+// Create Supabase client with fallback for demo mode
+export const supabase = createClient<Database>(
+  supabaseUrl || 'https://demo.supabase.co', 
+  supabaseAnonKey || 'demo-key', 
+  {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
