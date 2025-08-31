@@ -32,6 +32,13 @@ export default {
           black: '#000000'
         }
       },
+      backgroundImage: {
+        'function-ai': 'linear-gradient(to bottom right, rgb(17 94 89), rgb(6 78 59), rgb(15 23 42))',
+        'function-community': 'linear-gradient(to bottom right, rgb(120 53 15), rgb(154 52 18), rgb(127 29 29))',
+        'function-news': 'linear-gradient(to bottom right, rgb(15 23 42), rgb(17 24 39), rgb(23 37 84))',
+        'function-governance': 'linear-gradient(to bottom right, rgb(59 7 100), rgb(76 5 82), rgb(67 56 202))',
+        'function-liberation': 'linear-gradient(135deg, rgb(124 58 237), rgb(225 29 72), rgb(245 158 11), rgb(16 185 129))'
+      },
       fontFamily: {
         'sans': ['Inter', 'system-ui', 'sans-serif'],
         'display': ['Poppins', 'Inter', 'sans-serif'],

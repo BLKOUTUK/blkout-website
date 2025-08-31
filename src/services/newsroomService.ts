@@ -3,6 +3,7 @@
 
 import { supabase, supabaseHelpers } from '../lib/supabase'
 import type { NewsArticle, NewsroomStats, Database } from '../types/supabase'
+import type { SocialShareContent } from './ivorSocialIntegration'
 
 // Legacy interface for backward compatibility
 interface LegacyNewsArticle {

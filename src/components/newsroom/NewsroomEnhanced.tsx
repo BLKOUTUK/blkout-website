@@ -51,26 +51,7 @@ const CONTENT_CATEGORIES = {
   }
 }
 
-// Newsroom content will be populated from real backend data
-// Removed mock articles to maintain content authenticity
-// Fallback articles for when API is unavailable
-const fallbackArticles = [
-  {
-    id: 'fallback_001',
-    title: 'BLKOUT Newsroom Loading',
-    excerpt: 'Loading live content from our community contributors and newsroom team.',
-    category: 'System',
-    author: 'BLKOUT Team',
-    publishedAt: new Date().toISOString(),
-    image: '/images/squared/WELLDEF_SQUARED.png',
-    featured: false,
-    tags: ['loading'],
-    priority: 'medium',
-    readTime: 1,
-    isBreaking: false,
-    source: 'System'
-  }
-]
+// No fallback articles in Phase 1 - show empty state when no real data available
 
 // Newsroom Hero Section
 const NewsroomHero = ({ backendStatus }: { backendStatus: string }) => (
@@ -213,27 +194,20 @@ const NewsroomHero = ({ backendStatus }: { backendStatus: string }) => (
           </motion.div>
         )}
 
-        {/* Quick Stats */}
+        {/* Community Newsroom Notice */}
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.8 }}
-          className="grid grid-cols-3 gap-8 max-w-2xl mx-auto"
+          className="max-w-2xl mx-auto text-center"
         >
-          {[
-            { label: 'STORIES TODAY', value: '12' },
-            { label: 'SOURCES MONITORED', value: '47' },
-            { label: 'COMMUNITY UPDATES', value: '8' }
-          ].map((stat, index) => (
-            <div key={index} className="text-center">
-              <div className="text-3xl md:text-4xl font-black text-white heading-block mb-2">
-                {stat.value}
-              </div>
-              <div className="text-sm text-indigo-300 font-mono uppercase tracking-wider">
-                {stat.label}
-              </div>
-            </div>
-          ))}
+          <div className="bg-indigo-800/20 border border-indigo-700/30 rounded-xl p-6">
+            <h3 className="text-lg font-bold text-indigo-200 mb-2">Phase 1 Development</h3>
+            <p className="text-indigo-300 text-sm">
+              Newsroom integration with community contributors and automated content aggregation 
+              coming in Phase 2. Real articles will be displayed when content APIs are connected.
+            </p>
+          </div>
         </motion.div>
       </motion.div>
     </div>
@@ -411,7 +385,7 @@ const NewsArticlesGrid = ({ articles, loading, onRefresh }: {
 )
 
 export default function NewsroomEnhanced() {
-  const [articles, setArticles] = useState(fallbackArticles)
+  const [articles, setArticles] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [backendStatus, setBackendStatus] = useState<'checking' | 'connected' | 'offline'>('checking')
   const [selectedCategory, setSelectedCategory] = useState('All')
@@ -486,7 +460,8 @@ export default function NewsroomEnhanced() {
       console.error('❌ Error fetching articles:', error)
       handleAPIError(error, 'newsroom API')
       setBackendStatus('offline')
-      // Keep fallback articles on error
+      // No fallback data - show empty state in Phase 1
+      setArticles([])
     } finally {
       setLoading(false)
     }

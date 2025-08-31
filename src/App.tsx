@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
+import { IntegrationProvider } from './components/CrossComponentIntegration'
+import EcosystemNavigationHub from './components/EcosystemNavigationHub'
 import { motion } from 'framer-motion'
 
 // Core application components
@@ -15,6 +17,22 @@ import ModerationDashboard from './components/admin/ModerationDashboard'
 import NewsroomEnhanced from './components/newsroom/NewsroomEnhanced'
 import EventsPageIntegrated from './components/events/EventsPageIntegrated'
 import IvorChatbot from './components/blkout/IvorChatbot'
+
+// IVOR Community Liberation Platform
+import IVOR from './pages/IVOR'
+import LiveEventsPage from './pages/LiveEventsPage'
+import UnifiedExperiencePage from './pages/UnifiedExperiencePage'
+import ChromeExtensionPage from './pages/ChromeExtensionPage'
+import DemoScenariosPage from './pages/DemoScenariosPage'
+import OnboardingPage from './pages/OnboardingPage'
+import LaunchShowcasePage from './pages/LaunchShowcasePage'
+import OrganizationContributionsPage from './pages/OrganizationContributionsPage'
+import BetaUserFlowPage from './pages/BetaUserFlowPage'
+import LiveCommunityShowcasePage from './pages/LiveCommunityShowcasePage'
+import StoryAmplificationPage from './pages/StoryAmplificationPage'
+import LaunchPreparationPage from './pages/LaunchPreparationPage'
+import StakeholderDemoPage from './pages/StakeholderDemoPage'
+import DemonstrationBanner from './components/DemonstrationBanner'
 
 // Import Extension API to make it available globally
 import './services/extensionApi'
@@ -110,18 +128,18 @@ const Homepage = () => (
           </h1>
           
           <p className="text-xl text-indigo-200 mb-12 max-w-3xl mx-auto leading-relaxed">
-            Liberation through collective action and cooperative ownership. 
-            Building power, sharing resources, and centering Black queer joy.
+            🚨 DEMONSTRATION SITE: Speculative platform capabilities showcase.
+            NOT a real community platform - built to show potential technical architecture.
           </p>
           
           <div className="flex flex-wrap justify-center gap-6 mb-16">
             <motion.a
-              href="/governance"
+              href="/onboarding"
               className="px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold rounded-full hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              Community Governance
+              Get Started
             </motion.a>
             
             <motion.a
@@ -220,23 +238,42 @@ const NotFoundPage = () => (
 
 function App() {
   return (
-    <Router>
-      <SkipNavigation />
-      <ScrollToTop />
-      
-      
-      <Routes>
+    <IntegrationProvider>
+      <Router>
+        <SkipNavigation />
+        <ScrollToTop />
+        <DemonstrationBanner />
+        <EcosystemNavigationHub />
+        
+        <Routes>
         {/* Main routes */}
         <Route path="/" element={<Homepage />} />
         
         {/* Community and governance */}
-        <Route path="/governance" element={<GovernancePage />} />
-        <Route path="/movement" element={<PlatformLayout><MovementIntroEnhanced /></PlatformLayout>} />
+        <Route path="/governance" element={<div className="min-h-screen bg-gradient-to-br from-purple-950 via-violet-950 to-indigo-950"><GovernancePage /></div>} />
+        <Route path="/movement" element={<div className="min-h-screen bg-gradient-to-br from-red-950 via-yellow-950 to-green-950"><PlatformLayout><MovementIntroEnhanced /></PlatformLayout></div>} />
         
         {/* Content pages */}
-        <Route path="/newsroom" element={<PlatformLayout><NewsroomEnhanced /></PlatformLayout>} />
-        <Route path="/events" element={<PlatformLayout><EventsPageIntegrated /></PlatformLayout>} />
+        <Route path="/newsroom" element={<div className="min-h-screen bg-gradient-to-br from-slate-950 via-gray-950 to-blue-950"><PlatformLayout><NewsroomEnhanced /></PlatformLayout></div>} />
+        <Route path="/events" element={<div className="min-h-screen bg-gradient-to-br from-amber-950 via-orange-950 to-red-950"><PlatformLayout><EventsPageIntegrated /></PlatformLayout></div>} />
         
+        {/* IVOR Community Liberation Platform - AI/Tech sections */}
+        <Route path="/ivor" element={<div className="min-h-screen bg-gradient-to-br from-teal-950 via-cyan-950 to-slate-950"><IVOR /></div>} />
+        
+        {/* New ecosystem pages - Community/Events sections */}
+        <Route path="/live-events" element={<div className="min-h-screen bg-gradient-to-br from-amber-950 via-orange-950 to-red-950"><PlatformLayout><LiveEventsPage /></PlatformLayout></div>} />
+        <Route path="/dashboard" element={<div className="min-h-screen bg-gradient-to-br from-amber-950 via-orange-950 to-red-950"><PlatformLayout><LiveCommunityShowcasePage /></PlatformLayout></div>} />
+        <Route path="/ecosystem" element={<PlatformLayout><UnifiedExperiencePage /></PlatformLayout>} />
+        <Route path="/extension" element={<div className="min-h-screen bg-gradient-to-br from-teal-950 via-cyan-950 to-slate-950"><PlatformLayout><ChromeExtensionPage /></PlatformLayout></div>} />
+        <Route path="/demo" element={<PlatformLayout><DemoScenariosPage /></PlatformLayout>} />
+        <Route path="/onboarding" element={<PlatformLayout><OnboardingPage /></PlatformLayout>} />
+        <Route path="/launch" element={<PlatformLayout><LaunchShowcasePage /></PlatformLayout>} />
+        <Route path="/partnerships" element={<div className="min-h-screen bg-gradient-to-br from-amber-950 via-orange-950 to-red-950"><PlatformLayout><OrganizationContributionsPage /></PlatformLayout></div>} />
+        <Route path="/beta-flow" element={<PlatformLayout><BetaUserFlowPage /></PlatformLayout>} />
+        <Route path="/amplification" element={<div className="min-h-screen bg-gradient-to-br from-slate-950 via-gray-950 to-blue-950"><PlatformLayout><StoryAmplificationPage /></PlatformLayout></div>} />
+        <Route path="/launch-prep" element={<PlatformLayout><LaunchPreparationPage /></PlatformLayout>} />
+        <Route path="/stakeholder-demo" element={<PlatformLayout><StakeholderDemoPage /></PlatformLayout>} />
+
         {/* Admin routes */}
         <Route path="/admin" element={<AdminAuth><IntegrationDashboard /></AdminAuth>} />
         <Route path="/admin/moderation" element={<AdminAuth><ModerationDashboard /></AdminAuth>} />
@@ -246,11 +283,12 @@ function App() {
         
         {/* 404 */}
         <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-      
-      {/* IVOR Chatbot - Available on all pages */}
-      <IvorChatbot />
-    </Router>
+        </Routes>
+        
+        {/* IVOR Chatbot - Available on all pages */}
+        <IvorChatbot />
+      </Router>
+    </IntegrationProvider>
   )
 }
 

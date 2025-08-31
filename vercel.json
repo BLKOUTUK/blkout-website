@@ -1,24 +1,9 @@
 {
-  "name": "blkout-governance",
   "version": 2,
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "framework": null,
   "installCommand": "npm ci --prefer-offline --no-audit",
-  "functions": {
-    "api/events.js": {
-      "memory": 1024
-    },
-    "api/articles.js": {
-      "memory": 1024
-    },
-    "api/webhooks/n8n-events.js": {
-      "memory": 512
-    },
-    "api/webhooks/n8n-newsroom.js": {
-      "memory": 512
-    }
-  },
   "headers": [
     {
       "source": "/(.*)",

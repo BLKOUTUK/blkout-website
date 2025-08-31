@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MessageCircle, X, Send, Wifi, WifiOff } from 'lucide-react'
-import { ivorService } from '../../services/ivorService'
+import { ivorAPI } from '../../lib/api-client'
 
 /**
  * IvorChatbot - IVOR beta integration for community interaction
@@ -26,23 +26,14 @@ export default function IvorChatbot() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: "Hey! I'm IVOR, BLKOUT's community AI. I'm here to help connect you with our movement for cooperative ownership. What brings you to our community today?",
+      text: "Welcome to IVOR! I'm here to support your liberation journey with culturally affirming, community-centered guidance. I understand where you are in your empowerment journey and provide specific resources focused on Black queer liberation goals. How can I support you today?",
       sender: 'ivor',
       timestamp: new Date()
     }
   ])
   const [inputText, setInputText] = useState('')
-  const [isConnected, setIsConnected] = useState<boolean | null>(null)
+  const [isConnected, setIsConnected] = useState<boolean>(true) // Always connected in demo mode
   const [isTyping, setIsTyping] = useState(false)
-
-  // Check IVOR connection status on mount
-  useEffect(() => {
-    const checkConnection = async () => {
-      const connected = await ivorService.checkConnection()
-      setIsConnected(connected)
-    }
-    checkConnection()
-  }, [])
 
   const sendMessage = async () => {
     if (!inputText.trim()) return
@@ -62,41 +53,59 @@ export default function IvorChatbot() {
     try {
       // Get pathway context from localStorage for personalized responses
       const pathwayContext = localStorage.getItem('pathwayContext')
-      let context = null
+      let context = {}
       try {
-        context = pathwayContext ? JSON.parse(pathwayContext) : null
+        context = pathwayContext ? JSON.parse(pathwayContext) : {}
       } catch (e) {
-        // Ignore parsing errors
+        context = {}
       }
 
-      // Call real IVOR service
-      const response = await ivorService.sendMessage(messageText, context)
+      // Use enhanced IVOR API client with demo mode
+      const response = await ivorAPI.generateIntelligentResponse(
+        messageText, 
+        context, 
+        `chat_widget_${Date.now()}`
+      )
       
-      const ivorResponse: Message = {
-        id: (Date.now() + 1).toString(),
-        text: response.message || "I'm here to help with your community needs!",
-        sender: 'ivor',
-        timestamp: new Date()
+      if (response.success && response.data) {
+        const ivorResponse: Message = {
+          id: (Date.now() + 1).toString(),
+          text: response.data.message,
+          sender: 'ivor',
+          timestamp: new Date()
+        }
+        
+        setMessages(prev => [...prev, ivorResponse])
+        
+        // Add cultural affirmation as separate message if present
+        if (response.data.cultural_affirmation) {
+          setTimeout(() => {
+            const affirmationMessage: Message = {
+              id: (Date.now() + 2).toString(),
+              text: `💫 ${response.data.cultural_affirmation}`,
+              sender: 'ivor',
+              timestamp: new Date()
+            }
+            setMessages(prev => [...prev, affirmationMessage])
+          }, 1000)
+        }
+        
+      } else {
+        throw new Error(response.error || 'Failed to get response')
       }
-      
-      setMessages(prev => [...prev, ivorResponse])
-      
-      // Update connection status based on response
-      setIsConnected(ivorService.getConnectionStatus())
       
     } catch (error) {
       console.error('Failed to send message to IVOR:', error)
       
-      // Fallback response when API fails
+      // Fallback response 
       const fallbackResponse: Message = {
         id: (Date.now() + 1).toString(),
-        text: "I'm having trouble connecting right now, but I'm still here to help! BLKOUT supports Black queer liberation through community organizing, cooperative ownership, and mutual aid. How can I point you toward the resources you need?",
+        text: "I'm experiencing some technical difficulties, but I'm still here to support you. Please know that your needs are valid and there are community resources available. Would you like me to connect you with immediate support options?",
         sender: 'ivor',
         timestamp: new Date()
       }
       
       setMessages(prev => [...prev, fallbackResponse])
-      setIsConnected(false)
     } finally {
       setIsTyping(false)
     }
@@ -107,10 +116,7 @@ export default function IvorChatbot() {
       {/* Chat Toggle Button */}
       <motion.button
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-6 right-6 z-50 ${isOpen ? 'hidden' : 'flex'} 
-          items-center justify-center w-14 h-14 bg-blkout-primary text-white 
-          rounded-full shadow-lg hover:bg-blkout-warm transition-colors
-          focus:outline-none focus:ring-4 focus:ring-blkout-primary focus:ring-opacity-50`}
+        className={`fixed bottom-6 right-6 z-50 ${isOpen ? 'hidden' : 'flex'} items-center justify-center w-14 h-14 bg-purple-600 text-white rounded-full shadow-lg hover:bg-purple-700 transition-colors focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-opacity-50`}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         aria-label="Open IVOR community chatbot"

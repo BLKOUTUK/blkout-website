@@ -26,6 +26,7 @@
     "chromadb-client": "^2.4.6",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "elasticsearch": "^16.7.3",
     "framer-motion": "^11.0.0",
     "gsap": "^3.13.0",

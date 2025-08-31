@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Submit to BLKOUT</title>
+  <style>
+    body {
+      width: 400px;
+      min-height: 500px;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #fff;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 16px;
+      text-align: center;
+    }
+    
+    .header h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .header p {
+      margin: 4px 0 0 0;
+      font-size: 12px;
+      opacity: 0.9;
+    }
+    
+    .container {
+      padding: 16px;
+    }
+    
+    .disclaimer {
+      background: #fff3cd;
+      border: 1px solid #ffeaa7;
+      border-radius: 6px;
+      padding: 12px;
+      margin-bottom: 16px;
+      font-size: 12px;
+      color: #856404;
+    }
+    
+    .disclaimer strong {
+      color: #664d03;
+    }
+    
+    .form-group {
+      margin-bottom: 16px;
+    }
+    
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 6px;
+      font-size: 14px;
+      color: #374151;
+    }
+    
+    input, textarea, select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    
+    input:required:invalid {
+      border-color: #ef4444;
+    }
+    
+    input:required:valid {
+      border-color: #10b981;
+    }
+    
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+    }
+    
+    textarea {
+      height: 80px;
+      resize: vertical;
+    }
+    
+    .page-info {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 4px;
+      padding: 8px;
+      font-size: 12px;
+      color: #6b7280;
+    }
+    
+    .page-info strong {
+      color: #374151;
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 8px;
+      margin-top: 20px;
+    }
+    
+    button {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+    
+    .btn-primary:hover:not(:disabled) {
+      background: #5a6fd8;
+    }
+    
+    .btn-secondary {
+      background: #f3f4f6;
+      color: #374151;
+      border: 1px solid #d1d5db;
+    }
+    
+    .btn-secondary:hover {
+      background: #e5e7eb;
+    }
+    
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    
+    .success {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+      border-radius: 6px;
+      padding: 12px;
+      text-align: center;
+      font-size: 14px;
+    }
+    
+    .error {
+      background: #fee2e2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+      border-radius: 6px;
+      padding: 12px;
+      font-size: 14px;
+    }
+    
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid #e5e7eb;
+      border-top: 2px solid #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🖤 BLKOUT</h1>
+    <p>Report Real Community Event</p>
+  </div>
+  
+  <div class="container">
+    <div class="disclaimer">
+      <strong>📰 Community Reporting:</strong> Submit REAL events happening in UK Black queer communities. We'll contact event organizers for consent before any publication. All reports go through democratic community editorial review.
+    </div>
+    
+    <div id="main-form">
+      <div class="form-group">
+        <label for="story-type">Event Type</label>
+        <select id="story-type">
+          <option value="organizing">Organizing Victory/Campaign Win</option>
+          <option value="community">Community Event/Gathering</option>
+          <option value="culture">Cultural Celebration/Festival</option>
+          <option value="health">Health Resource Launch/Clinic Opening</option>
+          <option value="solidarity">Solidarity Action/Mutual Aid</option>
+          <option value="education">Workshop/Educational Event</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="story-title">Event Title</label>
+        <input type="text" id="story-title" placeholder="Brief, factual headline about what happened">
+      </div>
+      
+      <div class="form-group">
+        <label for="story-summary">Event Description</label>
+        <textarea id="story-summary" placeholder="Describe what actually happened - who, what, when, where, why. Include concrete details and outcomes."></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label for="location">UK Location</label>
+        <select id="location">
+          <option value="">Select location...</option>
+          <option value="London">London</option>
+          <option value="Manchester">Manchester</option>
+          <option value="Birmingham">Birmingham</option>
+          <option value="Leeds">Leeds</option>
+          <option value="Liverpool">Liverpool</option>
+          <option value="Bristol">Bristol</option>
+          <option value="Brighton">Brighton</option>
+          <option value="Edinburgh">Edinburgh</option>
+          <option value="Glasgow">Glasgow</option>
+          <option value="Cardiff">Cardiff</option>
+          <option value="other">Other UK Location</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="organizer-contact">Event Organizer Contact <span class="text-red-500">*</span></label>
+        <input 
+          type="text" 
+          id="organizer-contact" 
+          placeholder="Email or phone number for consent verification"
+          required
+        >
+        <div class="text-xs text-gray-600 mt-1">
+          📞 Required for community consent. We'll contact organizers before publication.
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="reporter-relationship">Your Relationship to Event</label>
+        <select id="reporter-relationship">
+          <option value="organizer">I helped organize this event</option>
+          <option value="participant">I participated in this event</option>
+          <option value="witness">I witnessed this event</option>
+          <option value="community_member">I heard about it from community</option>
+          <option value="other">Other (please explain in description)</option>
+        </select>
+        <div class="text-xs text-gray-600 mt-1">
+          🤝 Helps us understand your connection to ensure accurate reporting
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="source-url">Source Page</label>
+        <div class="page-info" id="page-info">
+          <strong>Current Page:</strong><br>
+          <span id="current-url">Loading...</span><br>
+          <strong>Title:</strong> <span id="current-title">Loading...</span>
+        </div>
+      </div>
+      
+      <div class="button-group">
+        <button type="button" class="btn-secondary" id="cancel-btn">Cancel</button>
+        <button type="button" class="btn-primary" id="submit-btn">Report Event</button>
+      </div>
+    </div>
+    
+    <div id="success-message" class="success" style="display: none;">
+      ✅ Event report submitted successfully!<br>
+      Thank you for community journalism with BLKOUT.
+    </div>
+    
+    <div id="error-message" class="error" style="display: none;">
+      ❌ <span id="error-text">Something went wrong. Please try again.</span>
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
