@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { 
   CheckCircle, XCircle, Clock, Eye, FileText, User, Calendar, 
-  Filter, RefreshCw, MessageSquare, AlertTriangle, Loader
+  Filter, RefreshCw, MessageSquare, AlertTriangle, Loader, Edit3, Save, X
 } from 'lucide-react'
 import { moderationService, type ModerationItem, type ModerationStats } from '../../../services/moderationService'
 
@@ -13,6 +13,13 @@ const SimpleModeration: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<ModerationItem | null>(null)
   const [filter, setFilter] = useState<'all' | 'pending' | 'high-priority'>('pending')
   const [moderating, setModerating] = useState<string | null>(null)
+  const [editing, setEditing] = useState(false)
+  const [editedContent, setEditedContent] = useState<{
+    title: string
+    content: string
+    author: string
+    category: string
+  }>({ title: '', content: '', author: '', category: '' })
 
   useEffect(() => {
     loadModerationData()
@@ -59,6 +66,7 @@ const SimpleModeration: React.FC = () => {
         // Remove item from queue or update its status
         setQueue(prev => prev.filter(item => item.id !== id))
         setSelectedItem(null)
+        setEditing(false)
         
         // Refresh stats
         await loadModerationData()
@@ -72,6 +80,57 @@ const SimpleModeration: React.FC = () => {
       console.error('Error moderating content:', error)
     } finally {
       setModerating(null)
+    }
+  }
+
+  const handleStartEditing = (item: ModerationItem) => {
+    setEditedContent({
+      title: item.content.title,
+      content: item.content.content || '',
+      author: item.content.author,
+      category: item.content.category
+    })
+    setEditing(true)
+  }
+
+  const handleSaveEdit = async () => {
+    if (!selectedItem) return
+    
+    try {
+      // Here we would update the content in the database
+      // For now, we'll update the local state to show the edited content
+      const updatedItem = {
+        ...selectedItem,
+        content: {
+          ...selectedItem.content,
+          ...editedContent
+        }
+      }
+      
+      // Update the selected item
+      setSelectedItem(updatedItem)
+      
+      // Update the queue
+      setQueue(prev => prev.map(item => 
+        item.id === selectedItem.id ? updatedItem : item
+      ))
+      
+      setEditing(false)
+      console.log('Content updated successfully')
+    } catch (error) {
+      console.error('Error updating content:', error)
+    }
+  }
+
+  const handleCancelEdit = () => {
+    setEditing(false)
+    if (selectedItem) {
+      setEditedContent({
+        title: selectedItem.content.title,
+        content: selectedItem.content.content || '',
+        author: selectedItem.content.author,
+        category: selectedItem.content.category
+      })
     }
   }
 
@@ -277,26 +336,88 @@ const SimpleModeration: React.FC = () => {
             
             {selectedItem ? (
               <div className="space-y-6">
+                {/* Edit Controls */}
+                {!editing && selectedItem.status === 'pending' && (
+                  <div className="flex justify-end">
+                    <button
+                      onClick={() => handleStartEditing(selectedItem)}
+                      className="flex items-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm transition-colors"
+                    >
+                      <Edit3 className="w-4 h-4" />
+                      Edit Content
+                    </button>
+                  </div>
+                )}
+
                 {/* Item Details */}
                 <div>
-                  <h3 className="text-2xl font-bold text-white mb-2">
-                    {selectedItem.content.title}
-                  </h3>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm">
-                      {selectedItem.content.category}
-                    </span>
-                    <span className="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm">
-                      By {selectedItem.content.author}
-                    </span>
-                  </div>
+                  {editing ? (
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-2">Title</label>
+                        <input
+                          type="text"
+                          value={editedContent.title}
+                          onChange={(e) => setEditedContent(prev => ({ ...prev, title: e.target.value }))}
+                          className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-300 mb-2">Author</label>
+                          <input
+                            type="text"
+                            value={editedContent.author}
+                            onChange={(e) => setEditedContent(prev => ({ ...prev, author: e.target.value }))}
+                            className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-300 mb-2">Category</label>
+                          <input
+                            type="text"
+                            value={editedContent.category}
+                            onChange={(e) => setEditedContent(prev => ({ ...prev, category: e.target.value }))}
+                            className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <h3 className="text-2xl font-bold text-white mb-2">
+                        {selectedItem.content.title}
+                      </h3>
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        <span className="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm">
+                          {selectedItem.content.category}
+                        </span>
+                        <span className="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm">
+                          By {selectedItem.content.author}
+                        </span>
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 {/* Content */}
                 <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                  <p className="text-gray-300 leading-relaxed">
-                    {selectedItem.content.content || 'No content preview available'}
-                  </p>
+                  {editing ? (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">Content</label>
+                      <textarea
+                        value={editedContent.content}
+                        onChange={(e) => setEditedContent(prev => ({ ...prev, content: e.target.value }))}
+                        rows={8}
+                        className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-vertical"
+                        placeholder="Content preview..."
+                      />
+                    </div>
+                  ) : (
+                    <p className="text-gray-300 leading-relaxed">
+                      {selectedItem.content.content || 'No content preview available'}
+                    </p>
+                  )}
                 </div>
 
                 {/* Metadata */}
@@ -332,30 +453,51 @@ const SimpleModeration: React.FC = () => {
                 {/* Moderation Actions */}
                 {selectedItem.status === 'pending' && (
                   <div className="flex gap-3 pt-4">
-                    <button
-                      onClick={() => handleModerate(selectedItem.id, 'approve')}
-                      disabled={moderating === selectedItem.id}
-                      className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors disabled:opacity-50"
-                    >
-                      {moderating === selectedItem.id ? (
-                        <Loader className="w-5 h-5 animate-spin" />
-                      ) : (
-                        <CheckCircle className="w-5 h-5" />
-                      )}
-                      Approve
-                    </button>
-                    <button
-                      onClick={() => handleModerate(selectedItem.id, 'reject', 'Does not meet community guidelines')}
-                      disabled={moderating === selectedItem.id}
-                      className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors disabled:opacity-50"
-                    >
-                      {moderating === selectedItem.id ? (
-                        <Loader className="w-5 h-5 animate-spin" />
-                      ) : (
-                        <XCircle className="w-5 h-5" />
-                      )}
-                      Reject
-                    </button>
+                    {editing ? (
+                      <>
+                        <button
+                          onClick={handleSaveEdit}
+                          className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                        >
+                          <Save className="w-5 h-5" />
+                          Save Changes
+                        </button>
+                        <button
+                          onClick={handleCancelEdit}
+                          className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors"
+                        >
+                          <X className="w-5 h-5" />
+                          Cancel
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => handleModerate(selectedItem.id, 'approve')}
+                          disabled={moderating === selectedItem.id}
+                          className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors disabled:opacity-50"
+                        >
+                          {moderating === selectedItem.id ? (
+                            <Loader className="w-5 h-5 animate-spin" />
+                          ) : (
+                            <CheckCircle className="w-5 h-5" />
+                          )}
+                          Approve
+                        </button>
+                        <button
+                          onClick={() => handleModerate(selectedItem.id, 'reject', 'Does not meet community guidelines')}
+                          disabled={moderating === selectedItem.id}
+                          className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors disabled:opacity-50"
+                        >
+                          {moderating === selectedItem.id ? (
+                            <Loader className="w-5 h-5 animate-spin" />
+                          ) : (
+                            <XCircle className="w-5 h-5" />
+                          )}
+                          Reject
+                        </button>
+                      </>
+                    )}
                   </div>
                 )}
               </div>

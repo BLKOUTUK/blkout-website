@@ -239,12 +239,22 @@ class ModerationService {
   // Moderate content (approve/reject) - updates Supabase directly
   async moderateContent(id: string, action: 'approve' | 'reject', reason?: string): Promise<ModerationResponse> {
     try {
+      console.log(`🔄 Moderating content ${id}: ${action}`, { reason })
+      
       // Try to update as event first
-      const eventResult = await supabaseHelpers.updateEvent(id, {
-        status: action === 'approve' ? 'published' : 'archived'
-      })
+      const eventResult = await supabase
+        .from('events')
+        .update({
+          status: action === 'approve' ? 'published' : 'archived',
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', id)
+        .select()
+        .single()
 
-      if (eventResult.data) {
+      console.log('📊 Event update result:', eventResult)
+
+      if (eventResult.data && !eventResult.error) {
         return { 
           success: true, 
           data: eventResult.data,
@@ -256,13 +266,16 @@ class ModerationService {
       const articleResult = await supabase
         .from('newsroom_articles')
         .update({
-          status: action === 'approve' ? 'published' : 'archived'
+          status: action === 'approve' ? 'published' : 'archived',
+          updated_at: new Date().toISOString()
         })
         .eq('id', id)
         .select()
         .single()
 
-      if (articleResult.data) {
+      console.log('📰 Article update result:', articleResult)
+
+      if (articleResult.data && !articleResult.error) {
         return { 
           success: true, 
           data: articleResult.data,
@@ -272,7 +285,7 @@ class ModerationService {
 
       return {
         success: false,
-        error: 'Content not found'
+        error: `Content not found in events or articles tables. Event error: ${eventResult.error?.message}, Article error: ${articleResult.error?.message}`
       }
     } catch (error) {
       console.error('Error moderating content:', error)
