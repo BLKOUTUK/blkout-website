@@ -79,22 +79,17 @@ class ModerationService {
       console.log('🔍 Fetching moderation queue with filters:', filters)
       
       // Get both events and articles from Supabase
-      const [eventsResult, articlesResult, newsroomResult, submissionsResult] = await Promise.all([
+      const [eventsResult, articlesResult] = await Promise.all([
         supabaseHelpers.getEvents({
           status: filters?.status === 'pending' ? 'reviewing' : filters?.status,
           limit: filters?.limit || 50,
           offset: filters?.offset
         }),
-        supabase.from('articles').select('*').limit(filters?.limit || 50),
-        // Also try other possible table names
-        supabase.from('newsroom_articles').select('*').limit(filters?.limit || 50).then(r => ({...r, table: 'newsroom_articles'})),
-        supabase.from('submissions').select('*').limit(filters?.limit || 50).then(r => ({...r, table: 'submissions'}))
+        supabase.from('newsroom_articles').select('*').limit(filters?.limit || 50)
       ])
 
       console.log('📊 Events result:', eventsResult)
-      console.log('📰 Articles result:', articlesResult)  
-      console.log('📰 Newsroom articles result:', newsroomResult)
-      console.log('📝 Submissions result:', submissionsResult)
+      console.log('📰 Newsroom Articles result:', articlesResult)
 
       const items: ModerationItem[] = []
 
@@ -104,21 +99,21 @@ class ModerationService {
           items.push({
             id: event.id,
             type: 'event',
-            status: event.status === 'reviewing' ? 'pending' : (event.status === 'published' ? 'approved' : 'rejected'),
+            status: event.status === 'draft' ? 'pending' : (event.status === 'published' ? 'approved' : 'rejected'),
             priority: 'medium',
             content: {
               id: event.id,
-              title: event.name,
+              title: event.title || event.name,
               content: event.description,
-              author: event.organizer_name || 'Unknown',
+              author: event.organizer || 'Chrome Extension',
               category: event.tags?.[0] || 'community'
             },
-            submittedBy: event.organizer_name || 'Chrome Extension',
+            submittedBy: event.organizer || 'Chrome Extension',
             submittedAt: event.created_at,
             flags: [],
             metadata: {
-              source: event.source,
-              location: typeof event.location === 'object' ? event.location.address : event.location
+              source: event.source || 'chrome_extension',
+              location: event.location
             }
           })
         })
@@ -131,21 +126,21 @@ class ModerationService {
             id: article.id,
             type: 'newsroom_article',
             status: article.status === 'draft' ? 'pending' : (article.status === 'published' ? 'approved' : 'rejected'),
-            priority: (article.priority as string) === 'high' ? 'high' : 'medium',
+            priority: 'medium',
             content: {
               id: article.id,
               title: article.title,
               content: article.content || article.excerpt || '',
-              author: article.author,
-              category: article.category
+              author: article.author || 'Chrome Extension',
+              category: article.category || 'general'
             },
             submittedBy: article.author || 'Chrome Extension',
             submittedAt: article.created_at,
             flags: [],
             metadata: {
-              source: article.submitted_via || 'chrome_extension',
-              word_count: article.content?.split(' ').length || 0,
-              estimated_read_time: article.read_time || 0
+              source: 'chrome_extension',
+              source_url: article.source_url,
+              word_count: article.content?.split(' ').length || 0
             }
           })
         })
@@ -257,9 +252,9 @@ class ModerationService {
         }
       }
 
-      // If not found as event, try as article
+      // If not found as event, try as article in newsroom_articles
       const articleResult = await supabase
-        .from('articles')
+        .from('newsroom_articles')
         .update({
           status: action === 'approve' ? 'published' : 'archived'
         })
