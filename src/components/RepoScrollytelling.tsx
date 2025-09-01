@@ -29,7 +29,7 @@ const slides = [
     title: 'WHERE BLACK QUEER MEN BUILD COLLECTIVE POWER',
     subtitle: 'BLKOUT UK is a movement built by and for Black queer men in the UK, shaping a future where our stories, culture, and leadership are central.',
     content: 'We exist to create systemic change. We connect, empower, and transform Black Queer men\'s lives through digital tech, storytelling, and community ownership.',
-    bgColor: '#1e3a8a'
+    bgColor: '#d97706'
   },
   
   // Well Defined - image only
@@ -355,7 +355,7 @@ const slides = [
     content: 'Browse our full range of projects, resources, and ways to get involved in the movement.',
     bgColor: '#4c1d95',
     ctaText: 'EXPLORE PLATFORM',
-    ctaUrl: 'https://blkoutuk.com'
+    ctaUrl: 'https://platform-blkout.vercel.app'
   }
 ]
 
