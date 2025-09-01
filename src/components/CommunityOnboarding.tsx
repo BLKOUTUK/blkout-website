@@ -71,7 +71,7 @@ const CommunityOnboarding: React.FC = () => {
       icon: '🤖',
       action: {
         type: 'external',
-        url: 'https://blkoutnxt-ivor-frontend.vercel.app/',
+        url: 'https://ivor-blkout.vercel.app/',
         label: 'Chat with IVOR'
       },
       benefits: [

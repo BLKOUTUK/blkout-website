@@ -126,7 +126,7 @@ const LaunchShowcase: React.FC = () => {
       ],
       call_to_action: {
         text: 'Chat with IVOR about Mutual Aid',
-        url: 'https://blkoutnxt-ivor-frontend.vercel.app/',
+        url: 'https://ivor-blkout.vercel.app/',
         type: 'external'
       }
     },
@@ -174,7 +174,7 @@ const LaunchShowcase: React.FC = () => {
       ],
       call_to_action: {
         text: 'Get Health Resources via IVOR',
-        url: 'https://blkoutnxt-ivor-frontend.vercel.app/',
+        url: 'https://ivor-blkout.vercel.app/',
         type: 'external'
       }
     },
@@ -503,7 +503,7 @@ const LaunchShowcase: React.FC = () => {
             Start Community Journey
           </Link>
           <a
-            href="https://blkoutnxt-ivor-frontend.vercel.app/"
+            href="https://ivor-blkout.vercel.app/"
             target="_blank"
             rel="noopener noreferrer"
             className="px-8 py-4 bg-gradient-to-r from-green-600 to-teal-600 text-white font-bold rounded-full hover:from-green-700 hover:to-teal-700 transition-all shadow-lg hover:shadow-xl"

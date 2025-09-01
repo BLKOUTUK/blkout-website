@@ -113,7 +113,7 @@ export const IntegrationProvider: React.FC<{ children: React.ReactNode }> = ({ c
     // Simulate component status monitoring
     const statusInterval = setInterval(() => {
       // Check IVOR status
-      fetch('https://blkoutnxt-ivor-frontend.vercel.app/health')
+      fetch('https://ivor-blkout.vercel.app/health')
         .then(() => updateComponentStatus('ivor', true))
         .catch(() => updateComponentStatus('ivor', false))
       

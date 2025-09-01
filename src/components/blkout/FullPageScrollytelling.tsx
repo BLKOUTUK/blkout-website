@@ -1326,7 +1326,7 @@ const FullPageScrollytelling: React.FC = () => {
                               Community Hub
                             </motion.button>
                           </Link>
-                          <a href="https://black-qtipoc-events-calendar.vercel.app/" target="_blank" rel="noopener noreferrer">
+                          <a href="https://events-blkout.vercel.app/" target="_blank" rel="noopener noreferrer">
                             <motion.button
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
