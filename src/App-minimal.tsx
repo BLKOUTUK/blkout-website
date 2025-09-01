@@ -6,8 +6,11 @@ import './services/extensionApi'
 
 // Import components
 import EcosystemNavigationHub from './components/EcosystemNavigationHub'
-import NewsroomEnhanced from './components/newsroom/NewsroomEnhanced'
-import CommunityGovernanceDashboard from './components/community/CommunityGovernanceDashboard'
+import NewsroomPhase1 from './components/newsroom/NewsroomPhase1'
+import GovernancePhase1 from './components/governance/GovernancePhase1'
+import SimpleModeration from './components/newsroom/admin/SimpleModeration'
+import AdminHubComplete from './components/blkout/AdminHubComplete'
+import SupabaseEventsAdmin from './components/admin/SupabaseEventsAdmin'
 
 // Simple skip navigation component
 const SkipNavigation = () => (
@@ -37,16 +40,27 @@ function App() {
       <EcosystemNavigationHub />
       <div id="main-content" className="min-h-screen bg-gradient-to-br from-purple-950 via-indigo-950 to-emerald-950">
         <div className="max-w-6xl mx-auto px-8 py-20 text-center">
-          <h1 className="text-6xl font-black text-white mb-8 leading-tight">
-            <span className="bg-gradient-to-r from-purple-400 to-emerald-400 bg-clip-text text-transparent">
-              BLKOUT
-            </span>
-            <br />
-            Community Platform
-          </h1>
+          <div className="flex items-center justify-center mb-8">
+            <img 
+              src="/images/squared/BLKOUTiconWHITE.png"
+              alt="BLKOUT"
+              className="w-20 h-20 object-contain mr-6"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none'
+              }}
+            />
+            <h1 className="text-6xl font-black text-white leading-tight">
+              <span className="bg-gradient-to-r from-purple-400 to-emerald-400 bg-clip-text text-transparent uppercase tracking-wide">
+                BLKOUT
+              </span>
+              <br />
+              <span className="text-4xl text-white/90 uppercase tracking-wider">Community Platform</span>
+            </h1>
+          </div>
           
           <p className="text-xl text-indigo-200 mb-12 max-w-3xl mx-auto leading-relaxed">
-            A community-owned platform for Black queer liberation, cooperative ownership, and democratic governance.
+            A community-owned platform for Black queer liberation. Access to knowledge, resources, and connections for Black queer lives.
           </p>
           
           <div className="flex flex-wrap justify-center gap-6 mb-16">
@@ -115,7 +129,7 @@ function App() {
                 </div>
               </div>
             } />
-            <Route path="/newsroom" element={<NewsroomEnhanced />} />
+            <Route path="/newsroom" element={<NewsroomPhase1 />} />
             <Route path="/events" element={
               <div className="text-white min-h-screen bg-gradient-to-br from-amber-950 via-orange-950 to-red-950 p-8">
                 <div className="max-w-4xl mx-auto">
@@ -134,7 +148,12 @@ function App() {
                 </div>
               </div>
             } />
-            <Route path="/governance" element={<CommunityGovernanceDashboard />} />
+            <Route path="/governance" element={<GovernancePhase1 />} />
+            <Route path="/admin/moderation" element={<SimpleModeration />} />
+            <Route path="/admin/events" element={<SupabaseEventsAdmin />} />
+            <Route path="/admin/newsroom" element={<SimpleModeration />} />
+            <Route path="/admin" element={<AdminHubComplete />} />
+            <Route path="/admin/dashboard" element={<AdminHubComplete />} />
           </Routes>
         </div>
       </div>
