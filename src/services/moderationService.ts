@@ -1,5 +1,7 @@
 // Moderation Service for BLKOUT Phase 1
-// Interfaces with existing moderation backend API
+// Directly interfaces with Supabase database where Chrome extension writes
+
+import { supabase, supabaseHelpers } from '../lib/supabase'
 
 interface ModerationItem {
   id: string
@@ -46,29 +48,26 @@ interface ModerationResponse {
 }
 
 class ModerationService {
-  private baseUrl: string
   private isConnected: boolean = false
 
   constructor() {
-    // Use the working moderation backend URL
-    this.baseUrl = process.env.NODE_ENV === 'production' 
-      ? 'https://blkout-moderation-backend.vercel.app'
-      : 'http://localhost:3001'
+    // Direct Supabase connection - no external API needed
+    this.checkConnection()
   }
 
   async checkConnection(): Promise<boolean> {
     try {
-      const response = await fetch(`${this.baseUrl}/health`)
-      this.isConnected = response.ok
+      const result = await supabaseHelpers.testConnection()
+      this.isConnected = result.connected
       return this.isConnected
     } catch (error) {
-      console.warn('Moderation service unavailable:', error)
+      console.warn('Supabase connection unavailable:', error)
       this.isConnected = false
       return false
     }
   }
 
-  // Get moderation queue with filters
+  // Get moderation queue with filters - reads directly from Supabase
   async getQueue(filters?: {
     type?: string
     status?: string
@@ -77,26 +76,94 @@ class ModerationService {
     offset?: number
   }): Promise<ModerationResponse> {
     try {
-      const params = new URLSearchParams()
-      if (filters) {
-        Object.entries(filters).forEach(([key, value]) => {
-          if (value !== undefined) params.append(key, value.toString())
+      // Get both events and articles from Supabase
+      const [eventsResult, articlesResult] = await Promise.all([
+        supabaseHelpers.getEvents({
+          status: filters?.status === 'pending' ? 'reviewing' : filters?.status,
+          limit: filters?.limit || 50,
+          offset: filters?.offset
+        }),
+        supabaseHelpers.getArticles({
+          status: filters?.status === 'pending' ? 'draft' : filters?.status,
+          limit: filters?.limit || 50,
+          offset: filters?.offset
+        })
+      ])
+
+      const items: ModerationItem[] = []
+
+      // Convert events to moderation items
+      if (eventsResult.data) {
+        eventsResult.data.forEach(event => {
+          items.push({
+            id: event.id,
+            type: 'event',
+            status: event.status === 'reviewing' ? 'pending' : (event.status === 'published' ? 'approved' : 'rejected'),
+            priority: 'medium',
+            content: {
+              id: event.id,
+              title: event.name,
+              content: event.description,
+              author: event.organizer_name || 'Unknown',
+              category: event.tags?.[0] || 'community'
+            },
+            submittedBy: event.organizer_name || 'Chrome Extension',
+            submittedAt: event.created_at,
+            flags: [],
+            metadata: {
+              source: event.source,
+              location: typeof event.location === 'object' ? event.location.address : event.location
+            }
+          })
         })
       }
 
-      const response = await fetch(`${this.baseUrl}/api/queue?${params}`)
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      // Convert articles to moderation items  
+      if (articlesResult.data) {
+        articlesResult.data.forEach(article => {
+          items.push({
+            id: article.id,
+            type: 'newsroom_article',
+            status: article.status === 'draft' ? 'pending' : (article.status === 'published' ? 'approved' : 'rejected'),
+            priority: article.priority === 'high' ? 'high' : 'medium',
+            content: {
+              id: article.id,
+              title: article.title,
+              content: article.content || article.excerpt || '',
+              author: article.author,
+              category: article.category
+            },
+            submittedBy: article.author || 'Chrome Extension',
+            submittedAt: article.created_at,
+            flags: [],
+            metadata: {
+              source: article.submitted_via || 'chrome_extension',
+              word_count: article.content?.split(' ').length || 0,
+              estimated_read_time: article.read_time || 0
+            }
+          })
+        })
       }
 
-      const data = await response.json()
-      return { success: true, data }
+      // Apply additional filters
+      let filteredItems = items
+      if (filters?.type) {
+        filteredItems = items.filter(item => item.type === filters.type)
+      }
+
+      return { 
+        success: true, 
+        data: { 
+          items: filteredItems,
+          total: filteredItems.length 
+        }
+      }
     } catch (error) {
       console.error('Error fetching moderation queue:', error)
       return { 
         success: false, 
         error: error instanceof Error ? error.message : 'Unknown error',
-        data: { items: [], total: 0 } // Fallback empty data
+        data: { items: [], total: 0 }
       }
     }
   }
@@ -168,24 +235,38 @@ class ModerationService {
     }
   }
 
-  // Moderate content (approve/reject)
+  // Moderate content (approve/reject) - updates Supabase directly
   async moderateContent(id: string, action: 'approve' | 'reject', reason?: string): Promise<ModerationResponse> {
     try {
-      const response = await fetch(`${this.baseUrl}/api/moderate/${id}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action, reason })
+      // Try to update as event first
+      const eventResult = await supabaseHelpers.updateEvent(id, {
+        status: action === 'approve' ? 'published' : 'archived'
       })
 
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      if (eventResult.data) {
+        return { 
+          success: true, 
+          data: eventResult.data,
+          message: `Event ${action === 'approve' ? 'approved' : 'rejected'} successfully` 
+        }
       }
 
-      const data = await response.json()
-      return { 
-        success: true, 
-        data, 
-        message: `Content ${action === 'approve' ? 'approved' : 'rejected'} successfully` 
+      // If not found as event, try as article
+      const articleResult = await supabaseHelpers.updateArticle(id, {
+        status: action === 'approve' ? 'published' : 'archived'
+      })
+
+      if (articleResult.data) {
+        return { 
+          success: true, 
+          data: articleResult.data,
+          message: `Article ${action === 'approve' ? 'approved' : 'rejected'} successfully` 
+        }
+      }
+
+      return {
+        success: false,
+        error: 'Content not found'
       }
     } catch (error) {
       console.error('Error moderating content:', error)
@@ -196,16 +277,23 @@ class ModerationService {
     }
   }
 
-  // Get moderation statistics
+  // Get moderation statistics from Supabase
   async getStats(): Promise<ModerationResponse> {
     try {
-      const response = await fetch(`${this.baseUrl}/api/stats`)
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      const stats = await supabaseHelpers.getCommunityStats()
+      
+      return { 
+        success: true, 
+        data: {
+          pendingCount: (stats.events?.total || 0) + (stats.articles?.total || 0) - 
+                       (stats.events?.published || 0) - (stats.articles?.published || 0),
+          todayActions: 0, // Could be calculated from updated_at timestamps
+          activeModerators: 1,
+          newsroomQueue: (stats.articles?.total || 0) - (stats.articles?.published || 0),
+          eventsQueue: (stats.events?.total || 0) - (stats.events?.published || 0),
+          communityQueue: 0
+        }
       }
-
-      const data = await response.json()
-      return { success: true, data }
     } catch (error) {
       console.error('Error fetching moderation stats:', error)
       return { 
@@ -258,8 +346,8 @@ class ModerationService {
   getConnectionStatus() {
     return {
       connected: this.isConnected,
-      service: 'moderation',
-      baseUrl: this.baseUrl
+      service: 'supabase-moderation',
+      baseUrl: 'direct-supabase-connection'
     }
   }
 }
