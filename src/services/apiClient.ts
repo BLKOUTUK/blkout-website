@@ -43,14 +43,14 @@ class ApiClient {
     const isLocalhost = typeof window !== 'undefined' && window.location.hostname === 'localhost'
     
     if (isDevelopment || isLocalhost) {
-      // Check if local API is running, fallback to production proxy
+      // Check if local API is running, fallback to production API
       return window.location.port === '5173' || window.location.port === '3000' 
         ? 'http://localhost:3000/api'  // Development API
-        : '/api'                       // Production proxy via Vercel
+        : 'https://blkout-newsroom-backend-ptfjb4krx-robs-projects-54d653d3.vercel.app/api'  // Direct backend
     }
     
-    // Production: use Vercel proxy to avoid CORS issues
-    return '/api'
+    // Production: use direct backend URL to avoid proxy complexity
+    return 'https://blkout-newsroom-backend-ptfjb4krx-robs-projects-54d653d3.vercel.app/api'
   }
 
   private loadAuthToken(): void {
