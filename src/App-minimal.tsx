@@ -55,12 +55,14 @@ function App() {
               📰 Newsroom
             </Link>
             
-            <Link
-              to="/events"
+            <a
+              href="https://events-blkout.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="px-8 py-4 bg-gradient-to-r from-amber-600 to-orange-600 text-white font-bold rounded-full hover:from-amber-700 hover:to-orange-700 transition-all duration-300 shadow-lg hover:shadow-xl"
             >
               📅 Events
-            </Link>
+            </a>
             
             <Link
               to="/governance"
