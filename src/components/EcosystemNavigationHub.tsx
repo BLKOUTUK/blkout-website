@@ -24,8 +24,8 @@ const EcosystemNavigationHub: React.FC = () => {
   const navigationItems: NavigationItem[] = [
     {
       id: 'dashboard',
-      label: 'Dashboard',
-      path: '/dashboard',
+      label: 'Main Platform',
+      path: '/',
       icon: '🏠',
       description: 'Community hub overview'
     },
@@ -39,7 +39,8 @@ const EcosystemNavigationHub: React.FC = () => {
     {
       id: 'events',
       label: 'Events',
-      path: '/events',
+      path: '',
+      external: 'https://events-blkout.vercel.app/',
       icon: '📅',
       description: 'UK community events calendar'
     },
@@ -47,7 +48,7 @@ const EcosystemNavigationHub: React.FC = () => {
       id: 'ivor',
       label: 'IVOR AI',
       path: '',
-      external: 'https://blkoutnxt-ivor-frontend.vercel.app/',
+      external: 'https://ivor-blkout.vercel.app/',
       icon: '🤖',
       description: 'AI assistant for organizing'
     },
@@ -57,90 +58,12 @@ const EcosystemNavigationHub: React.FC = () => {
       path: '/governance',
       icon: '🏛️',
       description: 'Democratic community decisions'
-    },
-    {
-      id: 'live-events',
-      label: 'Live Feed',
-      path: '/live-events',
-      icon: '📡',
-      description: 'Real-time community activity'
-    },
-    {
-      id: 'extension',
-      label: 'Reporter',
-      path: '/extension',
-      icon: '🔗',
-      description: 'Community journalism extension'
-    },
-    {
-      id: 'demo',
-      label: 'Demo',
-      path: '/demo',
-      icon: '🎬',
-      description: 'Interactive user journey demos'
-    },
-    {
-      id: 'onboarding',
-      label: 'Get Started',
-      path: '/onboarding',
-      icon: '👋',
-      description: 'Community onboarding journey'
-    },
-    {
-      id: 'launch',
-      label: 'Launch Materials',
-      path: '/launch',
-      icon: '🚀',
-      description: 'Community breadth showcase'
-    },
-    {
-      id: 'partnerships',
-      label: 'Partnerships',
-      path: '/partnerships',
-      icon: '🤝',
-      description: 'UK organization coordination'
-    },
-    {
-      id: 'beta-flow',
-      label: 'Beta Flow',
-      path: '/beta-flow',
-      icon: '🚀',
-      description: 'User journey visualization'
-    },
-    {
-      id: 'ecosystem',
-      label: 'Ecosystem',
-      path: '/ecosystem',
-      icon: '🌍',
-      description: 'Full platform overview'
-    },
-    {
-      id: 'amplification',
-      label: 'Story Amplification',
-      path: '/amplification',
-      icon: '📡',
-      description: 'Social sharing through IVOR'
-    },
-    {
-      id: 'launch-prep',
-      label: 'Launch Preparation',
-      path: '/launch-prep',
-      icon: '🚀',
-      description: 'Beta launch coordination'
-    },
-    {
-      id: 'stakeholder-demo',
-      label: 'Stakeholder Demo',
-      path: '/stakeholder-demo',
-      icon: '🎯',
-      description: 'Interactive ecosystem demonstrations'
     }
   ]
 
   const activeItem = navigationItems.find(item => 
-    item.path === location.pathname || 
-    (item.path === '/dashboard' && location.pathname === '/')
-  )
+    item.path === location.pathname
+  ) || navigationItems[0] // Default to main platform
 
   const handleItemClick = (item: NavigationItem) => {
     if (item.external) {
@@ -190,8 +113,7 @@ const EcosystemNavigationHub: React.FC = () => {
           {/* Navigation Items */}
           <div className="space-y-1">
             {navigationItems.map((item) => {
-              const isCurrentlyActive = item.path === location.pathname || 
-                (item.path === '/dashboard' && location.pathname === '/')
+              const isCurrentlyActive = item.path === location.pathname
 
               if (item.external) {
                 return (
@@ -247,8 +169,8 @@ const EcosystemNavigationHub: React.FC = () => {
           {/* Quick Status */}
           <div className="px-3 py-2 border-t border-gray-100 mt-2">
             <div className="flex items-center justify-between text-xs text-gray-500">
-              <span>🟢 14 Active Components</span>
-              <span>📡 Live Community Data</span>
+              <span>🟢 5 Core Components</span>
+              <span>📡 Phase 1 Platform</span>
             </div>
           </div>
         </div>
