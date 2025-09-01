@@ -83,11 +83,7 @@ class ModerationService {
           limit: filters?.limit || 50,
           offset: filters?.offset
         }),
-        supabaseHelpers.getArticles({
-          status: filters?.status === 'pending' ? 'draft' : filters?.status,
-          limit: filters?.limit || 50,
-          offset: filters?.offset
-        })
+        supabase.from('articles').select('*').limit(filters?.limit || 50)
       ])
 
       const items: ModerationItem[] = []
@@ -125,7 +121,7 @@ class ModerationService {
             id: article.id,
             type: 'newsroom_article',
             status: article.status === 'draft' ? 'pending' : (article.status === 'published' ? 'approved' : 'rejected'),
-            priority: article.priority === 'high' ? 'high' : 'medium',
+            priority: (article.priority as string) === 'high' ? 'high' : 'medium',
             content: {
               id: article.id,
               title: article.title,
@@ -252,9 +248,14 @@ class ModerationService {
       }
 
       // If not found as event, try as article
-      const articleResult = await supabaseHelpers.updateArticle(id, {
-        status: action === 'approve' ? 'published' : 'archived'
-      })
+      const articleResult = await supabase
+        .from('articles')
+        .update({
+          status: action === 'approve' ? 'published' : 'archived'
+        })
+        .eq('id', id)
+        .select()
+        .single()
 
       if (articleResult.data) {
         return { 
