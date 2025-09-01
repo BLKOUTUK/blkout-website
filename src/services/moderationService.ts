@@ -286,17 +286,43 @@ class ModerationService {
   // Get moderation statistics from Supabase
   async getStats(): Promise<ModerationResponse> {
     try {
-      const stats = await supabaseHelpers.getCommunityStats()
+      // Get real counts from the actual tables
+      const [eventsResult, articlesResult] = await Promise.all([
+        supabase.from('events').select('status, updated_at', { count: 'exact' }),
+        supabase.from('newsroom_articles').select('status, updated_at', { count: 'exact' })
+      ])
+
+      const events = eventsResult.data || []
+      const articles = articlesResult.data || []
+
+      // Count pending items (draft status = pending)
+      const pendingEvents = events.filter(e => e.status === 'draft').length
+      const pendingArticles = articles.filter(a => a.status === 'draft').length
+      const totalPending = pendingEvents + pendingArticles
+
+      // Calculate today's actions (items updated today)
+      const today = new Date().toISOString().split('T')[0]
+      const todayActions = [...events, ...articles].filter(item => 
+        item.updated_at && item.updated_at.startsWith(today)
+      ).length
+
+      console.log('📊 Stats calculated:', {
+        pendingEvents,
+        pendingArticles,
+        totalPending,
+        todayActions,
+        totalEvents: events.length,
+        totalArticles: articles.length
+      })
       
       return { 
         success: true, 
         data: {
-          pendingCount: (stats.events?.total || 0) + (stats.articles?.total || 0) - 
-                       (stats.events?.published || 0) - (stats.articles?.published || 0),
-          todayActions: 0, // Could be calculated from updated_at timestamps
+          pendingCount: totalPending,
+          todayActions: todayActions,
           activeModerators: 1,
-          newsroomQueue: (stats.articles?.total || 0) - (stats.articles?.published || 0),
-          eventsQueue: (stats.events?.total || 0) - (stats.events?.published || 0),
+          newsroomQueue: pendingArticles,
+          eventsQueue: pendingEvents,
           communityQueue: 0
         }
       }
