@@ -30,6 +30,14 @@ const EcosystemNavigationHub: React.FC = () => {
       description: 'Community hub overview'
     },
     {
+      id: 'journey',
+      label: 'Liberation Journey',
+      path: '',
+      external: 'https://journey-blkout.vercel.app/',
+      icon: '📖',
+      description: 'Interactive storytelling experience'
+    },
+    {
       id: 'newsroom',
       label: 'Newsroom',
       path: '/newsroom',
@@ -169,7 +177,7 @@ const EcosystemNavigationHub: React.FC = () => {
           {/* Quick Status */}
           <div className="px-3 py-2 border-t border-gray-100 mt-2">
             <div className="flex items-center justify-between text-xs text-gray-500">
-              <span>🟢 5 Core Components</span>
+              <span>🟢 6 Core Components</span>
               <span>📡 Phase 1 Platform</span>
             </div>
           </div>

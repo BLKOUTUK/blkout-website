@@ -77,6 +77,15 @@ function App() {
             >
               🤖 Chat with IVOR
             </a>
+            
+            <a
+              href="https://journey-blkout.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-8 py-4 bg-gradient-to-r from-pink-600 to-rose-600 text-white font-bold rounded-full hover:from-pink-700 hover:to-rose-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+            >
+              📖 Liberation Journey
+            </a>
           </div>
 
           <Routes>
@@ -102,9 +111,86 @@ function App() {
                 </div>
               </div>
             } />
-            <Route path="/newsroom" element={<div className="text-white">Newsroom page placeholder</div>} />
-            <Route path="/events" element={<div className="text-white">Events page placeholder</div>} />
-            <Route path="/governance" element={<div className="text-white">Governance page placeholder</div>} />
+            <Route path="/newsroom" element={
+              <div className="text-white min-h-screen bg-gradient-to-br from-slate-950 via-gray-950 to-blue-950 p-8">
+                <div className="max-w-4xl mx-auto">
+                  <h1 className="text-4xl font-bold mb-8">📰 Community Newsroom</h1>
+                  <div className="bg-white/10 rounded-lg p-6 mb-6">
+                    <h2 className="text-2xl font-bold mb-4">Stories from the Liberation Movement</h2>
+                    <p className="text-gray-300 mb-4">
+                      Our newsroom amplifies Black queer voices and community organizing victories across the UK.
+                      Real stories, real people, real change.
+                    </p>
+                    <div className="space-y-4">
+                      <div className="bg-white/5 rounded p-4">
+                        <h3 className="font-bold text-lg">Manchester Trans Collective Wins Housing Victory</h3>
+                        <p className="text-gray-400 text-sm">Community organizing secures affordable trans-friendly housing</p>
+                      </div>
+                      <div className="bg-white/5 rounded p-4">
+                        <h3 className="font-bold text-lg">Bristol Cooperative Cafe Launch</h3>
+                        <p className="text-gray-400 text-sm">Worker-owned space centering Black queer community</p>
+                      </div>
+                    </div>
+                    <Link to="/" className="inline-block mt-6 px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors">
+                      ← Back to Main Platform
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            } />
+            <Route path="/events" element={
+              <div className="text-white min-h-screen bg-gradient-to-br from-amber-950 via-orange-950 to-red-950 p-8">
+                <div className="max-w-4xl mx-auto">
+                  <h1 className="text-4xl font-bold mb-8">📅 Community Events</h1>
+                  <div className="bg-white/10 rounded-lg p-6">
+                    <p className="text-gray-300 mb-4">
+                      This page redirects to our live events calendar. 
+                      <a href="https://events-blkout.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-yellow-400 hover:text-yellow-300 underline ml-1">
+                        Visit Events Calendar →
+                      </a>
+                    </p>
+                    <Link to="/" className="inline-block mt-6 px-6 py-2 bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors">
+                      ← Back to Main Platform
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            } />
+            <Route path="/governance" element={
+              <div className="text-white min-h-screen bg-gradient-to-br from-purple-950 via-violet-950 to-indigo-950 p-8">
+                <div className="max-w-4xl mx-auto">
+                  <h1 className="text-4xl font-bold mb-8">🏛️ Democratic Governance</h1>
+                  <div className="bg-white/10 rounded-lg p-6">
+                    <h2 className="text-2xl font-bold mb-4">Community-Owned Decision Making</h2>
+                    <p className="text-gray-300 mb-6">
+                      BLKOUT operates on principles of cooperative ownership and democratic governance. 
+                      Every community member has a voice in platform decisions.
+                    </p>
+                    <div className="grid md:grid-cols-2 gap-6 mb-6">
+                      <div className="bg-white/5 rounded p-4">
+                        <h3 className="font-bold text-lg mb-2">🗳️ Current Votes</h3>
+                        <p className="text-gray-400 text-sm">Platform feature priorities, content guidelines, partnership decisions</p>
+                      </div>
+                      <div className="bg-white/5 rounded p-4">
+                        <h3 className="font-bold text-lg mb-2">📋 Proposals</h3>
+                        <p className="text-gray-400 text-sm">Submit ideas for platform improvements and community initiatives</p>
+                      </div>
+                      <div className="bg-white/5 rounded p-4">
+                        <h3 className="font-bold text-lg mb-2">👥 Committees</h3>
+                        <p className="text-gray-400 text-sm">Safety, Content, Tech, and Community Organizing working groups</p>
+                      </div>
+                      <div className="bg-white/5 rounded p-4">
+                        <h3 className="font-bold text-lg mb-2">📊 Transparency</h3>
+                        <p className="text-gray-400 text-sm">Open budget, decision logs, and community impact reports</p>
+                      </div>
+                    </div>
+                    <Link to="/" className="inline-block mt-6 px-6 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg transition-colors">
+                      ← Back to Main Platform
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            } />
           </Routes>
         </div>
       </div>
