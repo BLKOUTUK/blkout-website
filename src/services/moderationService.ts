@@ -76,15 +76,25 @@ class ModerationService {
     offset?: number
   }): Promise<ModerationResponse> {
     try {
+      console.log('🔍 Fetching moderation queue with filters:', filters)
+      
       // Get both events and articles from Supabase
-      const [eventsResult, articlesResult] = await Promise.all([
+      const [eventsResult, articlesResult, newsroomResult, submissionsResult] = await Promise.all([
         supabaseHelpers.getEvents({
           status: filters?.status === 'pending' ? 'reviewing' : filters?.status,
           limit: filters?.limit || 50,
           offset: filters?.offset
         }),
-        supabase.from('articles').select('*').limit(filters?.limit || 50)
+        supabase.from('articles').select('*').limit(filters?.limit || 50),
+        // Also try other possible table names
+        supabase.from('newsroom_articles').select('*').limit(filters?.limit || 50).then(r => ({...r, table: 'newsroom_articles'})),
+        supabase.from('submissions').select('*').limit(filters?.limit || 50).then(r => ({...r, table: 'submissions'}))
       ])
+
+      console.log('📊 Events result:', eventsResult)
+      console.log('📰 Articles result:', articlesResult)  
+      console.log('📰 Newsroom articles result:', newsroomResult)
+      console.log('📝 Submissions result:', submissionsResult)
 
       const items: ModerationItem[] = []
 
