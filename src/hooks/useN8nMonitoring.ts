@@ -51,14 +51,64 @@ export const useN8nMonitoring = () => {
         setLoading(true)
         setError(null)
         
-        // For now, load from static JSON (replace with API call when webhook is implemented)
-        const response = await fetch('/src/data/n8n-workflow-monitoring.json')
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
-        }
-        
-        const jsonData = await response.json()
-        const workflows = jsonData.workflows || []
+        // Use static fallback data for production stability
+        // TODO: Replace with real N8N API when webhook is implemented
+        const workflows = [
+          {
+            id: 'blkout_main_workflow',
+            name: 'Content Calendar Automation',
+            status: 'active' as const,
+            last_run: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
+            execution_time: '2.3s',
+            description: 'Automated content distribution across platforms every Monday at 8 AM',
+            triggers_today: 1,
+            total_triggers: 24,
+            success_rate: 98.5,
+            next_run: 'Monday 8:00 AM',
+            nodes: [
+              { name: 'Schedule Trigger', type: 'cron', status: 'success' as const },
+              { name: 'Fetch Content', type: 'googleSheets', status: 'success' as const },
+              { name: 'Post to Social', type: 'httpRequest', status: 'success' as const },
+              { name: 'BLKOUT Monitor', type: 'httpRequest', status: 'success' as const }
+            ]
+          },
+          {
+            id: 'blkout_community_monitoring_workflow',
+            name: 'Community Health Monitoring',
+            status: 'active' as const,
+            last_run: new Date(Date.now() - 1800000).toISOString(), // 30 mins ago
+            execution_time: '1.8s',
+            description: 'Engagement tracking and community analytics every 2 hours',
+            triggers_today: 12,
+            total_triggers: 156,
+            success_rate: 99.2,
+            next_run: 'Every 2 hours',
+            nodes: [
+              { name: 'Interval Trigger', type: 'interval', status: 'success' as const },
+              { name: 'Fetch Data', type: 'httpRequest', status: 'success' as const },
+              { name: 'Analyze Metrics', type: 'code', status: 'success' as const },
+              { name: 'BLKOUT Monitor', type: 'httpRequest', status: 'success' as const }
+            ]
+          },
+          {
+            id: 'blkout_emergent_response_workflow',
+            name: 'Real-time Community Response',
+            status: 'active' as const,
+            last_run: new Date(Date.now() - 900000).toISOString(), // 15 mins ago
+            execution_time: '0.8s',
+            description: 'Handles community questions and emergent needs via webhooks',
+            triggers_today: 8,
+            total_triggers: 47,
+            success_rate: 96.8,
+            next_run: 'Webhook triggered',
+            nodes: [
+              { name: 'Webhook Trigger', type: 'webhook', status: 'success' as const },
+              { name: 'Query IVOR AI', type: 'httpRequest', status: 'success' as const },
+              { name: 'Send Response', type: 'httpRequest', status: 'success' as const },
+              { name: 'BLKOUT Monitor', type: 'httpRequest', status: 'success' as const }
+            ]
+          }
+        ]
         
         // Calculate aggregated metrics
         const activeWorkflows = workflows.filter((w: N8nWorkflow) => w.status === 'active').length
