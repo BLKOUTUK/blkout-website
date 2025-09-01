@@ -6,6 +6,12 @@ import { motion } from 'framer-motion'
 import { Menu, X, Search, Home, ChevronDown } from 'lucide-react'
 
 const navigationItems = [
+  { 
+    name: 'Liberation Journey', 
+    href: 'https://journey-blkout.vercel.app', 
+    description: 'Interactive liberation storytelling experience',
+    external: true 
+  },
   { name: 'Latest Issue', href: '/platform', description: 'Current stories and featured content' },
   { name: 'Story Archive', href: '/stories', description: 'Complete archive of stories and analysis' },
   { name: 'I.V.O.R.', href: '/ivor', description: 'AI assistant and resource finder' },
@@ -80,16 +86,27 @@ export default function PrimaryNavigationEnhanced({ className = '' }: PrimaryNav
           <div className="hidden lg:flex items-center space-x-8">
             {navigationItems.map((item) => (
               <div key={item.name} className="relative group">
-                <Link
-                  to={item.href}
-                  className={`px-3 py-2 text-sm font-medium transition-colors duration-200 focus-enhanced ${
-                    isActive(item.href)
-                      ? 'text-white bg-indigo-800/50 rounded-md'
-                      : 'text-indigo-200 hover:text-white hover:bg-indigo-800/30 rounded-md'
-                  }`}
-                >
-                  {item.name}
-                </Link>
+                {item.external ? (
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-2 text-sm font-medium text-indigo-200 hover:text-white hover:bg-indigo-800/30 rounded-md transition-colors duration-200 focus-enhanced"
+                  >
+                    {item.name}
+                  </a>
+                ) : (
+                  <Link
+                    to={item.href}
+                    className={`px-3 py-2 text-sm font-medium transition-colors duration-200 focus-enhanced ${
+                      isActive(item.href)
+                        ? 'text-white bg-indigo-800/50 rounded-md'
+                        : 'text-indigo-200 hover:text-white hover:bg-indigo-800/30 rounded-md'
+                    }`}
+                  >
+                    {item.name}
+                  </Link>
+                )}
                 
                 {/* Dropdown menu for desktop */}
                 {item.children && (
@@ -166,17 +183,29 @@ export default function PrimaryNavigationEnhanced({ className = '' }: PrimaryNav
               {/* Mobile Navigation Links */}
               {navigationItems.map((item) => (
                 <div key={item.name}>
-                  <Link
-                    to={item.href}
-                    className={`block px-4 py-3 text-base font-medium transition-colors duration-200 touch-target focus-enhanced ${
-                      isActive(item.href)
-                        ? 'text-white bg-indigo-800/50 border-l-4 border-electric-cyan'
-                        : 'text-indigo-200 hover:text-white hover:bg-indigo-800/30'
-                    }`}
-                    onClick={() => setIsOpen(false)}
-                  >
-                    {item.name}
-                  </Link>
+                  {item.external ? (
+                    <a
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block px-4 py-3 text-base font-medium text-indigo-200 hover:text-white hover:bg-indigo-800/30 transition-colors duration-200 touch-target focus-enhanced"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {item.name}
+                    </a>
+                  ) : (
+                    <Link
+                      to={item.href}
+                      className={`block px-4 py-3 text-base font-medium transition-colors duration-200 touch-target focus-enhanced ${
+                        isActive(item.href)
+                          ? 'text-white bg-indigo-800/50 border-l-4 border-electric-cyan'
+                          : 'text-indigo-200 hover:text-white hover:bg-indigo-800/30'
+                      }`}
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {item.name}
+                    </Link>
+                  )}
                   
                   {/* Mobile submenu */}
                   {item.children && (

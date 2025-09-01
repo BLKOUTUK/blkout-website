@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, useLocation, Link } from 'react-router-dom'
 import { IntegrationProvider } from './components/CrossComponentIntegration'
 import EcosystemNavigationHub from './components/EcosystemNavigationHub'
 import { motion } from 'framer-motion'
@@ -14,9 +14,12 @@ import EventsAdminDashboard from './components/admin/EventsAdminDashboard'
 import NewsroomAdminDashboard from './components/admin/NewsroomAdminDashboard'
 import GovernanceDocumentsAdmin from './components/admin/GovernanceDocumentsAdmin'
 import ModerationDashboard from './components/admin/ModerationDashboard'
+import BlkoutUKMigrationPanel from './components/admin/BlkoutUKMigrationPanel'
 import NewsroomEnhanced from './components/newsroom/NewsroomEnhanced'
 import EventsPageIntegrated from './components/events/EventsPageIntegrated'
 import IvorChatbot from './components/blkout/IvorChatbot'
+import StoryArchive from './components/newsroom/StoryArchive'
+import CrossModuleNavigation from './components/layout/CrossModuleNavigation'
 
 // IVOR Community Liberation Platform
 import IVOR from './pages/IVOR'
@@ -85,7 +88,7 @@ const ScrollytellingLink = () => {
         </div>
         
         <a 
-          href="https://blkout-scrollytelling-l02xntf1j-robs-projects-54d653d3.vercel.app"
+          href="https://journey-blkout.vercel.app"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-block bg-gradient-to-r from-red-600 to-yellow-600 hover:from-red-700 hover:to-yellow-700 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
@@ -119,12 +122,12 @@ const Homepage = () => (
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-6xl font-black text-white mb-8 leading-tight">
-            <span className="bg-gradient-to-r from-purple-400 to-emerald-400 bg-clip-text text-transparent">
+          <h1 className="text-5xl md:text-7xl font-black text-white mb-8 leading-tight tracking-tight uppercase">
+            <span className="bg-gradient-to-r from-amber-400 to-purple-600 bg-clip-text text-transparent">
               BLKOUT
             </span>
             <br />
-            Community Platform
+            <span className="text-4xl md:text-6xl">Community Platform</span>
           </h1>
           
           <p className="text-xl text-indigo-200 mb-12 max-w-3xl mx-auto leading-relaxed">
@@ -133,50 +136,67 @@ const Homepage = () => (
           </p>
           
           <div className="flex flex-wrap justify-center gap-6 mb-16">
-            <motion.a
-              href="/onboarding"
-              className="px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold rounded-full hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+            <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              Get Started
-            </motion.a>
+              <Link
+                to="/onboarding"
+                className="inline-block px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold rounded-full hover:from-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+              >
+                Get Started
+              </Link>
+            </motion.div>
             
-            <motion.a
-              href="/movement"
-              className="px-8 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold rounded-full hover:from-emerald-700 hover:to-teal-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+            <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              Our Movement
-            </motion.a>
+              <Link
+                to="/movement"
+                className="inline-block px-8 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold rounded-full hover:from-emerald-700 hover:to-teal-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+              >
+                Our Movement
+              </Link>
+            </motion.div>
             
-            <motion.a
-              href="/newsroom"
-              className="px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-bold rounded-full hover:from-blue-700 hover:to-cyan-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+            <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              Newsroom
-            </motion.a>
+              <Link
+                to="/newsroom"
+                className="inline-block px-8 py-4 bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-bold rounded-full hover:from-blue-700 hover:to-cyan-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+              >
+                Newsroom
+              </Link>
+            </motion.div>
             
-            <motion.a
-              href="/events"
-              className="px-8 py-4 bg-gradient-to-r from-orange-600 to-red-600 text-white font-bold rounded-full hover:from-orange-700 hover:to-red-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+            <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              Events
-            </motion.a>
+              <Link
+                to="/events"
+                className="inline-block px-8 py-4 bg-gradient-to-r from-orange-600 to-red-600 text-white font-bold rounded-full hover:from-orange-700 hover:to-red-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+              >
+                Events
+              </Link>
+            </motion.div>
           </div>
         </motion.div>
+        
+        {/* Cross-Module Navigation */}
+        <div className="mt-16">
+          <CrossModuleNavigation />
+        </div>
       </div>
     </section>
 
     {/* Values Section */}
     <section className="py-16 bg-slate-900/50">
       <div className="max-w-6xl mx-auto px-8">
-        <h2 className="text-4xl font-bold text-white text-center mb-12">Our Values</h2>
+        <h2 className="text-3xl md:text-5xl font-bold tracking-wide uppercase text-white text-center mb-12">Our Values</h2>
         <div className="grid md:grid-cols-3 gap-8">
           <motion.div 
             className="text-center p-6 bg-white/5 rounded-lg"
@@ -231,7 +251,7 @@ const NotFoundPage = () => (
     <div className="text-center">
       <h1 className="text-6xl font-bold mb-4">404</h1>
       <p className="text-xl mb-8">Page not found</p>
-      <a href="/" className="text-blue-400 hover:text-blue-300">← Back to Home</a>
+      <Link to="/" className="text-blue-400 hover:text-blue-300">← Back to Home</Link>
     </div>
   </div>
 )
@@ -263,23 +283,27 @@ function App() {
         {/* New ecosystem pages - Community/Events sections */}
         <Route path="/live-events" element={<div className="min-h-screen bg-gradient-to-br from-amber-950 via-orange-950 to-red-950"><PlatformLayout><LiveEventsPage /></PlatformLayout></div>} />
         <Route path="/dashboard" element={<div className="min-h-screen bg-gradient-to-br from-amber-950 via-orange-950 to-red-950"><PlatformLayout><LiveCommunityShowcasePage /></PlatformLayout></div>} />
-        <Route path="/ecosystem" element={<PlatformLayout><UnifiedExperiencePage /></PlatformLayout>} />
+        <Route path="/ecosystem" element={<div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-950 to-slate-950"><PlatformLayout><UnifiedExperiencePage /></PlatformLayout></div>} />
         <Route path="/extension" element={<div className="min-h-screen bg-gradient-to-br from-teal-950 via-cyan-950 to-slate-950"><PlatformLayout><ChromeExtensionPage /></PlatformLayout></div>} />
-        <Route path="/demo" element={<PlatformLayout><DemoScenariosPage /></PlatformLayout>} />
-        <Route path="/onboarding" element={<PlatformLayout><OnboardingPage /></PlatformLayout>} />
-        <Route path="/launch" element={<PlatformLayout><LaunchShowcasePage /></PlatformLayout>} />
+        <Route path="/demo" element={<div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-950 to-slate-950"><PlatformLayout><DemoScenariosPage /></PlatformLayout></div>} />
+        <Route path="/onboarding" element={<div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-950 to-slate-950"><PlatformLayout><OnboardingPage /></PlatformLayout></div>} />
+        <Route path="/launch" element={<div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-950 to-slate-950"><PlatformLayout><LaunchShowcasePage /></PlatformLayout></div>} />
         <Route path="/partnerships" element={<div className="min-h-screen bg-gradient-to-br from-amber-950 via-orange-950 to-red-950"><PlatformLayout><OrganizationContributionsPage /></PlatformLayout></div>} />
-        <Route path="/beta-flow" element={<PlatformLayout><BetaUserFlowPage /></PlatformLayout>} />
+        <Route path="/beta-flow" element={<div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-950 to-slate-950"><PlatformLayout><BetaUserFlowPage /></PlatformLayout></div>} />
         <Route path="/amplification" element={<div className="min-h-screen bg-gradient-to-br from-slate-950 via-gray-950 to-blue-950"><PlatformLayout><StoryAmplificationPage /></PlatformLayout></div>} />
-        <Route path="/launch-prep" element={<PlatformLayout><LaunchPreparationPage /></PlatformLayout>} />
-        <Route path="/stakeholder-demo" element={<PlatformLayout><StakeholderDemoPage /></PlatformLayout>} />
+        <Route path="/launch-prep" element={<div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-950 to-slate-950"><PlatformLayout><LaunchPreparationPage /></PlatformLayout></div>} />
+        <Route path="/stakeholder-demo" element={<div className="min-h-screen bg-gradient-to-br from-indigo-950 via-purple-950 to-slate-950"><PlatformLayout><StakeholderDemoPage /></PlatformLayout></div>} />
 
-        {/* Admin routes */}
-        <Route path="/admin" element={<AdminAuth><IntegrationDashboard /></AdminAuth>} />
-        <Route path="/admin/moderation" element={<AdminAuth><ModerationDashboard /></AdminAuth>} />
-        <Route path="/admin/events" element={<AdminAuth><EventsAdminDashboard /></AdminAuth>} />
-        <Route path="/admin/newsroom" element={<AdminAuth><NewsroomAdminDashboard /></AdminAuth>} />
-        <Route path="/admin/governance" element={<AdminAuth><GovernanceDocumentsAdmin /></AdminAuth>} />
+        {/* Admin routes - Governance/purple theme for administrative functions */}
+        <Route path="/admin" element={<div className="min-h-screen bg-gradient-to-br from-purple-950 via-violet-950 to-indigo-950"><AdminAuth><IntegrationDashboard /></AdminAuth></div>} />
+        <Route path="/admin/moderation" element={<div className="min-h-screen bg-gradient-to-br from-purple-950 via-violet-950 to-indigo-950"><AdminAuth><ModerationDashboard /></AdminAuth></div>} />
+        <Route path="/admin/events" element={<div className="min-h-screen bg-gradient-to-br from-purple-950 via-violet-950 to-indigo-950"><AdminAuth><EventsAdminDashboard /></AdminAuth></div>} />
+        <Route path="/admin/newsroom" element={<div className="min-h-screen bg-gradient-to-br from-purple-950 via-violet-950 to-indigo-950"><AdminAuth><NewsroomAdminDashboard /></AdminAuth></div>} />
+        <Route path="/admin/governance" element={<div className="min-h-screen bg-gradient-to-br from-purple-950 via-violet-950 to-indigo-950"><AdminAuth><GovernanceDocumentsAdmin /></AdminAuth></div>} />
+        <Route path="/admin/migration" element={<div className="min-h-screen bg-gradient-to-br from-purple-950 via-violet-950 to-indigo-950"><AdminAuth><BlkoutUKMigrationPanel /></AdminAuth></div>} />
+        
+        {/* Story Archive */}
+        <Route path="/newsroom/archive" element={<div className="min-h-screen bg-gradient-to-br from-slate-950 via-gray-950 to-blue-950"><StoryArchive /></div>} />
         
         {/* 404 */}
         <Route path="*" element={<NotFoundPage />} />
