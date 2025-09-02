@@ -43,7 +43,10 @@ export default function StoryArchive() {
         data: data?.length, 
         count, 
         page: page + 1,
-        error: queryError 
+        error: queryError,
+        dataExists: !!data,
+        dataArray: Array.isArray(data),
+        firstTitle: data?.[0]?.title
       })
         
       if (queryError) {
@@ -90,21 +93,9 @@ export default function StoryArchive() {
         setCurrentPage(page)
         
       } else if (!append) {
-        // Only show fallback on first load if no data
-        console.log('🗃️ No articles found')
-        setArticles([
-          {
-            id: 'no-data-1',
-            title: 'No Published Articles Found',
-            excerpt: 'The database currently contains no published articles. This could mean articles are still being processed or the migration hasn\'t been completed yet.',
-            author: { name: 'System', avatar: 'SY' },
-            published_at: new Date().toISOString(),
-            category: 'System',
-            tags: ['system', 'info'],
-            submitted_via: 'system',
-            status: 'published'
-          }
-        ])
+        // No data found - this shouldn't happen with 268 BLKOUTUK articles
+        console.log('🗃️ No articles found - this is unexpected!', { data, count, queryError })
+        setArticles([])
         setHasMore(false)
       }
     } catch (err) {
