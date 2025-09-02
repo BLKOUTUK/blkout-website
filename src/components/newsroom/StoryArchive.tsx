@@ -31,11 +31,11 @@ export default function StoryArchive() {
       console.log(`🗃️ Fetching page ${page + 1} (${ITEMS_PER_PAGE} items)...`)
       console.log('🗃️ Using Supabase URL:', import.meta.env.VITE_SUPABASE_URL || 'fallback')
       
-      // Query for published articles only - BLKOUTUK articles are now published
+      // Query for BLKOUTUK articles only (identified by source URL) - temporarily ignore status due to RLS
       const { data, error: queryError, count } = await supabase
         .from('newsroom_articles')
         .select('*', { count: 'exact' })
-        .eq('status', 'published') // Now showing only published articles (BLKOUTUK migrated content)
+        .like('source_url', 'https://blkoutuk.com%') // Show BLKOUTUK articles regardless of status due to RLS issues
         .order('created_at', { ascending: false })
         .range(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE - 1)
       
@@ -184,9 +184,9 @@ export default function StoryArchive() {
             <h3 className="text-blue-400 font-bold mb-2">📊 Archive Status</h3>
             <div className="text-blue-300 text-sm space-y-1">
               <p>
-                Showing {articles.length} of {totalCount} published articles • 
-                {articles.filter(a => a.source_url?.includes('blkoutuk.com')).length} migrated from BLKOUTUK • 
-                {articles.filter(a => !a.source_url?.includes('blkoutuk.com') && a.source_url).length} community submissions
+                Showing {articles.length} of {totalCount} BLKOUTUK legacy articles • 
+                {totalCount} migrated from BLKOUTUK.com • 
+                Complete historical archive of community stories
               </p>
               {hasMore && (
                 <p>Loading in chunks of {ITEMS_PER_PAGE} for better performance</p>
