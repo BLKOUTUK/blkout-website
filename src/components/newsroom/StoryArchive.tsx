@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { Archive } from 'lucide-react'
 import { createClient } from '@supabase/supabase-js'
 
@@ -64,6 +65,7 @@ export default function StoryArchive() {
         const transformedArticles = data.map(article => ({
           id: article.id,
           title: article.title,
+          slug: article.slug,
           excerpt: article.excerpt || article.content?.substring(0, 200) || '',
           author: { 
             name: 'BLKOUTUK', // Default author for migrated articles
@@ -190,9 +192,10 @@ export default function StoryArchive() {
         {/* Articles Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {articles.map((article, index) => (
-            <div
+            <Link
               key={article.id}
-              className="bg-white/5 backdrop-blur-sm rounded-lg overflow-hidden hover:bg-white/10 transition-all duration-300 cursor-pointer group"
+              to={`/newsroom/article/${article.slug || article.id}`}
+              className="bg-white/5 backdrop-blur-sm rounded-lg overflow-hidden hover:bg-white/10 transition-all duration-300 cursor-pointer group block"
             >
               <div className="p-6">
                 <div className="flex items-center gap-2 mb-3">
@@ -237,7 +240,7 @@ export default function StoryArchive() {
                   </div>
                 )}
               </div>
-            </div>
+            </Link>
           ))}
         </div>
 

@@ -12,6 +12,7 @@ import SimpleModeration from './components/newsroom/admin/SimpleModeration'
 import AdminHubComplete from './components/blkout/AdminHubComplete'
 import SupabaseEventsAdmin from './components/admin/SupabaseEventsAdmin'
 import StoryArchive from './components/newsroom/StoryArchive'
+import ArticleReader from './components/newsroom/ArticleReader'
 
 // Simple skip navigation component
 const SkipNavigation = () => (
@@ -136,6 +137,7 @@ function App() {
                 <StoryArchive />
               </div>
             } />
+            <Route path="/newsroom/article/:slug" element={<ArticleReader />} />
             <Route path="/events" element={
               <div className="text-white min-h-screen bg-gradient-to-br from-amber-950 via-orange-950 to-red-950 p-8">
                 <div className="max-w-4xl mx-auto">
