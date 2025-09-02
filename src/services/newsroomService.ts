@@ -155,10 +155,12 @@ class NewsroomService {
     const status = filters?.status || 'published'
     
     let query = supabase
-      .from('articles')
+      .from('newsroom_articles')
       .select('*', { count: 'exact' })
       .order('published_at', { ascending: false })
       .range(offset, offset + limit - 1)
+      // Only include moderated/approved articles, exclude archived migrated content
+      .neq('submitted_via', 'blkoutuk-migration')
     
     // Apply filters
     if (status !== 'all') {
@@ -417,6 +419,97 @@ class NewsroomService {
   // Toggle data source preference
   setPreferSupabase(prefer: boolean) {
     this.useSupabase = prefer
+  }
+
+  // Get ALL articles for archive (including migrated content)
+  async getArchiveArticles(filters?: {
+    category?: string
+    featured?: boolean
+    limit?: number
+    page?: number
+    status?: 'all' | 'published' | 'draft'
+    submitted_via?: string
+  }): Promise<NewsroomResponse> {
+    console.log('🗄️ NewsroomService.getArchiveArticles called with filters:', filters)
+    console.log('🗄️ useSupabase:', this.useSupabase, 'supabaseConnected:', this.supabaseConnected)
+    
+    if (!this.useSupabase || !this.supabaseConnected) {
+      console.log('🗄️ Using fallback articles')
+      return this.getFallbackArticles(filters)
+    }
+
+    const limit = filters?.limit || 50
+    const page = filters?.page || 1
+    const offset = (page - 1) * limit
+    const status = filters?.status || 'published'
+    
+    console.log('🗄️ Query parameters:', { limit, page, offset, status })
+    
+    let query = supabase
+      .from('newsroom_articles')
+      .select('*', { count: 'exact' })
+      .order('published_at', { ascending: false })
+      .range(offset, offset + limit - 1)
+      // DO NOT exclude migrated articles for archive
+    
+    // Apply filters
+    if (status !== 'all') {
+      query = query.eq('status', status)
+    }
+    
+    if (filters?.category) {
+      query = query.eq('category', filters.category)
+    }
+    
+    if (filters?.featured !== undefined) {
+      query = query.eq('featured', filters.featured)
+    }
+
+    if (filters?.submitted_via) {
+      query = query.eq('submitted_via', filters.submitted_via)
+    }
+
+    console.log('🗄️ Executing Supabase query...')
+    const { data, error, count } = await query
+    
+    console.log('🗄️ Query result - data:', data?.length, 'articles, error:', error, 'count:', count)
+    
+    if (error) {
+      console.error('🗄️ Supabase query error:', error)
+      throw error
+    }
+
+    const articles = (data || []).map(article => ({
+      id: article.id,
+      title: article.title,
+      excerpt: article.excerpt || article.content?.substring(0, 200) || '',
+      content: article.content,
+      author: typeof article.author === 'string' 
+        ? { name: article.author, avatar: article.author.substring(0, 2).toUpperCase() }
+        : article.author,
+      publishedAt: article.published_at,
+      readTime: article.read_time || Math.max(1, Math.ceil((article.content?.length || 0) / 1000)),
+      category: article.category,
+      featured: article.featured,
+      tags: article.tags || [],
+      imageUrl: article.image_url,
+      source: article.submitted_via || 'Newsroom',
+      externalUrl: article.source_url,
+      status: article.priority === 'high' ? 'breaking' : (article.status === 'published' ? 'published' : 'updated'),
+      // Add migration context
+      submitted_via: article.submitted_via
+    }))
+
+    const response = {
+      articles,
+      total: count || 0,
+      page,
+      hasMore: (count || 0) > offset + limit,
+      source: 'supabase' as const
+    }
+    
+    console.log('🗄️ Returning response with', articles.length, 'articles')
+    return response
   }
 
   // Fallback data when backend is unavailable

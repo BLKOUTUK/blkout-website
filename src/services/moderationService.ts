@@ -85,7 +85,20 @@ class ModerationService {
           limit: filters?.limit || 50,
           offset: filters?.offset
         }),
-        supabase.from('newsroom_articles').select('*').limit(filters?.limit || 50)
+        (() => {
+          let query = supabase.from('newsroom_articles')
+            .select('*')
+            .limit(filters?.limit || 50)
+            // EXCLUDE BLKOUTUK migrated articles from moderation queue
+            .not('source_url', 'like', 'https://blkoutuk.com%')
+          
+          if (filters?.status === 'pending') {
+            query = query.in('status', ['draft', 'reviewing'])
+          } else if (filters?.status) {
+            query = query.eq('status', filters.status === 'approved' ? 'published' : filters.status)
+          }
+          return query
+        })()
       ])
 
       console.log('📊 Events result:', eventsResult)
@@ -99,7 +112,7 @@ class ModerationService {
           items.push({
             id: event.id,
             type: 'event',
-            status: event.status === 'draft' ? 'pending' : (event.status === 'published' ? 'approved' : 'rejected'),
+            status: ['draft', 'reviewing'].includes(event.status) ? 'pending' : (event.status === 'published' ? 'approved' : 'rejected'),
             priority: 'medium',
             content: {
               id: event.id,
@@ -125,7 +138,7 @@ class ModerationService {
           items.push({
             id: article.id,
             type: 'newsroom_article',
-            status: article.status === 'draft' ? 'pending' : (article.status === 'published' ? 'approved' : 'rejected'),
+            status: ['draft', 'reviewing'].includes(article.status) ? 'pending' : (article.status === 'published' ? 'approved' : 'rejected'),
             priority: 'medium',
             content: {
               id: article.id,

@@ -11,6 +11,7 @@ import GovernancePhase1 from './components/governance/GovernancePhase1'
 import SimpleModeration from './components/newsroom/admin/SimpleModeration'
 import AdminHubComplete from './components/blkout/AdminHubComplete'
 import SupabaseEventsAdmin from './components/admin/SupabaseEventsAdmin'
+import StoryArchive from './components/newsroom/StoryArchive'
 
 // Simple skip navigation component
 const SkipNavigation = () => (
@@ -130,6 +131,11 @@ function App() {
               </div>
             } />
             <Route path="/newsroom" element={<NewsroomPhase1 />} />
+            <Route path="/newsroom/archive" element={
+              <div className="min-h-screen bg-gradient-to-br from-slate-950 via-gray-950 to-blue-950">
+                <StoryArchive />
+              </div>
+            } />
             <Route path="/events" element={
               <div className="text-white min-h-screen bg-gradient-to-br from-amber-950 via-orange-950 to-red-950 p-8">
                 <div className="max-w-4xl mx-auto">

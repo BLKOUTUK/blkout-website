@@ -178,6 +178,13 @@ const NewsroomPhase1 = () => {
               <Plus className="w-5 h-5" />
               Submit Story
             </button>
+            <Link
+              to="/newsroom/archive"
+              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-violet-600 text-white font-bold rounded-lg hover:from-purple-700 hover:to-violet-700 transition-all duration-300"
+            >
+              <Archive className="w-5 h-5" />
+              Story Archive
+            </Link>
             <div className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold rounded-lg">
               <Archive className="w-5 h-5" />
               Submissions ({submissionStats.total})
