@@ -80,11 +80,31 @@ class ModerationService {
       
       // Get both events and articles from Supabase with detailed logging
       const [eventsResult, articlesResult] = await Promise.all([
-        supabaseHelpers.getEvents({
-          status: filters?.status === 'pending' ? 'reviewing' : filters?.status,
-          limit: filters?.limit || 50,
-          offset: filters?.offset
-        }),
+        (async () => {
+          // For events, we need to handle multiple pending statuses from Chrome extension
+          let eventQuery = supabase.from('events').select('*').limit(filters?.limit || 50)
+          
+          if (filters?.status === 'pending') {
+            console.log('🔍 Filtering for pending events (pending, draft, reviewing status)')
+            // Chrome extension creates events with 'pending' status, but moderation expects 'draft/reviewing'
+            eventQuery = eventQuery.in('status', ['pending', 'draft', 'reviewing'])
+          } else if (filters?.status) {
+            eventQuery = eventQuery.eq('status', filters.status === 'approved' ? 'published' : filters.status)
+          }
+          
+          if (filters?.offset) {
+            eventQuery = eventQuery.range(filters.offset, filters.offset + (filters.limit || 50) - 1)
+          }
+          
+          const result = await eventQuery.order('created_at', { ascending: false })
+          console.log('📊 Raw events query result:', {
+            success: !result.error,
+            count: result.data?.length || 0,
+            error: result.error?.message,
+            firstTitle: result.data?.[0]?.title || result.data?.[0]?.name
+          })
+          return result
+        })(),
         (async () => {
           let query = supabase.from('newsroom_articles')
             .select('*')
@@ -115,30 +135,51 @@ class ModerationService {
 
       const items: ModerationItem[] = []
 
-      // Convert events to moderation items
+      // Convert events to moderation items with detailed logging
       if (eventsResult.data) {
-        eventsResult.data.forEach(event => {
-          items.push({
+        console.log('🔄 Converting events to moderation items:', eventsResult.data.length)
+        eventsResult.data.forEach((event, index) => {
+          console.log(`📅 Processing event ${index + 1}:`, {
             id: event.id,
-            type: 'event',
-            status: ['draft', 'reviewing'].includes(event.status) ? 'pending' : (event.status === 'published' ? 'approved' : 'rejected'),
-            priority: 'medium',
+            title: event.title || event.name,
+            status: event.status,
+            source: event.source,
+            hasDescription: !!event.description
+          })
+          
+          const moderationItem = {
+            id: event.id,
+            type: 'event' as const,
+            // Map Chrome extension 'pending' status to moderation 'pending' status
+            status: ['draft', 'reviewing', 'pending'].includes(event.status) ? 'pending' as const : (event.status === 'published' ? 'approved' as const : 'rejected' as const),
+            priority: 'medium' as const,
             content: {
               id: event.id,
-              title: event.title || event.name,
-              content: event.description,
-              author: event.organizer || 'Chrome Extension',
+              title: event.title || event.name || 'Untitled Event',
+              content: event.description || '',
+              author: event.organizer || event.organizer_name || 'Chrome Extension',
               category: event.tags?.[0] || 'community'
             },
-            submittedBy: event.organizer || 'Chrome Extension',
+            submittedBy: event.organizer || event.organizer_name || 'Chrome Extension',
             submittedAt: event.created_at,
             flags: [],
             metadata: {
               source: event.source || 'chrome_extension',
-              location: event.location
+              location: typeof event.location === 'string' ? event.location : event.location?.address || 'Location TBD',
+              event_date: event.event_date
             }
+          }
+          
+          console.log('✅ Created event moderation item:', {
+            id: moderationItem.id,
+            type: moderationItem.type,
+            status: moderationItem.status,
+            title: moderationItem.content.title
           })
+          
+          items.push(moderationItem)
         })
+        console.log('📋 Total moderation items after events:', items.length)
       }
 
       // Convert articles to moderation items with detailed logging
@@ -283,12 +324,13 @@ class ModerationService {
     try {
       console.log(`🔄 Moderating content ${id}: ${action}`, { reason })
       
-      // Try to update as event first
+      // Try to update as event first (handle both pending and draft statuses)
       const eventResult = await supabase
         .from('events')
         .update({
           status: action === 'approve' ? 'published' : 'archived',
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
+          ...(reason && { moderation_reason: reason })
         })
         .eq('id', id)
         .select()
@@ -300,7 +342,7 @@ class ModerationService {
         return { 
           success: true, 
           data: eventResult.data,
-          message: `Event ${action === 'approve' ? 'approved' : 'rejected'} successfully` 
+          message: `Event "${eventResult.data.title || eventResult.data.name}" ${action === 'approve' ? 'approved and published' : 'rejected and archived'} successfully` 
         }
       }
 
@@ -309,7 +351,8 @@ class ModerationService {
         .from('newsroom_articles')
         .update({
           status: action === 'approve' ? 'published' : 'archived',
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
+          ...(reason && { moderation_reason: reason })
         })
         .eq('id', id)
         .select()
@@ -321,7 +364,7 @@ class ModerationService {
         return { 
           success: true, 
           data: articleResult.data,
-          message: `Article ${action === 'approve' ? 'approved' : 'rejected'} successfully` 
+          message: `Article "${articleResult.data.title}" ${action === 'approve' ? 'approved and published' : 'rejected and archived'} successfully` 
         }
       }
 
