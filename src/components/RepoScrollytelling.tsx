@@ -248,10 +248,10 @@ const slides = [
     id: 'pathway-discovery',
     type: 'pathway',
     title: 'DISCOVER YOUR LIBERATION PATHWAY',
-    subtitle: 'FIND YOUR ROLE IN THE MOVEMENT',
-    content: 'Now that you\'ve explored what\'s possible, let\'s get curious about how you want to contribute.',
+    subtitle: 'THERE ARE MANY DIFFERENT ROLES TO PLAY',
+    content: 'Now that you\'ve explored what\'s possible, let\'s get curious about how you want to contribute.\n\nWhat part of our work do you find most interesting?',
     bgColor: '#ea580c',
-    question: "What draws you most to community work?",
+    question: "What part of our work do you find most interesting?",
     options: [
       { text: "Direct mutual aid and support", pathway: "community-healer" },
       { text: "Creative expression and storytelling", pathway: "creative-catalyst" }, 
@@ -264,9 +264,9 @@ const slides = [
         subtitle: "The medicine our people need",
         description: "You're drawn to the deep work of healing - both individual and collective.",
         opportunities: [
-          "📅 Healing Circle - Thursdays 7pm, Peckham Community Centre",
-          "🎯 Peer support coordinator - Manchester chapter, £200/month",
-          "📚 Trauma-Informed Community Care certification - March 15"
+          "Ready to take the next step? Become a member of the BLKOUT cooperative and help build the platform for Black queer liberation.",
+          "Join our waiting list for the next recruitment round - we're looking for passionate community healers to help shape our future.",
+          "Your skills in community care and mutual aid are exactly what our cooperative needs to thrive."
         ]
       },
       "creative-catalyst": {
@@ -274,9 +274,9 @@ const slides = [
         subtitle: "Storytelling as liberation practice",
         description: "You understand that representation matters, but authentic representation controlled by us matters more.",
         opportunities: [
-          "📝 'Black Futures' digital magazine - £150 per published piece",
-          "🎬 Documentary collaboration with Kwame - grant funded",
-          "🎪 'Realness Stories' curator - £300/event + travel"
+          "Ready to take the next step? Become a member of the BLKOUT cooperative and help build the platform for Black queer liberation.",
+          "Join our waiting list for the next recruitment round - we're looking for creative catalysts to help shape our storytelling future.",
+          "Your skills in creative expression and authentic representation are exactly what our cooperative needs to thrive."
         ]
       },
       "tech-liberator": {
@@ -284,9 +284,9 @@ const slides = [
         subtitle: "Code as cooperative power",
         description: "You see technology as a tool for collective liberation, not individual accumulation.",
         opportunities: [
-          "💻 Platform development - React/TypeScript, cooperative ownership",
-          "🔧 Notification system design - £500 developer fee",
-          "🏫 'Code for Liberation' workshop - £250/session"
+          "Ready to take the next step? Become a member of the BLKOUT cooperative and help build the platform for Black queer liberation.",
+          "Join our waiting list for the next recruitment round - we're looking for tech liberators to help shape our digital future.",
+          "Your skills in technology and digital liberation are exactly what our cooperative needs to thrive."
         ]
       },
       "systems-transformer": {
@@ -294,9 +294,9 @@ const slides = [
         subtitle: "Policy as collective power building",
         description: "You're committed to changing the rules of the game, not just playing it better.",
         opportunities: [
-          "📊 Stonewall Housing data analyst - £2,800/month contract",
-          "⚡ Government consultation response - conversion therapy ban",
-          "🤝 Housing Justice Alliance strategy meeting - Feb 24"
+          "Ready to take the next step? Become a member of the BLKOUT cooperative and help build the platform for Black queer liberation.",
+          "Join our waiting list for the next recruitment round - we're looking for systems transformers to help shape our policy work.",
+          "Your skills in policy and systemic change are exactly what our cooperative needs to thrive."
         ]
       }
     }
@@ -329,7 +329,7 @@ const slides = [
     type: 'cta',
     title: 'READY TO JOIN?',
     subtitle: 'YOUR LIBERATION JOURNEY STARTS HERE',
-    content: 'You\'ve experienced our vision. Now join the movement for real community support, personalized AI assistance, and collective liberation action.',
+    content: 'You\'ve experienced our vision. Now join the movement for real community support, personalized AI assistance, and collective liberation action. Access the full BLKOUT platform with community tools, AI assistance, and cooperative features.',
     bgImage: '/images/squared/facecard SQUARED.png',
     bgColor: '#000000'
   },
@@ -340,7 +340,7 @@ const slides = [
     type: 'cta',
     title: 'STAY CONNECTED',
     subtitle: 'JOIN OUR NEWSLETTER',
-    content: 'Stay connected with our latest projects, events, and community stories.',
+    content: 'Stay connected with our latest projects, events, and community stories. Regular updates on cooperative development and community initiatives.',
     bgColor: '#1e3a8a',
     ctaText: 'JOIN NEWSLETTER',
     ctaUrl: 'https://blkoutuk.com/newsletter'
@@ -352,7 +352,7 @@ const slides = [
     type: 'cta',
     title: 'EXPLORE THE PLATFORM',
     subtitle: 'DISCOVER MORE',
-    content: 'Browse our full range of projects, resources, and ways to get involved in the movement.',
+    content: 'Browse our full range of projects, resources, and ways to get involved in the movement. Community hub, events calendar, and cooperative resources.',
     bgColor: '#4c1d95',
     ctaText: 'EXPLORE PLATFORM',
     ctaUrl: 'https://platform-blkout.vercel.app'
