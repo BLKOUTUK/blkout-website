@@ -78,14 +78,14 @@ class ModerationService {
     try {
       console.log('🔍 Fetching moderation queue with filters:', filters)
       
-      // Get both events and articles from Supabase
+      // Get both events and articles from Supabase with detailed logging
       const [eventsResult, articlesResult] = await Promise.all([
         supabaseHelpers.getEvents({
           status: filters?.status === 'pending' ? 'reviewing' : filters?.status,
           limit: filters?.limit || 50,
           offset: filters?.offset
         }),
-        (() => {
+        (async () => {
           let query = supabase.from('newsroom_articles')
             .select('*')
             .limit(filters?.limit || 50)
@@ -93,11 +93,20 @@ class ModerationService {
             .not('source_url', 'like', 'https://blkoutuk.com%')
           
           if (filters?.status === 'pending') {
+            console.log('🔍 Filtering for pending articles (draft, reviewing status)')
             query = query.in('status', ['draft', 'reviewing'])
           } else if (filters?.status) {
             query = query.eq('status', filters.status === 'approved' ? 'published' : filters.status)
           }
-          return query
+          
+          const result = await query
+          console.log('📰 Raw articles query result:', {
+            success: !result.error,
+            count: result.data?.length || 0,
+            error: result.error?.message,
+            firstTitle: result.data?.[0]?.title
+          })
+          return result
         })()
       ])
 
@@ -132,17 +141,27 @@ class ModerationService {
         })
       }
 
-      // Convert articles to moderation items  
+      // Convert articles to moderation items with detailed logging
       if (articlesResult.data) {
-        articlesResult.data.forEach(article => {
-          items.push({
+        console.log('🔄 Converting articles to moderation items:', articlesResult.data.length)
+        articlesResult.data.forEach((article, index) => {
+          console.log(`📄 Processing article ${index + 1}:`, {
             id: article.id,
-            type: 'newsroom_article',
-            status: ['draft', 'reviewing'].includes(article.status) ? 'pending' : (article.status === 'published' ? 'approved' : 'rejected'),
-            priority: 'medium',
+            title: article.title,
+            status: article.status,
+            author: article.author,
+            hasContent: !!article.content,
+            hasExcerpt: !!article.excerpt
+          })
+          
+          const moderationItem = {
+            id: article.id,
+            type: 'newsroom_article' as const,
+            status: ['draft', 'reviewing'].includes(article.status) ? 'pending' as const : (article.status === 'published' ? 'approved' as const : 'rejected' as const),
+            priority: 'medium' as const,
             content: {
               id: article.id,
-              title: article.title,
+              title: article.title || 'Untitled Article',
               content: article.content || article.excerpt || '',
               author: article.author || 'Chrome Extension',
               category: article.category || 'general'
@@ -155,8 +174,18 @@ class ModerationService {
               source_url: article.source_url,
               word_count: article.content?.split(' ').length || 0
             }
+          }
+          
+          console.log('✅ Created moderation item:', {
+            id: moderationItem.id,
+            type: moderationItem.type,
+            status: moderationItem.status,
+            title: moderationItem.content.title
           })
+          
+          items.push(moderationItem)
         })
+        console.log('📋 Total moderation items after articles:', items.length)
       }
 
       // Apply additional filters

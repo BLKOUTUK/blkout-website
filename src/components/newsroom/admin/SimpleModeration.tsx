@@ -38,17 +38,31 @@ const SimpleModeration: React.FC = () => {
         limit: 50
       }
 
+      console.log('🔄 Loading moderation data with filters:', queueFilters)
+
       const [queueResponse, statsResponse] = await Promise.all([
         moderationService.getQueue(queueFilters),
         moderationService.getStats()
       ])
 
+      console.log('📋 Queue response:', {
+        success: queueResponse.success,
+        itemsCount: queueResponse.data?.items?.length || 0,
+        error: queueResponse.error
+      })
+
       if (queueResponse.success) {
+        console.log('✅ Setting queue items:', queueResponse.data?.items?.length || 0)
         setQueue(queueResponse.data?.items || [])
+      } else {
+        console.error('❌ Queue loading failed:', queueResponse.error)
       }
 
       if (statsResponse.success) {
+        console.log('📊 Setting stats:', statsResponse.data)
         setStats(statsResponse.data)
+      } else {
+        console.error('❌ Stats loading failed:', statsResponse.error)
       }
     } catch (error) {
       console.error('Error loading moderation data:', error)
