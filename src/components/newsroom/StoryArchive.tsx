@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Archive } from 'lucide-react'
+import { Archive, Search, X } from 'lucide-react'
 import { createClient } from '@supabase/supabase-js'
 
 const supabase = createClient(
@@ -16,11 +16,13 @@ export default function StoryArchive() {
   const [hasMore, setHasMore] = useState(true)
   const [currentPage, setCurrentPage] = useState(0)
   const [totalCount, setTotalCount] = useState(0)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [isSearching, setIsSearching] = useState(false)
   
   const ITEMS_PER_PAGE = 12 // Smaller chunks for better performance
 
-  // Fetch articles with pagination - direct approach
-  const loadArticles = async (page: number = 0, append: boolean = false) => {
+  // Fetch articles with pagination and search
+  const loadArticles = async (page: number = 0, append: boolean = false, search: string = '') => {
     if (append) {
       setLoadingMore(true)
     } else {
@@ -29,15 +31,22 @@ export default function StoryArchive() {
     }
     
     try {
-      console.log(`🗃️ Fetching page ${page + 1} (${ITEMS_PER_PAGE} items)...`)
+      console.log(`🗃️ Fetching page ${page + 1} (${ITEMS_PER_PAGE} items)...${search ? ` Search: "${search}"` : ''}`)
       console.log('🗃️ Using Supabase URL:', import.meta.env.VITE_SUPABASE_URL || 'fallback')
       
-      // Query for BLKOUTUK published articles in the archive
-      const { data, error: queryError, count } = await supabase
+      // Build query for BLKOUTUK published articles with optional search
+      let query = supabase
         .from('newsroom_articles')
         .select('*', { count: 'exact' })
         .like('source_url', 'https://blkoutuk.com%')
         .eq('status', 'published')
+      
+      // Add search filter if provided
+      if (search.trim()) {
+        query = query.or(`title.ilike.%${search}%,content.ilike.%${search}%,excerpt.ilike.%${search}%`)
+      }
+      
+      const { data, error: queryError, count } = await query
         .order('created_at', { ascending: false })
         .range(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE - 1)
       
@@ -124,8 +133,21 @@ export default function StoryArchive() {
   // Load more articles
   const loadMore = async () => {
     if (!loadingMore && hasMore) {
-      await loadArticles(currentPage + 1, true)
+      await loadArticles(currentPage + 1, true, searchQuery)
     }
+  }
+
+  // Search functionality
+  const handleSearch = async (query: string) => {
+    setSearchQuery(query)
+    setIsSearching(!!query.trim())
+    await loadArticles(0, false, query)
+  }
+
+  const clearSearch = async () => {
+    setSearchQuery('')
+    setIsSearching(false)
+    await loadArticles(0, false, '')
   }
 
   // Initial load
@@ -153,9 +175,38 @@ export default function StoryArchive() {
             <Archive className="w-8 h-8 text-blue-400" />
             <h1 className="text-4xl font-bold text-white">Story Archive</h1>
           </div>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
             Our complete collection of community stories, including the preserved legacy of BLKOUTUK.com
           </p>
+          
+          {/* Search Bar */}
+          <div className="max-w-2xl mx-auto">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search className="h-5 w-5 text-gray-400" />
+              </div>
+              <input
+                type="text"
+                className="block w-full pl-10 pr-12 py-4 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Search 278 articles by title, content, or keywords..."
+                value={searchQuery}
+                onChange={(e) => handleSearch(e.target.value)}
+              />
+              {searchQuery && (
+                <button
+                  onClick={clearSearch}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-white transition-colors"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              )}
+            </div>
+            {isSearching && (
+              <div className="mt-2 text-sm text-blue-300">
+                🔍 Searching for "{searchQuery}"...
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Archive Status */}
@@ -178,12 +229,24 @@ export default function StoryArchive() {
             <h3 className="text-blue-400 font-bold mb-2">📊 Archive Status</h3>
             <div className="text-blue-300 text-sm space-y-1">
               <p>
-                Showing {articles.length} of {totalCount} BLKOUTUK legacy articles • 
-                {totalCount} migrated from BLKOUTUK.com • 
-                Complete historical archive of community stories
+                {isSearching ? (
+                  <>
+                    Found {articles.length} of {totalCount} articles matching "{searchQuery}" • 
+                    Searching BLKOUTUK legacy archive
+                  </>
+                ) : (
+                  <>
+                    Showing {articles.length} of {totalCount} BLKOUTUK legacy articles • 
+                    {totalCount} migrated from BLKOUTUK.com • 
+                    Complete historical archive of community stories
+                  </>
+                )}
               </p>
-              {hasMore && (
+              {hasMore && !isSearching && (
                 <p>Loading in chunks of {ITEMS_PER_PAGE} for better performance</p>
+              )}
+              {isSearching && totalCount === 0 && (
+                <p>Try different keywords or <button onClick={clearSearch} className="text-blue-400 hover:text-blue-300 underline">clear search</button> to browse all articles</p>
               )}
             </div>
           </div>
