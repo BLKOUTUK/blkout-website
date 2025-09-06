@@ -1,6 +1,5 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
-import { FaceSquareOverlay } from './components/FaceSquareOverlay'
 
 // Import ALL original components systematically
 import FullPageScrollytellingOptimized from './components/blkout/FullPageScrollytellingOptimized'
@@ -285,12 +284,10 @@ function App() {
   }
   
   return (
-    <>
-      <FaceSquareOverlay size="lg" position="center" enableLazyLoad={false} />
-      <Router>
-        <SkipNavigation />
-        <ScrollToTop />
-        <Routes>
+    <Router>
+      <SkipNavigation />
+      <ScrollToTop />
+      <Routes>
         <Route path="/" element={<FullPageScrollytellingOptimized />} />
         <Route path="/platform" element={<PlatformLayout><PlatformHomepage /></PlatformLayout>} />
         <Route path="/magazine" element={<MagazineHomepageEnhanced />} />
@@ -324,8 +321,7 @@ function App() {
         <Route path="/downloads" element={<ExtensionDownloadSimple />} />
         <Route path="/chrome-extension" element={<ExtensionDownloadSimple />} />
       </Routes>
-      </Router>
-    </>
+    </Router>
   )
 }
 
