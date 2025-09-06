@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { supabaseHelpers, supabase } from '../lib/supabase'
 import type { Event, NewsArticle, Contact } from '../types/supabase'
 
+
 // Hook for managing events with real-time updates
 export const useEvents = (filters: {
   status?: string
@@ -22,12 +23,17 @@ export const useEvents = (filters: {
       const result = await supabaseHelpers.getEvents(filters)
       
       if (result.error) {
-        throw new Error(result.error.message || 'Failed to fetch events')
+        setError(result.error.message || 'Failed to fetch events')
+        setEvents([])
+        return
       }
       
       setEvents(result.data || [])
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error')
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error'
+      console.error('Events fetch error:', err)
+      setError(errorMessage)
+      setEvents([])
     } finally {
       setLoading(false)
     }

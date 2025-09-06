@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Plus, Settings, Heart, Shield, Mail, LogIn, LogOut, User, Zap, Users, Globe, Rss, BarChart3, Calendar, ArrowRight, AlertCircle, RefreshCw, WifiOff } from 'lucide-react'
+import { Plus, Settings, Heart, Shield, Mail, LogIn, LogOut, User, Zap, Users, Globe, Rss, BarChart3, Calendar, ArrowRight, AlertCircle, RefreshCw, WifiOff, X, CheckCircle } from 'lucide-react'
 import PrimaryNavigationEnhanced from '../layout/PrimaryNavigationEnhanced'
 import PlatformFooter from '../layout/PlatformFooter'
 import LoadingSpinner from '../common/LoadingSpinner'
@@ -15,6 +15,26 @@ interface FilterOptions {
   source: 'all' | string
   location: string
   searchTerm: string
+}
+
+interface EventSubmissionFormData {
+  title: string
+  description: string
+  date: string
+  startTime: string
+  endTime: string
+  location: string
+  organizer: string
+  email: string
+  url: string
+  tags: string
+}
+
+interface ContactFormData {
+  name: string
+  email: string
+  message: string
+  subject: string
 }
 
 // Event Detail Modal Component
@@ -355,7 +375,7 @@ const FilterBar: React.FC<{
 // Main Events Page Component
 const EventsPageIntegrated: React.FC = () => {
   // Use Supabase hook instead of eventsService
-  const { events, loading, error } = useEvents({ status: 'published' }) // Only show published events
+  const { events, loading, error } = useEvents({ status: 'approved' }) // Only show approved events
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([])
   const [stats, setStats] = useState({ pending: 0, approved: 0, rejected: 0, total: 0 })
   const [retryCount, setRetryCount] = useState(0)
@@ -367,11 +387,34 @@ const EventsPageIntegrated: React.FC = () => {
   })
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [showEventForm, setShowEventForm] = useState(false)
+  const [showContactForm, setShowContactForm] = useState(false)
+  const [eventSubmissionStatus, setEventSubmissionStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
+  const [contactStatus, setContactStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
+  const [statusMessage, setStatusMessage] = useState('')
   const [filters, setFilters] = useState<FilterOptions>({
     dateRange: 'all',
     source: 'all',
     location: '',
     searchTerm: ''
+  })
+  const [eventFormData, setEventFormData] = useState<EventSubmissionFormData>({
+    title: '',
+    description: '',
+    date: '',
+    startTime: '',
+    endTime: '',
+    location: '',
+    organizer: '',
+    email: '',
+    url: '',
+    tags: ''
+  })
+  const [contactFormData, setContactFormData] = useState<ContactFormData>({
+    name: '',
+    email: '',
+    message: '',
+    subject: 'General Inquiry'
   })
 
   const handleEventClick = (event: Event) => {
@@ -382,6 +425,88 @@ const EventsPageIntegrated: React.FC = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false)
     setSelectedEvent(null)
+  }
+
+  const handleEventSubmission = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!eventFormData.title || !eventFormData.description || !eventFormData.date || !eventFormData.organizer || !eventFormData.email) return
+    
+    setEventSubmissionStatus('submitting')
+    
+    try {
+      // Simulate API call - in production, this would call a real event submission endpoint
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      
+      // Validate email format
+      if (!eventFormData.email.includes('@') || !eventFormData.email.includes('.')) {
+        throw new Error('Please enter a valid email address')
+      }
+      
+      setEventSubmissionStatus('success')
+      setStatusMessage('Event submitted successfully! We\'ll review it and get back to you soon.')
+      
+      // Reset form
+      setEventFormData({
+        title: '',
+        description: '',
+        date: '',
+        startTime: '',
+        endTime: '',
+        location: '',
+        organizer: '',
+        email: '',
+        url: '',
+        tags: ''
+      })
+      
+      setTimeout(() => {
+        setShowEventForm(false)
+        setEventSubmissionStatus('idle')
+        setStatusMessage('')
+      }, 3000)
+    } catch (error) {
+      setEventSubmissionStatus('error')
+      setStatusMessage(error instanceof Error ? error.message : 'Failed to submit event. Please try again.')
+      setTimeout(() => setEventSubmissionStatus('idle'), 3000)
+    }
+  }
+
+  const handleContactSubmission = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!contactFormData.name || !contactFormData.email || !contactFormData.message) return
+    
+    setContactStatus('submitting')
+    
+    try {
+      // Simulate API call - in production, this would call a real contact endpoint
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      
+      // Validate email format
+      if (!contactFormData.email.includes('@') || !contactFormData.email.includes('.')) {
+        throw new Error('Please enter a valid email address')
+      }
+      
+      setContactStatus('success')
+      setStatusMessage('Message sent successfully! We\'ll get back to you soon.')
+      
+      // Reset form
+      setContactFormData({
+        name: '',
+        email: '',
+        message: '',
+        subject: 'General Inquiry'
+      })
+      
+      setTimeout(() => {
+        setShowContactForm(false)
+        setContactStatus('idle')
+        setStatusMessage('')
+      }, 3000)
+    } catch (error) {
+      setContactStatus('error')
+      setStatusMessage(error instanceof Error ? error.message : 'Failed to send message. Please try again.')
+      setTimeout(() => setContactStatus('idle'), 3000)
+    }
   }
 
   // Calculate stats from loaded events (published events only)
@@ -462,8 +587,24 @@ const EventsPageIntegrated: React.FC = () => {
       />
       <div className="min-h-screen bg-gradient-to-br from-yellow-950 via-yellow-900 to-amber-900">
         <PrimaryNavigationEnhanced />
+
+        {/* Community Faces Overlay */}
+        <div className="fixed left-8 top-1/2 -translate-y-1/2 w-48 h-48 md:w-64 md:h-64 pointer-events-none z-10 border-4 border-yellow-400">
+          <img 
+            src="/face-cycling.gif"
+            alt="Community faces cycling"
+            className="w-full h-full object-contain filter drop-shadow-2xl opacity-95 border-2 border-red-500"
+            loading="lazy"
+            onError={(e) => {
+              console.error('Events page: Failed to load face-cycling.gif:', e);
+              e.currentTarget.style.border = '2px solid red';
+              e.currentTarget.alt = 'GIF FAILED TO LOAD';
+            }}
+            onLoad={() => console.log('Events page: face-cycling.gif loaded successfully')}
+          />
+        </div>
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pl-72">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
@@ -691,11 +832,17 @@ const EventsPageIntegrated: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 1.8 }}
             >
-              <button className="bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-yellow-950 font-bold px-8 py-4 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
+              <button 
+                onClick={() => setShowEventForm(true)}
+                className="bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-yellow-950 font-bold px-8 py-4 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg"
+              >
                 Submit an Event
               </button>
-              <button className="bg-transparent border-2 border-yellow-400 hover:bg-yellow-400/10 text-yellow-100 font-bold px-8 py-4 rounded-xl transition-all duration-300 transform hover:scale-105">
-                Join Our Community
+              <button 
+                onClick={() => setShowContactForm(true)}
+                className="bg-transparent border-2 border-yellow-400 hover:bg-yellow-400/10 text-yellow-100 font-bold px-8 py-4 rounded-xl transition-all duration-300 transform hover:scale-105"
+              >
+                Contact Us
               </button>
             </motion.div>
           </div>
@@ -712,6 +859,384 @@ const EventsPageIntegrated: React.FC = () => {
               isOpen={isModalOpen}
               onClose={handleCloseModal}
             />
+          )}
+        </AnimatePresence>
+
+        {/* Event Submission Modal */}
+        <AnimatePresence>
+          {showEventForm && (
+            <motion.div
+              className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowEventForm(false)}
+            >
+              <motion.div
+                className="bg-yellow-900/90 backdrop-blur-sm border border-yellow-600/40 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-8"
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-3xl font-bold text-white heading-block uppercase">
+                    <span className="bg-gradient-to-r from-yellow-400 to-amber-300 bg-clip-text text-transparent">
+                      Submit Your Event
+                    </span>
+                  </h2>
+                  <button
+                    onClick={() => setShowEventForm(false)}
+                    className="text-yellow-400 hover:text-yellow-300 text-2xl"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+
+                <form onSubmit={handleEventSubmission} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-yellow-200 mb-2">
+                        Event Title *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={eventFormData.title}
+                        onChange={(e) => setEventFormData(prev => ({ ...prev, title: e.target.value }))}
+                        className="w-full px-4 py-3 bg-yellow-800/30 border border-yellow-600/40 rounded-lg text-white placeholder-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                        placeholder="Enter event title"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-yellow-200 mb-2">
+                        Organizer Name *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={eventFormData.organizer}
+                        onChange={(e) => setEventFormData(prev => ({ ...prev, organizer: e.target.value }))}
+                        className="w-full px-4 py-3 bg-yellow-800/30 border border-yellow-600/40 rounded-lg text-white placeholder-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                        placeholder="Your name or organization"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-yellow-200 mb-2">
+                      Event Description *
+                    </label>
+                    <textarea
+                      required
+                      rows={4}
+                      value={eventFormData.description}
+                      onChange={(e) => setEventFormData(prev => ({ ...prev, description: e.target.value }))}
+                      className="w-full px-4 py-3 bg-yellow-800/30 border border-yellow-600/40 rounded-lg text-white placeholder-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                      placeholder="Describe your event..."
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-yellow-200 mb-2">
+                        Date *
+                      </label>
+                      <input
+                        type="date"
+                        required
+                        value={eventFormData.date}
+                        onChange={(e) => setEventFormData(prev => ({ ...prev, date: e.target.value }))}
+                        className="w-full px-4 py-3 bg-yellow-800/30 border border-yellow-600/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-yellow-200 mb-2">
+                        Start Time
+                      </label>
+                      <input
+                        type="time"
+                        value={eventFormData.startTime}
+                        onChange={(e) => setEventFormData(prev => ({ ...prev, startTime: e.target.value }))}
+                        className="w-full px-4 py-3 bg-yellow-800/30 border border-yellow-600/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-yellow-200 mb-2">
+                        End Time
+                      </label>
+                      <input
+                        type="time"
+                        value={eventFormData.endTime}
+                        onChange={(e) => setEventFormData(prev => ({ ...prev, endTime: e.target.value }))}
+                        className="w-full px-4 py-3 bg-yellow-800/30 border border-yellow-600/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-yellow-200 mb-2">
+                        Location
+                      </label>
+                      <input
+                        type="text"
+                        value={eventFormData.location}
+                        onChange={(e) => setEventFormData(prev => ({ ...prev, location: e.target.value }))}
+                        className="w-full px-4 py-3 bg-yellow-800/30 border border-yellow-600/40 rounded-lg text-white placeholder-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                        placeholder="Event location or 'Online'"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-yellow-200 mb-2">
+                        Contact Email *
+                      </label>
+                      <input
+                        type="email"
+                        required
+                        value={eventFormData.email}
+                        onChange={(e) => setEventFormData(prev => ({ ...prev, email: e.target.value }))}
+                        className="w-full px-4 py-3 bg-yellow-800/30 border border-yellow-600/40 rounded-lg text-white placeholder-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                        placeholder="your.email@example.com"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-yellow-200 mb-2">
+                        Event URL
+                      </label>
+                      <input
+                        type="url"
+                        value={eventFormData.url}
+                        onChange={(e) => setEventFormData(prev => ({ ...prev, url: e.target.value }))}
+                        className="w-full px-4 py-3 bg-yellow-800/30 border border-yellow-600/40 rounded-lg text-white placeholder-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                        placeholder="https://example.com/event"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-yellow-200 mb-2">
+                        Tags (comma-separated)
+                      </label>
+                      <input
+                        type="text"
+                        value={eventFormData.tags}
+                        onChange={(e) => setEventFormData(prev => ({ ...prev, tags: e.target.value }))}
+                        className="w-full px-4 py-3 bg-yellow-800/30 border border-yellow-600/40 rounded-lg text-white placeholder-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                        placeholder="community, social, wellbeing"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Status Messages */}
+                  {eventSubmissionStatus === 'success' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="bg-emerald-900/40 border border-emerald-600/40 rounded-lg p-4 flex items-center"
+                    >
+                      <CheckCircle className="w-5 h-5 text-emerald-400 mr-3" />
+                      <span className="text-emerald-200">{statusMessage}</span>
+                    </motion.div>
+                  )}
+                  {eventSubmissionStatus === 'error' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="bg-red-900/40 border border-red-600/40 rounded-lg p-4 flex items-center"
+                    >
+                      <AlertCircle className="w-5 h-5 text-red-400 mr-3" />
+                      <span className="text-red-200">{statusMessage}</span>
+                    </motion.div>
+                  )}
+
+                  <div className="flex justify-end space-x-4 pt-6 border-t border-yellow-600/30">
+                    <button
+                      type="button"
+                      onClick={() => setShowEventForm(false)}
+                      className="px-6 py-3 text-yellow-400 hover:text-white transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={eventSubmissionStatus === 'submitting'}
+                      className="px-8 py-3 bg-gradient-to-r from-yellow-600 to-amber-600 text-white font-bold hover:from-yellow-500 hover:to-amber-500 transition-all rounded-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                    >
+                      {eventSubmissionStatus === 'submitting' ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          Submitting...
+                        </>
+                      ) : (
+                        'Submit Event'
+                      )}
+                    </button>
+                  </div>
+                </form>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Contact Modal */}
+        <AnimatePresence>
+          {showContactForm && (
+            <motion.div
+              className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowContactForm(false)}
+            >
+              <motion.div
+                className="bg-yellow-900/90 backdrop-blur-sm border border-yellow-600/40 rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-8"
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-2xl font-bold text-white heading-block uppercase">
+                    <span className="bg-gradient-to-r from-yellow-400 to-amber-300 bg-clip-text text-transparent">
+                      Contact Events Team
+                    </span>
+                  </h2>
+                  <button
+                    onClick={() => setShowContactForm(false)}
+                    className="text-yellow-400 hover:text-yellow-300 text-2xl"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                </div>
+
+                <form onSubmit={handleContactSubmission} className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-yellow-200 mb-2">
+                      Your Name *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={contactFormData.name}
+                      onChange={(e) => setContactFormData(prev => ({ ...prev, name: e.target.value }))}
+                      className="w-full px-4 py-3 bg-yellow-800/30 border border-yellow-600/40 rounded-lg text-white placeholder-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                      placeholder="Enter your name"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-yellow-200 mb-2">
+                      Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={contactFormData.email}
+                      onChange={(e) => setContactFormData(prev => ({ ...prev, email: e.target.value }))}
+                      className="w-full px-4 py-3 bg-yellow-800/30 border border-yellow-600/40 rounded-lg text-white placeholder-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                      placeholder="your.email@example.com"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-yellow-200 mb-2">
+                      Subject
+                    </label>
+                    <select
+                      value={contactFormData.subject}
+                      onChange={(e) => setContactFormData(prev => ({ ...prev, subject: e.target.value }))}
+                      className="w-full px-4 py-3 bg-yellow-800/30 border border-yellow-600/40 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                    >
+                      <option value="General Inquiry">General Inquiry</option>
+                      <option value="Event Partnership">Event Partnership</option>
+                      <option value="Venue Suggestion">Venue Suggestion</option>
+                      <option value="Event Feedback">Event Feedback</option>
+                      <option value="Technical Issue">Technical Issue</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-yellow-200 mb-2">
+                      Message *
+                    </label>
+                    <textarea
+                      required
+                      rows={5}
+                      value={contactFormData.message}
+                      onChange={(e) => setContactFormData(prev => ({ ...prev, message: e.target.value }))}
+                      className="w-full px-4 py-3 bg-yellow-800/30 border border-yellow-600/40 rounded-lg text-white placeholder-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                      placeholder="How can we help you?"
+                    />
+                  </div>
+
+                  {/* Status Messages */}
+                  {contactStatus === 'success' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="bg-emerald-900/40 border border-emerald-600/40 rounded-lg p-4 flex items-center"
+                    >
+                      <CheckCircle className="w-5 h-5 text-emerald-400 mr-3" />
+                      <span className="text-emerald-200">{statusMessage}</span>
+                    </motion.div>
+                  )}
+                  {contactStatus === 'error' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="bg-red-900/40 border border-red-600/40 rounded-lg p-4 flex items-center"
+                    >
+                      <AlertCircle className="w-5 h-5 text-red-400 mr-3" />
+                      <span className="text-red-200">{statusMessage}</span>
+                    </motion.div>
+                  )}
+
+                  <div className="flex justify-end space-x-4 pt-6 border-t border-yellow-600/30">
+                    <button
+                      type="button"
+                      onClick={() => setShowContactForm(false)}
+                      className="px-6 py-3 text-yellow-400 hover:text-white transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={contactStatus === 'submitting'}
+                      className="px-8 py-3 bg-gradient-to-r from-yellow-600 to-amber-600 text-white font-bold hover:from-yellow-500 hover:to-amber-500 transition-all rounded-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                    >
+                      {contactStatus === 'submitting' ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          Sending...
+                        </>
+                      ) : (
+                        <>
+                          <Mail className="w-4 h-4 mr-2" />
+                          Send Message
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </form>
+
+                <div className="mt-8 pt-6 border-t border-yellow-600/30">
+                  <p className="text-yellow-200 text-sm text-center mb-4">
+                    You can also reach us directly:
+                  </p>
+                  <div className="text-center space-y-2">
+                    <a
+                      href="mailto:events@blkoutuk.com"
+                      className="text-yellow-400 hover:text-yellow-300 font-medium flex items-center justify-center"
+                    >
+                      <Mail className="w-4 h-4 mr-2" />
+                      events@blkoutuk.com
+                    </a>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
           )}
         </AnimatePresence>
       </div>
