@@ -365,13 +365,26 @@ const NewsArticlesGrid = ({ articles, loading, onRefresh }: {
                         </div>
                       </div>
                       
-                      <motion.button
-                        whileHover={{ x: 5 }}
-                        className="flex items-center text-indigo-400 hover:text-white transition-colors font-bold heading-block uppercase text-sm"
-                      >
-                        READ FULL STORY
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </motion.button>
+                      {article.source_url ? (
+                        <motion.a
+                          href={article.source_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          whileHover={{ x: 5 }}
+                          className="flex items-center text-indigo-400 hover:text-white transition-colors font-bold heading-block uppercase text-sm"
+                        >
+                          VIEW FULL ARTICLE
+                          <ExternalLink className="w-4 h-4 ml-2" />
+                        </motion.a>
+                      ) : (
+                        <motion.button
+                          whileHover={{ x: 5 }}
+                          className="flex items-center text-indigo-400 hover:text-white transition-colors font-bold heading-block uppercase text-sm"
+                        >
+                          READ FULL STORY
+                          <ArrowRight className="w-4 h-4 ml-2" />
+                        </motion.button>
+                      )}
                     </div>
                   </div>
                 </div>
