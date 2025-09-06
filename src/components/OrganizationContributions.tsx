@@ -605,7 +605,7 @@ const OrganizationContributions: React.FC = () => {
                 <div>
                   <strong>Next Steps:</strong>
                   <ul className="mt-2 text-sm text-gray-600 space-y-1">
-                    <li>• Contact us at partnerships@blkout.org.uk</li>
+                    <li>• Contact us at partnerships@blkoutuk.com</li>
                     <li>• Provide organization verification documents</li>
                     <li>• Review community guidelines and standards</li>
                     <li>• Submit events/stories through verified process</li>
@@ -614,7 +614,7 @@ const OrganizationContributions: React.FC = () => {
               </div>
               <div className="flex gap-3 mt-6">
                 <button
-                  onClick={() => window.open('mailto:partnerships@blkout.org.uk', '_blank')}
+                  onClick={() => window.open('mailto:partnerships@blkoutuk.com', '_blank')}
                   className="flex-1 px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700"
                 >
                   Contact Us

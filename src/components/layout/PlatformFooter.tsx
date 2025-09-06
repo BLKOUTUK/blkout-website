@@ -1,11 +1,41 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Mail, Twitter, Instagram, Youtube, Github, ExternalLink, Home } from 'lucide-react'
+import { Mail, Twitter, Instagram, Youtube, Github, ExternalLink, Home, CheckCircle, AlertCircle } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { useState } from 'react'
 
 // Platform Footer Component
 export default function PlatformFooter() {
+  const [email, setEmail] = useState('')
+  const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
+  const [errorMessage, setErrorMessage] = useState('')
+
+  const handleNewsletterSignup = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!email) return
+
+    setNewsletterStatus('submitting')
+    
+    try {
+      // For now, simulate successful signup - in production this would call a real API
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      // For demonstration, we'll show success for valid email formats
+      if (email.includes('@') && email.includes('.')) {
+        setNewsletterStatus('success')
+        setEmail('')
+        setTimeout(() => setNewsletterStatus('idle'), 3000)
+      } else {
+        throw new Error('Please enter a valid email address')
+      }
+    } catch (error) {
+      setNewsletterStatus('error')
+      setErrorMessage(error instanceof Error ? error.message : 'Failed to subscribe. Please try again.')
+      setTimeout(() => setNewsletterStatus('idle'), 3000)
+    }
+  }
+
   return (
     <footer className="relative bg-gradient-to-br from-indigo-950 via-slate-950 to-indigo-900 border-t border-indigo-800/30">
       {/* Background pattern */}
@@ -190,21 +220,66 @@ export default function PlatformFooter() {
             <p className="text-indigo-200 mb-8 font-light">
               Get the latest stories, resources, and community updates delivered to your inbox.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+            <form onSubmit={handleNewsletterSignup} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-1 px-6 py-3 bg-indigo-900/50 border border-indigo-700/50 text-white placeholder-indigo-300 focus:outline-none focus:border-indigo-500 font-light"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="flex-1 px-6 py-3 bg-indigo-900/50 border border-indigo-700/50 text-white placeholder-indigo-300 focus:outline-none focus:border-indigo-500 font-light disabled:opacity-50"
+                disabled={newsletterStatus === 'submitting'}
+                required
               />
               <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="px-8 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold hover:from-indigo-500 hover:to-violet-500 transition-all heading-block uppercase flex items-center justify-center"
+                type="submit"
+                whileHover={{ scale: newsletterStatus === 'submitting' ? 1 : 1.02 }}
+                whileTap={{ scale: newsletterStatus === 'submitting' ? 1 : 0.98 }}
+                disabled={newsletterStatus === 'submitting'}
+                className="px-8 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold hover:from-indigo-500 hover:to-violet-500 transition-all heading-block uppercase flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <Mail className="w-4 h-4 mr-2" />
-                SUBSCRIBE
+                {newsletterStatus === 'submitting' ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    SUBSCRIBING
+                  </>
+                ) : newsletterStatus === 'success' ? (
+                  <>
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    SUBSCRIBED!
+                  </>
+                ) : newsletterStatus === 'error' ? (
+                  <>
+                    <AlertCircle className="w-4 h-4 mr-2" />
+                    TRY AGAIN
+                  </>
+                ) : (
+                  <>
+                    <Mail className="w-4 h-4 mr-2" />
+                    SUBSCRIBE
+                  </>
+                )}
               </motion.button>
-            </div>
+            </form>
+            
+            {/* Newsletter Status Messages */}
+            {newsletterStatus === 'success' && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-emerald-300 text-sm text-center mt-3 font-light"
+              >
+                ✅ Successfully subscribed to BLKOUT updates!
+              </motion.div>
+            )}
+            {newsletterStatus === 'error' && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-red-300 text-sm text-center mt-3 font-light"
+              >
+                ❌ {errorMessage}
+              </motion.div>
+            )}
           </div>
         </motion.div>
         

@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { showSuccess, showError } from '../../utils/notifications';
 import SocialModerationQueue from './SocialModerationQueue';
 import { supabase } from '../../lib/supabase';
+import { unifiedModerationBridge } from '../../services/unifiedModerationBridge';
 import { articles, getDraftArticles } from '../../data/articles';
 import { events, getDraftEvents } from '../../data/events';
 import { 

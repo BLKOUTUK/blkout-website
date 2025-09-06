@@ -36,6 +36,7 @@ import StoryAmplificationPage from './pages/StoryAmplificationPage'
 import LaunchPreparationPage from './pages/LaunchPreparationPage'
 import StakeholderDemoPage from './pages/StakeholderDemoPage'
 import DemonstrationBanner from './components/DemonstrationBanner'
+import { FaceSquareOverlay } from './components/FaceSquareOverlay'
 
 // Import Extension API to make it available globally
 import './services/extensionApi'
@@ -107,6 +108,8 @@ const ScrollytellingLink = () => {
 // Main Homepage Component
 const Homepage = () => (
   <div className="min-h-screen bg-gradient-to-br from-indigo-950 via-indigo-900 to-slate-900">
+    {/* Community faces cycling overlay */}
+    <FaceSquareOverlay size="xl" position="center" enableLazyLoad={true} />
     <PrimaryNavigationEnhanced />
     
     {/* Hero Section */}
@@ -122,13 +125,26 @@ const Homepage = () => (
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-5xl md:text-7xl font-black text-white mb-8 leading-tight tracking-tight uppercase">
-            <span className="bg-gradient-to-r from-amber-400 to-purple-600 bg-clip-text text-transparent">
-              BLKOUT
-            </span>
-            <br />
-            <span className="text-4xl md:text-6xl">Community Platform</span>
-          </h1>
+          <div className="flex items-center justify-center gap-6 mb-8">
+            <img 
+              src="/face-cycling.gif" 
+              alt="Community faces cycling" 
+              className="w-20 h-20 md:w-24 md:h-24 object-contain border-2 border-red-500"
+              onError={(e) => {
+                console.error('Failed to load face-cycling.gif:', e);
+                e.currentTarget.style.border = '2px solid red';
+                e.currentTarget.alt = 'GIF FAILED TO LOAD';
+              }}
+              onLoad={() => console.log('face-cycling.gif loaded successfully')}
+            />
+            <h1 className="text-5xl md:text-7xl font-black text-white leading-tight tracking-tight uppercase">
+              <span className="bg-gradient-to-r from-amber-400 to-purple-600 bg-clip-text text-transparent">
+                BLKOUT
+              </span>
+              <br />
+              <span className="text-4xl md:text-6xl">Community Platform</span>
+            </h1>
+          </div>
           
           <p className="text-xl text-indigo-200 mb-12 max-w-3xl mx-auto leading-relaxed">
             🚨 DEMONSTRATION SITE: Speculative platform capabilities showcase.

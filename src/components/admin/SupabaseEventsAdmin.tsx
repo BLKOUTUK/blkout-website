@@ -658,7 +658,7 @@ export default function SupabaseEventsAdmin() {
                             value={formData.contact_email}
                             onChange={(e) => setFormData(prev => ({ ...prev, contact_email: e.target.value }))}
                             className="w-full px-4 py-2 bg-indigo-800/50 border border-indigo-600 rounded text-white placeholder-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            placeholder="community@blkout.org"
+                            placeholder="community@blkoutuk.com"
                           />
                         </div>
                       </div>
