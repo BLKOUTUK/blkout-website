@@ -757,4 +757,188 @@ export const supabaseHelpers = {
   }
 }
 
+// Additional moderation functions for admin workflow
+export interface NewsroomItem {
+  id: string
+  title: string
+  content: string
+  author?: string
+  source_url?: string
+  status: string
+  created_at: string
+  published_at?: string
+  moderated_at?: string
+  moderated_by?: string
+  tags?: string[]
+}
+
+export interface EventItem {
+  id: string
+  title: string
+  description: string
+  event_date: string
+  location?: string
+  organizer?: string
+  source_url?: string
+  status: string
+  created_at: string
+  published_at?: string
+  moderated_at?: string
+  moderated_by?: string
+  tags?: string[]
+}
+
+// Get moderation queue (pending items)
+export const getModerationQueue = async (): Promise<{ news: NewsroomItem[], events: EventItem[] }> => {
+  try {
+    // Get pending news items - try both possible table names
+    const [newsResult1, newsResult2, eventsResult] = await Promise.all([
+      supabase
+        .from('newsroom')
+        .select('*')
+        .eq('status', 'pending')
+        .order('created_at', { ascending: false }),
+      supabase
+        .from('newsroom_articles')
+        .select('*')
+        .eq('status', 'pending')
+        .order('created_at', { ascending: false }),
+      supabase
+        .from('events')
+        .select('*')
+        .eq('status', 'pending')
+        .order('created_at', { ascending: false })
+    ])
+
+    // Use whichever table has data or no error
+    const newsData = newsResult1.data || newsResult2.data || []
+    
+    return {
+      news: newsData as NewsroomItem[],
+      events: (eventsResult.data || []) as EventItem[]
+    }
+  } catch (error) {
+    console.error('Error loading moderation queue:', error)
+    return { news: [], events: [] }
+  }
+}
+
+// Moderate an item (approve/reject)
+export const moderateItem = async (
+  type: 'news' | 'event',
+  id: string,
+  action: 'approved' | 'rejected',
+  moderator: string
+): Promise<{ data: any, error: any }> => {
+  try {
+    const table = type === 'news' ? 'newsroom' : 'events'
+    const newStatus = action === 'approved' ? 'published' : 'rejected'
+    
+    const updateData: any = {
+      status: newStatus,
+      moderated_at: new Date().toISOString(),
+      moderated_by: moderator
+    }
+
+    // Add published timestamp for approved items
+    if (newStatus === 'published') {
+      updateData.published_at = new Date().toISOString()
+    }
+
+    // Try the update on primary table, fallback if needed
+    let result = await supabase
+      .from(table)
+      .update(updateData)
+      .eq('id', id)
+      .select()
+
+    // If news and primary table fails, try alternative table
+    if (type === 'news' && result.error) {
+      result = await supabase
+        .from('newsroom_articles')
+        .update(updateData)
+        .eq('id', id)
+        .select()
+    }
+
+    return result
+  } catch (error) {
+    console.error(`Error moderating ${type}:`, error)
+    return { data: null, error }
+  }
+}
+
+// Search published content
+export const searchContent = async (
+  query: string = '',
+  type?: 'news' | 'event'
+): Promise<{ news: NewsroomItem[], events: EventItem[] }> => {
+  try {
+    const promises = []
+
+    if (!type || type === 'news') {
+      // Search both possible news tables
+      const newsQuery1 = supabase
+        .from('newsroom')
+        .select('*')
+        .eq('status', 'published')
+        .order('published_at', { ascending: false })
+
+      const newsQuery2 = supabase
+        .from('newsroom_articles')
+        .select('*')
+        .eq('status', 'published')
+        .order('published_at', { ascending: false })
+
+      if (query) {
+        newsQuery1.or(`title.ilike.%${query}%,content.ilike.%${query}%`)
+        newsQuery2.or(`title.ilike.%${query}%,content.ilike.%${query}%`)
+      }
+
+      promises.push(newsQuery1, newsQuery2)
+    }
+
+    if (!type || type === 'event') {
+      const eventsQuery = supabase
+        .from('events')
+        .select('*')
+        .eq('status', 'published')
+        .order('published_at', { ascending: false })
+
+      if (query) {
+        eventsQuery.or(`title.ilike.%${query}%,description.ilike.%${query}%`)
+      }
+
+      promises.push(eventsQuery)
+    }
+
+    const results = await Promise.all(promises)
+    
+    // Combine results from both news tables if applicable
+    let newsData: NewsroomItem[] = []
+    let eventsData: EventItem[] = []
+
+    if (!type || type === 'news') {
+      newsData = [...(results[0].data || []), ...(results[1].data || [])]
+      // Remove duplicates and sort by published date
+      newsData = newsData
+        .filter((item, index, self) => self.findIndex(i => i.id === item.id) === index)
+        .sort((a, b) => new Date(b.published_at || '').getTime() - new Date(a.published_at || '').getTime())
+    }
+
+    if (!type || type === 'event') {
+      const eventResultIndex = (!type || type === 'news') ? 2 : 0
+      eventsData = results[eventResultIndex]?.data || []
+    }
+
+    return {
+      news: newsData,
+      events: eventsData
+    }
+  } catch (error) {
+    console.error('Error searching content:', error)
+    return { news: [], events: [] }
+  }
+}
+
 export default supabase

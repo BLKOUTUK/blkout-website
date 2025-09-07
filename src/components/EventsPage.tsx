@@ -9,7 +9,7 @@ const EventsPage = () => {
   const loadEvents = async (query = '') => {
     try {
       setLoading(true)
-      const results = await searchContent(query, 'events')
+      const results = await searchContent(query, 'event')
       setEvents(results.events)
     } catch (error) {
       console.error('Error loading events:', error)
