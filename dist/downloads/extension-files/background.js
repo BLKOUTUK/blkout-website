@@ -1,5 +1,5 @@
 // BLKOUT Extension Background Service Worker
-const API_BASE = 'https://blkout-website.vercel.app/api';
+const API_BASE = 'https://platform-blkout.vercel.app/api';
 
 // Create context menu on installation
 chrome.runtime.onInstalled.addListener(() => {
