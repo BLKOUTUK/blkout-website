@@ -9,6 +9,7 @@ import NewsroomPage from './components/NewsroomPage'
 import StoryArchivePage from './components/StoryArchivePage'
 import EventsPage from './components/EventsPage'
 import GovernancePage from './components/GovernancePage'
+import CommunityShowcasePage from './pages/CommunityShowcasePage'
 
 const IvorRedirect = () => {
   React.useEffect(() => {
@@ -50,7 +51,7 @@ function App() {
           <Route path="/newsroom" element={<NewsroomPage />} />
           <Route path="/events" element={<EventsPage />} />
           <Route path="/ivor" element={<IvorRedirect />} />
-          <Route path="/community" element={<div className="min-h-screen bg-gray-900 text-white flex items-center justify-center"><h1 className="text-4xl">Community</h1></div>} />
+          <Route path="/community" element={<CommunityShowcasePage />} />
           <Route path="/governance" element={<GovernancePage />} />
           <Route path="/movement" element={<MovementRedirect />} />
           
