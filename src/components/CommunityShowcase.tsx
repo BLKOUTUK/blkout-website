@@ -133,18 +133,35 @@ const CommunityShowcase: React.FC<CommunityShowcaseProps> = ({
             <strong>Join BLKOUTHUB</strong> - Our bespoke online community app designed specifically for Black queer men. 
             Connect with brothers across the UK, share experiences, find support, and build lasting friendships in a safe, affirming space.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 items-center">
+          <div className="flex flex-col gap-4">
             <a 
-              href="https://blkouthub.com" 
+              href="https://blkouthub.com/invitation?code=BE862C"
               target="_blank" 
               rel="noopener noreferrer"
-              className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+              className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold text-lg rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg transform hover:scale-105"
             >
-              🚀 Join BLKOUTHUB Community
+              🎯 JOIN BLKOUTHUB NOW - EXCLUSIVE INVITATION
             </a>
-            <p className="text-sm text-gray-600">
-              ✨ Safe spaces • Real connections • Black queer brotherhood
-            </p>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex items-center space-x-2 mb-2">
+                <span className="text-blue-600 font-semibold">🔐 Exclusive Access Code:</span>
+                <code className="bg-blue-100 px-2 py-1 rounded font-mono text-blue-800">BE862C</code>
+              </div>
+              <p className="text-sm text-blue-700">
+                ✨ <strong>Limited invitation:</strong> Join our private community for Black queer men with this exclusive access code. 
+                Safe spaces • Real connections • Black queer brotherhood
+              </p>
+            </div>
+            <div className="flex justify-center">
+              <a 
+                href="https://blkouthub.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-sm text-gray-600 hover:text-gray-800 underline"
+              >
+                Learn more about BLKOUTHUB →
+              </a>
+            </div>
           </div>
         </div>
       </div>
