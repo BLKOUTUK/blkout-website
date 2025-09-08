@@ -11,12 +11,11 @@ const NewsroomPage = () => {
     try {
       setLoading(true)
       
-      // Query news_articles but exclude migrated blkoutuk.com content
+      // Query newsroom_articles for community-curated content
       let newsQuery = supabase
-        .from('news_articles')
+        .from('newsroom_articles')
         .select('*')
         .eq('status', 'published')
-        .neq('submitted_via', 'blkoutuk-migration') // Exclude migrated articles
         .order('published_at', { ascending: false })
 
       if (query) {
