@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App-minimal.tsx'
+import App from './App.tsx'
 import './index.css'
 
 // Import extension API for Chrome extension access

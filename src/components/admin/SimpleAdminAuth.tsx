@@ -4,7 +4,7 @@ interface AdminAuthProps {
   children: React.ReactNode
 }
 
-const AdminAuth = ({ children }: AdminAuthProps) => {
+const SimpleAdminAuth = ({ children }: AdminAuthProps) => {
   const [password, setPassword] = useState('')
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [error, setError] = useState('')
@@ -73,4 +73,4 @@ const AdminAuth = ({ children }: AdminAuthProps) => {
   )
 }
 
-export default AdminAuth
+export default SimpleAdminAuth

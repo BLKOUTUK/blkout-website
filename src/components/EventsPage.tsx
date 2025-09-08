@@ -1,22 +1,53 @@
 import React, { useState, useEffect } from 'react'
 import { searchContent, EventItem } from '../lib/supabase'
+import { eventsIntegration, ExternalEvent } from '../services/eventsIntegration'
+import SharedLayout from './layout/SharedLayout'
 
 const EventsPage = () => {
-  const [events, setEvents] = useState<EventItem[]>([])
+  const [events, setEvents] = useState<(EventItem | ExternalEvent)[]>([])
   const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true)
+  const [showExternal, setShowExternal] = useState(true)
+  const [eventSource, setEventSource] = useState<'all' | 'platform' | 'external'>('all')
 
   const loadEvents = async (query = '') => {
     try {
       setLoading(true)
-      const results = await searchContent(query, 'event')
-      setEvents(results.events)
+      let allEvents: (EventItem | ExternalEvent)[] = []
+
+      // Load platform events if requested
+      if (eventSource === 'all' || eventSource === 'platform') {
+        const platformResults = await searchContent(query, 'event')
+        allEvents.push(...platformResults.events.map(event => ({ ...event, source: 'platform' as const })))
+      }
+
+      // Load external events if requested
+      if ((eventSource === 'all' || eventSource === 'external') && showExternal) {
+        const externalEvents = await eventsIntegration.getCombinedEvents({
+          search: query,
+          includeExternal: true
+        })
+        allEvents.push(...externalEvents.map(event => ({ ...event, source: 'external' as const })))
+      }
+
+      // Sort by date
+      allEvents.sort((a, b) => {
+        const dateA = new Date(a.date || a.event_date || '').getTime()
+        const dateB = new Date(b.date || b.event_date || '').getTime()
+        return dateA - dateB
+      })
+
+      setEvents(allEvents)
     } catch (error) {
       console.error('Error loading events:', error)
     } finally {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    loadEvents(searchQuery)
+  }, [eventSource])
 
   useEffect(() => {
     loadEvents()
@@ -36,6 +67,42 @@ const EventsPage = () => {
           <p className="text-xl text-gray-300 text-center mb-8">
             Activism, community gatherings, and liberation events
           </p>
+          
+          {/* Event Source Toggle */}
+          <div className="flex justify-center mb-6">
+            <div className="bg-gray-700 rounded-lg p-1 flex space-x-1">
+              <button
+                onClick={() => setEventSource('all')}
+                className={`px-4 py-2 rounded-md text-sm transition-colors ${
+                  eventSource === 'all' 
+                    ? 'bg-blue-600 text-white' 
+                    : 'text-gray-300 hover:text-white'
+                }`}
+              >
+                All Events
+              </button>
+              <button
+                onClick={() => setEventSource('platform')}
+                className={`px-4 py-2 rounded-md text-sm transition-colors ${
+                  eventSource === 'platform' 
+                    ? 'bg-blue-600 text-white' 
+                    : 'text-gray-300 hover:text-white'
+                }`}
+              >
+                Platform Events
+              </button>
+              <button
+                onClick={() => setEventSource('external')}
+                className={`px-4 py-2 rounded-md text-sm transition-colors ${
+                  eventSource === 'external' 
+                    ? 'bg-blue-600 text-white' 
+                    : 'text-gray-300 hover:text-white'
+                }`}
+              >
+                Community Calendar
+              </button>
+            </div>
+          </div>
           
           {/* Search */}
           <form onSubmit={handleSearch} className="max-w-md mx-auto">

@@ -113,6 +113,360 @@ const CommunityShowcase: React.FC<CommunityShowcaseProps> = ({
 
   return (
     <div className="community-showcase p-6 bg-white rounded-lg shadow-sm">
+      {/* BLKOUTHUB Community Video */}
+      <div className="mb-8 p-6 bg-gradient-to-r from-blue-900/10 to-purple-900/10 rounded-lg border border-blue-200">
+        <h3 className="text-xl font-bold text-gray-900 mb-3">🌟 BLKOUTHUB - Community for Black Queer Men</h3>
+        <div className="aspect-video mb-4">
+          <iframe
+            width="100%"
+            height="100%"
+            src="https://www.youtube.com/embed/7fUP1Zbjvxw?si=DZpSyc-dgyVQAC8F"
+            title="BLKOUTHUB Community Video"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            className="rounded-lg"
+          ></iframe>
+        </div>
+        <div className="text-gray-700 mb-4">
+          <p className="mb-3">
+            <strong>Join BLKOUTHUB</strong> - Our bespoke online community app designed specifically for Black queer men. 
+            Connect with brothers across the UK, share experiences, find support, and build lasting friendships in a safe, affirming space.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 items-center">
+            <a 
+              href="https://blkouthub.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              🚀 Join BLKOUTHUB Community
+            </a>
+            <p className="text-sm text-gray-600">
+              ✨ Safe spaces • Real connections • Black queer brotherhood
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Newsletter Signup */}
+      <div className="mb-8 p-6 bg-gradient-to-r from-purple-900/10 to-pink-900/10 rounded-lg border border-purple-200">
+        <h3 className="text-xl font-bold text-gray-900 mb-3">📧 Monthly Newsletter</h3>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex-1">
+            <p className="text-gray-700 mb-3">
+              Stay connected with our monthly newsletter featuring community updates, upcoming events, 
+              liberation resources, and highlights from across the Black queer community.
+            </p>
+            <div className="flex gap-2">
+              <input
+                type="email"
+                placeholder="Enter your email address"
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              />
+              <button className="px-6 py-2 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition-colors">
+                Subscribe
+              </button>
+            </div>
+            <p className="text-xs text-gray-500 mt-2">
+              ✨ We respect your privacy. Unsubscribe at any time.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Co-Curation Opportunity - Limited Time */}
+      <div className="mb-8 p-6 bg-gradient-to-r from-green-900/10 to-teal-900/10 rounded-lg border border-green-200">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-xl font-bold text-gray-900">
+            🎯 Co-Curate Our Website - Content Moderator Opportunity
+          </h3>
+          <span className="bg-green-600 text-green-100 px-3 py-1 rounded-full text-sm font-semibold">
+            Until Sept 20
+          </span>
+        </div>
+        
+        <div className="grid md:grid-cols-2 gap-6">
+          <div>
+            <p className="text-gray-700 mb-4">
+              <strong>Help shape our community platform!</strong> We're inviting community members to become content moderators 
+              and co-curators, working directly with our team to ensure our website reflects authentic Black queer voices and values.
+            </p>
+            
+            <div className="space-y-2 text-sm text-gray-600 mb-4">
+              <div>• Review and moderate community-submitted content</div>
+              <div>• Co-curate featured stories and highlights</div>
+              <div>• Ensure content aligns with our liberation values</div>
+              <div>• Shape community guidelines and policies</div>
+              <div>• Work collaboratively with the core team</div>
+            </div>
+
+            <div className="bg-white/50 rounded-lg p-4 mb-4">
+              <p className="text-sm text-gray-700">
+                <strong className="text-green-700">Time commitment:</strong> 2-4 hours per week<br />
+                <strong className="text-green-700">Duration:</strong> 3-month initial commitment<br />
+                <strong className="text-green-700">Compensation:</strong> Volunteer role with recognition and future opportunities
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <div className="bg-white/70 rounded-lg p-4 mb-4">
+              <h4 className="font-semibold text-gray-900 mb-3">Learn More About This Opportunity</h4>
+              <div className="aspect-video mb-3">
+                <iframe
+                  src="https://docs.google.com/presentation/d/1cNtPoAN1boT8wNjkKPCO1n4jof2E-eTt4NTBxZNnOuk/embed?start=false&loop=false&delayms=3000"
+                  width="100%"
+                  height="100%"
+                  frameBorder="0"
+                  allowFullScreen
+                  className="rounded-lg"
+                  title="Content Moderator Opportunity Presentation"
+                ></iframe>
+              </div>
+              <a 
+                href="https://docs.google.com/presentation/d/1cNtPoAN1boT8wNjkKPCO1n4jof2E-eTt4NTBxZNnOuk/edit?usp=sharing"
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center text-green-600 hover:text-green-700 font-semibold text-sm"
+              >
+                View Full Presentation
+                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            </div>
+
+            <form 
+              action="mailto:rob@blkoutuk.com" 
+              method="post" 
+              encType="text/plain"
+              className="space-y-3"
+            >
+              <input type="hidden" name="subject" value="Content Moderator Application" />
+              <input
+                type="text"
+                name="name"
+                placeholder="Your Name"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                required
+              />
+              <input
+                type="email"
+                name="email"
+                placeholder="Your Email"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                required
+              />
+              <textarea
+                name="message"
+                placeholder="Tell us why you're interested in becoming a content moderator and what experience you bring..."
+                rows={3}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                required
+              ></textarea>
+              <button
+                type="submit"
+                className="w-full bg-gradient-to-r from-green-600 to-teal-600 text-white py-2 px-4 rounded-lg font-semibold hover:from-green-700 hover:to-teal-700 transition-colors text-sm"
+              >
+                Apply to Be a Content Moderator
+              </button>
+            </form>
+            
+            <p className="text-xs text-gray-500 mt-2">
+              ⏰ Applications close September 20th • Opens your email client
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* In Development Projects */}
+      <div className="mb-8 p-6 bg-gradient-to-r from-amber-900/10 to-orange-900/10 rounded-lg border border-amber-200">
+        <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
+          🚧 In Development - Expanding Our Platform
+        </h3>
+        
+        <div className="grid md:grid-cols-2 gap-6 mb-8">
+          {/* Channel BLKOUT */}
+          <div className="bg-white/50 rounded-lg p-6">
+            <div className="flex items-center mb-4">
+              <div className="w-10 h-10 bg-gradient-to-r from-red-500 to-pink-500 rounded-lg flex items-center justify-center mr-3">
+                <span className="text-white font-bold text-lg">📺</span>
+              </div>
+              <h4 className="text-lg font-bold text-gray-900">Channel BLKOUT</h4>
+            </div>
+            
+            <p className="text-gray-700 mb-4 text-sm leading-relaxed">
+              Our community-driven media platform amplifying Black queer voices through podcasts, video content, 
+              and live streaming. Channel BLKOUT will feature community conversations, educational content, 
+              cultural programming, and direct activism coverage - all created by and for our community.
+            </p>
+            
+            <div className="space-y-3">
+              <div className="flex items-center text-sm text-gray-600">
+                <span className="w-2 h-2 bg-amber-500 rounded-full mr-2"></span>
+                Community-produced podcasts and video series
+              </div>
+              <div className="flex items-center text-sm text-gray-600">
+                <span className="w-2 h-2 bg-amber-500 rounded-full mr-2"></span>
+                Live streaming events and discussions
+              </div>
+              <div className="flex items-center text-sm text-gray-600">
+                <span className="w-2 h-2 bg-amber-500 rounded-full mr-2"></span>
+                Educational content and skill-sharing
+              </div>
+            </div>
+            
+            <div className="mt-4">
+              <a 
+                href="https://blkoutnxtchannel.carrd.co" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center text-red-600 hover:text-red-700 font-semibold text-sm"
+              >
+                Learn More About Channel BLKOUT
+                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          {/* BLKOUT Storylab */}
+          <div className="bg-white/50 rounded-lg p-6">
+            <div className="flex items-center mb-4">
+              <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-lg flex items-center justify-center mr-3">
+                <span className="text-white font-bold text-lg">✍️</span>
+              </div>
+              <h4 className="text-lg font-bold text-gray-900">BLKOUT Storylab</h4>
+            </div>
+            
+            <p className="text-gray-700 mb-4 text-sm leading-relaxed">
+              A creative writing and storytelling platform where Black queer writers can develop their craft, 
+              share their stories, and connect with audiences. Storylab will feature workshops, mentorship programs, 
+              publishing opportunities, and a digital magazine showcasing community narratives.
+            </p>
+            
+            <div className="space-y-3">
+              <div className="flex items-center text-sm text-gray-600">
+                <span className="w-2 h-2 bg-amber-500 rounded-full mr-2"></span>
+                Creative writing workshops and mentorship
+              </div>
+              <div className="flex items-center text-sm text-gray-600">
+                <span className="w-2 h-2 bg-amber-500 rounded-full mr-2"></span>
+                Digital magazine and publishing platform
+              </div>
+              <div className="flex items-center text-sm text-gray-600">
+                <span className="w-2 h-2 bg-amber-500 rounded-full mr-2"></span>
+                Community story archives and oral history project
+              </div>
+            </div>
+            
+            <div className="mt-4">
+              <a 
+                href="https://blkoutnxtstory.carrd.co" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center text-purple-600 hover:text-purple-700 font-semibold text-sm"
+              >
+                Learn More About BLKOUT Storylab
+                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Development Partners Expression of Interest */}
+        <div className="bg-gradient-to-r from-orange-900/20 to-red-900/20 rounded-lg p-6">
+          <h4 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
+            🤝 Development Partners Wanted
+          </h4>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            <div>
+              <p className="text-gray-700 mb-4 text-sm">
+                We're seeking development partners, content creators, technical specialists, and community organizations 
+                to help bring Channel BLKOUT and BLKOUT Storylab to life. Whether you're interested in content creation, 
+                technical development, funding partnerships, or community outreach - we'd love to hear from you.
+              </p>
+              
+              <div className="space-y-2 text-sm text-gray-600">
+                <div>• <strong>Content creators</strong> - podcasters, video producers, writers</div>
+                <div>• <strong>Technical partners</strong> - developers, designers, platform specialists</div>
+                <div>• <strong>Funding partners</strong> - grants, sponsorship, cooperative investment</div>
+                <div>• <strong>Community partners</strong> - organizations, collectives, networks</div>
+              </div>
+            </div>
+            
+            <div>
+              <form 
+                action="mailto:rob@blkoutuk.com" 
+                method="post" 
+                encType="text/plain"
+                className="space-y-4"
+              >
+                <input type="hidden" name="subject" value="Development Partnership Interest" />
+                <div>
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Your Name"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    required
+                  />
+                </div>
+                <div>
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Your Email"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    required
+                  />
+                </div>
+                <div>
+                  <select
+                    name="interest"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    required
+                  >
+                    <option value="">Select Your Interest</option>
+                    <option value="Channel BLKOUT - Content Creation">Channel BLKOUT - Content Creation</option>
+                    <option value="Channel BLKOUT - Technical Development">Channel BLKOUT - Technical Development</option>
+                    <option value="BLKOUT Storylab - Writing/Editorial">BLKOUT Storylab - Writing/Editorial</option>
+                    <option value="BLKOUT Storylab - Platform Development">BLKOUT Storylab - Platform Development</option>
+                    <option value="Both Projects - Funding Partner">Both Projects - Funding Partner</option>
+                    <option value="Both Projects - Community Partner">Both Projects - Community Partner</option>
+                    <option value="Other Partnership Opportunity">Other Partnership Opportunity</option>
+                  </select>
+                </div>
+                <div>
+                  <textarea
+                    name="message"
+                    placeholder="Tell us about your interest and how you'd like to contribute..."
+                    rows={3}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    required
+                  ></textarea>
+                </div>
+                <button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-orange-600 to-red-600 text-white py-2 px-4 rounded-lg font-semibold hover:from-orange-700 hover:to-red-700 transition-colors text-sm"
+                >
+                  Express Interest in Partnership
+                </button>
+              </form>
+              
+              <p className="text-xs text-gray-500 mt-2">
+                ✨ This will open your email client with a pre-filled message to rob@blkoutuk.com
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>

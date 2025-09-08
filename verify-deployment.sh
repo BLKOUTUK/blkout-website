@@ -8,7 +8,7 @@ echo "================================="
 
 # Get the latest production deployment
 echo "📋 Fetching latest deployments..."
-LATEST_DEPLOYMENT=$(npx vercel ls --scope robs-projects-54d653d3 | grep "Production" | head -1 | awk '{print $2}')
+LATEST_DEPLOYMENT=$(npx vercel ls --scope robs-projects-54d653d3 | grep "Production" | head -1 | awk '{print $3}')
 
 if [ -z "$LATEST_DEPLOYMENT" ]; then
     echo "❌ Error: Could not find latest production deployment"

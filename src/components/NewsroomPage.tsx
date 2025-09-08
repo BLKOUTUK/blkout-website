@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { searchContent, NewsroomItem } from '../lib/supabase'
+import { supabase, NewsroomItem } from '../lib/supabase'
+import SharedLayout from './layout/SharedLayout'
 
 const NewsroomPage = () => {
   const [articles, setArticles] = useState<NewsroomItem[]>([])
@@ -9,10 +10,42 @@ const NewsroomPage = () => {
   const loadArticles = async (query = '') => {
     try {
       setLoading(true)
-      const results = await searchContent(query, 'news')
-      setArticles(results.news)
+      
+      // Query news_articles but exclude migrated blkoutuk.com content
+      let newsQuery = supabase
+        .from('news_articles')
+        .select('*')
+        .eq('status', 'published')
+        .neq('submitted_via', 'blkoutuk-migration') // Exclude migrated articles
+        .order('published_at', { ascending: false })
+
+      if (query) {
+        newsQuery = newsQuery.or(`title.ilike.%${query}%,content.ilike.%${query}%,excerpt.ilike.%${query}%`)
+      }
+
+      const { data, error } = await newsQuery
+
+      if (error) {
+        console.error('Error loading articles:', error)
+        setArticles([])
+      } else {
+        // Transform to NewsroomItem format
+        const transformedArticles = (data || []).map(article => ({
+          id: article.id,
+          title: article.title,
+          content: article.excerpt || article.content || '',
+          author: article.author,
+          published_at: article.published_at,
+          source_url: article.source_url,
+          tags: article.tags || [],
+          category: article.category,
+          status: article.status as 'published' | 'breaking' | 'updated'
+        }))
+        setArticles(transformedArticles)
+      }
     } catch (error) {
       console.error('Error loading articles:', error)
+      setArticles([])
     } finally {
       setLoading(false)
     }
@@ -28,14 +61,22 @@ const NewsroomPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      {/* Header */}
-      <div className="bg-gray-800 py-12">
-        <div className="container mx-auto px-6">
-          <h1 className="text-4xl font-bold text-center mb-4">📰 Newsroom</h1>
-          <p className="text-xl text-gray-300 text-center mb-8">
-            Community journalism and news analysis
-          </p>
+    <SharedLayout>
+      <div className="container mx-auto px-6 py-12">
+        <div className="text-center mb-12">
+          <h1 className="text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+            📰 Newsroom
+          </h1>
+          <h2 className="text-2xl mb-8 text-white font-bold uppercase tracking-wide">
+            COMMUNITY-CURATED ARTICLES FROM EXTERNAL SOURCES
+          </h2>
+          
+          <div className="bg-blue-900/30 border border-blue-500/50 rounded-lg p-4 max-w-3xl mx-auto mb-8">
+            <p className="text-blue-200 text-sm">
+              📰 <strong>Newsroom Purpose:</strong> Community-curated articles that link to external websites and sources. 
+              For our complete historical archive from blkoutuk.com, visit <a href="/stories" className="text-blue-300 hover:text-blue-100 underline">Story Archive</a>.
+            </p>
+          </div>
           
           {/* Search */}
           <form onSubmit={handleSearch} className="max-w-md mx-auto">
@@ -128,7 +169,7 @@ const NewsroomPage = () => {
           <a href="/" className="text-blue-400 hover:text-blue-300">← Back to Platform</a>
         </div>
       </div>
-    </div>
+    </SharedLayout>
   )
 }
 

@@ -6,6 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import { showSuccess, showError } from '../../utils/notifications';
 import SocialModerationQueue from './SocialModerationQueue';
+import ExternalEventsModerationTab from './ExternalEventsModerationTab';
 import { supabase } from '../../lib/supabase';
 import { unifiedModerationBridge } from '../../services/unifiedModerationBridge';
 import { articles, getDraftArticles } from '../../data/articles';
@@ -318,6 +319,19 @@ const ModerationDashboard: React.FC = () => {
                   Social Media
                 </div>
               </button>
+              <button
+                onClick={() => setActiveTab('external-events')}
+                className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                  activeTab === 'external-events'
+                    ? 'bg-purple-600 text-white'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4" />
+                  External Events
+                </div>
+              </button>
             </div>
           </div>
         </div>
@@ -327,6 +341,8 @@ const ModerationDashboard: React.FC = () => {
         {/* Conditional Content Based on Active Tab */}
         {activeTab === 'social' ? (
           <SocialModerationQueue />
+        ) : activeTab === 'external-events' ? (
+          <ExternalEventsModerationTab />
         ) : (
           <>
         {/* Stats Overview */}

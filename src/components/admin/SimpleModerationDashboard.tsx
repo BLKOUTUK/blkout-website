@@ -1,18 +1,45 @@
 import React, { useState, useEffect } from 'react'
-import { getModerationQueue, moderateItem, NewsroomItem, EventItem } from '../lib/supabase'
+import { supabase } from '../../lib/supabase'
 
-const ModerationDashboard = () => {
-  const [queue, setQueue] = useState<{ news: NewsroomItem[], events: EventItem[] }>({ news: [], events: [] })
+interface ModerationItem {
+  id: string
+  type: 'news' | 'event'
+  title: string
+  content?: string
+  description?: string
+  author?: string
+  organizer?: string
+  source_url?: string
+  created_at: string
+  status: string
+}
+
+const SimpleModerationDashboard = () => {
+  const [queue, setQueue] = useState<{ news: ModerationItem[], events: ModerationItem[] }>({ news: [], events: [] })
   const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState('')
 
   const loadQueue = async () => {
     try {
       setLoading(true)
-      const data = await getModerationQueue()
-      setQueue(data)
+      
+      // Fetch from both possible tables
+      const [newsResult1, newsResult2, eventsResult] = await Promise.all([
+        supabase.from('newsroom').select('*').eq('status', 'pending').order('created_at', { ascending: false }),
+        supabase.from('newsroom_articles').select('*').eq('status', 'pending').order('created_at', { ascending: false }),
+        supabase.from('events').select('*').eq('status', 'pending').order('created_at', { ascending: false })
+      ])
+
+      const newsData = newsResult1.data || newsResult2.data || []
+      const eventsData = eventsResult.data || []
+
+      setQueue({ 
+        news: newsData.map(item => ({ ...item, type: 'news' as const })), 
+        events: eventsData.map(item => ({ ...item, type: 'event' as const })) 
+      })
     } catch (error) {
       setMessage(`Error loading queue: ${error}`)
+      console.error('Error loading moderation queue:', error)
     } finally {
       setLoading(false)
     }
@@ -28,11 +55,25 @@ const ModerationDashboard = () => {
     action: 'approved' | 'rejected'
   ) => {
     try {
-      await moderateItem(type, id, action, 'admin')
+      const table = type === 'news' ? 'newsroom_articles' : 'events'
+      const status = action === 'approved' ? 'published' : 'rejected'
+      
+      const { error } = await supabase
+        .from(table)
+        .update({ 
+          status,
+          moderated_at: new Date().toISOString(),
+          moderated_by: 'admin'
+        })
+        .eq('id', id)
+
+      if (error) throw error
+
       setMessage(`${type === 'news' ? 'News item' : 'Event'} ${action} successfully!`)
       loadQueue() // Reload the queue
     } catch (error) {
       setMessage(`Error moderating ${type}: ${error}`)
+      console.error('Moderation error:', error)
     }
   }
 
@@ -74,7 +115,7 @@ const ModerationDashboard = () => {
                 queue.news.map((item) => (
                   <div key={item.id} className="bg-gray-800 rounded-lg p-6">
                     <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-                    <p className="text-gray-300 mb-3 line-clamp-3">{item.content}</p>
+                    <p className="text-gray-300 mb-3 line-clamp-3">{item.content || item.description}</p>
                     
                     <div className="text-sm text-gray-400 mb-3 space-y-1">
                       {item.author && <div><strong>Author:</strong> {item.author}</div>}
@@ -114,11 +155,9 @@ const ModerationDashboard = () => {
                 queue.events.map((item) => (
                   <div key={item.id} className="bg-gray-800 rounded-lg p-6">
                     <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-                    <p className="text-gray-300 mb-3 line-clamp-3">{item.description}</p>
+                    <p className="text-gray-300 mb-3 line-clamp-3">{item.description || item.content}</p>
                     
                     <div className="text-sm text-gray-400 mb-3 space-y-1">
-                      <div><strong>Date:</strong> {new Date(item.event_date).toLocaleDateString()}</div>
-                      {item.location && <div><strong>Location:</strong> {item.location}</div>}
                       {item.organizer && <div><strong>Organizer:</strong> {item.organizer}</div>}
                       {item.source_url && (
                         <div><strong>Source:</strong> <a href={item.source_url} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300">{item.source_url}</a></div>
@@ -155,4 +194,4 @@ const ModerationDashboard = () => {
   )
 }
 
-export default ModerationDashboard
+export default SimpleModerationDashboard

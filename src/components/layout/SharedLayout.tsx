@@ -1,8 +1,20 @@
-import React, { useState } from 'react'
+import React, { useState, ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { Instagram, Facebook, Youtube, Twitter, Linkedin } from 'lucide-react'
 
-const PlatformHomepage = () => {
+interface SharedLayoutProps {
+  children: ReactNode
+  title?: string
+  subtitle?: string
+  showHero?: boolean
+}
+
+export const SharedLayout = ({ 
+  children, 
+  title = "BLKOUT", 
+  subtitle = "COMMUNITY PLATFORM FOR BLACK QUEER LIBERATION",
+  showHero = false 
+}: SharedLayoutProps) => {
   const [isEcosystemOpen, setIsEcosystemOpen] = useState(false)
 
   return (
@@ -155,133 +167,76 @@ const PlatformHomepage = () => {
           </div>
         </div>
       </nav>
-      
-      {/* Hero Section */}
-      <div className="container mx-auto px-6 py-20">
-        <div className="text-center mb-16">
-          <h1 className="text-8xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-            BLKOUT
-          </h1>
-          <h2 className="text-3xl mb-8 text-white font-bold uppercase tracking-wide">
-            COMMUNITY PLATFORM FOR BLACK QUEER LIBERATION
-          </h2>
-          <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
-            Building community power through cooperative democracy, storytelling, and collective action.
-          </p>
-        </div>
 
-        {/* Core Ecosystem Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-          <Link to="/stories" className="group">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
-              <div className="text-4xl mb-4">📚</div>
-              <h3 className="text-xl font-bold mb-2">Story Archive</h3>
-              <p className="text-gray-400">Historical articles migrated from blkoutuk.com archive</p>
-            </div>
-          </Link>
-
-          <Link to="/newsroom" className="group">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
-              <div className="text-4xl mb-4">📰</div>
-              <h3 className="text-xl font-bold mb-2">Newsroom</h3>
-              <p className="text-gray-400">Current articles from community submissions and automation</p>
-            </div>
-          </Link>
-
-          <Link to="/events" className="group">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
-              <div className="text-4xl mb-4">📅</div>
-              <h3 className="text-xl font-bold mb-2">Events</h3>
-              <p className="text-gray-400">Community events and activism calendar</p>
-            </div>
-          </Link>
-
-          <Link to="/ivor" className="group">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
-              <div className="text-4xl mb-4">🤖</div>
-              <h3 className="text-xl font-bold mb-2">I.V.O.R.</h3>
-              <p className="text-gray-400">AI assistant and resource finder</p>
-            </div>
-          </Link>
-
-          <Link to="/community" className="group">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
-              <div className="text-4xl mb-4">🏘️</div>
-              <h3 className="text-xl font-bold mb-2">Community</h3>
-              <p className="text-gray-400">Connect with community members and discussions</p>
-            </div>
-          </Link>
-
-          <Link to="/governance" className="group">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
-              <div className="text-4xl mb-4">🏛️</div>
-              <h3 className="text-xl font-bold mb-2">Governance</h3>
-              <p className="text-gray-400">Democratic decision-making and cooperative ownership</p>
-            </div>
-          </Link>
-
-          <Link to="/movement" className="group">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
-              <div className="text-4xl mb-4">✊</div>
-              <h3 className="text-xl font-bold mb-2">Movement</h3>
-              <p className="text-gray-400">Our principles and community values</p>
-            </div>
-          </Link>
-
-          <a href="https://blkoutnxtchannel.carrd.co" target="_blank" rel="noopener noreferrer" className="group">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
-              <div className="text-4xl mb-4">📺</div>
-              <h3 className="text-xl font-bold mb-2">Media Hub</h3>
-              <p className="text-gray-400">Video content and community media</p>
-            </div>
-          </a>
-        </div>
-
-        {/* Social Media Links */}
-        <div className="text-center">
-          <h3 className="text-2xl font-bold mb-6">Connect With Us</h3>
-          <div className="flex justify-center items-center space-x-8 flex-wrap">
-            <a href="https://instagram.com/blkoutuk" target="_blank" rel="noopener noreferrer" 
-               className="text-white hover:text-gray-300 transition-colors p-2"
-               title="Instagram">
-              <Instagram size={28} />
-            </a>
-            <a href="https://facebook.com/blkoutuk" target="_blank" rel="noopener noreferrer"
-               className="text-white hover:text-gray-300 transition-colors p-2"
-               title="Facebook">
-              <Facebook size={28} />
-            </a>
-            <a href="https://twitter.com/blkoutuk" target="_blank" rel="noopener noreferrer"
-               className="text-white hover:text-gray-300 transition-colors p-2"
-               title="Twitter/X">
-              <Twitter size={28} />
-            </a>
-            <a href="https://linkedin.com/company/blkoutuk" target="_blank" rel="noopener noreferrer"
-               className="text-white hover:text-gray-300 transition-colors p-2"
-               title="LinkedIn">
-              <Linkedin size={28} />
-            </a>
-            <a href="https://tiktok.com/@blkoutuk" target="_blank" rel="noopener noreferrer"
-               className="text-white hover:text-gray-300 transition-colors p-2"
-               title="TikTok">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
-              </svg>
-            </a>
-            <a href="https://youtube.com/@blkoutuk" target="_blank" rel="noopener noreferrer"
-               className="text-white hover:text-gray-300 transition-colors p-2"
-               title="YouTube">
-              <Youtube size={28} />
-            </a>
-            <a href="https://blkouthub.com" target="_blank" rel="noopener noreferrer"
-               className="text-white hover:text-gray-300 text-lg font-semibold transition-colors px-4 py-2 border border-white/20 rounded-lg ml-4">
-              BLKOUTHUB
-            </a>
+      {/* Optional Hero Section */}
+      {showHero && (
+        <div className="container mx-auto px-6 py-20">
+          <div className="text-center mb-16">
+            <h1 className="text-8xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+              {title}
+            </h1>
+            <h2 className="text-3xl mb-8 text-white font-bold uppercase tracking-wide">
+              {subtitle}
+            </h2>
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
+              Building community power through cooperative democracy, storytelling, and collective action.
+            </p>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* Page Content */}
+      {children}
+
+      {/* Footer with Social Media Links */}
+      <footer className="bg-black/20 backdrop-blur-sm border-t border-white/10 mt-20">
+        <div className="container mx-auto px-6 py-16">
+          {/* Social Media Links */}
+          <div className="text-center mb-8">
+            <h3 className="text-2xl font-bold mb-6">Connect With Us</h3>
+            <div className="flex justify-center items-center space-x-8 flex-wrap">
+              <a href="https://instagram.com/blkoutuk" target="_blank" rel="noopener noreferrer" 
+                 className="text-white hover:text-gray-300 transition-colors p-2"
+                 title="Instagram">
+                <Instagram size={28} />
+              </a>
+              <a href="https://facebook.com/blkoutuk" target="_blank" rel="noopener noreferrer"
+                 className="text-white hover:text-gray-300 transition-colors p-2"
+                 title="Facebook">
+                <Facebook size={28} />
+              </a>
+              <a href="https://twitter.com/blkoutuk" target="_blank" rel="noopener noreferrer"
+                 className="text-white hover:text-gray-300 transition-colors p-2"
+                 title="Twitter/X">
+                <Twitter size={28} />
+              </a>
+              <a href="https://linkedin.com/company/blkoutuk" target="_blank" rel="noopener noreferrer"
+                 className="text-white hover:text-gray-300 transition-colors p-2"
+                 title="LinkedIn">
+                <Linkedin size={28} />
+              </a>
+              <a href="https://tiktok.com/@blkoutuk" target="_blank" rel="noopener noreferrer"
+                 className="text-white hover:text-gray-300 transition-colors p-2"
+                 title="TikTok">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                </svg>
+              </a>
+              <a href="https://youtube.com/@blkoutuk" target="_blank" rel="noopener noreferrer"
+                 className="text-white hover:text-gray-300 transition-colors p-2"
+                 title="YouTube">
+                <Youtube size={28} />
+              </a>
+              <a href="https://blkouthub.com" target="_blank" rel="noopener noreferrer"
+                 className="text-white hover:text-gray-300 text-lg font-semibold transition-colors px-4 py-2 border border-white/20 rounded-lg ml-4">
+                BLKOUTHUB
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
 
-export default PlatformHomepage
+export default SharedLayout
