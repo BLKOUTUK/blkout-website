@@ -4,7 +4,7 @@
  * Connects events system with storytelling pipeline for community celebration
  */
 
-import { supabase } from '../utils/supabaseClient'
+import { supabase } from '../lib/supabase'
 import { format, parseISO, startOfWeek, endOfWeek, subDays } from 'date-fns'
 
 // Types
