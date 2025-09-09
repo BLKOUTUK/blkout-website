@@ -49,6 +49,11 @@
       ]
     }
   ],
+  "functions": {
+    "api/*.ts": {
+      "runtime": "@vercel/node@3"
+    }
+  },
   "rewrites": [
     {
       "source": "/downloads/(.*)",
@@ -59,7 +64,31 @@
       "destination": "/extension-download.html"
     },
     {
-      "source": "/(.*)",
+      "source": "/community-org-demo",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/onboarding",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/dashboard",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/instagram-sources",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/community-curation",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/moderation",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/((?!api/).*)",
       "destination": "/index.html"
     }
   ]
