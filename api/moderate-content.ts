@@ -3,7 +3,9 @@
 // Purpose: Handle approve/reject actions from moderation dashboard
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { publicationService } from '../src/services/publicationService';
+
+// Test if the function loads
+console.log('Moderation API loaded successfully');
 
 interface ModerationRequest {
   action: 'approve' | 'reject' | 'edit';
@@ -60,31 +62,18 @@ export default async function handler(
     // Handle different moderation actions
     switch (action) {
       case 'approve':
-        try {
-          const publishedContent = await publicationService.approveFromModeration(
-            contentId, 
-            moderatorId,
-            contentType
-          );
-          
-          return res.status(200).json({
-            success: true,
-            message: 'Content approved and published successfully',
-            data: {
-              published: publishedContent,
-              contentId,
-              action: 'approved',
-              timestamp: new Date().toISOString()
-            }
-          });
-          
-        } catch (error) {
-          console.error('Approval failed:', error);
-          return res.status(500).json({
-            error: 'Approval failed',
-            message: error instanceof Error ? error.message : 'Unknown error during approval'
-          });
-        }
+        // Temporary mock response for testing
+        return res.status(200).json({
+          success: true,
+          message: 'Content approved and published successfully (mock)',
+          data: {
+            contentId,
+            contentType,
+            action: 'approved',
+            timestamp: new Date().toISOString(),
+            note: 'Mock response - publication service temporarily disabled for testing'
+          }
+        });
 
       case 'reject':
         if (!reason) {
