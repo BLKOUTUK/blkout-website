@@ -1,17 +1,15 @@
-// Publication Service Implementation
+// Updated Publication Service for bgjengudzfickgomjqmz project
+// Works with existing 'events' and 'newsroom_articles' tables
 // File: src/services/publicationService.ts
-// Purpose: Bridge moderation queue to published content for community consumption
 
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.VITE_SUPABASE_URL || '';
+const supabaseUrl = 'https://bgjengudzfickgomjqmz.supabase.co';
 const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || '';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 interface ModeratedContent {
   id: string;
-  content_id: string;
-  type: 'news_digest' | 'community_event' | 'chrome_extension_content';
   title: string;
   content: string;
   author?: string;
@@ -21,6 +19,12 @@ interface ModeratedContent {
   rejection_reason?: string;
   priority: 'low' | 'medium' | 'high';
   source: string;
+  // Event-specific fields
+  event_date?: string;
+  location?: string;
+  // Metadata
+  created_at?: string;
+  updated_at?: string;
 }
 
 interface PublishedContent {
@@ -31,34 +35,41 @@ interface PublishedContent {
   approved_by: string;
   status: 'published';
   source: string;
+  original_event_id?: string;
+  original_article_id?: string;
 }
 
 export interface PublicationService {
-  approveFromModeration(contentId: string, approverId: string): Promise<PublishedContent>;
-  rejectFromModeration(contentId: string, moderatorId: string, reason: string): Promise<void>;
-  publishContent(content: ModeratedContent): Promise<PublishedContent>;
+  approveFromModeration(contentId: string, approverId: string, contentType: 'events' | 'newsroom_articles'): Promise<PublishedContent>;
+  rejectFromModeration(contentId: string, moderatorId: string, reason: string, contentType: 'events' | 'newsroom_articles'): Promise<void>;
+  publishContent(content: ModeratedContent, contentType: 'events' | 'newsroom_articles'): Promise<PublishedContent>;
   updatePublicationStatus(contentId: string, status: 'published' | 'draft' | 'archived'): Promise<void>;
-  getPublishedContent(type?: string): Promise<PublishedContent[]>;
+  getPublishedContent(type?: 'events' | 'news' | 'articles'): Promise<PublishedContent[]>;
+  getModerationQueue(contentType?: 'events' | 'newsroom_articles'): Promise<ModeratedContent[]>;
 }
 
 export class CommunityPublicationService implements PublicationService {
   
-  async approveFromModeration(contentId: string, approverId: string): Promise<PublishedContent> {
+  async approveFromModeration(
+    contentId: string, 
+    approverId: string, 
+    contentType: 'events' | 'newsroom_articles'
+  ): Promise<PublishedContent> {
     try {
-      // 1. Get content from moderation queue
+      // 1. Get content from original table (events or newsroom_articles)
       const { data: moderatedContent, error: fetchError } = await supabase
-        .from('moderation_queue')
+        .from(contentType)
         .select('*')
         .eq('id', contentId)
         .single();
       
       if (fetchError || !moderatedContent) {
-        throw new Error(`Content not found in moderation: ${fetchError?.message || 'Unknown error'}`);
+        throw new Error(`Content not found in ${contentType}: ${fetchError?.message || 'Unknown error'}`);
       }
 
-      // 2. Update moderation status to approved
+      // 2. Update original table status to approved
       const { error: updateError } = await supabase
-        .from('moderation_queue')
+        .from(contentType)
         .update({ 
           status: 'approved',
           approved_by: approverId,
@@ -67,14 +78,14 @@ export class CommunityPublicationService implements PublicationService {
         .eq('id', contentId);
 
       if (updateError) {
-        throw new Error(`Failed to update moderation status: ${updateError.message}`);
+        throw new Error(`Failed to update ${contentType} status: ${updateError.message}`);
       }
 
       // 3. Publish the content
-      const published = await this.publishContent(moderatedContent);
+      const published = await this.publishContent(moderatedContent, contentType);
 
-      // 4. Remove from moderation queue after successful publication
-      await this.removeFromModerationQueue(contentId);
+      // 4. Log the moderation action
+      await this.logModerationAction(contentId, contentType, 'approved', approverId);
 
       return published;
 
@@ -84,10 +95,15 @@ export class CommunityPublicationService implements PublicationService {
     }
   }
 
-  async rejectFromModeration(contentId: string, moderatorId: string, reason: string): Promise<void> {
+  async rejectFromModeration(
+    contentId: string, 
+    moderatorId: string, 
+    reason: string,
+    contentType: 'events' | 'newsroom_articles'
+  ): Promise<void> {
     try {
       const { error } = await supabase
-        .from('moderation_queue')
+        .from(contentType)
         .update({ 
           status: 'rejected',
           rejected_by: moderatorId,
@@ -97,11 +113,11 @@ export class CommunityPublicationService implements PublicationService {
         .eq('id', contentId);
 
       if (error) {
-        throw new Error(`Failed to reject content: ${error.message}`);
+        throw new Error(`Failed to reject ${contentType}: ${error.message}`);
       }
 
       // Log rejection for transparency
-      await this.logModerationAction(contentId, 'rejected', moderatorId, reason);
+      await this.logModerationAction(contentId, contentType, 'rejected', moderatorId, reason);
 
     } catch (error) {
       console.error('Rejection failed:', error);
@@ -109,21 +125,33 @@ export class CommunityPublicationService implements PublicationService {
     }
   }
 
-  async publishContent(content: ModeratedContent): Promise<PublishedContent> {
+  async publishContent(content: ModeratedContent, contentType: 'events' | 'newsroom_articles'): Promise<PublishedContent> {
     try {
-      // Determine target publication table based on content type
-      const targetTable = this.getPublicationTable(content.type);
+      // Determine target publication table
+      const targetTable = this.getPublicationTable(contentType);
       
       const publishedContent = {
-        id: content.content_id || content.id,
+        id: crypto.randomUUID(),
         title: content.title,
         content: content.content,
         author: content.author,
         published_at: new Date().toISOString(),
         status: 'published' as const,
-        source: content.source,
+        source: content.source || 'chrome_extension',
         approved_by: content.approved_by,
-        original_moderation_id: content.id
+        // Add original reference
+        ...(contentType === 'events' ? { 
+          original_event_id: content.id,
+          event_date: content.event_date,
+          location: content.location 
+        } : { 
+          original_article_id: content.id 
+        }),
+        metadata: {
+          original_table: contentType,
+          priority: content.priority,
+          approved_at: content.approved_at
+        }
       };
 
       // Insert into appropriate published content table
@@ -138,7 +166,13 @@ export class CommunityPublicationService implements PublicationService {
       }
 
       // Log successful publication
-      await this.logPublicationEvent(published.id, targetTable, content.approved_by);
+      await this.logPublicationEvent(published.id, targetTable, content.id, contentType, content.approved_by);
+
+      // Update original content status to published
+      await supabase
+        .from(contentType)
+        .update({ status: 'published' })
+        .eq('id', content.id);
 
       return published;
 
@@ -150,8 +184,8 @@ export class CommunityPublicationService implements PublicationService {
 
   async updatePublicationStatus(contentId: string, status: 'published' | 'draft' | 'archived'): Promise<void> {
     try {
-      // Update across all publication tables - we don't know which one it's in
-      const tables = ['published_news', 'published_events', 'published_articles'];
+      // Update across all publication tables
+      const tables = ['published_events', 'published_news', 'published_articles'];
       
       for (const table of tables) {
         const { error } = await supabase
@@ -159,7 +193,6 @@ export class CommunityPublicationService implements PublicationService {
           .update({ status, updated_at: new Date().toISOString() })
           .eq('id', contentId);
         
-        // Don't throw on "not found" errors - content might be in a different table
         if (error && !error.message.includes('No rows')) {
           console.error(`Failed to update status in ${table}:`, error);
         }
@@ -171,10 +204,10 @@ export class CommunityPublicationService implements PublicationService {
     }
   }
 
-  async getPublishedContent(type?: string): Promise<PublishedContent[]> {
+  async getPublishedContent(type?: 'events' | 'news' | 'articles'): Promise<PublishedContent[]> {
     try {
       const tables = type ? [this.getPublicationTable(type as any)] : 
-                     ['published_news', 'published_events', 'published_articles'];
+                     ['published_events', 'published_news', 'published_articles'];
       
       const allContent: PublishedContent[] = [];
       
@@ -207,46 +240,56 @@ export class CommunityPublicationService implements PublicationService {
     }
   }
 
+  async getModerationQueue(contentType?: 'events' | 'newsroom_articles'): Promise<ModeratedContent[]> {
+    try {
+      const tables = contentType ? [contentType] : ['events', 'newsroom_articles'];
+      const allContent: ModeratedContent[] = [];
+      
+      for (const table of tables) {
+        const { data, error } = await supabase
+          .from(table)
+          .select('*')
+          .in('status', ['pending', 'rejected']) // Show pending and rejected items
+          .order('created_at', { ascending: false });
+        
+        if (error) {
+          console.error(`Failed to fetch moderation queue from ${table}:`, error);
+          continue;
+        }
+        
+        if (data) {
+          allContent.push(...data);
+        }
+      }
+      
+      return allContent.sort((a, b) => {
+        const aTime = new Date(a.created_at || 0).getTime();
+        const bTime = new Date(b.created_at || 0).getTime();
+        return bTime - aTime;
+      });
+      
+    } catch (error) {
+      console.error('Failed to get moderation queue:', error);
+      return [];
+    }
+  }
+
   private getPublicationTable(contentType: string): string {
     switch (contentType) {
-      case 'news_digest':
-      case 'automated_digest':
-        return 'published_news';
-      case 'community_event':
-      case 'discovered_event':
+      case 'events':
         return 'published_events';
-      case 'chrome_extension_content':
-      case 'shared_article':
-        return 'published_articles';
+      case 'newsroom_articles':
+        return 'published_news';
       default:
         return 'published_articles'; // Default fallback
     }
   }
 
-  private async removeFromModerationQueue(contentId: string): Promise<void> {
-    try {
-      // Archive rather than delete for audit trail
-      const { error } = await supabase
-        .from('moderation_queue')
-        .update({ 
-          archived: true,
-          archived_at: new Date().toISOString()
-        })
-        .eq('id', contentId);
-
-      if (error) {
-        console.error('Failed to archive moderation item:', error);
-        // Don't throw - publication was successful, archiving is secondary
-      }
-    } catch (error) {
-      console.error('Archive operation failed:', error);
-    }
-  }
-
   private async logModerationAction(
-    contentId: string, 
-    action: string, 
-    moderatorId: string, 
+    contentId: string,
+    contentTable: string,
+    action: string,
+    moderatorId: string,
     reason?: string
   ): Promise<void> {
     try {
@@ -254,6 +297,7 @@ export class CommunityPublicationService implements PublicationService {
         .from('moderation_log')
         .insert({
           content_id: contentId,
+          content_table: contentTable,
           action,
           moderator_id: moderatorId,
           reason,
@@ -266,8 +310,10 @@ export class CommunityPublicationService implements PublicationService {
   }
 
   private async logPublicationEvent(
-    publishedId: string, 
-    table: string, 
+    publishedId: string,
+    publishedTable: string,
+    originalId: string,
+    originalTable: string,
     approverId?: string
   ): Promise<void> {
     try {
@@ -275,7 +321,9 @@ export class CommunityPublicationService implements PublicationService {
         .from('publication_log')
         .insert({
           published_id: publishedId,
-          table_name: table,
+          published_table: publishedTable,
+          original_id: originalId,
+          original_table: originalTable,
           approved_by: approverId,
           published_at: new Date().toISOString()
         });
