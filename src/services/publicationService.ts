@@ -4,8 +4,10 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://bgjengudzfickgomjqmz.supabase.co';
+const supabaseUrl = process.env.VITE_SUPABASE_URL || 'https://bgjengudzfickgomjqmz.supabase.co';
 const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY || '';
+
+// Initialize Supabase client
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 interface ModeratedContent {
