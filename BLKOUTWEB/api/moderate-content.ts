@@ -5,6 +5,23 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { publicationService } from '../src/services/publicationService';
 
+// Content type detection helper
+async function detectContentType(contentId: string): Promise<'events' | 'newsroom_articles'> {
+  try {
+    // Try events table first
+    const eventCheck = await publicationService.getContentById(contentId, 'events');
+    if (eventCheck) return 'events';
+    
+    // Try newsroom_articles table
+    const articleCheck = await publicationService.getContentById(contentId, 'newsroom_articles');
+    if (articleCheck) return 'newsroom_articles';
+    
+    throw new Error(`Content ${contentId} not found in any table`);
+  } catch (error) {
+    throw new Error(`Failed to detect content type: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+}
+
 interface ModerationRequest {
   action: 'approve' | 'reject' | 'edit';
   contentId: string;
@@ -52,9 +69,13 @@ export default async function handler(
     switch (action) {
       case 'approve':
         try {
+          // Detect content type automatically  
+          const contentType = await detectContentType(contentId);
+          
           const publishedContent = await publicationService.approveFromModeration(
             contentId, 
-            moderatorId
+            moderatorId,
+            contentType
           );
           
           return res.status(200).json({
@@ -85,10 +106,14 @@ export default async function handler(
         }
         
         try {
+          // Detect content type automatically
+          const contentType = await detectContentType(contentId);
+          
           await publicationService.rejectFromModeration(
             contentId, 
             moderatorId, 
-            reason
+            reason,
+            contentType
           );
           
           return res.status(200).json({
@@ -119,11 +144,37 @@ export default async function handler(
           });
         }
         
-        // TODO: Implement edit functionality
-        return res.status(501).json({
-          error: 'Edit functionality not yet implemented',
-          message: 'Content editing will be available in next update'
-        });
+        try {
+          // Detect content type automatically
+          const contentType = await detectContentType(contentId);
+          
+          const updatedContent = await publicationService.editFromModeration(
+            contentId,
+            moderatorId,
+            edits,
+            contentType
+          );
+          
+          return res.status(200).json({
+            success: true,
+            message: 'Content edited successfully',
+            data: {
+              updated: updatedContent,
+              contentId,
+              action: 'edited',
+              edits,
+              moderatorId,
+              timestamp: new Date().toISOString()
+            }
+          });
+          
+        } catch (error) {
+          console.error('Edit failed:', error);
+          return res.status(500).json({
+            error: 'Edit failed',
+            message: error instanceof Error ? error.message : 'Unknown error during editing'
+          });
+        }
 
       default:
         return res.status(400).json({

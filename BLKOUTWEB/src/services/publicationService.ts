@@ -332,6 +332,151 @@ export class CommunityPublicationService implements PublicationService {
       // Don't throw - logging is supplementary
     }
   }
+
+  // New methods for enhanced moderation functionality
+  async getContentById(contentId: string, contentType: 'events' | 'newsroom_articles'): Promise<ModeratedContent | null> {
+    try {
+      const { data, error } = await supabase
+        .from(contentType)
+        .select('*')
+        .eq('id', contentId)
+        .single();
+      
+      if (error) {
+        console.error(`Failed to get content from ${contentType}:`, error);
+        return null;
+      }
+      
+      return data;
+    } catch (error) {
+      console.error('Failed to get content by ID:', error);
+      return null;
+    }
+  }
+
+  async editFromModeration(
+    contentId: string,
+    moderatorId: string,
+    edits: {
+      title?: string;
+      content?: string;
+      priority?: 'low' | 'medium' | 'high';
+      event_date?: string;
+      location?: string;
+    },
+    contentType: 'events' | 'newsroom_articles'
+  ): Promise<ModeratedContent> {
+    try {
+      // Update content with edits
+      const { data: updatedContent, error } = await supabase
+        .from(contentType)
+        .update({
+          ...edits,
+          updated_at: new Date().toISOString(),
+          // Keep status as pending after edit - requires re-approval
+          status: 'pending'
+        })
+        .eq('id', contentId)
+        .select()
+        .single();
+
+      if (error) {
+        throw new Error(`Failed to edit ${contentType}: ${error.message}`);
+      }
+
+      // Log the edit action
+      await this.logModerationAction(
+        contentId, 
+        contentType, 
+        'edited', 
+        moderatorId, 
+        `Edited fields: ${Object.keys(edits).join(', ')}`
+      );
+
+      return updatedContent;
+
+    } catch (error) {
+      console.error('Edit failed:', error);
+      throw error;
+    }
+  }
+
+  async batchModerationAction(
+    contentIds: string[],
+    action: 'approve' | 'reject',
+    moderatorId: string,
+    reason?: string
+  ): Promise<{ successful: string[], failed: string[], results: any[] }> {
+    const successful: string[] = [];
+    const failed: string[] = [];
+    const results: any[] = [];
+
+    for (const contentId of contentIds) {
+      try {
+        // Detect content type for each item
+        const contentType = await this.detectContentTypeInternal(contentId);
+        
+        if (action === 'approve') {
+          const result = await this.approveFromModeration(contentId, moderatorId, contentType);
+          successful.push(contentId);
+          results.push({ contentId, status: 'approved', data: result });
+        } else if (action === 'reject') {
+          if (!reason) {
+            throw new Error('Reason required for rejection');
+          }
+          await this.rejectFromModeration(contentId, moderatorId, reason, contentType);
+          successful.push(contentId);
+          results.push({ contentId, status: 'rejected', reason });
+        }
+      } catch (error) {
+        console.error(`Batch ${action} failed for ${contentId}:`, error);
+        failed.push(contentId);
+        results.push({ 
+          contentId, 
+          status: 'failed', 
+          error: error instanceof Error ? error.message : 'Unknown error' 
+        });
+      }
+    }
+
+    return { successful, failed, results };
+  }
+
+  async getPendingCount(contentType?: 'events' | 'newsroom_articles'): Promise<number> {
+    try {
+      const tables = contentType ? [contentType] : ['events', 'newsroom_articles'];
+      let totalCount = 0;
+      
+      for (const table of tables) {
+        const { count, error } = await supabase
+          .from(table)
+          .select('*', { count: 'exact', head: true })
+          .eq('status', 'pending');
+        
+        if (error) {
+          console.error(`Failed to count pending items in ${table}:`, error);
+          continue;
+        }
+        
+        totalCount += count || 0;
+      }
+      
+      return totalCount;
+    } catch (error) {
+      console.error('Failed to get pending count:', error);
+      return 0;
+    }
+  }
+
+  private async detectContentTypeInternal(contentId: string): Promise<'events' | 'newsroom_articles'> {
+    const eventCheck = await this.getContentById(contentId, 'events');
+    if (eventCheck) return 'events';
+    
+    const articleCheck = await this.getContentById(contentId, 'newsroom_articles');
+    if (articleCheck) return 'newsroom_articles';
+    
+    throw new Error(`Content ${contentId} not found in any table`);
+  }
 }
 
 // Export singleton instance
