@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BLKOUTNXT Platform - Community Liberation Technology</title>
+    <meta name="description" content="Federated Independence Architecture for community liberation and democratic governance" />
+    
+    <!-- Performance optimizations -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Community liberation values -->
+    <meta name="keywords" content="community liberation, democratic governance, federated architecture, black queer liberation">
+    <meta name="author" content="BLKOUT Community">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://blkoutnxt.vercel.app/">
+    <meta property="og:title" content="BLKOUTNXT Platform - Community Liberation Technology">
+    <meta property="og:description" content="Federated Independence Architecture for community liberation and democratic governance">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://blkoutnxt.vercel.app/">
+    <meta property="twitter:title" content="BLKOUTNXT Platform - Community Liberation Technology">
+    <meta property="twitter:description" content="Federated Independence Architecture for community liberation and democratic governance">
+
+    <!-- Security headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;">
+    
+    <!-- Manifest for PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1f2937">
+    
+    <!-- Critical CSS for federation architecture -->
+    <style>
+      /* Critical CSS for federated loading states */
+      .loading-federation {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 50vh;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .loading-spinner {
+        width: 2rem;
+        height: 2rem;
+        border: 3px solid #e5e7eb;
+        border-top: 3px solid #3b82f6;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      /* Independence mode indicator */
+      .independence-mode {
+        background: linear-gradient(90deg, #059669, #10b981);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+    </style>
+    <script type="module" crossorigin src="/assets/index-6d0339f6.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/vendor-2c4ac583.js">
+    <link rel="modulepreload" crossorigin href="/assets/federation-722f8fae.js">
+    <link rel="modulepreload" crossorigin href="/assets/monitoring-e5309bcb.js">
+    <link rel="stylesheet" href="/assets/index-dd1445b0.css">
+  </head>
+  <body>
+    <div id="root">
+      <!-- Federated loading fallback -->
+      <div class="loading-federation">
+        <div class="loading-spinner"></div>
+        <div>
+          <h2 style="color: #1f2937; font-size: 1.5rem; margin-bottom: 0.5rem;">BLKOUTNXT Platform</h2>
+          <p style="color: #6b7280;">Loading community liberation technology...</p>
+          <div class="independence-mode" style="margin-top: 1rem;">
+            🛡️ Independent Architecture - Always Functional
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+    <!-- Service Worker for offline-first architecture -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+              console.log('SW registered: ', registration);
+            })
+            .catch(registrationError => {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+    </script>
+  </body>
+</html>

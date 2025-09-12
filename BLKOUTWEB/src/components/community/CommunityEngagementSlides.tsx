@@ -162,7 +162,7 @@ export const CommunityEngagementSlides: React.FC<CommunityEngagementSlidesProps>
               exit={{ scale: 0.95, opacity: 0 }}
               className="bg-gradient-to-br from-purple-950 to-indigo-950 rounded-xl p-6 max-w-md w-full
                        border border-purple-700/30"
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e: React.MouseEvent) => e.stopPropagation()}
             >
               <h4 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                 🏴‍☠️ Join the Liberation Movement

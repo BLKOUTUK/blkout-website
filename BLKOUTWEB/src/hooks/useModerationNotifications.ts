@@ -40,7 +40,7 @@ export const useModerationNotifications = (
       const count = await publicationService.getPendingCount();
       const now = new Date().toISOString();
       
-      setData(prev => ({
+      setData(() => ({
         pendingCount: count,
         lastChecked: now,
         hasNewContent: count > lastViewedCount

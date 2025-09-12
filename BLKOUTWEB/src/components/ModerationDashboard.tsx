@@ -9,7 +9,7 @@ interface ModeratedContent {
   status: 'pending' | 'approved' | 'rejected';
   priority: 'low' | 'medium' | 'high';
   source: string;
-  created_at: string;
+  created_at?: string;
   event_date?: string;
   location?: string;
 }
@@ -294,7 +294,7 @@ export const ModerationDashboard: React.FC<ModerationDashboardProps> = ({
                       <div className="flex items-center text-xs text-gray-500 space-x-4 mb-3">
                         <span>Source: {item.source}</span>
                         {item.author && <span>Author: {item.author}</span>}
-                        <span>Created: {new Date(item.created_at).toLocaleDateString()}</span>
+                        <span>Created: {item.created_at ? new Date(item.created_at).toLocaleDateString() : 'Unknown'}</span>
                         {item.event_date && (
                           <span>Event: {new Date(item.event_date).toLocaleDateString()}</span>
                         )}
