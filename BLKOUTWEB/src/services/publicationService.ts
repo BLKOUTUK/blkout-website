@@ -168,6 +168,9 @@ export class CommunityPublicationService implements PublicationService {
 
       // Log successful publication
       await this.logPublicationEvent(published.id, targetTable, content.id, contentType, content.approved_by);
+      
+      // Trigger publication webhooks
+      await this.triggerWebhooks(published, contentType, 'published');
 
       // Update original content status to published
       await supabase
@@ -497,6 +500,9 @@ export class CommunityPublicationService implements PublicationService {
 
       console.log(`Successfully submitted ${contentType}:`, data.id);
       
+      // Trigger webhook automation workflows
+      await this.triggerWebhooks(data, contentType, 'submitted');
+      
       // Notify IVOR and other federated services (optional enhancement)
       await this.notifyFederatedServices(data, contentType);
       
@@ -550,6 +556,66 @@ export class CommunityPublicationService implements PublicationService {
     if (articleCheck) return 'newsroom_articles';
     
     throw new Error(`Content ${contentId} not found in any table`);
+  }
+
+  private async triggerWebhooks(content: ModeratedContent | PublishedContent, contentType: string, action: 'submitted' | 'published'): Promise<void> {
+    try {
+      const webhookBase = 'https://blkout-moderation.vercel.app/api/webhooks';
+      
+      // Trigger N8N automation workflow
+      try {
+        await fetch(`${webhookBase}/n8n-submit`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            content,
+            contentType,
+            action
+          })
+        });
+        console.log(`✅ N8N webhook triggered for ${action}:`, content.id);
+      } catch (error) {
+        console.log(`ℹ️ N8N webhook failed (non-critical):`, error);
+      }
+
+      // For published content, trigger additional webhooks
+      if (action === 'published') {
+        // Trigger BLKOUTHUB mobile app sync
+        try {
+          await fetch(`${webhookBase}/blkouthub`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              content,
+              action,
+              contentType
+            })
+          });
+          console.log(`✅ BLKOUTHUB webhook triggered:`, content.id);
+        } catch (error) {
+          console.log(`ℹ️ BLKOUTHUB webhook failed (non-critical):`, error);
+        }
+
+        // Trigger social media automation
+        try {
+          await fetch(`${webhookBase}/social-publish`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              content,
+              contentType,
+              action
+            })
+          });
+          console.log(`✅ Social media webhook triggered:`, content.id);
+        } catch (error) {
+          console.log(`ℹ️ Social media webhook failed (non-critical):`, error);
+        }
+      }
+
+    } catch (error) {
+      console.log(`ℹ️ Webhook triggers failed (non-critical):`, error instanceof Error ? error.message : 'Unknown error');
+    }
   }
 }
 
