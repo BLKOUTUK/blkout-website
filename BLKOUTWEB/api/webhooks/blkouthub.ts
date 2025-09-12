@@ -55,12 +55,30 @@ export default async function handler(
       timestamp: new Date().toISOString()
     };
 
-    // In production, send to actual BLKOUTHUB endpoint
-    // const blkouthubResponse = await fetch('https://hub.blkout.uk/api/v1/sync', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(blkouthubPayload)
-    // });
+    // Send to actual BLKOUTHUB endpoint with Bearer token authentication
+    const blkouthubUrl = process.env.BLKOUTHUB_API_URL || 'https://hub.blkout.uk/api/v1/sync';
+    const apiKey = process.env.BLKOUTHUB_API_KEY;
+    
+    if (apiKey && blkouthubUrl) {
+      try {
+        const blkouthubResponse = await fetch(blkouthubUrl, {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+          },
+          body: JSON.stringify(blkouthubPayload)
+        });
+
+        if (!blkouthubResponse.ok) {
+          console.warn('BLKOUTHUB API call failed:', blkouthubResponse.status);
+        }
+      } catch (error) {
+        console.error('BLKOUTHUB webhook failed (non-critical):', error);
+      }
+    } else {
+      console.log('BLKOUTHUB API not configured - skipping actual API call');
+    }
 
     console.log('BLKOUTHUB webhook triggered:', blkouthubPayload);
 
