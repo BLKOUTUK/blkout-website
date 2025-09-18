@@ -913,7 +913,7 @@ const RepoScrollytelling: React.FC = () => {
                       </button>
 
                       <a
-                        href="https://blkouthub.com/invitation?code=BE862C"
+                        href="https://blkout-liberation-frontend.vercel.app"
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{
@@ -994,7 +994,7 @@ const RepoScrollytelling: React.FC = () => {
             backdropFilter: 'blur(10px)'
           }}>
             <a
-              href={slide.ctaUrl || "https://blkouthub.com/invitation?code=BE862C"}
+              href={slide.ctaUrl || "https://blkout-liberation-frontend.vercel.app"}
               target="_blank"
               rel="noopener noreferrer"
               style={{
