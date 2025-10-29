@@ -93,9 +93,9 @@ export default function ArticleDetail() {
   // Clean HTML content for display
   const cleanHtmlContent = (htmlContent: string) => {
     if (!htmlContent) return ''
-    
+
     // Remove WordPress classes and inline styles while preserving structure
-    return htmlContent
+    let cleaned = htmlContent
       .replace(/class="[^"]*"/g, '')
       .replace(/style="[^"]*"/g, '')
       .replace(/data-[^=]*="[^"]*"/g, '')
@@ -105,6 +105,16 @@ export default function ArticleDetail() {
       // Ensure videos and iframes are responsive
       .replace(/<iframe/g, '<iframe style="max-width: 100%; height: 400px;"')
       .replace(/<video/g, '<video style="max-width: 100%; height: auto;" controls')
+
+    // Ensure paragraphs have proper spacing
+    // If content has no <p> tags but has line breaks, wrap in paragraphs
+    if (!cleaned.includes('<p>') && cleaned.includes('\n')) {
+      // Split by double line breaks and wrap each section in <p> tags
+      const paragraphs = cleaned.split(/\n\s*\n/).filter(p => p.trim())
+      cleaned = paragraphs.map(p => `<p>${p.trim()}</p>`).join('\n')
+    }
+
+    return cleaned
   }
 
   if (loading) {
@@ -304,8 +314,12 @@ export default function ArticleDetail() {
         }
         
         .article-content p {
-          margin-bottom: 1.5rem;
-          line-height: 1.8;
+          margin-bottom: 2rem;
+          line-height: 1.9;
+        }
+
+        .article-content p + p {
+          margin-top: 1.5rem;
         }
         
         .article-content blockquote {
