@@ -74,7 +74,7 @@ const ModerationDashboard: React.FC = () => {
         console.log('Fetching data from Supabase...');
         const [eventsResult, articlesResult] = await Promise.all([
           supabase.from('events').select('*').in('status', ['draft', 'pending']),
-          supabase.from('newsroom_articles').select('*').in('status', ['draft', 'pending'])
+          supabase.from('news_articles').select('*').in('status', ['draft', 'review', 'pending'])
         ]);
         
         console.log('Events result:', eventsResult);
@@ -194,7 +194,7 @@ const ModerationDashboard: React.FC = () => {
         }
       } else if (item.type === 'newsroom_article') {
         const { error } = await supabase
-          .from('newsroom_articles')
+          .from('news_articles')
           .update({
             status: action === 'approved' ? 'published' : 'rejected', // approved articles become published
             moderated_at: new Date().toISOString(),

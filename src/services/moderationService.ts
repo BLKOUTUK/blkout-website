@@ -106,7 +106,7 @@ class ModerationService {
           return result
         })(),
         (async () => {
-          let query = supabase.from('newsroom_articles')
+          let query = supabase.from('news_articles')
             .select('*')
             .limit(filters?.limit || 50)
             // EXCLUDE BLKOUTUK migrated articles from moderation queue
@@ -346,9 +346,9 @@ class ModerationService {
         }
       }
 
-      // If not found as event, try as article in newsroom_articles
+      // If not found as event, try as article in news_articles
       const articleResult = await supabase
-        .from('newsroom_articles')
+        .from('news_articles')
         .update({
           status: action === 'approve' ? 'published' : 'archived',
           updated_at: new Date().toISOString(),
@@ -387,7 +387,7 @@ class ModerationService {
       // Get real counts from the actual tables
       const [eventsResult, articlesResult] = await Promise.all([
         supabase.from('events').select('status, updated_at', { count: 'exact' }),
-        supabase.from('newsroom_articles').select('status, updated_at', { count: 'exact' })
+        supabase.from('news_articles').select('status, updated_at', { count: 'exact' })
       ])
 
       const events = eventsResult.data || []

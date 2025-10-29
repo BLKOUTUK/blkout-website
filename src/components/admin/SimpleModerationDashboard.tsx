@@ -23,14 +23,13 @@ const SimpleModerationDashboard = () => {
     try {
       setLoading(true)
       
-      // Fetch from both possible tables
-      const [newsResult1, newsResult2, eventsResult] = await Promise.all([
-        supabase.from('newsroom').select('*').eq('status', 'pending').order('created_at', { ascending: false }),
-        supabase.from('newsroom_articles').select('*').eq('status', 'pending').order('created_at', { ascending: false }),
+      // Fetch pending items from news_articles and events tables
+      const [newsResult, eventsResult] = await Promise.all([
+        supabase.from('news_articles').select('*').eq('status', 'review').order('created_at', { ascending: false }),
         supabase.from('events').select('*').eq('status', 'pending').order('created_at', { ascending: false })
       ])
 
-      const newsData = newsResult1.data || newsResult2.data || []
+      const newsData = newsResult.data || []
       const eventsData = eventsResult.data || []
 
       setQueue({ 
@@ -55,7 +54,7 @@ const SimpleModerationDashboard = () => {
     action: 'approved' | 'rejected'
   ) => {
     try {
-      const table = type === 'news' ? 'newsroom_articles' : 'events'
+      const table = type === 'news' ? 'news_articles' : 'events'
       const status = action === 'approved' ? 'published' : 'rejected'
       
       const { error } = await supabase

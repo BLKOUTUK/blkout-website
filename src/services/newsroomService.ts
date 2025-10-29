@@ -155,7 +155,7 @@ class NewsroomService {
     const status = filters?.status || 'published'
     
     let query = supabase
-      .from('newsroom_articles')
+      .from('news_articles')
       .select('*', { count: 'exact' })
       .order('published_at', { ascending: false })
       .range(offset, offset + limit - 1)
@@ -446,7 +446,7 @@ class NewsroomService {
     console.log('🗄️ Query parameters:', { limit, page, offset, status })
     
     let query = supabase
-      .from('newsroom_articles')
+      .from('legacy_articles')
       .select('*', { count: 'exact' })
       .order('published_at', { ascending: false })
       .range(offset, offset + limit - 1)

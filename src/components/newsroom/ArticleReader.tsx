@@ -41,7 +41,7 @@ export default function ArticleReader() {
       console.log('📖 Loading article:', articleSlug)
       
       const { data, error: queryError } = await supabase
-        .from('newsroom_articles')
+        .from('news_articles')
         .select('*')
         .eq('slug', articleSlug)
         .single()

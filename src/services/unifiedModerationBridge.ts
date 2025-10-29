@@ -60,14 +60,14 @@ class UnifiedModerationBridge {
       )
       .subscribe()
 
-    // Listen for newsroom_articles table changes
+    // Listen for news_articles table changes
     supabase
       .channel('articles_moderation')
       .on('postgres_changes', 
         { 
           event: 'UPDATE', 
           schema: 'public', 
-          table: 'newsroom_articles',
+          table: 'news_articles',
           filter: 'status=in.(published,archived,rejected)'
         }, 
         (payload) => this.handleDatabaseChange('newsroom_article', payload)
@@ -245,7 +245,7 @@ class UnifiedModerationBridge {
 
     try {
       // Update the database directly without triggering the realtime listener
-      const tableName = action.contentType === 'event' ? 'events' : 'newsroom_articles'
+      const tableName = action.contentType === 'event' ? 'events' : 'news_articles'
       const newStatus = action.action === 'approve' ? 'published' : 'archived'
 
       const { data, error } = await supabase

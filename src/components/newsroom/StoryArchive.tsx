@@ -36,7 +36,7 @@ export default function StoryArchive() {
       
       // Build query for BLKOUTUK published articles with optional search
       let query = supabase
-        .from('newsroom_articles')
+        .from('legacy_articles')
         .select('*', { count: 'exact' })
         .like('source_url', 'https://blkoutuk.com%')
         .eq('status', 'published')

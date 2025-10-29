@@ -156,7 +156,7 @@ export const supabaseHelpers = {
     offset?: number
   } = {}) {
     let query = supabase
-      .from('newsroom_articles')
+      .from('news_articles')
       .select('*')
       .order('published_at', { ascending: false })
 
@@ -186,7 +186,7 @@ export const supabaseHelpers = {
   async createArticle(articleData: any) {
     return this.safeQuery(() =>
       supabase
-        .from('newsroom_articles')
+        .from('news_articles')
         .insert(articleData)
         .select()
         .single()
@@ -196,7 +196,7 @@ export const supabaseHelpers = {
   async updateArticle(id: string, updates: any) {
     return this.safeQuery(() =>
       supabase
-        .from('newsroom_articles')
+        .from('news_articles')
         .update(updates)
         .eq('id', id)
         .select()
@@ -207,7 +207,7 @@ export const supabaseHelpers = {
   async deleteArticle(id: string) {
     return this.safeQuery(() =>
       supabase
-        .from('newsroom_articles')
+        .from('news_articles')
         .delete()
         .eq('id', id)
     )
@@ -262,7 +262,7 @@ export const supabaseHelpers = {
       .on('postgres_changes', {
         event: '*',
         schema: 'public',
-        table: 'newsroom_articles'
+        table: 'news_articles'
       }, (payload) => {
         console.log('📰 Article change detected:', payload)
         callback(payload)
@@ -280,7 +280,7 @@ export const supabaseHelpers = {
       ),
       this.safeQuery(() =>
         supabase
-          .from('newsroom_articles')
+          .from('news_articles')
           .select('status, category')
       ),
       this.safeQuery(() =>
@@ -799,7 +799,7 @@ export const getModerationQueue = async (): Promise<{ news: NewsroomItem[], even
         .eq('status', 'pending')
         .order('created_at', { ascending: false }),
       supabase
-        .from('newsroom_articles')
+        .from('news_articles')
         .select('*')
         .eq('status', 'pending')
         .order('created_at', { ascending: false }),
@@ -855,7 +855,7 @@ export const moderateItem = async (
     // If news and primary table fails, try alternative table
     if (type === 'news' && result.error) {
       result = await supabase
-        .from('newsroom_articles')
+        .from('news_articles')
         .update(updateData)
         .eq('id', id)
         .select()
@@ -885,7 +885,7 @@ export const searchContent = async (
         .order('published_at', { ascending: false })
 
       const newsQuery2 = supabase
-        .from('newsroom_articles')
+        .from('news_articles')
         .select('*')
         .eq('status', 'published')
         .order('published_at', { ascending: false })

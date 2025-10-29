@@ -11,9 +11,9 @@ const NewsroomPage = () => {
     try {
       setLoading(true)
       
-      // Query newsroom_articles for community-curated content
+      // Query news_articles for community-curated content
       let newsQuery = supabase
-        .from('newsroom_articles')
+        .from('news_articles')
         .select('*')
         .eq('status', 'published')
         .order('published_at', { ascending: false })

@@ -62,16 +62,9 @@ const ContentSubmissionForm = () => {
 
         // Try both possible news tables
         let result = await supabase
-          .from('newsroom')
+          .from('news_articles')
           .insert([submitData])
           .select()
-
-        if (result.error) {
-          result = await supabase
-            .from('newsroom_articles')
-            .insert([submitData])
-            .select()
-        }
 
         if (result.error) throw result.error
       } else {

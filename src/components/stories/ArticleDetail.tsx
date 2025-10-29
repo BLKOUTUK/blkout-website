@@ -32,7 +32,7 @@ export default function ArticleDetail() {
 
         // Fetch article from Supabase
         const { data, error: queryError } = await supabase
-          .from('newsroom_articles')
+          .from('legacy_articles')
           .select('*')
           .or(`slug.eq.${slug},id.eq.${slug}`)
           .eq('status', 'published')

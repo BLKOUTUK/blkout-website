@@ -1,5 +1,5 @@
 // Updated Publication Service for bgjengudzfickgomjqmz project
-// Works with existing 'events' and 'newsroom_articles' tables
+// Works with existing 'events' and 'news_articles' tables
 // File: src/services/publicationService.ts
 
 import { createClient } from '@supabase/supabase-js';
@@ -42,12 +42,12 @@ interface PublishedContent {
 }
 
 export interface PublicationService {
-  approveFromModeration(contentId: string, approverId: string, contentType: 'events' | 'newsroom_articles'): Promise<PublishedContent>;
-  rejectFromModeration(contentId: string, moderatorId: string, reason: string, contentType: 'events' | 'newsroom_articles'): Promise<void>;
-  publishContent(content: ModeratedContent, contentType: 'events' | 'newsroom_articles'): Promise<PublishedContent>;
+  approveFromModeration(contentId: string, approverId: string, contentType: 'events' | 'news_articles'): Promise<PublishedContent>;
+  rejectFromModeration(contentId: string, moderatorId: string, reason: string, contentType: 'events' | 'news_articles'): Promise<void>;
+  publishContent(content: ModeratedContent, contentType: 'events' | 'news_articles'): Promise<PublishedContent>;
   updatePublicationStatus(contentId: string, status: 'published' | 'draft' | 'archived'): Promise<void>;
   getPublishedContent(type?: 'events' | 'news' | 'articles'): Promise<PublishedContent[]>;
-  getModerationQueue(contentType?: 'events' | 'newsroom_articles'): Promise<ModeratedContent[]>;
+  getModerationQueue(contentType?: 'events' | 'news_articles'): Promise<ModeratedContent[]>;
 }
 
 export class CommunityPublicationService implements PublicationService {
@@ -55,10 +55,10 @@ export class CommunityPublicationService implements PublicationService {
   async approveFromModeration(
     contentId: string, 
     approverId: string, 
-    contentType: 'events' | 'newsroom_articles'
+    contentType: 'events' | 'news_articles'
   ): Promise<PublishedContent> {
     try {
-      // 1. Get content from original table (events or newsroom_articles)
+      // 1. Get content from original table (events or news_articles)
       const { data: moderatedContent, error: fetchError } = await supabase
         .from(contentType)
         .select('*')
@@ -101,7 +101,7 @@ export class CommunityPublicationService implements PublicationService {
     contentId: string, 
     moderatorId: string, 
     reason: string,
-    contentType: 'events' | 'newsroom_articles'
+    contentType: 'events' | 'news_articles'
   ): Promise<void> {
     try {
       const { error } = await supabase
@@ -127,7 +127,7 @@ export class CommunityPublicationService implements PublicationService {
     }
   }
 
-  async publishContent(content: ModeratedContent, contentType: 'events' | 'newsroom_articles'): Promise<PublishedContent> {
+  async publishContent(content: ModeratedContent, contentType: 'events' | 'news_articles'): Promise<PublishedContent> {
     try {
       // Determine target publication table
       const targetTable = this.getPublicationTable(contentType);
@@ -242,9 +242,9 @@ export class CommunityPublicationService implements PublicationService {
     }
   }
 
-  async getModerationQueue(contentType?: 'events' | 'newsroom_articles'): Promise<ModeratedContent[]> {
+  async getModerationQueue(contentType?: 'events' | 'news_articles'): Promise<ModeratedContent[]> {
     try {
-      const tables = contentType ? [contentType] : ['events', 'newsroom_articles'];
+      const tables = contentType ? [contentType] : ['events', 'news_articles'];
       const allContent: ModeratedContent[] = [];
       
       for (const table of tables) {
@@ -280,7 +280,7 @@ export class CommunityPublicationService implements PublicationService {
     switch (contentType) {
       case 'events':
         return 'published_events';
-      case 'newsroom_articles':
+      case 'news_articles':
         return 'published_news';
       default:
         return 'published_articles'; // Default fallback
