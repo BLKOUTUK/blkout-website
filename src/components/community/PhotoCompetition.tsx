@@ -715,7 +715,7 @@ export default function PhotoCompetition() {
             </motion.button>
             
             <p className="text-white/50 mt-8 max-w-3xl mx-auto font-light leading-relaxed">
-              Submissions open through May 2025. Your participation helps us understand community 
+              Submissions open December 1st - 31st, 2025. Your participation helps us understand community
               engagement and build toward a comprehensive Photography Award in 2026.
             </p>
           </motion.div>
