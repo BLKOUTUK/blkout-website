@@ -75,9 +75,9 @@ Whether it's:
 
 ---
 
-## 📅 This Weekend: Join Us
+## 📅 Next Thursday: Join Us
 
-We're gathering, and your presence matters.
+We're gathering next Thursday, and your presence matters.
 
 **[RSVP NOW: https://blkouthub.com/events/31372E](https://blkouthub.com/events/31372E)**
 
@@ -178,7 +178,7 @@ As Adrienne Rich wrote, we need spaces "among whom we can sit down and weep, and
 - **[Read "One Month Later"](https://voices-blkout.up.railway.app/#one-month-later-are-pride-s-anonymous-board-proud-mgmj86p2)** - Understand the pattern playing out at Pride in London
 - **[Read "Counted As Warriors?"](https://blkoutuk.com/long-read-counted-as-warriors/)** - The 50-year history behind this moment
 - **[Submit your story](https://blkouthub.com/voices/submit)** - Your voice shapes our collective narrative
-- **[RSVP to this weekend's event](https://blkouthub.com/events/31372E)** - Community isn't built in isolation
+- **[RSVP to next Thursday's event](https://blkouthub.com/events/31372E)** - Community isn't built in isolation
 - **[Chat with IVOR](https://blkouthub.com/ivor)** - Get support on health, resources, or just to talk
 - **[Browse our newsroom](https://blkouthub.com/newsroom)** - Stay connected to what's happening in Black queer communities
 - **[Explore the full platform](https://blkouthub.com)** - Discover all we've built together
