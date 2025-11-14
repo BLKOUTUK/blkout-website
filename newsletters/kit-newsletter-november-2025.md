@@ -15,29 +15,46 @@ This month, I want to highlight why our **Community Story Submission** feature m
 
 ---
 
-## 📖 Required Reading: "Counted As Warriors?"
+## 📖 Required Reading: "One Month Later: Are Pride's Anonymous Board Proud?"
 
-**[READ: Counted As Warriors? - 50 Years of Pride & The Fight for Black Queer Liberation →](https://blkoutuk.com/long-read-counted-as-warriors/)**
+**[READ: One Month Later - Pride's Anonymous Board →](https://voices-blkout.up.railway.app/#one-month-later-are-pride-s-anonymous-board-proud-mgmj86p2)**
 
-This long-form article examines 50 years of Gay Pride matched by 50 years of failure among movements for racial justice in the UK to see that **none of us are free until we are all free.**
+*By Rob Berkeley | Published October 11, 2025*
 
-### The Story You Need to Know
+This opinion piece examines what's happening at Pride in London one month after the board obtained a **High Court injunction against CEO Christopher Joell-DeShields** - and why every brother needs to understand this pattern.
 
-In 1972, Ted Brown - who moved from Harlem via Jamaica to Brixton where he still lives today - helped organize London's first Pride march on July 1st. One of the few Black people present, Brown organized the **kiss-in at Trafalgar Square** that preceded the march to Hyde Park, at a time when mainstream TV wouldn't air a same-sex kiss between men for another 17 years.
+### What's Actually Happening
 
-The Gay Liberation Front was directly influenced by **radical Black liberation organizing** - its founders Bob Mellor and Aubrey Walter met at the Revolutionary Peoples Constitutional Convention in Philadelphia, convened by the Black Panther Party, where Huey Newton personally advocated for building common cause with movements for women's and gay liberation.
+Pride in London is operating with an **anonymous board** - no investigation findings, no transparency, despite spending substantial legal fees. An organization that receives public funding is acting like a private fiefdom, with board members making strategic media leaks while hiding their identities.
 
-**A movement for queer liberation, intertwined in moral purpose and method with radical Black political organizing in the US, in which Black people were not only present, but prominent, was largely met with suspicion by campaigners for racial justice in the UK.**
+Christopher Joell-DeShields, the CEO, had successfully **transformed Pride to reflect London's actual demographic diversity**. He was doing the work. Making Pride actually representative. And then came the allegations, the injunction, the public spectacle.
 
-### Why This Still Matters
+### The Pattern We Know Too Well
 
-Ted Brown isn't marching in 2022 to take a wistful trip down memory lane. He's launching a **campaign for dignity in care for LGBT elders** after his partner suffered harrowing homophobic elder abuse in a care home during the twilight of his life.
+As Rob Berkeley writes: **"Black leaders—especially Black gay leaders—recruited during crisis, set up to fail, then publicly executed when they succeed."**
 
-The article documents how racial justice organizations remained silent on Section 28, ambivalent on equalizing age of consent, and absent when we lost Justin Fashanu. It explores the trauma caused when Black queer people are told their liberation has to wait.
+Sound familiar? It should. We've seen this play out over and over:
+- Recruit a Black leader during organizational crisis
+- Watch them successfully transform the organization
+- Resist the actual change they bring
+- Remove them publicly while maintaining anonymity
+- Claim progress while preventing transformation
 
-**This is the history we're building from.** This is why BLKOUT exists.
+This isn't just about one CEO. This is about how institutions resist genuine change while maintaining appearances of inclusivity.
 
-**[Read "Counted As Warriors?" in full →](https://blkoutuk.com/long-read-counted-as-warriors/)**
+### What This Means For Us
+
+50 years after Ted Brown organized that kiss-in at Trafalgar Square, 50 years after the Gay Liberation Front learned from the Black Panthers that none of us are free until we are all free - **we're still watching Black queer leaders get publicly executed by anonymous boards.**
+
+The article calls for Mayor Sadiq Khan to **"demand the transparency that public money should guarantee"** and ends with a direct challenge to the Pride in London board:
+
+**"Show your faces. Share your findings. Or step aside and let people with actual courage lead."**
+
+**[Read the full article on BLKOUT Voices →](https://voices-blkout.up.railway.app/#one-month-later-are-pride-s-anonymous-board-proud-mgmj86p2)**
+
+### Context: Read "Counted As Warriors?"
+
+To understand the 50-year history this builds on, read Rob Berkeley's **["Counted As Warriors?"](https://blkoutuk.com/long-read-counted-as-warriors/)** - about Ted Brown, the first Pride march, the Black Panthers' influence on GLF, and 50 years of movements for racial justice failing to stand with Black queer people.
 
 ---
 
@@ -70,15 +87,17 @@ Community isn't built in isolation. Let's build connection, share space, and str
 
 ## 🏳️‍🌈 Community Updates
 
-### Pride in London: Solidarity with Chris
+### Pride in London: Solidarity with Christopher Joell-DeShields
 
-We stand in unwavering solidarity with Chris and all those fighting to ensure Pride remains a space that **centers the most marginalized** in our community.
+We stand in unwavering solidarity with **Christopher Joell-DeShields** and all those fighting to ensure Pride remains a space that **centers the most marginalized** in our community, not anonymous boards operating like private fiefdoms.
 
-Pride is protest. Pride is political. Pride belongs to those who fought for it - and who still fight today.
+Christopher transformed Pride in London to reflect the city's actual demographic diversity. He was recruited to lead during crisis, succeeded in his mandate, and now faces a High Court injunction from a board that won't show their faces or share their findings.
 
-As our "Counted As Warriors?" article reminds us: 50 years after that first march, we're still fighting to be counted. Still demanding that movements for racial justice recognize that **none of us are free until we are all free.**
+**This is the pattern.** Black leaders - especially Black gay leaders - set up to fail, then publicly executed when they succeed.
 
-**[Learn about Pride's radical history →](https://blkouthub.com/voices)**
+Pride is protest. Pride is political. Pride belongs to those who fought for it - Ted Brown at Trafalgar Square, the GLF learning from the Black Panthers - not to anonymous boards resisting genuine change.
+
+**[Read Rob Berkeley's analysis of what's happening →](https://voices-blkout.up.railway.app/#one-month-later-are-pride-s-anonymous-board-proud-mgmj86p2)**
 
 ### Congratulations Lady Phyll! 💍
 
@@ -156,7 +175,8 @@ As Adrienne Rich wrote, we need spaces "among whom we can sit down and weep, and
 
 **Here's how you can show up:**
 
-- **[Read "Counted As Warriors?"](https://blkoutuk.com/long-read-counted-as-warriors/)** - Understand the history we're building from
+- **[Read "One Month Later"](https://voices-blkout.up.railway.app/#one-month-later-are-pride-s-anonymous-board-proud-mgmj86p2)** - Understand the pattern playing out at Pride in London
+- **[Read "Counted As Warriors?"](https://blkoutuk.com/long-read-counted-as-warriors/)** - The 50-year history behind this moment
 - **[Submit your story](https://blkouthub.com/voices/submit)** - Your voice shapes our collective narrative
 - **[RSVP to this weekend's event](https://blkouthub.com/events/31372E)** - Community isn't built in isolation
 - **[Chat with IVOR](https://blkouthub.com/ivor)** - Get support on health, resources, or just to talk
@@ -171,21 +191,21 @@ With love and solidarity,
 
 ---
 
-*P.S. - Share this newsletter with a brother who needs to know he's not alone. Forward it to someone who would benefit from IVOR's support. Send the "Counted As Warriors?" article to a friend navigating the intersections. We grow stronger together.*
+*P.S. - Share this newsletter with a brother who needs to know he's not alone. Forward "One Month Later" to someone who needs to understand what's happening at Pride in London. Send "Counted As Warriors?" to a friend navigating the intersections. Share IVOR with someone struggling with health questions. We grow stronger together.*
 
 ---
 
 **Quick Links:**
-- 📖 **[BLKOUT Voices Articles](https://blkouthub.com/voices)** - Read community stories
+- 📖 **[BLKOUT Voices Blog](https://voices-blkout.up.railway.app/)** - Read Rob Berkeley's latest analysis
+- 📰 **[BLKOUT Newsroom](https://blkouthub.com/newsroom)** - Community news and organizing
 - 🤖 **[Meet IVOR](https://blkouthub.com/ivor)** - AI liberation assistant
 - 📅 **[Events Calendar](https://blkouthub.com/events)** - Find gatherings near you
-- 📰 **[Newsroom](https://blkouthub.com/newsroom)** - Community news and organizing
 - 💬 **[Community Gateway](https://blkouthub.com/community)** - Connect and contribute
 - 🏠 **[Platform Home](https://blkouthub.com)** - Explore everything
 
 ---
 
-#MAKINGSPACEFORUS | #BLKOUTVoices | #BlackQueerLiberation | #CountedAsWarriors
+#MAKINGSPACEFORUS | #BLKOUTVoices | #BlackQueerLiberation | #CountedAsWarriors | #PrideInLondon | #ShowYourFaces
 
 ---
 
