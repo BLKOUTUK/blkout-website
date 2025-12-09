@@ -355,7 +355,7 @@ const slides = [
     content: 'Browse our full range of projects, resources, and ways to get involved in the movement. Community hub, events calendar, and cooperative resources.',
     bgColor: '#4c1d95',
     ctaText: 'EXPLORE PLATFORM',
-    ctaUrl: 'https://platform-blkout.vercel.app'
+    ctaUrl: 'https://blkout-community-platform-pl201c5w0-robs-projects-54d653d3.vercel.app'
   }
 ]
 
@@ -913,7 +913,7 @@ const RepoScrollytelling: React.FC = () => {
                       </button>
 
                       <a
-                        href="https://blkout-liberation-frontend.vercel.app"
+                        href="https://blkout-community-platform-pl201c5w0-robs-projects-54d653d3.vercel.app"
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{
@@ -994,7 +994,7 @@ const RepoScrollytelling: React.FC = () => {
             backdropFilter: 'blur(10px)'
           }}>
             <a
-              href={slide.ctaUrl || "https://blkout-liberation-frontend.vercel.app"}
+              href={slide.ctaUrl || "https://blkout-community-platform-pl201c5w0-robs-projects-54d653d3.vercel.app"}
               target="_blank"
               rel="noopener noreferrer"
               style={{

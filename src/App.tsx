@@ -1,8 +1,8 @@
-import RepoScrollytelling from './components/RepoScrollytelling'
+import MasonryScrollytelling from './components/MasonryScrollytelling'
 import './index.css'
 
 function App() {
-  return <RepoScrollytelling />
+  return <MasonryScrollytelling />
 }
 
 export default App
