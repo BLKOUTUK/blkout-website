@@ -16,18 +16,35 @@ export default function PlatformFooter() {
     if (!email) return
 
     setNewsletterStatus('submitting')
-    
+
     try {
-      // For now, simulate successful signup - in production this would call a real API
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      // For demonstration, we'll show success for valid email formats
-      if (email.includes('@') && email.includes('.')) {
+      const response = await fetch('https://crm.blkoutuk.cloud/api/community/join', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          subscriptions: {
+            newsletter: true,
+            events: false,
+            blkouthub: false,
+            volunteer: false,
+          },
+          consentGiven: true,
+          source: 'blkoutuk_website',
+          sourceUrl: window.location.href,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
         setNewsletterStatus('success')
         setEmail('')
         setTimeout(() => setNewsletterStatus('idle'), 3000)
       } else {
-        throw new Error('Please enter a valid email address')
+        throw new Error(data.message || 'Failed to subscribe. Please try again.')
       }
     } catch (error) {
       setNewsletterStatus('error')
