@@ -12,7 +12,7 @@ import CommunityShowcasePage from './pages/CommunityShowcasePage'
 
 const IvorRedirect = () => {
   React.useEffect(() => {
-    window.location.href = 'https://ivor-beta.vercel.app/'
+    window.location.href = 'https://ivor.blkoutuk.cloud/'
   }, [])
 
   return (
@@ -27,14 +27,14 @@ const IvorRedirect = () => {
 
 const MovementRedirect = () => {
   React.useEffect(() => {
-    window.location.href = 'https://blkout-scrollytelling.vercel.app/'
+    window.location.href = 'https://blkoutuk.com/'
   }, [])
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
       <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Redirecting to Liberation Journey...</h1>
-        <p className="text-gray-400">Experience our interactive scrollytelling movement narrative</p>
+        <h1 className="text-4xl font-bold mb-4">Redirecting to BLKOUT...</h1>
+        <p className="text-gray-400">Experience our liberation narrative</p>
       </div>
     </div>
   )
@@ -42,7 +42,7 @@ const MovementRedirect = () => {
 
 const EventsRedirect = () => {
   React.useEffect(() => {
-    window.location.href = 'https://events-blkout.vercel.app/'
+    window.location.href = 'https://events.blkoutuk.cloud/'
   }, [])
 
   return (
