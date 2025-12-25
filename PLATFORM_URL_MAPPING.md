@@ -1,13 +1,18 @@
 # BLKOUT Platform - Official URL Mapping
 
-**Last Updated**: 2025-12-20
+**Last Updated**: 2025-12-25
 **Purpose**: Canonical reference for all platform URLs across deployments
+
+**CRITICAL INFRASTRUCTURE NOTE**:
+- **Host**: blkoutuk.cloud (Hostinger/Coolify UK servers)
+- **Alias**: blkoutuk.com points to blkoutuk.cloud
+- **Default Platform**: Coolify (Hostinger) - Vercel is the EXCEPTION not the rule
 
 ## Production URLs (Hostinger/Coolify)
 
 | Service | Production URL | Status | Deployment Platform |
 |---------|---------------|--------|-------------------|
-| **Main Website** | https://blkoutuk.com | ✅ Active | Vercel |
+| **Main Website** | https://blkoutuk.com | ✅ Active | Coolify (Hostinger) |
 | **Events Calendar** | https://events.blkoutuk.cloud | ✅ Active | Coolify (Hostinger) |
 | **Newsroom** | https://news.blkoutuk.cloud | ✅ Active | Coolify (Hostinger) |
 | **Blog (BLKOUT Voices)** | https://blog.blkoutuk.cloud | ✅ Active | Coolify (Hostinger) |
