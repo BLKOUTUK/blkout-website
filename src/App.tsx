@@ -9,6 +9,7 @@ import NewsroomPage from './components/NewsroomPage'
 import StoryArchivePage from './components/StoryArchivePage'
 import GovernancePage from './components/GovernancePage'
 import CommunityShowcasePage from './pages/CommunityShowcasePage'
+import TheoryOfChange from './components/movement/TheoryOfChange'
 
 const IvorRedirect = () => {
   React.useEffect(() => {
@@ -25,20 +26,7 @@ const IvorRedirect = () => {
   )
 }
 
-const MovementRedirect = () => {
-  React.useEffect(() => {
-    window.location.href = 'https://blkoutuk.com/'
-  }, [])
-
-  return (
-    <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Redirecting to BLKOUT...</h1>
-        <p className="text-gray-400">Experience our liberation narrative</p>
-      </div>
-    </div>
-  )
-}
+// MovementRedirect removed - now using TheoryOfChange component
 
 const EventsRedirect = () => {
   React.useEffect(() => {
@@ -67,7 +55,7 @@ function App() {
           <Route path="/ivor" element={<IvorRedirect />} />
           <Route path="/community" element={<CommunityShowcasePage />} />
           <Route path="/governance" element={<GovernancePage />} />
-          <Route path="/movement" element={<MovementRedirect />} />
+          <Route path="/movement" element={<TheoryOfChange />} />
           
           {/* Admin Routes */}
           <Route path="/admin" element={<AdminAuth><AdminDashboard /></AdminAuth>} />
