@@ -34,11 +34,11 @@ const StoryArchivePage = () => {
         setLoadingMore(true)
       }
       
-      // Query for migrated articles from blkoutuk.com in news_articles table
+      // Query for migrated articles from blkoutuk.com in legacy_articles table
       let supabaseQuery = supabase
-        .from('news_articles')
+        .from('legacy_articles')
         .select('*')
-        .eq('submitted_via', 'blkoutuk-migration')
+        .eq('status', 'published')
         .order('published_at', { ascending: false })
         .range(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE - 1)
 
@@ -112,7 +112,7 @@ const StoryArchivePage = () => {
             📚 STORY ARCHIVE
           </h1>
           <h2 className="text-2xl mb-8 text-white font-bold uppercase tracking-wide">
-            270+ ARTICLES FROM BLKOUTUK.COM
+            280+ ARTICLES FROM BLKOUTUK.COM (2016-2025)
           </h2>
         </div>
 
