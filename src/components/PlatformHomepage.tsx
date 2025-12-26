@@ -176,7 +176,8 @@ const PlatformHomepage = () => {
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
               <div className="text-4xl mb-4">📚</div>
               <h3 className="text-xl font-bold mb-2">Story Archive</h3>
-              <p className="text-gray-400">Historical articles migrated from blkoutuk.com archive</p>
+              <p className="text-gray-400">280+ articles from blkoutuk.com (2016-2025)</p>
+              <p className="text-sm text-amber-400 mt-2 font-semibold">9 years of Black queer voices</p>
             </div>
           </Link>
 
