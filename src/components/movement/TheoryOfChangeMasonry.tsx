@@ -343,7 +343,7 @@ export default function TheoryOfChangeMasonry() {
       bgGradient: 'from-fuchsia-950 to-violet-950',
       content: {
         title: 'The order matters.',
-        highlight: '(Yeah, we're saying centuries of individualism might have had it backwards.)'
+        highlight: '(Yeah, we\'re saying centuries of individualism might have had it backwards.)'
       }
     }
   ];
