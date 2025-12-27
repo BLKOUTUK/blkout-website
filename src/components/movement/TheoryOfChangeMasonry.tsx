@@ -426,18 +426,18 @@ export default function TheoryOfChangeMasonry() {
             transition={{ duration: 1 }}
           >
             <p className="text-amber-400 text-sm md:text-base font-mono uppercase tracking-widest mb-6">
-              BLKOUT UK PRESENTS
+              THE QUESTION
             </p>
 
             <h1
-              className="text-6xl md:text-8xl lg:text-9xl font-black text-white uppercase tracking-tight leading-none mb-8"
+              className="text-5xl md:text-7xl lg:text-8xl font-black text-white uppercase tracking-tight leading-tight mb-8"
               style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}
             >
-              Theory of Change
+              Why BLKOUT Matters
             </h1>
 
-            <p className="text-2xl md:text-3xl text-purple-200 font-light mb-12 max-w-3xl mx-auto leading-relaxed">
-              A liberation platform for and by Black queer men in the UK
+            <p className="text-3xl md:text-4xl text-purple-200 font-light mb-12 max-w-3xl mx-auto leading-relaxed">
+              Black Queer Men & Collective Liberation
             </p>
 
             <div className="flex flex-wrap gap-4 justify-center text-sm">
