@@ -208,7 +208,9 @@ export default function TheoryOfChangeMasonry() {
       imageUrl: '/images/theory-of-change/card-01-isolation.png',
       bgGradient: 'from-indigo-950 to-purple-950',
       content: {
-        body: 'You ever been in a room full of us and still felt alone?'
+        subtitle: 'THE RECOGNITION',
+        body: 'You ever been in a room full of us',
+        highlight: 'and still felt alone?'
       }
     },
     {
@@ -218,7 +220,8 @@ export default function TheoryOfChangeMasonry() {
       imageUrl: '/images/theory-of-change/card-02-recognition.png',
       bgGradient: 'from-purple-950 to-violet-950',
       content: {
-        body: 'Same.'
+        body: 'Yeah.',
+        highlight: 'Same.'
       }
     },
     {
@@ -248,8 +251,10 @@ export default function TheoryOfChangeMasonry() {
       imageUrl: '/images/theory-of-change/card-04-poll.png',
       bgGradient: 'from-indigo-950 to-purple-950',
       content: {
-        title: 'How many Black queer men do you know well enough to call at 3am?',
-        body: 'Be honest.'
+        subtitle: 'QUICK QUESTION',
+        title: 'How many Black queer men do you know',
+        body: 'well enough to call at 3am?',
+        highlight: 'Be honest.'
       },
       interactive: {
         type: 'poll',
@@ -259,23 +264,25 @@ export default function TheoryOfChangeMasonry() {
     {
       id: 5,
       type: 'statement',
-      size: 'small',
+      size: 'medium',
       imageUrl: '/images/theory-of-change/card-05-one-or-fewer.png',
       bgGradient: 'from-purple-950 to-fuchsia-950',
       content: {
-        body: 'Most said:',
-        highlight: '1 or fewer.'
+        subtitle: 'WHEN WE ASKED',
+        title: '1 or fewer.',
+        highlight: '(And that includes the group chat that\'s been on mute since 2019.)'
       }
     },
     {
       id: 6,
       type: 'statement',
-      size: 'medium',
+      size: 'large',
       imageUrl: '/images/theory-of-change/card-06-proximity.png',
       bgGradient: 'from-violet-950 to-purple-950',
       content: {
-        body: 'That\'s not community.',
-        highlight: 'That\'s proximity.'
+        title: 'That\'s not community.',
+        body: 'That\'s proximity.',
+        highlight: '(And proximity without knowing is just... geography.)'
       }
     },
     {
@@ -317,23 +324,26 @@ export default function TheoryOfChangeMasonry() {
     {
       id: 9,
       type: 'statement',
-      size: 'hero', // Upgraded to HERO size for emphasis
+      size: 'hero',
       imageUrl: '/images/theory-of-change/card-09-inversion.png',
       bgGradient: 'from-purple-950 to-fuchsia-950',
       content: {
+        subtitle: 'WHAT IF WE HAD IT BACKWARDS?',
         title: 'The Inversion',
-        body: 'Know yourself → Love yourself → Connect',
-        highlight: 'Know each other → Know ourselves → Love becomes possible'
+        heading2: 'Know yourself → Love yourself → Connect',
+        body: 'Know each other → Know ourselves',
+        highlight: 'Then love becomes possible.'
       }
     },
     {
       id: 10,
       type: 'statement',
-      size: 'medium',
+      size: 'large',
       imageUrl: '/images/theory-of-change/card-10-backwards.png',
       bgGradient: 'from-fuchsia-950 to-violet-950',
       content: {
-        body: 'The order matters.'
+        title: 'The order matters.',
+        highlight: '(Yeah, we're saying centuries of individualism might have had it backwards.)'
       }
     }
   ];
