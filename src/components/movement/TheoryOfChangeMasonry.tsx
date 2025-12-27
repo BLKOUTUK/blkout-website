@@ -386,7 +386,8 @@ export default function TheoryOfChangeMasonry() {
         title: 'The order matters',
         heading2: '(We\'ve inherited thought that never thought about us)',
         highlight: 'Decolonising our minds means rejecting individualism and embracing interdependence'
-      }
+      },
+      cta: { text: 'Join our next gathering', link: 'https://events.blkoutuk.cloud', color: 'amber' }
     }
   ];
 
