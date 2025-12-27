@@ -13,6 +13,7 @@ interface Card {
   type: 'statement' | 'interactive' | 'beauty' | 'disclaimer';
   size: 'small' | 'medium' | 'large' | 'hero';
   imageUrl?: string;
+  videoUrl?: string;      // For inline video cards
   bgGradient: string;
   content: {
     title?: string;         // Primary heading (largest)
@@ -61,8 +62,20 @@ const MasonryCard: React.FC<{ card: Card; index: number }> = ({ card, index }) =
       transition={{ duration: 0.6, delay: (index % 12) * 0.05 }}
       whileHover={{ scale: 1.02 }}
     >
-      {/* Background Image or Gradient */}
-      {card.imageUrl ? (
+      {/* Background: Image, Video, or Gradient */}
+      {card.videoUrl ? (
+        <div className="absolute inset-0">
+          <video
+            src={card.videoUrl}
+            className="w-full h-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/20" />
+        </div>
+      ) : card.imageUrl ? (
         <div className="absolute inset-0">
           <img
             src={card.imageUrl}
@@ -418,6 +431,7 @@ export default function TheoryOfChangeMasonry() {
     { id: 30, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-30-isolation.png', bgGradient: 'from-indigo-950 to-purple-950', content: { body: 'Second-wave sought Free Love.', highlight: 'We pursue Love to get us free.' }},
     { id: 31, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-31-problem-is-us.png', bgGradient: 'from-fuchsia-950 to-purple-950', content: { body: 'Our sexuality is not a choice.', highlight: 'Our community is.' }},
     { id: 32, type: 'beauty', size: 'large', imageUrl: '/images/theory-of-change/card-32-never-us.png', bgGradient: 'from-violet-600 to-purple-600', content: { title: 'Tenderness is a political act.' }, cta: { text: 'How we\'re different', link: '/governance', color: 'amber' }},
+    { id: 32.5, type: 'beauty', size: 'large', videoUrl: '/videos/Making Space For What.mp4', bgGradient: 'from-purple-950 to-indigo-950', content: {} },
     { id: 33, type: 'interactive', size: 'hero', imageUrl: '/images/theory-of-change/card-33-show-up.png', bgGradient: 'from-purple-950 to-violet-950', content: { title: 'How do you show up?', body: 'Choose your power' }, interactive: { type: 'poll', data: { options: ['I bring food', 'I show up', 'I listen', 'I fight', 'I laugh', 'I remember'] }}}
   ];
 
