@@ -9,7 +9,7 @@ import NewsroomPage from './components/NewsroomPage'
 import StoryArchivePage from './components/StoryArchivePage'
 import GovernancePage from './components/GovernancePage'
 import CommunityShowcasePage from './pages/CommunityShowcasePage'
-import TheoryOfChange from './components/movement/TheoryOfChange'
+import TheoryOfChange from './components/movement/TheoryOfChangeMasonry'
 
 const IvorRedirect = () => {
   React.useEffect(() => {

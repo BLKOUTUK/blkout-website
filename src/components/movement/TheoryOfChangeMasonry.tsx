@@ -1,0 +1,446 @@
+/**
+ * Theory of Change v2.0 - Masonry Grid Layout
+ * Inspired by Grindr Unwrapped and MasonryScrollytelling
+ * Multi-column responsive grid with hero video breaks
+ */
+
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Share2, ExternalLink } from 'lucide-react';
+
+interface Card {
+  id: number;
+  type: 'statement' | 'interactive' | 'beauty' | 'disclaimer';
+  size: 'small' | 'medium' | 'large' | 'hero';
+  imageUrl?: string;
+  bgGradient: string;
+  content: {
+    title?: string;
+    body?: string;
+    highlight?: string;
+  };
+  interactive?: {
+    type: 'poll' | 'reveal' | 'wordcloud';
+    data?: any;
+  };
+}
+
+// Masonry size classes
+const sizeClasses = {
+  small: 'col-span-1 row-span-1',
+  medium: 'col-span-1 row-span-2',
+  large: 'col-span-2 row-span-2',
+  hero: 'col-span-2 row-span-3 md:col-span-3 lg:col-span-4'
+};
+
+const heightClasses = {
+  small: 'min-h-[250px]',
+  medium: 'min-h-[400px]',
+  large: 'min-h-[500px]',
+  hero: 'min-h-[600px]'
+};
+
+// Card component for masonry grid
+const MasonryCard: React.FC<{ card: Card; index: number }> = ({ card, index }) => {
+  const [revealed, setRevealed] = useState(false);
+  const [selected, setSelected] = useState<string | null>(null);
+
+  return (
+    <motion.div
+      className={`relative overflow-hidden rounded-2xl group ${sizeClasses[card.size]} ${heightClasses[card.size]}`}
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.6, delay: (index % 12) * 0.05 }}
+      whileHover={{ scale: 1.02 }}
+    >
+      {/* Background Image or Gradient */}
+      {card.imageUrl ? (
+        <div className="absolute inset-0">
+          <img
+            src={card.imageUrl}
+            alt=""
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/20" />
+        </div>
+      ) : (
+        <div className={`absolute inset-0 bg-gradient-to-br ${card.bgGradient}`} />
+      )}
+
+      {/* Content */}
+      <div className="relative z-10 h-full flex flex-col justify-end p-6 md:p-8">
+        {card.content.title && (
+          <motion.p
+            className="text-amber-400 text-xs md:text-sm font-mono uppercase tracking-widest mb-3"
+          >
+            {card.content.title}
+          </motion.p>
+        )}
+
+        <motion.h2
+          className="text-2xl md:text-3xl lg:text-4xl font-black text-white uppercase tracking-tight leading-tight mb-4"
+          style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}
+        >
+          {card.content.body}
+        </motion.h2>
+
+        {card.content.highlight && (
+          <p className="text-base md:text-lg text-purple-200 font-light">
+            {card.content.highlight}
+          </p>
+        )}
+
+        {/* Interactive elements */}
+        {card.interactive?.type === 'poll' && (
+          <div className="mt-4 space-y-2">
+            {card.interactive.data.options.map((option: string) => (
+              <button
+                key={option}
+                onClick={(e) => { e.stopPropagation(); setSelected(option); }}
+                className={`w-full px-4 py-2 rounded-lg text-sm font-bold transition-all ${
+                  selected === option
+                    ? 'bg-fuchsia-600 text-white'
+                    : 'bg-purple-900/50 text-purple-100 hover:bg-purple-800/50'
+                }`}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {card.interactive?.type === 'reveal' && (
+          <button
+            onClick={(e) => { e.stopPropagation(); setRevealed(!revealed); }}
+            className="mt-4 px-6 py-3 bg-purple-600 hover:bg-purple-500 rounded-lg text-white font-bold transition-all"
+          >
+            {revealed ? card.interactive.data.revealed : 'Click to reveal →'}
+          </button>
+        )}
+      </div>
+    </motion.div>
+  );
+};
+
+// Hero Video Break component
+const HeroVideoBreak: React.FC<{ title: string; subtitle: string }> = ({ title, subtitle }) => {
+  return (
+    <section className="relative w-full min-h-screen flex items-center justify-center bg-black my-16">
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-950 via-indigo-950 to-black opacity-50" />
+      <div className="relative z-10 text-center px-4">
+        <motion.h2
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-6xl md:text-8xl font-black text-white uppercase mb-6"
+          style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}
+        >
+          {title}
+        </motion.h2>
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3 }}
+          className="text-xl md:text-2xl text-amber-400 font-bold"
+        >
+          {subtitle}
+        </motion.p>
+        {/* Video placeholder - will be replaced with actual video */}
+        <div className="mt-12 w-full max-w-4xl mx-auto aspect-video bg-purple-950/30 rounded-2xl border border-purple-700/50 flex items-center justify-center">
+          <p className="text-purple-400 text-sm">Video Coming Soon</p>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default function TheoryOfChangeMasonry() {
+  // Elegant disclaimer - non-obstructive
+  const DisclaimerNote = () => (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 1 }}
+      className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-40 max-w-2xl"
+    >
+      <div className="bg-purple-950/90 backdrop-blur-sm border border-purple-700/50 rounded-full px-6 py-3 shadow-lg">
+        <p className="text-xs text-purple-300 text-center">
+          <span className="font-semibold">Imagery:</span> AI-generated (Wan 2.6, Gemini 3) •
+          <span className="text-purple-400"> Real photos in select cards</span>
+        </p>
+      </div>
+    </motion.div>
+  );
+
+  // ACT 1: Recognition (Cards 1-10)
+  const act1Cards: Card[] = [
+    {
+      id: 1,
+      type: 'statement',
+      size: 'hero',
+      imageUrl: '/images/theory-of-change/card-01-isolation.png',
+      bgGradient: 'from-indigo-950 to-purple-950',
+      content: {
+        body: 'You ever been in a room full of us and still felt alone?'
+      }
+    },
+    {
+      id: 2,
+      type: 'statement',
+      size: 'medium',
+      imageUrl: '/images/theory-of-change/card-02-recognition.png',
+      bgGradient: 'from-purple-950 to-violet-950',
+      content: {
+        body: 'Same.'
+      }
+    },
+    {
+      id: 3,
+      type: 'statement',
+      size: 'medium',
+      imageUrl: '/images/theory-of-change/card-03-wondering.png',
+      bgGradient: 'from-fuchsia-950 to-purple-950',
+      content: {
+        body: 'You ever wondered who you\'d be if you actually knew us?'
+      }
+    },
+    {
+      id: 4,
+      type: 'interactive',
+      size: 'large',
+      imageUrl: '/images/theory-of-change/card-04-poll.png',
+      bgGradient: 'from-indigo-950 to-purple-950',
+      content: {
+        title: 'How many Black queer men do you know well enough to call at 3am?',
+        body: 'Be honest.'
+      },
+      interactive: {
+        type: 'poll',
+        data: { options: ['0', '1-2', '3-5', 'Squad deep'] }
+      }
+    },
+    {
+      id: 5,
+      type: 'statement',
+      size: 'small',
+      imageUrl: '/images/theory-of-change/card-05-one-or-fewer.png',
+      bgGradient: 'from-purple-950 to-fuchsia-950',
+      content: {
+        body: 'Most said:',
+        highlight: '1 or fewer.'
+      }
+    },
+    {
+      id: 6,
+      type: 'statement',
+      size: 'medium',
+      imageUrl: '/images/theory-of-change/card-06-proximity.png',
+      bgGradient: 'from-violet-950 to-purple-950',
+      content: {
+        body: 'That\'s not community.',
+        highlight: 'That\'s proximity.'
+      }
+    },
+    {
+      id: 7,
+      type: 'statement',
+      size: 'small',
+      imageUrl: '/images/theory-of-change/card-07-survive-alone.png',
+      bgGradient: 'from-fuchsia-600 to-purple-600',
+      content: {
+        body: 'We\'ve learned to survive alone together.'
+      }
+    },
+    {
+      id: 8,
+      type: 'interactive',
+      size: 'medium',
+      imageUrl: '/images/theory-of-change/card-08-old-story.png',
+      bgGradient: 'from-indigo-950 to-purple-950',
+      content: {
+        title: 'What we\'ve been told',
+        body: 'Click to reveal'
+      },
+      interactive: {
+        type: 'reveal',
+        data: { revealed: 'Love yourself first. Know yourself. Then connect.' }
+      }
+    },
+    {
+      id: 9,
+      type: 'statement',
+      size: 'large',
+      imageUrl: '/images/theory-of-change/card-09-inversion.png',
+      bgGradient: 'from-purple-950 to-fuchsia-950',
+      content: {
+        title: 'The Inversion',
+        body: 'Know yourself → Love yourself → Connect',
+        highlight: 'Know each other → Know ourselves → Love becomes possible'
+      }
+    },
+    {
+      id: 10,
+      type: 'statement',
+      size: 'medium',
+      imageUrl: '/images/theory-of-change/card-10-backwards.png',
+      bgGradient: 'from-fuchsia-950 to-violet-950',
+      content: {
+        body: 'The order matters.'
+      }
+    }
+  ];
+
+  // ACT 2: The Problem (Cards 11-17)
+  const act2Cards: Card[] = [
+    { id: 11, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-11-geography.png', bgGradient: 'from-indigo-950 to-purple-950', content: { body: 'Racism and patriarchy don\'t just hurt us.', highlight: 'They sever us from each other.' }},
+    { id: 12, type: 'statement', size: 'medium', imageUrl: '/images/theory-of-change/card-12-cascade.png', bgGradient: 'from-purple-950 to-violet-950', content: { title: 'Without each other:', body: 'We can\'t know ourselves' }},
+    { id: 13, type: 'statement', size: 'medium', imageUrl: '/images/theory-of-change/card-13-app.png', bgGradient: 'from-violet-950 to-purple-950', content: { body: 'The app designed for everyone else.' }},
+    { id: 14, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-14-club.png', bgGradient: 'from-purple-950 to-indigo-950', content: { body: 'You can\'t know yourself in isolation.', highlight: 'The self is relational.' }},
+    { id: 15, type: 'beauty', size: 'small', imageUrl: '/images/theory-of-change/card-15-group-chat.png', bgGradient: 'from-indigo-600 to-purple-600', content: { title: 'We come from somewhere.' }},
+    { id: 16, type: 'statement', size: 'medium', imageUrl: '/images/theory-of-change/card-16-swipe.png', bgGradient: 'from-violet-950 to-purple-950', content: { body: 'Where are the rest of us?' }},
+    { id: 17, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-17-dont-know.png', bgGradient: 'from-fuchsia-950 to-purple-950', content: { body: 'Our heterogeneity wasn\'t a problem.', highlight: 'It was richness we hadn\'t learned to hold.' }}
+  ];
+
+  // ACT 3: What We're Building (Cards 19-26, 28)
+  const act3Cards: Card[] = [
+    { id: 19, type: 'statement', size: 'hero', imageUrl: '/images/theory-of-change/card-19-what-if.png', bgGradient: 'from-purple-950 to-indigo-950', content: { title: 'So we\'re building:', body: 'SPACE', highlight: 'Where we meet each other as we actually are.' }},
+    { id: 21, type: 'statement', size: 'medium', imageUrl: '/images/theory-of-change/card-21-gatherings.png', bgGradient: 'from-fuchsia-600 to-purple-600', content: { body: 'Monthly gatherings.', highlight: 'Real conversations.' }},
+    { id: 22, type: 'interactive', size: 'large', imageUrl: '/images/theory-of-change/card-22-wordcloud.png', bgGradient: 'from-indigo-950 to-purple-950', content: { title: 'What comes up when we talk:', body: 'Click topics' }, interactive: { type: 'wordcloud', data: { topics: ['Family', 'Sex', 'Money', 'Health', 'Joy', 'Love'] }}},
+    { id: 23, type: 'statement', size: 'medium', imageUrl: '/images/theory-of-change/card-23-connection.png', bgGradient: 'from-purple-950 to-violet-950', content: { body: 'Not networking.', highlight: 'Connection.' }},
+    { id: 24, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-24-articles.png', bgGradient: 'from-violet-950 to-purple-950', content: { body: '300+ articles by us, for us', highlight: '8 years building' }},
+    { id: 26, type: 'statement', size: 'medium', imageUrl: '/images/theory-of-change/card-26-map.png', bgGradient: 'from-purple-950 to-indigo-950', content: { title: 'From London to Bristol to Manchester', body: 'Finding each other' }},
+    { id: 28, type: 'statement', size: 'medium', imageUrl: '/images/theory-of-change/card-28-digital-human.png', bgGradient: 'from-fuchsia-950 to-purple-950', content: { body: 'Tech built by us.', highlight: 'Owned by us.' }}
+  ];
+
+  // ACT 4: The Core (Cards 30-33)
+  const act4Cards: Card[] = [
+    { id: 30, type: 'statement', size: 'medium', imageUrl: '/images/theory-of-change/card-30-isolation.png', bgGradient: 'from-indigo-950 to-purple-950', content: { body: 'Second-wave sought Free Love.', highlight: 'We pursue Love to get us free.' }},
+    { id: 31, type: 'statement', size: 'small', imageUrl: '/images/theory-of-change/card-31-problem-is-us.png', bgGradient: 'from-fuchsia-950 to-purple-950', content: { body: 'Our sexuality is not a choice.', highlight: 'Our community is.' }},
+    { id: 32, type: 'beauty', size: 'medium', imageUrl: '/images/theory-of-change/card-32-never-us.png', bgGradient: 'from-violet-600 to-purple-600', content: { title: 'Tenderness is a political act.' }},
+    { id: 33, type: 'interactive', size: 'large', imageUrl: '/images/theory-of-change/card-33-show-up.png', bgGradient: 'from-purple-950 to-violet-950', content: { title: 'How do you show up?', body: 'Choose your power' }, interactive: { type: 'poll', data: { options: ['I bring food', 'I show up', 'I listen', 'I fight', 'I laugh', 'I remember'] }}}
+  ];
+
+  // ACT 5: The Invitation (Cards 35-38)
+  const act5Cards: Card[] = [
+    { id: 35, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-35-structural-damage.png', bgGradient: 'from-indigo-950 to-purple-950', content: { title: 'FREEDOM FROM', body: 'Power to resist and dismantle.' }},
+    { id: 36, type: 'statement', size: 'medium', imageUrl: '/images/theory-of-change/card-36-relational-repair.png', bgGradient: 'from-purple-950 to-violet-950', content: { title: 'FREEDOM TO', body: 'Imagination. Creation. Something new.' }},
+    { id: 37, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-37-liberation.png', bgGradient: 'from-violet-950 to-purple-950', content: { title: 'What does liberation look like?', body: 'Your vision matters.' }},
+    { id: 38, type: 'statement', size: 'hero', imageUrl: '/images/theory-of-change/card-38-damage-repair.png', bgGradient: 'from-purple-950 to-indigo-950', content: { body: 'The damage is structural.', highlight: 'The repair is relational.' }}
+  ];
+
+  return (
+    <div className="min-h-screen bg-black">
+      {/* Progress Bar */}
+      <div className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-amber-500 z-50" />
+
+      {/* Ticker Header */}
+      <div className="fixed top-1 left-0 right-0 z-40 overflow-hidden bg-black/80 backdrop-blur-sm">
+        <motion.div
+          className="flex whitespace-nowrap py-2"
+          animate={{ x: [0, -1000] }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        >
+          {[...Array(10)].map((_, i) => (
+            <span key={i} className="text-xs font-mono uppercase tracking-widest text-gray-400 mx-8">
+              LIBERATION • COMMUNITY • POWER • HEALING • CONNECTION • COLLECTIVE •
+            </span>
+          ))}
+        </motion.div>
+      </div>
+
+      {/* Elegant Disclaimer - Bottom overlay */}
+      <DisclaimerNote />
+
+      {/* Main Content */}
+      <main className="pt-20">
+        {/* ACT 1: Recognition - Masonry Grid */}
+        <section className="container mx-auto px-4 py-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 auto-rows-[250px]">
+            {act1Cards.map((card, i) => (
+              <MasonryCard key={card.id} card={card} index={i} />
+            ))}
+          </div>
+        </section>
+
+        {/* VIDEO BREAK 1: We Don't Know Each Other (Yet) */}
+        <HeroVideoBreak
+          title="We Don't Know Each Other"
+          subtitle="(Yet)"
+        />
+
+        {/* ACT 2: The Problem - Masonry Grid */}
+        <section className="container mx-auto px-4 py-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 auto-rows-[250px]">
+            {act2Cards.map((card, i) => (
+              <MasonryCard key={card.id} card={card} index={i} />
+            ))}
+          </div>
+        </section>
+
+        {/* VIDEO BREAK 2: Heroes */}
+        <HeroVideoBreak
+          title="Heroes"
+          subtitle="The team assembles"
+        />
+
+        {/* ACT 3: What We're Building - Masonry Grid */}
+        <section className="container mx-auto px-4 py-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 auto-rows-[250px]">
+            {act3Cards.map((card, i) => (
+              <MasonryCard key={card.id} card={card} index={i} />
+            ))}
+          </div>
+        </section>
+
+        {/* ACT 4: The Core - Masonry Grid */}
+        <section className="container mx-auto px-4 py-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 auto-rows-[250px]">
+            {act4Cards.map((card, i) => (
+              <MasonryCard key={card.id} card={card} index={i} />
+            ))}
+          </div>
+        </section>
+
+        {/* ACT 5: The Invitation - Masonry Grid */}
+        <section className="container mx-auto px-4 py-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 auto-rows-[250px]">
+            {act5Cards.map((card, i) => (
+              <MasonryCard key={card.id} card={card} index={i} />
+            ))}
+          </div>
+        </section>
+
+        {/* Final CTA: OOMF Interactive */}
+        <section className="relative w-full min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-950 via-purple-950 to-black">
+          <div className="text-center px-4 max-w-4xl">
+            <h2 className="text-6xl md:text-8xl font-black text-white uppercase mb-6" style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}>
+              We're the heroes we've been waiting for
+            </h2>
+            <p className="text-2xl md:text-3xl text-amber-400 font-bold mb-12">
+              Now put yourself in the story
+            </p>
+            <a
+              href="https://blkoutuk.github.io/OOMF_Interactive/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 px-12 py-6 bg-gradient-to-r from-fuchsia-600 to-pink-600 text-white font-black text-xl rounded-lg hover:from-fuchsia-500 hover:to-pink-500 transition-all transform hover:scale-105 uppercase"
+              style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}
+            >
+              Create Your Hero Panel →
+              <ExternalLink className="w-6 h-6" />
+            </a>
+          </div>
+        </section>
+
+        {/* Share Button */}
+        <button
+          className="fixed top-20 right-8 z-50 w-12 h-12 bg-purple-900/80 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-purple-800/80 transition-colors"
+        >
+          <Share2 className="w-5 h-5 text-white" />
+        </button>
+      </main>
+    </div>
+  );
+}
