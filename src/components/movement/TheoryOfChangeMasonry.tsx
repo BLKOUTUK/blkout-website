@@ -406,11 +406,71 @@ export default function TheoryOfChangeMasonry() {
         </motion.div>
       </div>
 
+      {/* Hero Introduction */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Background */}
+        <div className="absolute inset-0">
+          <img
+            src="/images/collective-png/capacity.png"
+            alt=""
+            className="w-full h-full object-cover opacity-40"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black" />
+        </div>
+
+        {/* Hero Content */}
+        <div className="relative z-10 text-center px-4 max-w-5xl">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+          >
+            <p className="text-amber-400 text-sm md:text-base font-mono uppercase tracking-widest mb-6">
+              BLKOUT UK PRESENTS
+            </p>
+
+            <h1
+              className="text-6xl md:text-8xl lg:text-9xl font-black text-white uppercase tracking-tight leading-none mb-8"
+              style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}
+            >
+              Theory of Change
+            </h1>
+
+            <p className="text-2xl md:text-3xl text-purple-200 font-light mb-12 max-w-3xl mx-auto leading-relaxed">
+              A liberation platform for and by Black queer men in the UK
+            </p>
+
+            <div className="flex flex-wrap gap-4 justify-center text-sm">
+              <span className="px-5 py-2.5 bg-purple-900/50 border border-purple-700/50 rounded-full text-purple-100">
+                Community Owned
+              </span>
+              <span className="px-5 py-2.5 bg-purple-900/50 border border-purple-700/50 rounded-full text-purple-100">
+                Democratic Governance
+              </span>
+              <span className="px-5 py-2.5 bg-purple-900/50 border border-purple-700/50 rounded-full text-purple-100">
+                Built by Us
+              </span>
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.5 }}
+              className="mt-16"
+            >
+              <p className="text-purple-400 text-sm animate-pulse">
+                Scroll to begin ↓
+              </p>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Elegant Disclaimer - Bottom overlay */}
       <DisclaimerNote />
 
       {/* Main Content */}
-      <main className="pt-20">
+      <main className="pt-0">
         {/* ACT 1: Recognition - Masonry Grid */}
         <section className="container mx-auto px-4 py-8">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 auto-rows-[250px]">
