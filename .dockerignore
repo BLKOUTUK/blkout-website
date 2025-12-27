@@ -17,6 +17,4 @@ dist
 public/images/collective-png
 public/images/blkoutuk.com v3
 
-# Allow specific videos needed for Theory of Change
-!public/videos/Lordescroll.mp4
-!public/videos/Making Space For What.mp4
+# Theory of Change videos ARE included (removed blanket video exclusion)
