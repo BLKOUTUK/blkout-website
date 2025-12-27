@@ -220,8 +220,8 @@ export default function TheoryOfChangeMasonry() {
       imageUrl: '/images/theory-of-change/card-02-recognition.png',
       bgGradient: 'from-purple-950 to-violet-950',
       content: {
-        body: 'Yeah.',
-        highlight: 'Same.'
+        subtitle: 'yeah',
+        title: 'same'
       }
     },
     {
@@ -230,9 +230,7 @@ export default function TheoryOfChangeMasonry() {
       size: 'small',
       imageUrl: '/images/theory-backgrounds-resized/spiderman-meme.png',
       bgGradient: 'from-purple-900 to-indigo-900',
-      content: {
-        title: '👉👈'
-      }
+      content: {}
     },
     {
       id: 3,
@@ -251,10 +249,8 @@ export default function TheoryOfChangeMasonry() {
       imageUrl: '/images/theory-of-change/card-04-poll.png',
       bgGradient: 'from-indigo-950 to-purple-950',
       content: {
-        subtitle: 'QUICK QUESTION',
         title: 'How many Black queer men',
-        body: 'would you call in a crisis?',
-        highlight: 'When you\'re falling apart and need someone who gets it.'
+        body: 'could you call on @ 3AM for help in a crisis?'
       },
       interactive: {
         type: 'poll',
@@ -268,8 +264,8 @@ export default function TheoryOfChangeMasonry() {
       imageUrl: '/images/theory-of-change/card-05-one-or-fewer.png',
       bgGradient: 'from-purple-950 to-fuchsia-950',
       content: {
-        subtitle: 'WHEN WE ASKED',
-        title: '1 or fewer.',
+        subtitle: 'when we asked, you said:',
+        title: '1 or fewer',
         highlight: '(And that includes the group chat that\'s been on mute since 2019.)'
       }
     },
