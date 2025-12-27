@@ -287,12 +287,12 @@ export default function TheoryOfChangeMasonry() {
     },
     {
       id: 7,
-      type: 'statement',
-      size: 'small',
+      type: 'beauty',
+      size: 'large',
       imageUrl: '/images/theory-of-change/card-07-survive-alone.png',
       bgGradient: 'from-fuchsia-600 to-purple-600',
       content: {
-        body: 'We\'ve learned to survive alone together.'
+        title: 'We\'ve learned to survive alone together.'
       }
     },
     {
