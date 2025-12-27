@@ -279,9 +279,20 @@ export default function TheoryOfChangeMasonry() {
       }
     },
     {
+      id: 8.5,
+      type: 'beauty',
+      size: 'medium',
+      imageUrl: 'https://i.imgflip.com/7cp4yq.jpg', // RuPaul meme placeholder - user will provide correct image
+      bgGradient: 'from-fuchsia-600 to-pink-600',
+      content: {
+        title: 'Can I get an amen!',
+        body: '(But what if...)'
+      }
+    },
+    {
       id: 9,
       type: 'statement',
-      size: 'large',
+      size: 'hero', // Upgraded to HERO size for emphasis
       imageUrl: '/images/theory-of-change/card-09-inversion.png',
       bgGradient: 'from-purple-950 to-fuchsia-950',
       content: {
