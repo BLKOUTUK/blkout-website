@@ -15,9 +15,11 @@ interface Card {
   imageUrl?: string;
   bgGradient: string;
   content: {
-    title?: string;
-    body?: string;
-    highlight?: string;
+    title?: string;         // Primary heading (largest)
+    heading2?: string;      // Secondary heading
+    subtitle?: string;      // Supporting text above main
+    body?: string;          // Main text
+    highlight?: string;     // Emphasis text below main
   };
   interactive?: {
     type: 'poll' | 'reveal' | 'wordcloud';
@@ -70,23 +72,46 @@ const MasonryCard: React.FC<{ card: Card; index: number }> = ({ card, index }) =
 
       {/* Content */}
       <div className="relative z-10 h-full flex flex-col justify-end p-6 md:p-8">
-        {card.content.title && (
-          <motion.p
-            className="text-amber-400 text-xs md:text-sm font-mono uppercase tracking-widest mb-3"
-          >
-            {card.content.title}
+        {/* Subtitle (small, uppercase, accent color) */}
+        {card.content.subtitle && (
+          <motion.p className="text-amber-400 text-xs md:text-sm font-mono uppercase tracking-widest mb-2">
+            {card.content.subtitle}
           </motion.p>
         )}
 
-        <motion.h2
-          className="text-2xl md:text-3xl lg:text-4xl font-black text-white uppercase tracking-tight leading-tight mb-4"
-          style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}
-        >
-          {card.content.body}
-        </motion.h2>
+        {/* Title (primary heading - largest) */}
+        {card.content.title && (
+          <motion.h1
+            className="text-3xl md:text-4xl lg:text-5xl font-black text-white uppercase tracking-tight leading-tight mb-3"
+            style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}
+          >
+            {card.content.title}
+          </motion.h1>
+        )}
 
+        {/* Heading2 (secondary heading) */}
+        {card.content.heading2 && (
+          <motion.h2
+            className="text-2xl md:text-3xl font-bold text-purple-100 uppercase tracking-tight leading-tight mb-3"
+            style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}
+          >
+            {card.content.heading2}
+          </motion.h2>
+        )}
+
+        {/* Body (main text) */}
+        {card.content.body && (
+          <motion.p
+            className="text-xl md:text-2xl lg:text-3xl font-black text-white uppercase tracking-tight leading-tight mb-4"
+            style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}
+          >
+            {card.content.body}
+          </motion.p>
+        )}
+
+        {/* Highlight (emphasis text below) */}
         {card.content.highlight && (
-          <p className="text-base md:text-lg text-purple-200 font-light">
+          <p className="text-base md:text-lg text-purple-200 font-light leading-relaxed">
             {card.content.highlight}
           </p>
         )}
