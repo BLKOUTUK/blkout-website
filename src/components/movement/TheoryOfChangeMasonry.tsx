@@ -385,20 +385,20 @@ export default function TheoryOfChangeMasonry() {
   // ACT 3: What We're Building (Cards 19-26, 28)
   const act3Cards: Card[] = [
     { id: 19, type: 'statement', size: 'hero', imageUrl: '/images/theory-of-change/card-19-what-if.png', bgGradient: 'from-purple-950 to-indigo-950', content: { title: 'So we\'re building:', body: 'SPACE', highlight: 'Where we meet each other as we actually are.' }},
-    { id: 21, type: 'statement', size: 'medium', imageUrl: '/images/theory-of-change/card-21-gatherings.png', bgGradient: 'from-fuchsia-600 to-purple-600', content: { body: 'Monthly gatherings.', highlight: 'Real conversations.' }},
+    { id: 21, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-21-gatherings.png', bgGradient: 'from-fuchsia-600 to-purple-600', content: { body: 'Monthly gatherings.', highlight: 'Real conversations.' }},
     { id: 22, type: 'interactive', size: 'large', imageUrl: '/images/theory-of-change/card-22-wordcloud.png', bgGradient: 'from-indigo-950 to-purple-950', content: { title: 'What comes up when we talk:', body: 'Click topics' }, interactive: { type: 'wordcloud', data: { topics: ['Family', 'Sex', 'Money', 'Health', 'Joy', 'Love'] }}},
-    { id: 23, type: 'statement', size: 'medium', imageUrl: '/images/theory-of-change/card-23-connection.png', bgGradient: 'from-purple-950 to-violet-950', content: { body: 'Not networking.', highlight: 'Connection.' }},
+    { id: 23, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-23-connection.png', bgGradient: 'from-purple-950 to-violet-950', content: { body: 'Not networking.', highlight: 'Connection.' }},
     { id: 24, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-24-articles.png', bgGradient: 'from-violet-950 to-purple-950', content: { body: '300+ articles by us, for us', highlight: '8 years building' }},
-    { id: 26, type: 'statement', size: 'medium', imageUrl: '/images/theory-of-change/card-26-map.png', bgGradient: 'from-purple-950 to-indigo-950', content: { title: 'From London to Bristol to Manchester', body: 'Finding each other' }},
-    { id: 28, type: 'statement', size: 'medium', imageUrl: '/images/theory-of-change/card-28-digital-human.png', bgGradient: 'from-fuchsia-950 to-purple-950', content: { body: 'Tech built by us.', highlight: 'Owned by us.' }}
+    { id: 26, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-26-map.png', bgGradient: 'from-purple-950 to-indigo-950', content: { title: 'From London to Bristol to Manchester', body: 'Finding each other' }},
+    { id: 28, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-28-digital-human.png', bgGradient: 'from-fuchsia-950 to-purple-950', content: { body: 'Tech built by us.', highlight: 'Owned by us.' }}
   ];
 
   // ACT 4: The Core (Cards 30-33)
   const act4Cards: Card[] = [
-    { id: 30, type: 'statement', size: 'medium', imageUrl: '/images/theory-of-change/card-30-isolation.png', bgGradient: 'from-indigo-950 to-purple-950', content: { body: 'Second-wave sought Free Love.', highlight: 'We pursue Love to get us free.' }},
-    { id: 31, type: 'statement', size: 'small', imageUrl: '/images/theory-of-change/card-31-problem-is-us.png', bgGradient: 'from-fuchsia-950 to-purple-950', content: { body: 'Our sexuality is not a choice.', highlight: 'Our community is.' }},
-    { id: 32, type: 'beauty', size: 'medium', imageUrl: '/images/theory-of-change/card-32-never-us.png', bgGradient: 'from-violet-600 to-purple-600', content: { title: 'Tenderness is a political act.' }},
-    { id: 33, type: 'interactive', size: 'large', imageUrl: '/images/theory-of-change/card-33-show-up.png', bgGradient: 'from-purple-950 to-violet-950', content: { title: 'How do you show up?', body: 'Choose your power' }, interactive: { type: 'poll', data: { options: ['I bring food', 'I show up', 'I listen', 'I fight', 'I laugh', 'I remember'] }}}
+    { id: 30, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-30-isolation.png', bgGradient: 'from-indigo-950 to-purple-950', content: { body: 'Second-wave sought Free Love.', highlight: 'We pursue Love to get us free.' }},
+    { id: 31, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-31-problem-is-us.png', bgGradient: 'from-fuchsia-950 to-purple-950', content: { body: 'Our sexuality is not a choice.', highlight: 'Our community is.' }},
+    { id: 32, type: 'beauty', size: 'large', imageUrl: '/images/theory-of-change/card-32-never-us.png', bgGradient: 'from-violet-600 to-purple-600', content: { title: 'Tenderness is a political act.' }},
+    { id: 33, type: 'interactive', size: 'hero', imageUrl: '/images/theory-of-change/card-33-show-up.png', bgGradient: 'from-purple-950 to-violet-950', content: { title: 'How do you show up?', body: 'Choose your power' }, interactive: { type: 'poll', data: { options: ['I bring food', 'I show up', 'I listen', 'I fight', 'I laugh', 'I remember'] }}}
   ];
 
   // ACT 5: The Invitation (Cards 35-38)
