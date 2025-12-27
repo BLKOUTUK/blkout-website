@@ -470,7 +470,8 @@ const act4Cards: CardData[] = [
   {
     id: 30,
     type: 'statement',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-30-isolation.png',
     content: {
       body: 'Second-wave sought Free Love.',
       highlight: 'We pursue Love to get us free.'
@@ -480,7 +481,8 @@ const act4Cards: CardData[] = [
   {
     id: 31,
     type: 'statement',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-31-problem-is-us.png',
     content: {
       body: 'Our sexuality is not a choice.',
       highlight: 'Our community is.'
@@ -490,7 +492,8 @@ const act4Cards: CardData[] = [
   {
     id: 32,
     type: 'beauty',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-32-never-us.png',
     content: {
       title: 'Tenderness is a political act.'
     },
@@ -499,7 +502,8 @@ const act4Cards: CardData[] = [
   {
     id: 33,
     type: 'interactive',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-33-show-up.png',
     content: {
       title: 'How do you show up for your people?',
       body: 'Choose your power'
@@ -536,7 +540,8 @@ const act5Cards: CardData[] = [
   {
     id: 35,
     type: 'statement',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-35-structural-damage.png',
     content: {
       title: 'FREEDOM FROM',
       body: 'Collective power to resist and dismantle.'
