@@ -627,6 +627,50 @@ const Card: React.FC<CardProps> = ({ card, isActive, onInteraction }) => {
 
   const renderContent = () => {
     switch (card.type) {
+      case 'disclaimer':
+        return (
+          <div className="text-center max-w-3xl">
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={isActive ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8 }}
+              className="text-4xl md:text-6xl font-black leading-tight mb-8 uppercase tracking-tight text-white"
+              style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}
+            >
+              {card.content.title}
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={isActive ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="text-xl md:text-2xl text-amber-400 mb-12 font-bold"
+            >
+              {card.content.body}
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={isActive ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              className="bg-purple-900/30 border border-purple-700/30 rounded-lg p-6"
+            >
+              <pre className="text-sm text-purple-400 whitespace-pre-line text-left font-sans">
+                {card.content.subtext}
+              </pre>
+            </motion.div>
+
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={isActive ? { opacity: 1 } : {}}
+              transition={{ delay: 1 }}
+              className="mt-8 text-purple-500 text-sm animate-pulse"
+            >
+              Scroll to continue ↓
+            </p>
+          </div>
+        )
+
       case 'statement':
         return (
           <div className="text-center max-w-4xl">
