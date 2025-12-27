@@ -238,8 +238,11 @@ export default function TheoryOfChangeMasonry() {
       size: 'large',
       bgGradient: 'from-purple-950 via-violet-950 to-indigo-950',
       content: {
-        body: 'Societies invest in passing on knowledge between generations. They design systems around it.',
-        highlight: 'Schools, churches, media conglomerates, museums, families, taxes, police all actively work to encourage young people to understand what it is to be a "good man". Many of the same institutions have actively worked to deny young people knowledge of what it is to be a queer man. We are left to our own devices. Smartphones mostly.'
+        subtitle: 'THE DESIGN',
+        title: 'Societies invest in passing on knowledge between generations.',
+        heading2: 'They design systems around it.',
+        body: 'Schools, churches, media, museums, families, taxes, police—all actively work to teach young people what it is to be a "good man".',
+        highlight: 'Many of the same institutions have actively worked to deny young people knowledge of what it is to be a queer man. We are left to our own devices. Smartphones mostly.'
       }
     },
     {
@@ -259,10 +262,9 @@ export default function TheoryOfChangeMasonry() {
       imageUrl: '/images/theory-of-change/card-04-poll.png',
       bgGradient: 'from-indigo-950 to-purple-950',
       content: {
-        subtitle: '(Note: a booty call, however urgent, is not a crisis)',
         title: 'How many Black queer men',
         body: 'could you call on in a crisis?',
-        highlight: 'When you\'re falling apart and need someone who gets it.'
+        highlight: 'When you\'re falling apart and need someone who gets it. (Note: a booty call, however urgent, is not a crisis.)'
       },
       interactive: {
         type: 'poll',
