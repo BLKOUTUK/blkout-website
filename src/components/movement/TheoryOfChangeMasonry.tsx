@@ -25,6 +25,11 @@ interface Card {
     type: 'poll' | 'reveal' | 'wordcloud';
     data?: any;
   };
+  cta?: {
+    text: string;
+    link: string;
+    color?: 'amber' | 'fuchsia';
+  };
 }
 
 // Masonry size classes
@@ -142,6 +147,21 @@ const MasonryCard: React.FC<{ card: Card; index: number }> = ({ card, index }) =
           >
             {revealed ? card.interactive.data.revealed : 'Click to reveal →'}
           </button>
+        )}
+
+        {/* CTA Button */}
+        {card.cta && (
+          <a
+            href={card.cta.link}
+            onClick={(e) => e.stopPropagation()}
+            className={`mt-4 inline-flex items-center gap-2 px-6 py-3 rounded-lg font-bold transition-all hover:scale-105 ${
+              card.cta.color === 'fuchsia'
+                ? 'bg-gradient-to-r from-fuchsia-600 to-pink-600 text-white'
+                : 'bg-gradient-to-r from-amber-600 to-amber-500 text-black'
+            }`}
+          >
+            {card.cta.text} →
+          </a>
         )}
       </div>
     </motion.div>
@@ -378,25 +398,25 @@ export default function TheoryOfChangeMasonry() {
     { id: 14, type: 'statement', size: 'hero', imageUrl: '/images/theory-of-change/card-14-club.png', bgGradient: 'from-purple-950 to-indigo-950', content: { body: 'You can\'t know yourself in isolation.', highlight: 'The self is relational.' }},
     { id: 15, type: 'beauty', size: 'large', imageUrl: '/images/theory-of-change/card-15-group-chat.png', bgGradient: 'from-indigo-600 to-purple-600', content: { title: 'We come from somewhere.' }},
     { id: 16, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-16-swipe.png', bgGradient: 'from-violet-950 to-purple-950', content: { body: 'Where are the rest of us?' }},
-    { id: 17, type: 'statement', size: 'hero', imageUrl: '/images/theory-of-change/card-17-dont-know.png', bgGradient: 'from-fuchsia-950 to-purple-950', content: { body: 'Our heterogeneity wasn\'t a problem.', highlight: 'It was richness we hadn\'t learned to hold.' }}
+    { id: 17, type: 'statement', size: 'hero', imageUrl: '/images/theory-of-change/card-17-dont-know.png', bgGradient: 'from-fuchsia-950 to-purple-950', content: { body: 'Our heterogeneity wasn\'t a problem.', highlight: 'It was richness we hadn\'t learned to hold.' }, cta: { text: '300+ articles by us, for us', link: '/stories', color: 'amber' }}
   ];
 
   // ACT 3: What We're Building (Cards 19-26, 28)
   const act3Cards: Card[] = [
     { id: 19, type: 'statement', size: 'hero', imageUrl: '/images/theory-of-change/card-19-what-if.png', bgGradient: 'from-purple-950 to-indigo-950', content: { title: 'So we\'re building:', body: 'SPACE', highlight: 'Where we meet each other as we actually are.' }},
-    { id: 21, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-21-gatherings.png', bgGradient: 'from-fuchsia-600 to-purple-600', content: { body: 'Monthly gatherings.', highlight: 'Real conversations.' }},
+    { id: 21, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-21-gatherings.png', bgGradient: 'from-fuchsia-600 to-purple-600', content: { body: 'Monthly gatherings.', highlight: 'Real conversations.' }, cta: { text: 'See what\'s happening', link: 'https://events.blkoutuk.cloud', color: 'amber' }},
     { id: 22, type: 'interactive', size: 'large', imageUrl: '/images/theory-of-change/card-22-wordcloud.png', bgGradient: 'from-indigo-950 to-purple-950', content: { title: 'What comes up when we talk:', body: 'Click topics' }, interactive: { type: 'wordcloud', data: { topics: ['Family', 'Sex', 'Money', 'Health', 'Joy', 'Love'] }}},
     { id: 23, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-23-connection.png', bgGradient: 'from-purple-950 to-violet-950', content: { body: 'Not networking.', highlight: 'Connection.' }},
-    { id: 24, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-24-articles.png', bgGradient: 'from-violet-950 to-purple-950', content: { body: '300+ articles by us, for us', highlight: '8 years building' }},
-    { id: 26, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-26-map.png', bgGradient: 'from-purple-950 to-indigo-950', content: { title: 'From London to Bristol to Manchester', body: 'Finding each other' }},
-    { id: 28, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-28-digital-human.png', bgGradient: 'from-fuchsia-950 to-purple-950', content: { body: 'Tech built by us.', highlight: 'Owned by us.' }}
+    { id: 24, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-24-articles.png', bgGradient: 'from-violet-950 to-purple-950', content: { body: '300+ articles by us, for us', highlight: '8 years building' }, cta: { text: 'Explore our stories', link: '/stories', color: 'amber' }},
+    { id: 26, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-26-map.png', bgGradient: 'from-purple-950 to-indigo-950', content: { title: 'From London to Bristol to Manchester', body: 'Finding each other' }, cta: { text: 'Connect locally', link: 'https://events.blkoutuk.cloud', color: 'amber' }},
+    { id: 28, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-28-digital-human.png', bgGradient: 'from-fuchsia-950 to-purple-950', content: { body: 'Tech built by us.', highlight: 'Owned by us.' }, cta: { text: 'Meet IVOR', link: 'https://ivor.blkoutuk.cloud', color: 'amber' }}
   ];
 
   // ACT 4: The Core (Cards 30-33)
   const act4Cards: Card[] = [
     { id: 30, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-30-isolation.png', bgGradient: 'from-indigo-950 to-purple-950', content: { body: 'Second-wave sought Free Love.', highlight: 'We pursue Love to get us free.' }},
     { id: 31, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-31-problem-is-us.png', bgGradient: 'from-fuchsia-950 to-purple-950', content: { body: 'Our sexuality is not a choice.', highlight: 'Our community is.' }},
-    { id: 32, type: 'beauty', size: 'large', imageUrl: '/images/theory-of-change/card-32-never-us.png', bgGradient: 'from-violet-600 to-purple-600', content: { title: 'Tenderness is a political act.' }},
+    { id: 32, type: 'beauty', size: 'large', imageUrl: '/images/theory-of-change/card-32-never-us.png', bgGradient: 'from-violet-600 to-purple-600', content: { title: 'Tenderness is a political act.' }, cta: { text: 'How we\'re different', link: '/governance', color: 'amber' }},
     { id: 33, type: 'interactive', size: 'hero', imageUrl: '/images/theory-of-change/card-33-show-up.png', bgGradient: 'from-purple-950 to-violet-950', content: { title: 'How do you show up?', body: 'Choose your power' }, interactive: { type: 'poll', data: { options: ['I bring food', 'I show up', 'I listen', 'I fight', 'I laugh', 'I remember'] }}}
   ];
 
