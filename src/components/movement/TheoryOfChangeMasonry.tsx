@@ -336,7 +336,7 @@ export default function TheoryOfChangeMasonry() {
       id: 8.5,
       type: 'beauty',
       size: 'medium',
-      imageUrl: '/images/theory-backgrounds-resized/rupaul-amen.gif',
+      imageUrl: '/images/theory-of-change/RupaulAmen.gif',
       bgGradient: 'from-fuchsia-600 to-pink-600',
       content: {
         title: 'Can I get an amen!',
