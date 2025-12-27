@@ -364,8 +364,9 @@ export default function TheoryOfChangeMasonry() {
       imageUrl: '/images/theory-of-change/card-10-backwards.png',
       bgGradient: 'from-fuchsia-950 to-violet-950',
       content: {
-        title: 'The order matters.',
-        highlight: '(Yeah, we\'re saying centuries of individualism might have had it backwards.)'
+        title: 'The order matters',
+        heading2: '(We\'ve inherited thought that never thought about us)',
+        highlight: 'Decolonising our minds means rejecting individualism and embracing interdependence'
       }
     }
   ];
