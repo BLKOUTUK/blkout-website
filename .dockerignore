@@ -1,24 +1,19 @@
-**/.classpath
-**/.dockerignore
-**/.env
-**/.git
-**/.gitignore
-**/.project
-**/.settings
-**/.toolstarget
-**/.vs
-**/.vscode
-**/*.*proj.user
-**/*.dbmdl
-**/*.jfm
-**/charts
-**/docker-compose*
-**/compose*
-**/Dockerfile*
-**/node_modules
-**/npm-debug.log
-**/obj
-**/secrets.dev.yaml
-**/values.dev.yaml
-LICENSE
-README.md
+# Development
+node_modules
+.git
+.github
+*.log
+
+# AI metadata  
+.claude
+.claude-flow
+.swarm
+.serena
+
+# Build artifacts
+dist
+
+# Large files not needed
+public/videos
+public/images/collective-png
+public/images/blkoutuk.com v3
