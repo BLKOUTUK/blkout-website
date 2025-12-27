@@ -408,62 +408,26 @@ export default function TheoryOfChangeMasonry() {
 
       {/* Hero Introduction */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Background */}
+        {/* Custom Hero Design */}
         <div className="absolute inset-0">
           <img
-            src="/images/collective-png/capacity.png"
-            alt=""
-            className="w-full h-full object-cover opacity-40"
+            src="/images/theory-of-change/WHY BLKOUT HERO.png"
+            alt="Why BLKOUT Matters"
+            className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black" />
         </div>
 
-        {/* Hero Content */}
-        <div className="relative z-10 text-center px-4 max-w-5xl">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-          >
-            <p className="text-amber-400 text-sm md:text-base font-mono uppercase tracking-widest mb-6">
-              THE QUESTION
-            </p>
-
-            <h1
-              className="text-5xl md:text-7xl lg:text-8xl font-black text-white uppercase tracking-tight leading-tight mb-8"
-              style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}
-            >
-              Why BLKOUT Matters
-            </h1>
-
-            <p className="text-3xl md:text-4xl text-purple-200 font-light mb-12 max-w-3xl mx-auto leading-relaxed">
-              Black Queer Men & Collective Liberation
-            </p>
-
-            <div className="flex flex-wrap gap-4 justify-center text-sm">
-              <span className="px-5 py-2.5 bg-purple-900/50 border border-purple-700/50 rounded-full text-purple-100">
-                Community Owned
-              </span>
-              <span className="px-5 py-2.5 bg-purple-900/50 border border-purple-700/50 rounded-full text-purple-100">
-                Democratic Governance
-              </span>
-              <span className="px-5 py-2.5 bg-purple-900/50 border border-purple-700/50 rounded-full text-purple-100">
-                Built by Us
-              </span>
-            </div>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.5 }}
-              className="mt-16"
-            >
-              <p className="text-purple-400 text-sm animate-pulse">
-                Scroll to begin ↓
-              </p>
-            </motion.div>
-          </motion.div>
-        </div>
+        {/* Scroll prompt */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2 }}
+          className="absolute bottom-12 left-1/2 transform -translate-x-1/2 z-10"
+        >
+          <p className="text-white text-sm animate-pulse">
+            Scroll to begin ↓
+          </p>
+        </motion.div>
       </section>
 
       {/* Elegant Disclaimer - Bottom overlay */}
