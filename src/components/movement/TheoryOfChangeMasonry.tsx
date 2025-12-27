@@ -314,7 +314,7 @@ export default function TheoryOfChangeMasonry() {
       id: 8.5,
       type: 'beauty',
       size: 'medium',
-      imageUrl: 'https://i.imgflip.com/7cp4yq.jpg', // RuPaul meme placeholder - user will provide correct image
+      imageUrl: 'https://tenor.com/buOcy.gif',
       bgGradient: 'from-fuchsia-600 to-pink-600',
       content: {
         title: 'Can I get an amen!',
