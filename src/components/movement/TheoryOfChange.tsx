@@ -667,7 +667,7 @@ const Card: React.FC<CardProps> = ({ card, isActive, onInteraction }) => {
               className="mt-8 text-purple-500 text-sm animate-pulse"
             >
               Scroll to continue ↓
-            </p>
+            </motion.p>
           </div>
         )
 
