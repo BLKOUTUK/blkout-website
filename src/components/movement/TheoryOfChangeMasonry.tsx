@@ -233,6 +233,16 @@ export default function TheoryOfChangeMasonry() {
       content: {}
     },
     {
+      id: 2.75,
+      type: 'statement',
+      size: 'large',
+      bgGradient: 'from-purple-950 via-violet-950 to-indigo-950',
+      content: {
+        body: 'Societies invest in passing on knowledge between generations. They design systems around it.',
+        highlight: 'Schools, churches, media conglomerates, museums, families, taxes, police all actively work to encourage young people to understand what it is to be a "good man". Many of the same institutions have actively worked to deny young people knowledge of what it is to be a queer man. We are left to our own devices. Smartphones mostly.'
+      }
+    },
+    {
       id: 3,
       type: 'statement',
       size: 'medium',
