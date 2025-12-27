@@ -216,7 +216,7 @@ export default function TheoryOfChangeMasonry() {
     {
       id: 2,
       type: 'statement',
-      size: 'medium',
+      size: 'large',
       imageUrl: '/images/theory-of-change/card-02-recognition.png',
       bgGradient: 'from-purple-950 to-violet-950',
       content: {
@@ -248,7 +248,7 @@ export default function TheoryOfChangeMasonry() {
     {
       id: 3,
       type: 'statement',
-      size: 'medium',
+      size: 'large',
       imageUrl: '/images/theory-of-change/card-03-wondering.png',
       bgGradient: 'from-fuchsia-950 to-purple-950',
       content: {
@@ -274,7 +274,7 @@ export default function TheoryOfChangeMasonry() {
     {
       id: 5,
       type: 'statement',
-      size: 'medium',
+      size: 'large',
       imageUrl: '/images/theory-of-change/card-05-one-or-fewer.png',
       bgGradient: 'from-purple-950 to-fuchsia-950',
       content: {
@@ -308,7 +308,7 @@ export default function TheoryOfChangeMasonry() {
     {
       id: 7.5,
       type: 'statement',
-      size: 'medium',
+      size: 'large',
       imageUrl: '/images/theory-of-change/survival is a good start.png',
       bgGradient: 'from-violet-950 to-purple-950',
       content: {
@@ -320,7 +320,7 @@ export default function TheoryOfChangeMasonry() {
     {
       id: 8,
       type: 'interactive',
-      size: 'medium',
+      size: 'large',
       imageUrl: '/images/theory-of-change/card-08-old-story.png',
       bgGradient: 'from-indigo-950 to-purple-950',
       content: {
@@ -335,7 +335,7 @@ export default function TheoryOfChangeMasonry() {
     {
       id: 8.5,
       type: 'beauty',
-      size: 'medium',
+      size: 'large',
       imageUrl: '/images/theory-of-change/RupaulAmen.gif',
       bgGradient: 'from-fuchsia-600 to-pink-600',
       content: {
