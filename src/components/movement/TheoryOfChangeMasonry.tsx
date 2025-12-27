@@ -457,10 +457,33 @@ export default function TheoryOfChangeMasonry() {
 
       {/* Main Content */}
       <main className="pt-0">
-        {/* ACT 1: Recognition - Masonry Grid */}
+        {/* ACT 1: Recognition - Masonry Grid (Cards 1-7) */}
         <section className="container mx-auto px-4 py-8">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 auto-rows-[250px]">
-            {act1Cards.map((card, i) => (
+            {act1Cards.filter(c => c.id <= 7).map((card, i) => (
+              <MasonryCard key={card.id} card={card} index={i} />
+            ))}
+          </div>
+        </section>
+
+        {/* LORDE VIDEO BREAK: Transition from Survival to Thriving */}
+        <section className="relative w-full min-h-screen flex items-center justify-center bg-black my-8">
+          <div className="w-full max-w-6xl">
+            <video
+              src="/videos/Lordescroll.mp4"
+              className="w-full rounded-2xl"
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          </div>
+        </section>
+
+        {/* Continue Act 1 (Cards 7.5-10) */}
+        <section className="container mx-auto px-4 py-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 auto-rows-[250px]">
+            {act1Cards.filter(c => c.id > 7).map((card, i) => (
               <MasonryCard key={card.id} card={card} index={i} />
             ))}
           </div>
