@@ -252,9 +252,9 @@ export default function TheoryOfChangeMasonry() {
       bgGradient: 'from-indigo-950 to-purple-950',
       content: {
         subtitle: 'QUICK QUESTION',
-        title: 'How many Black queer men do you know',
-        body: 'well enough to call at 3am?',
-        highlight: 'Be honest.'
+        title: 'How many Black queer men',
+        body: 'would you call in a crisis?',
+        highlight: 'When you\'re falling apart and need someone who gets it.'
       },
       interactive: {
         type: 'poll',
