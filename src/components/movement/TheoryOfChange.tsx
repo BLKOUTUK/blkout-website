@@ -1310,14 +1310,15 @@ const Card: React.FC<CardProps> = ({ card, isActive, onInteraction }) => {
   }
 
   return (
-    <div className={`h-screen snap-start flex items-center justify-center px-6 md:px-12 relative overflow-hidden`}>
-      {/* Background Image (if hyper-real card) */}
+    <div className={`h-screen snap-start flex items-center justify-center px-4 md:px-8 relative overflow-hidden`}>
+      {/* Background Image (if hyper-real card) - 4:5 portrait centered */}
       {card.imageUrl && (
-        <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 z-0 flex items-center justify-center bg-black">
           <img
             src={card.imageUrl}
             alt=""
-            className="w-full h-full object-cover"
+            className="max-h-full w-auto object-contain"
+            style={{ aspectRatio: '4/5' }}
           />
           {/* Gradient overlay for text readability */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
@@ -1330,7 +1331,7 @@ const Card: React.FC<CardProps> = ({ card, isActive, onInteraction }) => {
       )}
 
       {/* Content */}
-      <div className="relative z-10">
+      <div className="relative z-10 w-full max-w-4xl">
         {renderContent()}
       </div>
     </div>
