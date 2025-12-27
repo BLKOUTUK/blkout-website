@@ -228,7 +228,7 @@ export default function TheoryOfChangeMasonry() {
       id: 2.5,
       type: 'beauty',
       size: 'small',
-      imageUrl: 'https://i.imgflip.com/7cp4yq.jpg', // Spiderman pointing meme
+      imageUrl: '/images/theory-backgrounds-resized/spiderman-meme.png',
       bgGradient: 'from-purple-900 to-indigo-900',
       content: {
         title: '👉👈'
