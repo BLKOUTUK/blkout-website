@@ -324,8 +324,7 @@ export default function TheoryOfChangeMasonry() {
       imageUrl: '/images/theory-of-change/card-08-old-story.png',
       bgGradient: 'from-indigo-950 to-purple-950',
       content: {
-        title: 'What we\'ve been told',
-        body: 'Click to reveal'
+        title: 'What we\'ve been told'
       },
       interactive: {
         type: 'reveal',
