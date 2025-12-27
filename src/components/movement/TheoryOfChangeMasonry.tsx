@@ -403,9 +403,9 @@ export default function TheoryOfChangeMasonry() {
 
   // ACT 5: The Invitation (Cards 35-38)
   const act5Cards: Card[] = [
-    { id: 35, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-35-structural-damage.png', bgGradient: 'from-indigo-950 to-purple-950', content: { title: 'FREEDOM FROM', body: 'Power to resist and dismantle.' }},
-    { id: 36, type: 'statement', size: 'medium', imageUrl: '/images/theory-of-change/card-36-relational-repair.png', bgGradient: 'from-purple-950 to-violet-950', content: { title: 'FREEDOM TO', body: 'Imagination. Creation. Something new.' }},
-    { id: 37, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-37-liberation.png', bgGradient: 'from-violet-950 to-purple-950', content: { title: 'What does liberation look like?', body: 'Your vision matters.' }},
+    { id: 35, type: 'statement', size: 'hero', imageUrl: '/images/theory-of-change/card-35-structural-damage.png', bgGradient: 'from-indigo-950 to-purple-950', content: { title: 'FREEDOM FROM', body: 'Power to resist and dismantle.' }},
+    { id: 36, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-36-relational-repair.png', bgGradient: 'from-purple-950 to-violet-950', content: { title: 'FREEDOM TO', body: 'Imagination. Creation. Something new.' }},
+    { id: 37, type: 'statement', size: 'hero', imageUrl: '/images/theory-of-change/card-37-liberation.png', bgGradient: 'from-violet-950 to-purple-950', content: { title: 'What does liberation look like?', body: 'Your vision matters.' }},
     { id: 38, type: 'statement', size: 'hero', imageUrl: '/images/theory-of-change/card-38-damage-repair.png', bgGradient: 'from-purple-950 to-indigo-950', content: { body: 'The damage is structural.', highlight: 'The repair is relational.' }}
   ];
 
