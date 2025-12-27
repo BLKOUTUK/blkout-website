@@ -374,12 +374,12 @@ export default function TheoryOfChangeMasonry() {
   // ACT 2: The Problem (Cards 11-17)
   const act2Cards: Card[] = [
     { id: 11, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-11-geography.png', bgGradient: 'from-indigo-950 to-purple-950', content: { body: 'Racism and patriarchy don\'t just hurt us.', highlight: 'They sever us from each other.' }},
-    { id: 12, type: 'statement', size: 'medium', imageUrl: '/images/theory-of-change/card-12-cascade.png', bgGradient: 'from-purple-950 to-violet-950', content: { title: 'Without each other:', body: 'We can\'t know ourselves' }},
-    { id: 13, type: 'statement', size: 'medium', imageUrl: '/images/theory-of-change/card-13-app.png', bgGradient: 'from-violet-950 to-purple-950', content: { body: 'The app designed for everyone else.' }},
-    { id: 14, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-14-club.png', bgGradient: 'from-purple-950 to-indigo-950', content: { body: 'You can\'t know yourself in isolation.', highlight: 'The self is relational.' }},
-    { id: 15, type: 'beauty', size: 'small', imageUrl: '/images/theory-of-change/card-15-group-chat.png', bgGradient: 'from-indigo-600 to-purple-600', content: { title: 'We come from somewhere.' }},
-    { id: 16, type: 'statement', size: 'medium', imageUrl: '/images/theory-of-change/card-16-swipe.png', bgGradient: 'from-violet-950 to-purple-950', content: { body: 'Where are the rest of us?' }},
-    { id: 17, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-17-dont-know.png', bgGradient: 'from-fuchsia-950 to-purple-950', content: { body: 'Our heterogeneity wasn\'t a problem.', highlight: 'It was richness we hadn\'t learned to hold.' }}
+    { id: 12, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-12-cascade.png', bgGradient: 'from-purple-950 to-violet-950', content: { title: 'Without each other:', body: 'We can\'t know ourselves' }},
+    { id: 13, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-13-app.png', bgGradient: 'from-violet-950 to-purple-950', content: { body: 'The app designed for everyone else.' }},
+    { id: 14, type: 'statement', size: 'hero', imageUrl: '/images/theory-of-change/card-14-club.png', bgGradient: 'from-purple-950 to-indigo-950', content: { body: 'You can\'t know yourself in isolation.', highlight: 'The self is relational.' }},
+    { id: 15, type: 'beauty', size: 'large', imageUrl: '/images/theory-of-change/card-15-group-chat.png', bgGradient: 'from-indigo-600 to-purple-600', content: { title: 'We come from somewhere.' }},
+    { id: 16, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-16-swipe.png', bgGradient: 'from-violet-950 to-purple-950', content: { body: 'Where are the rest of us?' }},
+    { id: 17, type: 'statement', size: 'hero', imageUrl: '/images/theory-of-change/card-17-dont-know.png', bgGradient: 'from-fuchsia-950 to-purple-950', content: { body: 'Our heterogeneity wasn\'t a problem.', highlight: 'It was richness we hadn\'t learned to hold.' }}
   ];
 
   // ACT 3: What We're Building (Cards 19-26, 28)
