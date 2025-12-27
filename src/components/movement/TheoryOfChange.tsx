@@ -198,7 +198,8 @@ const act2Cards: CardData[] = [
   {
     id: 11,
     type: 'statement',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-11-geography.png',
     content: {
       body: 'Racism and patriarchy don\'t just hurt us.',
       highlight: 'They sever us from each other.'
@@ -208,7 +209,8 @@ const act2Cards: CardData[] = [
   {
     id: 12,
     type: 'cascade',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-12-cascade.png',
     content: {
       title: 'Without each other:'
     },
@@ -227,7 +229,8 @@ const act2Cards: CardData[] = [
   {
     id: 13,
     type: 'text',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-13-app.png',
     content: {
       quote: 'If we can\'t love ourselves, how are we going to love each other?',
       highlight: 'But what if we\'ve had it backwards?'
@@ -237,7 +240,8 @@ const act2Cards: CardData[] = [
   {
     id: 14,
     type: 'statement',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-14-club.png',
     content: {
       body: 'You can\'t know yourself in isolation.',
       highlight: 'The self is relational. Always was.'
@@ -247,7 +251,8 @@ const act2Cards: CardData[] = [
   {
     id: 15,
     type: 'beauty',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-15-group-chat.png',
     content: {
       title: 'We come from somewhere.'
     },
@@ -256,7 +261,8 @@ const act2Cards: CardData[] = [
   {
     id: 16,
     type: 'interactive',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-16-swipe.png',
     content: {
       title: 'They asked us what works. No one knew.'
     },
@@ -278,7 +284,8 @@ const act2Cards: CardData[] = [
   {
     id: 17,
     type: 'statement',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-17-dont-know.png',
     content: {
       body: 'Our heterogeneity wasn\'t a problem to solve.',
       highlight: 'It was the richness we hadn\'t yet learned to hold.'
@@ -309,7 +316,8 @@ const act3Cards: CardData[] = [
   {
     id: 19,
     type: 'statement',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-19-what-if.png',
     content: {
       title: 'So we\'re building something.',
       body: 'SPACE',
@@ -340,7 +348,8 @@ const act3Cards: CardData[] = [
   {
     id: 22,
     type: 'interactive',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-22-wordcloud.png',
     content: {
       title: 'What comes up when we finally talk:',
       body: 'Click a topic'
@@ -370,7 +379,8 @@ const act3Cards: CardData[] = [
   {
     id: 23,
     type: 'statement',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-23-connection.png',
     content: {
       title: 'From Dialogue to:',
       body: 'INSTITUTION',
@@ -381,7 +391,8 @@ const act3Cards: CardData[] = [
   {
     id: 24,
     type: 'text',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-24-articles.png',
     content: {
       body: '300+ articles by us, for us\n8 years building\n1 community-owned organization\n0 permission asked'
     },
@@ -399,7 +410,8 @@ const act3Cards: CardData[] = [
   {
     id: 26,
     type: 'interactive',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-26-map.png',
     content: {
       title: 'Black queer men. Everywhere. Finding each other.',
       body: 'Where are you?'
