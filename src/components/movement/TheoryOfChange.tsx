@@ -551,7 +551,8 @@ const act5Cards: CardData[] = [
   {
     id: 36,
     type: 'statement',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-36-relational-repair.png',
     content: {
       title: 'FREEDOM TO',
       body: 'Imagination. Creation. Something new taking root.'
@@ -561,7 +562,8 @@ const act5Cards: CardData[] = [
   {
     id: 37,
     type: 'interactive',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-37-liberation.png',
     content: {
       title: 'If we had everything we needed, what would you want us to build?',
       body: 'Share your vision'
@@ -577,7 +579,8 @@ const act5Cards: CardData[] = [
   {
     id: 38,
     type: 'statement',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-38-damage-repair.png',
     content: {
       body: 'The damage is structural.',
       highlight: 'The repair is relational.'
