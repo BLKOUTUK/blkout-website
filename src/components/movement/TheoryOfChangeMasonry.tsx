@@ -74,7 +74,7 @@ const MasonryCard: React.FC<{ card: Card; index: number }> = ({ card, index }) =
       <div className="relative z-10 h-full flex flex-col justify-end p-6 md:p-8">
         {/* Subtitle (small, uppercase, accent color) */}
         {card.content.subtitle && (
-          <motion.p className="text-amber-400 text-xs md:text-sm font-mono uppercase tracking-widest mb-2">
+          <motion.p className="text-amber-400 text-sm md:text-base lg:text-lg font-mono uppercase tracking-widest mb-2">
             {card.content.subtitle}
           </motion.p>
         )}
@@ -111,7 +111,7 @@ const MasonryCard: React.FC<{ card: Card; index: number }> = ({ card, index }) =
 
         {/* Highlight (emphasis text below) */}
         {card.content.highlight && (
-          <p className="text-base md:text-lg text-purple-200 font-light leading-relaxed">
+          <p className="text-lg md:text-xl lg:text-2xl text-purple-200 font-light leading-relaxed">
             {card.content.highlight}
           </p>
         )}
