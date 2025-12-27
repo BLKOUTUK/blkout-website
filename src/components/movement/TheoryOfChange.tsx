@@ -18,8 +18,9 @@ import PrimaryNavigationEnhanced from '../layout/PrimaryNavigationEnhanced'
 
 interface CardData {
   id: number
-  type: 'text' | 'visual' | 'interactive' | 'video' | 'statement' | 'beauty' | 'cascade' | 'oomf'
-  visualStyle?: 'animated' | 'photo' // X-Men 97 animation vs real photography
+  type: 'text' | 'visual' | 'interactive' | 'video' | 'statement' | 'beauty' | 'cascade' | 'oomf' | 'disclaimer'
+  visualStyle?: 'animated' | 'photo' | 'hyper-real' // Animation, real photography, or AI photorealistic
+  imageUrl?: string // Path to generated card image
   content: {
     title?: string
     body?: string
@@ -27,7 +28,7 @@ interface CardData {
     quote?: string
     subtext?: string
   }
-  background: string // Tailwind gradient classes
+  background: string // Tailwind gradient classes (fallback if no image)
   interactive?: {
     type: 'poll' | 'reveal' | 'swipe' | 'wordcloud' | 'map' | 'openresponse' | 'cascade'
     data?: any
@@ -37,12 +38,34 @@ interface CardData {
     placeholder: string
     duration: string
     style: string
+    videoUrl?: string // Path to video file when ready
   }
   oomf?: {
     url: string
     ctaText: string
   }
+  cta?: {
+    type: 'single' | 'horizontal-scroll'
+    text?: string
+    link?: string
+    color?: 'amber' | 'fuchsia'
+  }
 }
+
+// ========================================
+// CARD 0: DISCLAIMER
+// ========================================
+const disclaimerCard: CardData = {
+  id: 0,
+  type: 'disclaimer',
+  visualStyle: 'hyper-real',
+  content: {
+    title: 'THE FOLLOWING IMAGERY CREATED WITH AI',
+    body: 'Representing diverse Black queer experiences',
+    subtext: 'Models: Alibaba Wan 2.6 (DashScope), Google Gemini 3 Pro\n\nReal photography: Cards 20, 27, 29, 39, 40'
+  },
+  background: 'from-indigo-950 via-purple-950 to-black'
+};
 
 // ========================================
 // ACT 1: RECOGNITION (Cards 1-10)
@@ -51,7 +74,8 @@ const act1Cards: CardData[] = [
   {
     id: 1,
     type: 'statement',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-01-isolation.png',
     content: {
       body: 'You ever been in a room full of us and still felt alone?'
     },
@@ -60,7 +84,8 @@ const act1Cards: CardData[] = [
   {
     id: 2,
     type: 'statement',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-02-recognition.png',
     content: {
       body: 'Same.'
     },
@@ -69,7 +94,8 @@ const act1Cards: CardData[] = [
   {
     id: 3,
     type: 'text',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-03-wondering.png',
     content: {
       body: 'You ever wondered who you\'d be if you actually knew us?'
     },
@@ -78,7 +104,8 @@ const act1Cards: CardData[] = [
   {
     id: 4,
     type: 'interactive',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-04-poll.png',
     content: {
       title: 'How many Black queer men do you know well enough to call at 3am?',
       body: 'Be honest.'
@@ -94,7 +121,8 @@ const act1Cards: CardData[] = [
   {
     id: 5,
     type: 'text',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-05-one-or-fewer.png',
     content: {
       body: 'When we asked, most said:',
       highlight: '1 or fewer.'
@@ -104,7 +132,8 @@ const act1Cards: CardData[] = [
   {
     id: 6,
     type: 'statement',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-06-proximity.png',
     content: {
       body: 'That\'s not a personal failing.',
       highlight: 'That\'s a design.'
@@ -114,7 +143,8 @@ const act1Cards: CardData[] = [
   {
     id: 7,
     type: 'beauty',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-07-survive-alone.png',
     content: {
       title: 'But also—'
     },
@@ -123,7 +153,8 @@ const act1Cards: CardData[] = [
   {
     id: 8,
     type: 'interactive',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-08-old-story.png',
     content: {
       title: 'What we\'ve been told',
       body: 'Click to reveal →'
@@ -139,7 +170,8 @@ const act1Cards: CardData[] = [
   {
     id: 9,
     type: 'statement',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-09-inversion.png',
     content: {
       title: 'The Inversion',
       body: 'Know yourself → Love yourself → Connect',
@@ -150,7 +182,8 @@ const act1Cards: CardData[] = [
   {
     id: 10,
     type: 'statement',
-    visualStyle: 'animated',
+    visualStyle: 'hyper-real',
+    imageUrl: '/images/theory-of-change/card-10-backwards.png',
     content: {
       body: 'The order matters.'
     },
@@ -1213,8 +1246,29 @@ const Card: React.FC<CardProps> = ({ card, isActive, onInteraction }) => {
   }
 
   return (
-    <div className={`h-screen snap-start flex items-center justify-center px-6 md:px-12 bg-gradient-to-br ${card.background}`}>
-      {renderContent()}
+    <div className={`h-screen snap-start flex items-center justify-center px-6 md:px-12 relative overflow-hidden`}>
+      {/* Background Image (if hyper-real card) */}
+      {card.imageUrl && (
+        <div className="absolute inset-0 z-0">
+          <img
+            src={card.imageUrl}
+            alt=""
+            className="w-full h-full object-cover"
+          />
+          {/* Gradient overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/30" />
+        </div>
+      )}
+
+      {/* Fallback gradient background */}
+      {!card.imageUrl && (
+        <div className={`absolute inset-0 z-0 bg-gradient-to-br ${card.background}`} />
+      )}
+
+      {/* Content */}
+      <div className="relative z-10">
+        {renderContent()}
+      </div>
     </div>
   )
 }
@@ -1289,8 +1343,8 @@ export default function TheoryOfChange() {
   const [currentCard, setCurrentCard] = useState(0)
   const [interactions, setInteractions] = useState<Record<number, any>>({})
 
-  // All cards (Complete 40-card Theory of Change v2.0 experience)
-  const allCards = [...act1Cards, ...act2Cards, ...act3Cards, ...act4Cards, ...act5Cards]
+  // All cards (Complete 40-card Theory of Change v2.0 experience with disclaimer)
+  const allCards = [disclaimerCard, ...act1Cards, ...act2Cards, ...act3Cards, ...act4Cards, ...act5Cards]
 
   // Track scroll position
   useEffect(() => {
