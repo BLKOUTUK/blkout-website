@@ -250,7 +250,8 @@ export default function TheoryOfChangeMasonry() {
       bgGradient: 'from-indigo-950 to-purple-950',
       content: {
         title: 'How many Black queer men',
-        body: 'could you call on @ 3AM for help in a crisis?'
+        body: 'could you call on in a crisis?',
+        highlight: 'When you\'re falling apart and need someone who gets it.'
       },
       interactive: {
         type: 'poll',
