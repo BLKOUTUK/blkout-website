@@ -506,6 +506,18 @@ export default function TheoryOfChangeMasonry() {
           />
         </div>
 
+        {/* Context overlay */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+          className="absolute bottom-32 left-1/2 transform -translate-x-1/2 z-10 text-center"
+        >
+          <p className="text-lg md:text-xl text-purple-300 italic">
+            (That's us. Welcome.)
+          </p>
+        </motion.div>
+
         {/* Scroll prompt */}
         <motion.div
           initial={{ opacity: 0 }}
