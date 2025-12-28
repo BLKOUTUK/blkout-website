@@ -294,14 +294,13 @@ export default function TheoryOfChangeMasonry() {
     {
       id: 2.75,
       type: 'statement',
-      size: 'hero',
+      size: 'large',
       bgGradient: 'from-purple-950 via-violet-950 to-indigo-950',
       content: {
         subtitle: 'THE DESIGN',
-        title: 'Societies invest in passing on knowledge between generations.',
-        heading2: 'They design systems around it.',
-        body: 'Schools, churches, media, museums, families, taxes, police—all actively work to teach young people what it is to be a "good man". Many of the same institutions have actively worked to deny young people knowledge of what it is to be a queer man.',
-        highlight: 'We are left to our own devices.\n\nSmartphones mostly.'
+        title: 'Societies invest in passing on knowledge between generations',
+        body: 'Schools, churches, media, museums actively teach what it is to be a "good man". Many deny us knowledge of what it is to be a queer man.',
+        highlight: 'We are left to our own devices. Smartphones mostly.'
       }
     },
     {
@@ -415,7 +414,8 @@ export default function TheoryOfChangeMasonry() {
       bgGradient: 'from-purple-950 to-fuchsia-950',
       content: {
         subtitle: 'you\'ve missed a step',
-        title: 'Each others missing link',
+        title: 'We are...',
+        heading2: 'Each others\' missing link',
         body: 'Loving ourselves requires both personal and collective growth. Loving who we are requires empathy and care.',
         highlight: 'Community enables love'
       }
@@ -451,7 +451,7 @@ export default function TheoryOfChangeMasonry() {
     { id: 21, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-21-gatherings.png', bgGradient: 'from-fuchsia-600 to-purple-600', content: { title: 'A lively calendar of social events', body: 'Real conversations. Shared experiences.' }, cta: { text: 'See what\'s happening', link: 'https://events.blkoutuk.cloud', color: 'amber' }},
     { id: 22, type: 'interactive', size: 'large', imageUrl: '/images/theory-of-change/card-22-wordcloud.png', bgGradient: 'from-indigo-950 to-purple-950', content: { title: 'What comes up when we talk:' }, interactive: { type: 'wordcloud', data: { topics: ['Family', 'Sex', 'Money', 'Health', 'Faith', 'Fear', 'Joy', 'Aging', 'Love', 'Loneliness', 'Dreams', 'Rage', 'Healing'] }}},
     { id: 23, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-23-connection.png', bgGradient: 'from-purple-950 to-violet-950', content: { title: 'Not Networking', body: 'No transaction required.', highlight: 'Connection' }},
-    { id: 24, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-24-articles.png', bgGradient: 'from-violet-950 to-purple-950', content: { title: '300+ articles by us, for us', body: '8 years building our own newsroom', highlight: 'Telling our stories on our terms' }, cta: { text: 'Explore our stories', link: '/stories', color: 'amber' }},
+    { id: 24, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-24-articles.png', bgGradient: 'from-violet-950 to-purple-950', content: { title: '300+ articles', body: '8 years building our archive', highlight: 'Telling our stories on our terms' }, cta: { text: 'Read the archive', link: '/stories', color: 'amber' }},
     { id: 26, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-26-map.png', bgGradient: 'from-purple-950 to-indigo-950', content: { title: 'From London to Bristol to Manchester', body: 'Finding each other' }, cta: { text: 'Connect locally', link: 'https://events.blkoutuk.cloud', color: 'amber' }},
     { id: 27, type: 'beauty', size: 'small', imageUrl: '/images/theory-of-change/silhouette letters white rgb.png', bgGradient: 'from-fuchsia-950 to-purple-950', content: {} },
     { id: 28, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-28-digital-human.png', bgGradient: 'from-fuchsia-950 to-purple-950', content: { title: 'IVOR: Your AI companion', body: 'Built to understand our experiences', highlight: 'Technology that serves, not surveils' }, cta: { text: 'Meet IVOR', link: 'https://ivor.blkoutuk.cloud', color: 'amber' }}
@@ -462,7 +462,6 @@ export default function TheoryOfChangeMasonry() {
     { id: 30, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-30-isolation.png', bgGradient: 'from-indigo-950 to-purple-950', content: { body: '1970s 2nd Wave Queer rights activism sought \'free love\'', highlight: 'Today, we seek love to set us free.' }},
     { id: 31, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-31-problem-is-us.png', bgGradient: 'from-fuchsia-950 to-purple-950', content: { body: 'Our sexuality is not a choice', highlight: 'Commitment to community is' }},
     { id: 32, type: 'beauty', size: 'large', imageUrl: '/images/theory-of-change/card-32-never-us.png', bgGradient: 'from-violet-600 to-purple-600', content: { title: 'Tenderness is a political act', body: 'Black queer joy is revolutionary' }, cta: { text: 'How we\'re different', link: '/governance', color: 'amber' }},
-    { id: 32.3, type: 'beauty', size: 'large', videoUrl: '/videos/baldwinscroll.mp4', bgGradient: 'from-purple-950 to-indigo-950', content: {} },
     { id: 32.5, type: 'beauty', size: 'large', videoUrl: '/videos/Making Space For What.mp4', bgGradient: 'from-purple-950 to-indigo-950', content: {} },
     { id: 33, type: 'interactive', size: 'hero', imageUrl: '/images/theory-of-change/card-33-show-up.png', bgGradient: 'from-purple-950 to-violet-950', content: { title: 'How do you show up?', body: 'Choose your power' }, interactive: { type: 'poll', data: { options: ['I bring food', 'I show up', 'I listen', 'I fight', 'I laugh', 'I remember'] }}}
   ];
@@ -471,6 +470,7 @@ export default function TheoryOfChangeMasonry() {
   const act5Cards: Card[] = [
     { id: 35, type: 'statement', size: 'hero', imageUrl: '/images/theory-of-change/card-35-structural-damage.png', bgGradient: 'from-indigo-950 to-purple-950', content: { subtitle: 'Liberation Is', title: 'Freedom from...', body: 'Ending harm, using our power to resist and dismantle injustice' }},
     { id: 36, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-36-relational-repair.png', bgGradient: 'from-purple-950 to-violet-950', content: { subtitle: 'Liberation Is', title: 'Freedom to...', body: 'Imagine better, create the new' }},
+    { id: 36.5, type: 'beauty', size: 'large', videoUrl: '/videos/baldwinscroll.mp4', bgGradient: 'from-purple-950 to-indigo-950', content: {} },
     { id: 37, type: 'statement', size: 'hero', imageUrl: '/images/theory-of-change/card-37-liberation.png', bgGradient: 'from-violet-950 to-purple-950', content: { title: 'What does liberation look like?', body: 'Your vision matters.' }, cta: { text: 'Get the newsletter', link: 'https://crm.blkoutuk.cloud/api/community/join', color: 'amber' }},
     { id: 38, type: 'statement', size: 'hero', imageUrl: '/images/theory-of-change/card-38-damage-repair.png', bgGradient: 'from-purple-950 to-indigo-950', content: { subtitle: 'THE THESIS', title: 'The damage is structural.', body: 'The repair is relational.', highlight: 'This is the work.' }, cta: { text: 'Explore the platform', link: '/platform', color: 'amber' }}
   ];
@@ -618,7 +618,7 @@ export default function TheoryOfChangeMasonry() {
                 <div className="text-black"><img src="/images/squared/BLKOUTiconBLACK.png" alt="BLKOUT" className="w-16 h-16 mb-4" /><h3 className="text-3xl font-black uppercase mb-3" style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}>Stay in Touch</h3><p className="text-lg font-semibold mb-4">Newsletter</p><p className="text-sm opacity-80">Weekly updates from the collective</p></div>
               </motion.a>
               <motion.a href="https://blkouthub.com" target="_blank" rel="noopener noreferrer" whileInView={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: 50 }} transition={{ delay: 0.2 }} className="bg-gradient-to-br from-fuchsia-600 to-pink-600 rounded-2xl p-8 hover:scale-105 transition-all">
-                <div className="text-white"><img src="/images/blkouthub_logo.png" alt="BLKOUTHUB" className="w-auto h-16 mb-4" /><h3 className="text-3xl font-black uppercase mb-3" style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}>Commit to Do More</h3><p className="text-lg font-semibold mb-4">Join the BLKOUTHUB</p><p className="text-sm opacity-90">Active membership. Real gatherings.</p></div>
+                <div className="text-white"><img src="/images/blkouthub_logo.png" alt="BLKOUTHUB" className="w-auto h-16 mb-4" /><h3 className="text-3xl font-black uppercase mb-3" style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}>Get Connected</h3><p className="text-lg font-semibold mb-4">Join the BLKOUTHUB</p><p className="text-sm opacity-90">Active membership. Real gatherings.</p></div>
               </motion.a>
               <motion.a href="/platform" whileInView={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: 50 }} transition={{ delay: 0.3 }} className="bg-gradient-to-br from-purple-600 to-indigo-600 rounded-2xl p-8 hover:scale-105 transition-all">
                 <div className="text-white"><img src="/images/squared/BLKOUTiconWHITE.png" alt="BLKOUT" className="w-16 h-16 mb-4" /><h3 className="text-3xl font-black uppercase mb-3" style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}>Learn</h3><p className="text-lg font-semibold mb-4">Explore Resources</p><p className="text-sm opacity-90">280+ articles, Events, IVOR AI</p></div>
@@ -627,13 +627,20 @@ export default function TheoryOfChangeMasonry() {
           </div>
         </section>
 
-        {/* POST-CREDIT: OOMF Embedded */}
+        {/* POST-CREDIT: OOMF Interactive */}
         <section className="relative w-full min-h-screen flex flex-col items-center justify-center bg-black py-24">
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ delay: 0.5, duration: 1 }} className="text-center px-4 max-w-6xl w-full">
             <p className="text-sm text-purple-600 uppercase tracking-widest mb-8">One more thing...</p>
+
+            {/* OOMF Crew Image */}
+            <div className="mb-12">
+              <img src="/images/theory-of-change/the oomf crew.jpg" alt="The OOMF Crew" className="max-w-2xl mx-auto rounded-2xl" />
+            </div>
+
             <h2 className="text-4xl md:text-6xl font-black text-white uppercase mb-4" style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}>We're the heroes we've been waiting for</h2>
             <p className="text-xl md:text-2xl text-amber-400 font-bold mb-12">Now put yourself in the story</p>
-            <div className="w-full max-w-5xl mx-auto mb-8">
+
+            <div className="w-full max-w-3xl mx-auto mb-8">
               <div className="relative rounded-2xl overflow-hidden border-2 border-purple-700/50" style={{ paddingBottom: '125%' }}>
                 <iframe src="https://blkoutuk.github.io/OOMF_Interactive/" className="absolute inset-0 w-full h-full" title="Create Your Hero Panel" allow="camera; microphone" sandbox="allow-same-origin allow-scripts allow-forms allow-popups" />
               </div>
@@ -641,6 +648,42 @@ export default function TheoryOfChangeMasonry() {
             <a href="https://blkoutuk.github.io/OOMF_Interactive/" target="_blank" rel="noopener noreferrer" className="text-sm text-purple-400 hover:text-purple-300">Having trouble? Open in new tab →</a>
           </motion.div>
         </section>
+
+        {/* Footer */}
+        <footer className="bg-black border-t border-purple-900/30 py-16">
+          <div className="container mx-auto px-4 max-w-6xl">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+              <div>
+                <h4 className="text-white font-bold mb-4 uppercase">Platform</h4>
+                <ul className="space-y-2 text-purple-300 text-sm">
+                  <li><a href="https://events.blkoutuk.cloud" className="hover:text-white">Events</a></li>
+                  <li><a href="/stories" className="hover:text-white">Archive</a></li>
+                  <li><a href="https://ivor.blkoutuk.cloud" className="hover:text-white">IVOR AI</a></li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="text-white font-bold mb-4 uppercase">Community</h4>
+                <ul className="space-y-2 text-purple-300 text-sm">
+                  <li><a href="https://blkouthub.com" className="hover:text-white">BLKOUTHUB</a></li>
+                  <li><a href="/governance" className="hover:text-white">Governance</a></li>
+                  <li><a href="/platform" className="hover:text-white">Platform</a></li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="text-white font-bold mb-4 uppercase">Connect</h4>
+                <ul className="space-y-2 text-purple-300 text-sm">
+                  <li><a href="https://instagram.com/blkoutuk" className="hover:text-white">Instagram</a></li>
+                  <li><a href="https://twitter.com/blkoutuk" className="hover:text-white">Twitter/X</a></li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="text-white font-bold mb-4 uppercase">BLKOUT UK</h4>
+                <p className="text-purple-400 text-sm">Community-owned liberation platform</p>
+                <p className="text-purple-600 text-xs mt-4">© 2025 BLKOUT UK Cooperative</p>
+              </div>
+            </div>
+          </div>
+        </footer>
 
         {/* Share Button */}
         <button
