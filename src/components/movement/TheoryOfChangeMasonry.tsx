@@ -162,6 +162,24 @@ const MasonryCard: React.FC<{ card: Card; index: number }> = ({ card, index }) =
           </button>
         )}
 
+        {card.interactive?.type === 'wordcloud' && (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {card.interactive.data.topics.map((topic: string) => (
+              <button
+                key={topic}
+                onClick={(e) => { e.stopPropagation(); setSelected(topic); }}
+                className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${
+                  selected === topic
+                    ? 'bg-fuchsia-600 text-white'
+                    : 'bg-purple-900/50 text-purple-100 hover:bg-purple-800/50'
+                }`}
+              >
+                {topic}
+              </button>
+            ))}
+          </div>
+        )}
+
         {/* CTA Button */}
         {card.cta && (
           <a
