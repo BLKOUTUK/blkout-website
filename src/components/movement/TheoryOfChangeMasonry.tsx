@@ -596,26 +596,41 @@ export default function TheoryOfChangeMasonry() {
           </div>
         </section>
 
-        {/* Final CTA: OOMF Interactive */}
-        <section className="relative w-full min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-950 via-purple-950 to-black">
-          <div className="text-center px-4 max-w-4xl">
-            <h2 className="text-6xl md:text-8xl font-black text-white uppercase mb-6" style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}>
-              We're the heroes we've been waiting for
-            </h2>
-            <p className="text-2xl md:text-3xl text-amber-400 font-bold mb-12">
-              Now put yourself in the story
-            </p>
-            <a
-              href="https://blkoutuk.github.io/OOMF_Interactive/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 px-12 py-6 bg-gradient-to-r from-fuchsia-600 to-pink-600 text-white font-black text-xl rounded-lg hover:from-fuchsia-500 hover:to-pink-500 transition-all transform hover:scale-105 uppercase"
-              style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}
-            >
-              Create Your Hero Panel →
-              <ExternalLink className="w-6 h-6" />
-            </a>
+        {/* LANDING: 3 Primary CTAs */}
+        <section className="relative w-full min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-950 via-indigo-950 to-black py-24">
+          <div className="container mx-auto px-4 max-w-6xl">
+            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} className="text-center mb-16">
+              <h2 className="text-5xl md:text-7xl font-black text-white uppercase mb-6" style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}>What's Next?</h2>
+              <p className="text-xl md:text-2xl text-purple-300 font-light">Choose your path into the collective</p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+              <motion.a href="https://crm.blkoutuk.cloud/api/community/join" whileInView={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: 50 }} transition={{ delay: 0.1 }} className="bg-gradient-to-br from-amber-600 to-amber-500 rounded-2xl p-8 hover:scale-105 transition-all">
+                <div className="text-black"><div className="text-5xl mb-4">✉️</div><h3 className="text-3xl font-black uppercase mb-3" style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}>Stay in Touch</h3><p className="text-lg font-semibold mb-4">Newsletter</p><p className="text-sm opacity-80">Weekly updates from the collective</p></div>
+              </motion.a>
+              <motion.a href="https://blkouthub.com" target="_blank" rel="noopener noreferrer" whileInView={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: 50 }} transition={{ delay: 0.2 }} className="bg-gradient-to-br from-fuchsia-600 to-pink-600 rounded-2xl p-8 hover:scale-105 transition-all">
+                <div className="text-white"><div className="text-5xl mb-4">🤝</div><h3 className="text-3xl font-black uppercase mb-3" style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}>Commit to Do More</h3><p className="text-lg font-semibold mb-4">Join the BLKOUTHUB</p><p className="text-sm opacity-90">Active membership. Real gatherings.</p></div>
+              </motion.a>
+              <motion.a href="/platform" whileInView={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: 50 }} transition={{ delay: 0.3 }} className="bg-gradient-to-br from-purple-600 to-indigo-600 rounded-2xl p-8 hover:scale-105 transition-all">
+                <div className="text-white"><div className="text-5xl mb-4">📚</div><h3 className="text-3xl font-black uppercase mb-3" style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}>Learn</h3><p className="text-lg font-semibold mb-4">Explore Resources</p><p className="text-sm opacity-90">280+ articles, Events, IVOR AI</p></div>
+              </motion.a>
+            </div>
           </div>
+        </section>
+
+        {/* POST-CREDIT: OOMF Embedded */}
+        <section className="relative w-full min-h-screen flex flex-col items-center justify-center bg-black py-24">
+          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ delay: 0.5, duration: 1 }} className="text-center px-4 max-w-6xl w-full">
+            <p className="text-sm text-purple-600 uppercase tracking-widest mb-8">One more thing...</p>
+            <h2 className="text-4xl md:text-6xl font-black text-white uppercase mb-4" style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}>We're the heroes we've been waiting for</h2>
+            <p className="text-xl md:text-2xl text-amber-400 font-bold mb-12">Now put yourself in the story</p>
+            <div className="w-full max-w-5xl mx-auto mb-8">
+              <div className="relative rounded-2xl overflow-hidden border-2 border-purple-700/50" style={{ paddingBottom: '125%' }}>
+                <iframe src="https://blkoutuk.github.io/OOMF_Interactive/" className="absolute inset-0 w-full h-full" title="Create Your Hero Panel" allow="camera; microphone" sandbox="allow-same-origin allow-scripts allow-forms allow-popups" />
+              </div>
+            </div>
+            <a href="https://blkoutuk.github.io/OOMF_Interactive/" target="_blank" rel="noopener noreferrer" className="text-sm text-purple-400 hover:text-purple-300">Having trouble? Open in new tab →</a>
+          </motion.div>
         </section>
 
         {/* Share Button */}
