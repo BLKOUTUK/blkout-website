@@ -526,10 +526,11 @@ export default function TheoryOfChangeMasonry() {
 
         {/* LORDE VIDEO BREAK: Transition from Survival to Thriving */}
         <section className="relative w-full flex items-center justify-center bg-black my-8 py-16">
-          <div className="w-full max-w-5xl px-4">
+          <div className="w-auto max-w-2xl px-4">
             <video
               src="/videos/Lordescroll.mp4"
               className="w-full rounded-2xl"
+              style={{ aspectRatio: '4/5' }}
               autoPlay
               loop
               playsInline
