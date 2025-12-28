@@ -311,9 +311,8 @@ export default function TheoryOfChangeMasonry() {
       imageUrl: '/images/theory-of-change/card-05-one-or-fewer.png',
       bgGradient: 'from-purple-950 to-fuchsia-950',
       content: {
-        subtitle: 'when we asked, you said:',
-        title: '1 or fewer',
-        highlight: '(And that includes the group chat that\'s been on mute since 2019.)'
+        title: 'Ever wondered what difference it would make',
+        body: 'if we knew each other better?'
       }
     },
     {
@@ -336,7 +335,8 @@ export default function TheoryOfChangeMasonry() {
       bgGradient: 'from-fuchsia-600 to-purple-600',
       content: {
         title: 'We\'ve learned to survive alone together.'
-      }
+      },
+      cta: { text: 'In The Picture: Loneliness Report', link: 'https://blkoutuk.com/in-the-picture', color: 'amber' }
     },
     {
       id: 7.5,
@@ -370,9 +370,15 @@ export default function TheoryOfChangeMasonry() {
       size: 'large',
       imageUrl: '/images/theory-of-change/RupaulAmen.gif',
       bgGradient: 'from-fuchsia-600 to-pink-600',
+      content: {}
+    },
+    {
+      id: 8.75,
+      type: 'statement',
+      size: 'medium',
+      bgGradient: 'from-purple-950 to-violet-950',
       content: {
-        title: 'Can I get an amen!',
-        body: '(But what if...)'
+        title: 'Hold on a minute'
       }
     },
     {
@@ -382,11 +388,10 @@ export default function TheoryOfChangeMasonry() {
       imageUrl: '/images/theory-of-change/card-09-inversion.png',
       bgGradient: 'from-purple-950 to-fuchsia-950',
       content: {
-        subtitle: 'WHAT IF WE HAD IT BACKWARDS?',
-        title: 'The Inversion',
-        heading2: 'Know yourself → Love yourself → Connect',
-        body: 'Know each other → Know ourselves',
-        highlight: 'Then love becomes possible.'
+        subtitle: 'you\'ve missed a step',
+        title: 'Each others missing link',
+        body: 'Loving ourselves requires both personal and collective growth. Loving who we are requires empathy and care.',
+        highlight: 'Community enables love'
       }
     },
     {
@@ -396,9 +401,7 @@ export default function TheoryOfChangeMasonry() {
       imageUrl: '/images/theory-of-change/card-10-backwards.png',
       bgGradient: 'from-fuchsia-950 to-violet-950',
       content: {
-        title: 'The order matters',
-        heading2: '(We\'ve inherited thought that never thought about us)',
-        highlight: 'Decolonising our minds means rejecting individualism and embracing interdependence'
+        title: 'Choose freedom'
       },
       cta: { text: 'Join our next gathering', link: 'https://events.blkoutuk.cloud', color: 'amber' }
     }
@@ -406,7 +409,7 @@ export default function TheoryOfChangeMasonry() {
 
   // ACT 2: The Problem (Cards 11-17)
   const act2Cards: Card[] = [
-    { id: 11, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-11-geography.png', bgGradient: 'from-indigo-950 to-purple-950', content: { body: 'Racism and patriarchy don\'t just hurt us.', highlight: 'They sever us from each other.' }},
+    { id: 11, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-11-geography.png', bgGradient: 'from-indigo-950 to-purple-950', content: { body: 'Racism and patriarchy don\'t just harm us as individuals,', highlight: 'they stop us from healing by cutting us off from each other' }},
     { id: 12, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-12-cascade.png', bgGradient: 'from-purple-950 to-violet-950', content: { title: 'Without each other:', body: 'We can\'t know ourselves' }},
     { id: 13, type: 'statement', size: 'large', imageUrl: '/images/theory-of-change/card-13-app.png', bgGradient: 'from-violet-950 to-purple-950', content: { title: 'Success on dating apps means sharing as little of yourself as possible', body: 'No face, no case, no intimacy' }},
     { id: 14, type: 'statement', size: 'hero', imageUrl: '/images/theory-of-change/card-14-club.png', bgGradient: 'from-purple-950 to-indigo-950', content: { body: 'You can\'t know yourself in isolation.', highlight: 'The self is relational.' }},
@@ -503,8 +506,8 @@ export default function TheoryOfChangeMasonry() {
         </section>
 
         {/* LORDE VIDEO BREAK: Transition from Survival to Thriving */}
-        <section className="relative w-full min-h-screen flex items-center justify-center bg-black my-8">
-          <div className="w-full max-w-6xl">
+        <section className="relative w-full flex items-center justify-center bg-black my-8 py-16">
+          <div className="w-full max-w-3xl px-4">
             <video
               src="/videos/Lordescroll.mp4"
               className="w-full rounded-2xl"
@@ -512,6 +515,7 @@ export default function TheoryOfChangeMasonry() {
               muted
               loop
               playsInline
+              controls
             />
           </div>
         </section>
