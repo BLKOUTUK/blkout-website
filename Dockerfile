@@ -1,6 +1,9 @@
 # Build stage
 FROM node:20-alpine AS builder
 
+# Cache bust: force rebuild - 2025-12-28
+ARG CACHEBUST=43d1cc1
+
 WORKDIR /app
 
 # Copy package files
