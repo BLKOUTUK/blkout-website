@@ -298,9 +298,9 @@ export default function TheoryOfChangeMasonry() {
       bgGradient: 'from-purple-950 via-violet-950 to-indigo-950',
       content: {
         subtitle: 'THE DESIGN',
-        title: 'Societies invest in passing on knowledge between generations',
-        body: 'Schools, churches, media, museums actively teach what it is to be a "good man". Many deny us knowledge of what it is to be a queer man.',
-        highlight: 'We are left to our own devices. Smartphones mostly.'
+        title: 'Societies pass on knowledge between generations',
+        body: 'They actively teach young people what it is to be a "good man". Many deny us knowledge of what it is to be a queer man.',
+        highlight: 'We are left to our own devices.'
       }
     },
     {
@@ -569,11 +569,20 @@ export default function TheoryOfChangeMasonry() {
           </div>
         </section>
 
-        {/* VIDEO BREAK 1: We Don't Know Each Other (Yet) */}
-        <HeroVideoBreak
-          title="We Don't Know Each Other"
-          subtitle="(Yet)"
-        />
+        {/* VIDEO BREAK 1: Welcome BLKOUT TV */}
+        <section className="relative w-full flex items-center justify-center bg-black my-8 py-16">
+          <div className="w-auto max-w-2xl px-4">
+            <video
+              src="/videos/Welcome BLKOUT TV.mp4"
+              className="w-full rounded-2xl"
+              style={{ aspectRatio: '4/5' }}
+              loop
+              playsInline
+              controls
+              preload="metadata"
+            />
+          </div>
+        </section>
 
         {/* ACT 2: The Problem - Masonry Grid */}
         <section className="container mx-auto px-4 py-8">
