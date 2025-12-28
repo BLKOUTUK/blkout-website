@@ -64,16 +64,16 @@ const MasonryCard: React.FC<{ card: Card; index: number }> = ({ card, index }) =
     >
       {/* Background: Image, Video, or Gradient */}
       {card.videoUrl ? (
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-black flex items-center justify-center">
           <video
             src={card.videoUrl}
-            className="w-full h-full object-cover"
-            autoPlay
+            className="w-full h-full object-contain"
+            style={{ aspectRatio: '4/5' }}
             loop
             playsInline
             controls
+            preload="metadata"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/20 pointer-events-none" />
         </div>
       ) : card.imageUrl ? (
         <div className="absolute inset-0">
@@ -531,10 +531,10 @@ export default function TheoryOfChangeMasonry() {
               src="/videos/Lordescroll.mp4"
               className="w-full rounded-2xl"
               style={{ aspectRatio: '4/5' }}
-              autoPlay
               loop
               playsInline
               controls
+              preload="metadata"
             />
           </div>
         </section>
