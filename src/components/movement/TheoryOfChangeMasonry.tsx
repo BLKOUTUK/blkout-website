@@ -129,7 +129,7 @@ const MasonryCard: React.FC<{ card: Card; index: number }> = ({ card, index }) =
 
         {/* Highlight (emphasis text below) */}
         {card.content.highlight && (
-          <p className="text-lg md:text-xl lg:text-2xl text-purple-200 font-light leading-relaxed">
+          <p className="text-lg md:text-xl lg:text-2xl text-purple-200 font-light leading-relaxed italic">
             {card.content.highlight}
           </p>
         )}
@@ -291,13 +291,14 @@ export default function TheoryOfChangeMasonry() {
     {
       id: 4,
       type: 'interactive',
-      size: 'hero',
+      size: 'large',
       imageUrl: '/images/theory-of-change/card-04-poll.png',
       bgGradient: 'from-indigo-950 to-purple-950',
       content: {
         title: 'How many Black queer men',
-        body: 'could you call on in a crisis?',
-        highlight: 'When you\'re falling apart and need someone who gets it. (Note: a booty call, however urgent, is not a crisis.)'
+        heading2: 'could you call on in a crisis?',
+        body: 'When you\'re falling apart and need someone who gets it.',
+        highlight: '(Note: a booty call, however urgent, is not a crisis.)'
       },
       interactive: {
         type: 'poll',
