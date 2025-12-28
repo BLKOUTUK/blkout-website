@@ -321,10 +321,8 @@ export default function TheoryOfChangeMasonry() {
       imageUrl: '/images/theory-of-change/card-04-poll.png',
       bgGradient: 'from-indigo-950 to-purple-950',
       content: {
-        title: 'How many Black queer men',
-        heading2: 'could you call on in a crisis?',
-        body: 'When you\'re falling apart and need someone who gets it.',
-        highlight: '(Note: a booty call, however urgent, is not a crisis.)'
+        title: 'How many Black queer men could you call on in a crisis?',
+        highlight: '(Booty calls don\'t count.)'
       },
       interactive: {
         type: 'poll',
