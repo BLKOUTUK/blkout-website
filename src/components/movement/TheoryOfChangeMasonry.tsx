@@ -338,8 +338,9 @@ export default function TheoryOfChangeMasonry() {
       imageUrl: '/images/theory-of-change/card-05-one-or-fewer.png',
       bgGradient: 'from-purple-950 to-fuchsia-950',
       content: {
-        title: 'Ever wondered what difference it would make',
-        body: 'if we knew each other better?'
+        subtitle: 'when we asked, you said:',
+        title: '1 or fewer',
+        highlight: '(And that includes the group chat that\'s been on mute since 2019.)'
       }
     },
     {
