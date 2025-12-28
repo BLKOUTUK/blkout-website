@@ -69,11 +69,11 @@ const MasonryCard: React.FC<{ card: Card; index: number }> = ({ card, index }) =
             src={card.videoUrl}
             className="w-full h-full object-cover"
             autoPlay
-            muted
             loop
             playsInline
+            controls
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/20 pointer-events-none" />
         </div>
       ) : card.imageUrl ? (
         <div className="absolute inset-0">
@@ -526,12 +526,11 @@ export default function TheoryOfChangeMasonry() {
 
         {/* LORDE VIDEO BREAK: Transition from Survival to Thriving */}
         <section className="relative w-full flex items-center justify-center bg-black my-8 py-16">
-          <div className="w-full max-w-3xl px-4">
+          <div className="w-full max-w-5xl px-4">
             <video
               src="/videos/Lordescroll.mp4"
               className="w-full rounded-2xl"
               autoPlay
-              muted
               loop
               playsInline
               controls
@@ -606,13 +605,13 @@ export default function TheoryOfChangeMasonry() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
               <motion.a href="https://crm.blkoutuk.cloud/api/community/join" whileInView={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: 50 }} transition={{ delay: 0.1 }} className="bg-gradient-to-br from-amber-600 to-amber-500 rounded-2xl p-8 hover:scale-105 transition-all">
-                <div className="text-black"><div className="text-5xl mb-4">✉️</div><h3 className="text-3xl font-black uppercase mb-3" style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}>Stay in Touch</h3><p className="text-lg font-semibold mb-4">Newsletter</p><p className="text-sm opacity-80">Weekly updates from the collective</p></div>
+                <div className="text-black"><img src="/images/squared/BLKOUTiconBLACK.png" alt="BLKOUT" className="w-16 h-16 mb-4" /><h3 className="text-3xl font-black uppercase mb-3" style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}>Stay in Touch</h3><p className="text-lg font-semibold mb-4">Newsletter</p><p className="text-sm opacity-80">Weekly updates from the collective</p></div>
               </motion.a>
               <motion.a href="https://blkouthub.com" target="_blank" rel="noopener noreferrer" whileInView={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: 50 }} transition={{ delay: 0.2 }} className="bg-gradient-to-br from-fuchsia-600 to-pink-600 rounded-2xl p-8 hover:scale-105 transition-all">
-                <div className="text-white"><div className="text-5xl mb-4">🤝</div><h3 className="text-3xl font-black uppercase mb-3" style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}>Commit to Do More</h3><p className="text-lg font-semibold mb-4">Join the BLKOUTHUB</p><p className="text-sm opacity-90">Active membership. Real gatherings.</p></div>
+                <div className="text-white"><img src="/images/blkouthub-logo.png" alt="BLKOUTHUB" className="w-16 h-16 mb-4" /><h3 className="text-3xl font-black uppercase mb-3" style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}>Commit to Do More</h3><p className="text-lg font-semibold mb-4">Join the BLKOUTHUB</p><p className="text-sm opacity-90">Active membership. Real gatherings.</p></div>
               </motion.a>
               <motion.a href="/platform" whileInView={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: 50 }} transition={{ delay: 0.3 }} className="bg-gradient-to-br from-purple-600 to-indigo-600 rounded-2xl p-8 hover:scale-105 transition-all">
-                <div className="text-white"><div className="text-5xl mb-4">📚</div><h3 className="text-3xl font-black uppercase mb-3" style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}>Learn</h3><p className="text-lg font-semibold mb-4">Explore Resources</p><p className="text-sm opacity-90">280+ articles, Events, IVOR AI</p></div>
+                <div className="text-white"><img src="/images/squared/BLKOUTiconWHITE.png" alt="BLKOUT" className="w-16 h-16 mb-4" /><h3 className="text-3xl font-black uppercase mb-3" style={{ fontFamily: "'Arial Black', 'Arial', sans-serif" }}>Learn</h3><p className="text-lg font-semibold mb-4">Explore Resources</p><p className="text-sm opacity-90">280+ articles, Events, IVOR AI</p></div>
               </motion.a>
             </div>
           </div>
