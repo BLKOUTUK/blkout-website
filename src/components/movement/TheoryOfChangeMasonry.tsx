@@ -284,6 +284,14 @@ export default function TheoryOfChangeMasonry() {
       content: {}
     },
     {
+      id: 2.6,
+      type: 'beauty',
+      size: 'small',
+      imageUrl: '/images/theory-of-change/silhouette letters white rgb.png',
+      bgGradient: 'from-purple-950 to-indigo-950',
+      content: {}
+    },
+    {
       id: 2.75,
       type: 'statement',
       size: 'hero',
