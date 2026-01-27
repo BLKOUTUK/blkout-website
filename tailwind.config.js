@@ -1,24 +1,24 @@
+/**
+ * Scrollytelling - Tailwind Configuration
+ *
+ * Uses @blkout/shared preset for consistent design system.
+ * App-specific cooperative colors for narrative experiences.
+ */
+
 /** @type {import('tailwindcss').Config} */
 export default {
+  // Use shared BLKOUT design system
+  presets: [require('../../packages/shared/tailwind.preset')],
+
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+
   theme: {
     extend: {
+      // App-specific: Cooperative green spectrum for storytelling
       colors: {
-        blkout: {
-          50: '#fef2f2',
-          100: '#fee2e2',
-          200: '#fecaca',
-          300: '#fca5a5',
-          400: '#f87171',
-          500: '#ef4444',
-          600: '#dc2626',
-          700: '#b91c1c',
-          800: '#991b1b',
-          900: '#7f1d1d',
-        },
         cooperative: {
           50: '#f0fdf4',
           100: '#dcfce7',
@@ -33,7 +33,6 @@ export default {
         },
       },
       fontFamily: {
-        'display': ['Inter', 'system-ui', 'sans-serif'],
         'body': ['Inter', 'system-ui', 'sans-serif'],
       },
     },
